@@ -4,18 +4,23 @@
     <Fields>
       <FormLink name="Parent" recordType="PNAM" refName="AStoryManagerNode" />
       <FormLink name="PreviousSibling" recordType="SNAM" refName="AStoryManagerNode" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" nullable="False" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" nullable="False" />
     </Fields>
   </Object>
   <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record" GUID="d5eb571d-6f2f-4286-9efa-0a5fab8eddb6" ID="453">
     <Fields>
       <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
-      <ByteArray name="XNAM" recordType="XNAM" />
+      <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
     </Fields>
   </Object>
   <Object name="StoryManagerQuestNode" recordType="SMQN" baseClass="AStoryManagerNode" objType="Record" GUID="2f1031e5-dcff-4f22-aad3-7472e3300692" ID="455">
     <Fields>
-      <Enum name="Flags" enumName="StoryManagerQuestNode.QuestFlag" byteLength="4" recordType="DNAM" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="2" />
+          <Enum name="QuestFlags" enumName="StoryManagerQuestNode.QuestFlag" byteLength="2" />
+        </Fields>
+      </Data>
       <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
       <UInt32 name="MaxNumQuestsToRun" recordType="MNAM" />
       <RefList name="Quests" counterRecType="QNAM" nullable="False" refName="StoryManagerQuest" />
@@ -24,15 +29,58 @@
   <Object name="StoryManagerQuest" objType="Subrecord" GUID="b4d160cb-2899-46b7-b717-a555f48bcba1" ID="457">
     <Fields>
       <FormLink name="Quest" recordType="NNAM" refName="Quest" />
-      <ByteArray name="FNAM" recordType="FNAM" />
+      <UInt32 name="FNAM" recordType="FNAM" />
       <Float name="HoursUntilReset" recordType="RNAM" multiplier="24" />
     </Fields>
   </Object>
   <Object name="StoryManagerEventNode" recordType="SMEN" baseClass="AStoryManagerNode" objType="Record" GUID="dd24d26a-8a21-4c53-9dbd-842a4d2fbe2f" ID="456">
     <Fields>
       <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
-      <ByteArray name="XNAM" recordType="XNAM" />
-      <RecordType name="Type" recordType="ENAM" />
+      <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
+      <Enum name="Type" enumName="StoryManagerEventNode.Types" byteLength="4" recordType="ENAM" />
     </Fields>
+    <AdditionalContainedRecordType>ADBO</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ADCR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ADIA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AFAV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AHEL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AIPL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>AOBJ</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ARRT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ASSU</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>BRIB</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CAST</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CHRR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CLOC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CLRL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CRFT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CURE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>DEAD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ESJA</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>FLAT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>HACK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>ILOC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>INFC</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>INTM</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>IRON</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>JAIL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>KILL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LCLD</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LCPG</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LEVL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>LOCK</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>NVPE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>OAAT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PCON</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PFIN</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>PRFV</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>QPMT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>QSTR</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>REMP</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SCPT</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>SKIL</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>STIJ</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>TMEE</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>TRES</AdditionalContainedRecordType>
   </Object>
 </Loqui>

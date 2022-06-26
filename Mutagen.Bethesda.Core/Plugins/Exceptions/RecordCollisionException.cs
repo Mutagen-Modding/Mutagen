@@ -1,25 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Plugins.Exceptions;
 
-namespace Mutagen.Bethesda.Plugins.Exceptions
+public class RecordCollisionException : Exception
 {
-    public class RecordCollisionException : Exception
+    public readonly FormKey? FormKey;
+    public readonly Type? GroupType;
+
+    public RecordCollisionException(FormKey formKey, Type type)
     {
-        public readonly FormKey? FormKey;
-        public readonly Type? GroupType;
+        GroupType = type;
+        FormKey = formKey;
+    }
 
-        public RecordCollisionException(FormKey formKey, Type type)
-        {
-            GroupType = type;
-            FormKey = formKey;
-        }
-
-        public override string ToString()
-        {
-            return $"{nameof(RecordCollisionException)}: Two records with the same FormKey {FormKey} existed in the same Group<{GroupType?.Name}>";
-        }
+    public override string ToString()
+    {
+        return $"{nameof(RecordCollisionException)}: Two records with the same FormKey {FormKey} existed in the same Group<{GroupType?.Name}>";
     }
 }

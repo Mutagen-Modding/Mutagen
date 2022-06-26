@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -83,12 +84,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestTargetMixIn.ToString(
+            QuestTargetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -242,9 +244,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -255,61 +257,52 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(QuestTarget.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(QuestTarget.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, QuestTarget.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, QuestTarget.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(QuestTarget.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(QuestTarget.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Target ?? true)
                     {
-                        fg.AppendItem(Target, "Target");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.QSTADataTypeState ?? true)
                     {
-                        fg.AppendItem(QSTADataTypeState, "QSTADataTypeState");
+                        sb.AppendItem(QSTADataTypeState, "QSTADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -414,60 +407,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Target, "Target");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(QSTADataTypeState, "QSTADataTypeState");
+                {
+                    sb.AppendItem(QSTADataTypeState, "QSTADataTypeState");
+                }
             }
             #endregion
 
@@ -549,8 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = QuestTarget_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestTargetCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestTargetCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum QSTADataType
@@ -565,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -575,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static QuestTarget CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestTarget();
             ((QuestTargetSetterCommon)((IQuestTargetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -590,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestTarget item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -600,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -668,26 +653,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IQuestTargetGetter item,
             string? name = null,
             QuestTarget.Mask<bool>? printMask = null)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).ToString(
+            return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IQuestTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestTarget.Mask<bool>? printMask = null)
         {
-            ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).ToString(
+            ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -793,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IQuestTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestTargetSetterCommon)((IQuestTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -808,10 +793,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestTarget_FieldIndex
+    internal enum QuestTarget_FieldIndex
     {
         Target = 0,
         Flags = 1,
@@ -821,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestTarget_Registration : ILoquiRegistration
+    internal partial class QuestTarget_Registration : ILoquiRegistration
     {
         public static readonly QuestTarget_Registration Instance = new QuestTarget_Registration();
 
@@ -863,6 +848,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.QSTA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.QSTA);
+            var all = RecordCollection.Factory(
+                RecordTypes.QSTA,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(QuestTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -896,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestTargetSetterCommon
+    internal partial class QuestTargetSetterCommon
     {
         public static readonly QuestTargetSetterCommon Instance = new QuestTargetSetterCommon();
 
@@ -924,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IQuestTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -937,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestTargetCommon
+    internal partial class QuestTargetCommon
     {
         public static readonly QuestTargetCommon Instance = new QuestTargetCommon();
 
@@ -961,7 +957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Target = item.Target.Equals(rhs.Target);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
@@ -971,79 +966,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.QSTADataTypeState = item.QSTADataTypeState == rhs.QSTADataTypeState;
         }
         
-        public string ToString(
+        public string Print(
             IQuestTargetGetter item,
             string? name = null,
             QuestTarget.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IQuestTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"QuestTarget =>");
+                sb.AppendLine($"QuestTarget =>");
             }
             else
             {
-                fg.AppendLine($"{name} (QuestTarget) =>");
+                sb.AppendLine($"{name} (QuestTarget) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IQuestTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             QuestTarget.Mask<bool>? printMask = null)
         {
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target.FormKey, "Target");
+                sb.AppendItem(item.Target.FormKey, "Target");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.QSTADataTypeState ?? true)
             {
-                fg.AppendItem(item.QSTADataTypeState, "QSTADataTypeState");
+                sb.AppendItem(item.QSTADataTypeState, "QSTADataTypeState");
             }
         }
         
@@ -1064,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestTarget_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
             {
@@ -1092,11 +1081,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestTargetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestTargetGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Target);
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1106,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestTargetSetterTranslationCommon
+    internal partial class QuestTargetSetterTranslationCommon
     {
         public static readonly QuestTargetSetterTranslationCommon Instance = new QuestTargetSetterTranslationCommon();
 
@@ -1216,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration StaticRegistration => QuestTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1240,11 +1229,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestTargetBinaryWriteTranslation Instance = new QuestTargetBinaryWriteTranslation();
+        public static readonly QuestTargetBinaryWriteTranslation Instance = new QuestTargetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestTargetGetter item,
@@ -1255,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IQuestTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.QSTA)))
             {
@@ -1270,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1283,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IQuestTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1297,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestTargetGetter)item,
@@ -1307,9 +1296,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestTargetBinaryCreateTranslation
+    internal partial class QuestTargetBinaryCreateTranslation
     {
-        public readonly static QuestTargetBinaryCreateTranslation Instance = new QuestTargetBinaryCreateTranslation();
+        public static readonly QuestTargetBinaryCreateTranslation Instance = new QuestTargetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestTarget item,
@@ -1324,14 +1313,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1345,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)QuestTarget_FieldIndex.Conditions;
@@ -1366,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IQuestTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1379,16 +1368,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestTargetBinaryOverlay :
+    internal partial class QuestTargetBinaryOverlay :
         PluginBinaryOverlay,
         IQuestTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestTarget_Registration.Instance;
-        public static QuestTarget_Registration StaticRegistration => QuestTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1402,16 +1391,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestTargetCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestTargetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1419,26 +1408,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        private int? _QSTALocation;
+        private RangeInt32? _QSTALocation;
         public QuestTarget.QSTADataType QSTADataTypeState { get; private set; }
         #region Target
-        private int _TargetLocation => _QSTALocation!.Value;
+        private int _TargetLocation => _QSTALocation!.Value.Min;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
+        public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _QSTALocation!.Value + 0x4;
+        private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _QSTALocation.HasValue;
-        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Quest.TargetFlag Flags => _Flags_IsSet ? (Quest.TargetFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1446,42 +1428,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected QuestTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static IQuestTargetGetter QuestTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestTargetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static QuestTargetBinaryOverlay QuestTargetFactory(
+        public static IQuestTargetGetter QuestTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestTargetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1491,25 +1479,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
-                    _QSTALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    if (lastParsed.ShortCircuit((int)QuestTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)QuestTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)QuestTarget_FieldIndex.Conditions;
                 }
                 default:
@@ -1518,12 +1511,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestTargetMixIn.ToString(
+            QuestTargetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

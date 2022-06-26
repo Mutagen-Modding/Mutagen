@@ -5,11 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -68,12 +70,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TeleportDestinationMixIn.ToString(
+            TeleportDestinationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -195,38 +198,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(TeleportDestination.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(TeleportDestination.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TeleportDestination.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, TeleportDestination.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(TeleportDestination.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TeleportDestination.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Destination ?? true)
                     {
-                        fg.AppendItem(Destination, "Destination");
+                        sb.AppendItem(Destination, "Destination");
                     }
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
+                        sb.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendItem(Rotation, "Rotation");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -321,38 +319,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Destination, "Destination");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
+                {
+                    sb.AppendItem(Destination, "Destination");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
             }
             #endregion
 
@@ -431,8 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = TeleportDestination_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TeleportDestinationCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TeleportDestinationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -443,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static TeleportDestination CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TeleportDestination();
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TeleportDestination item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -478,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -497,6 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ITeleportDestination :
         IFormLinkContainer,
         ILoquiObjectSetter<ITeleportDestination>,
+        IPositionRotation,
         ITeleportDestinationGetter
     {
         new IFormLink<IPlacedGetter> Destination { get; set; }
@@ -508,7 +503,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ITeleportDestinationGetter>
+        ILoquiObject<ITeleportDestinationGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -544,26 +540,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITeleportDestinationGetter item,
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
-            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).ToString(
+            return ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITeleportDestinationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
-            ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).ToString(
+            ((TeleportDestinationCommon)((ITeleportDestinationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -669,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ITeleportDestination item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TeleportDestinationSetterCommon)((ITeleportDestinationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -684,10 +680,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum TeleportDestination_FieldIndex
+    internal enum TeleportDestination_FieldIndex
     {
         Destination = 0,
         Position = 1,
@@ -696,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class TeleportDestination_Registration : ILoquiRegistration
+    internal partial class TeleportDestination_Registration : ILoquiRegistration
     {
         public static readonly TeleportDestination_Registration Instance = new TeleportDestination_Registration();
 
@@ -738,6 +734,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XTEL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XTEL);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TeleportDestinationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -771,7 +773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class TeleportDestinationSetterCommon
+    internal partial class TeleportDestinationSetterCommon
     {
         public static readonly TeleportDestinationSetterCommon Instance = new TeleportDestinationSetterCommon();
 
@@ -797,12 +799,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ITeleportDestination item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XTEL),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -813,7 +815,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TeleportDestinationCommon
+    internal partial class TeleportDestinationCommon
     {
         public static readonly TeleportDestinationCommon Instance = new TeleportDestinationCommon();
 
@@ -837,67 +839,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TeleportDestination.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Destination = item.Destination.Equals(rhs.Destination);
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
         
-        public string ToString(
+        public string Print(
             ITeleportDestinationGetter item,
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITeleportDestinationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TeleportDestination.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TeleportDestination =>");
+                sb.AppendLine($"TeleportDestination =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TeleportDestination) =>");
+                sb.AppendLine($"{name} (TeleportDestination) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITeleportDestinationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TeleportDestination.Mask<bool>? printMask = null)
         {
             if (printMask?.Destination ?? true)
             {
-                fg.AppendItem(item.Destination.FormKey, "Destination");
+                sb.AppendItem(item.Destination.FormKey, "Destination");
             }
             if (printMask?.Position ?? true)
             {
-                fg.AppendItem(item.Position, "Position");
+                sb.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendItem(item.Rotation, "Rotation");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
         }
         
@@ -941,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITeleportDestinationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITeleportDestinationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Destination);
             yield break;
@@ -950,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TeleportDestinationSetterTranslationCommon
+    internal partial class TeleportDestinationSetterTranslationCommon
     {
         public static readonly TeleportDestinationSetterTranslationCommon Instance = new TeleportDestinationSetterTranslationCommon();
 
@@ -1036,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]
@@ -1060,11 +1059,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TeleportDestinationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
+        public static readonly TeleportDestinationBinaryWriteTranslation Instance = new TeleportDestinationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITeleportDestinationGetter item,
@@ -1084,12 +1083,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ITeleportDestinationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XTEL),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1101,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITeleportDestinationGetter)item,
@@ -1111,9 +1110,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class TeleportDestinationBinaryCreateTranslation
+    internal partial class TeleportDestinationBinaryCreateTranslation
     {
-        public readonly static TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
+        public static readonly TeleportDestinationBinaryCreateTranslation Instance = new TeleportDestinationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITeleportDestination item,
@@ -1135,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ITeleportDestinationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TeleportDestinationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1148,16 +1147,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class TeleportDestinationBinaryOverlay :
+    internal partial class TeleportDestinationBinaryOverlay :
         PluginBinaryOverlay,
         ITeleportDestinationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TeleportDestination_Registration.Instance;
-        public static TeleportDestination_Registration StaticRegistration => TeleportDestination_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TeleportDestination_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TeleportDestinationCommon.Instance;
         [DebuggerStepThrough]
@@ -1171,16 +1170,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TeleportDestinationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TeleportDestinationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TeleportDestinationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TeleportDestinationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1188,9 +1187,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0xC));
-        public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x10, 0xC));
+        public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
+        public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1198,25 +1197,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected TeleportDestinationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
+        public static ITeleportDestinationGetter TeleportDestinationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new TeleportDestinationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x1C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1225,25 +1229,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
+        public static ITeleportDestinationGetter TeleportDestinationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TeleportDestinationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TeleportDestinationMixIn.ToString(
+            TeleportDestinationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

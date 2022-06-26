@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,20 +20,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -164,12 +165,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogItemMixIn.ToString(
+            DialogItemMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -464,9 +466,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Topics.Specific = l;
-                        foreach (var item in Topics.Specific.WithIndex())
+                        foreach (var item in Topics.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -478,9 +480,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, DialogResponse.Mask<R>?>>();
                         obj.Responses.Specific = l;
-                        foreach (var item in Responses.Specific.WithIndex())
+                        foreach (var item in Responses.Specific)
                         {
-                            MaskItemIndexed<R, DialogResponse.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DialogResponse.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DialogResponse.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DialogResponse.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -493,9 +495,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -508,9 +510,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Choices.Specific = l;
-                        foreach (var item in Choices.Specific.WithIndex())
+                        foreach (var item in Choices.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -522,9 +524,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.LinkFrom.Specific = l;
-                        foreach (var item in LinkFrom.Specific.WithIndex())
+                        foreach (var item in LinkFrom.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -534,157 +536,138 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DialogItem.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DialogItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DialogItem.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DialogItem.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DialogItem.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogItem.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        sb.AppendItem(Quest, "Quest");
                     }
                     if (printMask?.PreviousTopic ?? true)
                     {
-                        fg.AppendItem(PreviousTopic, "PreviousTopic");
+                        sb.AppendItem(PreviousTopic, "PreviousTopic");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
                         && Topics is {} TopicsItem)
                     {
-                        fg.AppendLine("Topics =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Topics =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TopicsItem.Overall);
+                            sb.AppendItem(TopicsItem.Overall);
                             if (TopicsItem.Specific != null)
                             {
                                 foreach (var subItem in TopicsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Responses?.Overall ?? true)
                         && Responses is {} ResponsesItem)
                     {
-                        fg.AppendLine("Responses =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Responses =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ResponsesItem.Overall);
+                            sb.AppendItem(ResponsesItem.Overall);
                             if (ResponsesItem.Specific != null)
                             {
                                 foreach (var subItem in ResponsesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Choices?.Overall ?? true)
                         && Choices is {} ChoicesItem)
                     {
-                        fg.AppendLine("Choices =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Choices =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ChoicesItem.Overall);
+                            sb.AppendItem(ChoicesItem.Overall);
                             if (ChoicesItem.Specific != null)
                             {
                                 foreach (var subItem in ChoicesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LinkFrom?.Overall ?? true)
                         && LinkFrom is {} LinkFromItem)
                     {
-                        fg.AppendLine("LinkFrom =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LinkFrom =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LinkFromItem.Overall);
+                            sb.AppendItem(LinkFromItem.Overall);
                             if (LinkFromItem.Specific != null)
                             {
                                 foreach (var subItem in LinkFromItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Script?.Overall ?? true)
                     {
-                        Script?.ToString(fg);
+                        Script?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -828,150 +811,131 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Data?.ToString(fg);
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(PreviousTopic, "PreviousTopic");
+                base.PrintFillInternal(sb);
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(PreviousTopic, "PreviousTopic");
+                }
                 if (Topics is {} TopicsItem)
                 {
-                    fg.AppendLine("Topics =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Topics =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TopicsItem.Overall);
+                        sb.AppendItem(TopicsItem.Overall);
                         if (TopicsItem.Specific != null)
                         {
                             foreach (var subItem in TopicsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Responses is {} ResponsesItem)
                 {
-                    fg.AppendLine("Responses =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Responses =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ResponsesItem.Overall);
+                        sb.AppendItem(ResponsesItem.Overall);
                         if (ResponsesItem.Specific != null)
                         {
                             foreach (var subItem in ResponsesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Choices is {} ChoicesItem)
                 {
-                    fg.AppendLine("Choices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Choices =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ChoicesItem.Overall);
+                        sb.AppendItem(ChoicesItem.Overall);
                         if (ChoicesItem.Specific != null)
                         {
                             foreach (var subItem in ChoicesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LinkFrom is {} LinkFromItem)
                 {
-                    fg.AppendLine("LinkFrom =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LinkFrom =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LinkFromItem.Overall);
+                        sb.AppendItem(LinkFromItem.Overall);
                         if (LinkFromItem.Specific != null)
                         {
                             foreach (var subItem in LinkFromItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                Script?.ToString(fg);
+                Script?.Print(sb);
             }
             #endregion
 
@@ -1061,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogItemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogItemCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogItem(FormKey formKey)
         {
@@ -1122,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1132,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static DialogItem CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogItem();
             ((DialogItemSetterCommon)((IDialogItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1147,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogItem item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1157,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1240,26 +1204,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDialogItemGetter item,
             string? name = null,
             DialogItem.Mask<bool>? printMask = null)
         {
-            return ((DialogItemCommon)((IDialogItemGetter)item).CommonInstance()!).ToString(
+            return ((DialogItemCommon)((IDialogItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDialogItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogItem.Mask<bool>? printMask = null)
         {
-            ((DialogItemCommon)((IDialogItemGetter)item).CommonInstance()!).ToString(
+            ((DialogItemCommon)((IDialogItemGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1354,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDialogItemInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogItemSetterCommon)((IDialogItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1369,10 +1333,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DialogItem_FieldIndex
+    internal enum DialogItem_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1392,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DialogItem_Registration : ILoquiRegistration
+    internal partial class DialogItem_Registration : ILoquiRegistration
     {
         public static readonly DialogItem_Registration Instance = new DialogItem_Registration();
 
@@ -1434,6 +1398,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.INFO;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.INFO);
+            var all = RecordCollection.Factory(
+                RecordTypes.INFO,
+                RecordTypes.DATA,
+                RecordTypes.QSTI,
+                RecordTypes.PNAM,
+                RecordTypes.NAME,
+                RecordTypes.TRDT,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.CTDA,
+                RecordTypes.CTDT,
+                RecordTypes.TCLT,
+                RecordTypes.TCLF,
+                RecordTypes.SCHD,
+                RecordTypes.SCHR);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1467,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DialogItemSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class DialogItemSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly DialogItemSetterCommon Instance = new DialogItemSetterCommon();
 
@@ -1515,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IDialogItemInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDialogItemInternal>(
                 record: item,
@@ -1528,7 +1513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DialogItem)item,
@@ -1539,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (DialogItem)item,
@@ -1550,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogItemCommon : OblivionMajorRecordCommon
+    internal partial class DialogItemCommon : OblivionMajorRecordCommon
     {
         public new static readonly DialogItemCommon Instance = new DialogItemCommon();
 
@@ -1574,7 +1559,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -1606,160 +1590,138 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IDialogItemGetter item,
             string? name = null,
             DialogItem.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDialogItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogItem =>");
+                sb.AppendLine($"DialogItem =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogItem) =>");
+                sb.AppendLine($"{name} (DialogItem) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogItemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogItem.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
+                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if (printMask?.PreviousTopic ?? true)
             {
-                fg.AppendItem(item.PreviousTopic.FormKeyNullable, "PreviousTopic");
+                sb.AppendItem(item.PreviousTopic.FormKeyNullable, "PreviousTopic");
             }
             if (printMask?.Topics?.Overall ?? true)
             {
-                fg.AppendLine("Topics =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Topics =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Topics)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Responses?.Overall ?? true)
             {
-                fg.AppendLine("Responses =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Responses =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Responses)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Choices?.Overall ?? true)
             {
-                fg.AppendLine("Choices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Choices =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Choices)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.LinkFrom?.Overall ?? true)
             {
-                fg.AppendLine("LinkFrom =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LinkFrom =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LinkFrom)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Script?.Overall ?? true)
             {
-                item.Script?.ToString(fg, "Script");
+                item.Script?.Print(sb, "Script");
             }
         }
         
@@ -1829,11 +1791,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Responses) ?? true))
             {
-                if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+                if (!lhs.Responses.SequenceEqual(rhs.Responses, (l, r) => ((DialogResponseCommon)((IDialogResponseGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogItem_FieldIndex.Responses)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DialogItem_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Choices) ?? true))
             {
@@ -1914,19 +1876,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogItemGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Quest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Quest);
+                yield return QuestInfo;
             }
-            if (obj.PreviousTopic.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PreviousTopic, out var PreviousTopicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PreviousTopic);
+                yield return PreviousTopicInfo;
             }
             foreach (var item in obj.Topics)
             {
@@ -1942,7 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (obj.Script is IFormLinkContainerGetter ScriptlinkCont)
             {
-                foreach (var item in ScriptlinkCont.ContainedFormLinks)
+                foreach (var item in ScriptlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1988,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogItemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class DialogItemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly DialogItemSetterTranslationCommon Instance = new DialogItemSetterTranslationCommon();
 
@@ -2302,7 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
-        public new static DialogItem_Registration StaticRegistration => DialogItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2320,18 +2282,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogItemBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DialogItemBinaryWriteTranslation Instance = new DialogItemBinaryWriteTranslation();
+        public new static readonly DialogItemBinaryWriteTranslation Instance = new DialogItemBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDialogItemGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2355,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Topics,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2365,7 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDialogResponseGetter>.Instance.Write(
                 writer: writer,
                 items: item.Responses,
-                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IDialogResponseGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((DialogResponseBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2376,7 +2338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2387,7 +2349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Choices,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2397,7 +2359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LinkFrom,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2414,7 +2376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IDialogItemGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2425,12 +2387,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2442,7 +2407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogItemGetter)item,
@@ -2453,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDialogItemGetter)item,
@@ -2464,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDialogItemGetter)item,
@@ -2474,9 +2439,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DialogItemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class DialogItemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
+        public new static readonly DialogItemBinaryCreateTranslation Instance = new DialogItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.INFO;
         public static void FillBinaryStructs(
@@ -2495,7 +2460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2533,7 +2498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DialogResponse>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
+                            triggeringRecord: DialogResponse_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: DialogResponse.TryCreateFromBinary));
                     return (int)DialogItem_FieldIndex.Responses;
@@ -2544,7 +2509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)DialogItem_FieldIndex.Conditions;
@@ -2582,7 +2547,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2599,16 +2565,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogItemBinaryOverlay :
+    internal partial class DialogItemBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IDialogItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItem_Registration.Instance;
-        public new static DialogItem_Registration StaticRegistration => DialogItem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => DialogItem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DialogItemCommon.Instance;
         [DebuggerStepThrough]
@@ -2616,14 +2582,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogItemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DialogItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2635,21 +2601,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDialogItemDataGetter? Data => _DataLocation.HasValue ? DialogItemDataBinaryOverlay.DialogItemDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IDialogItemDataGetter? Data => _DataLocation.HasValue ? DialogItemDataBinaryOverlay.DialogItemDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region PreviousTopic
         private int? _PreviousTopicLocation;
-        public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
+        public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = ListExt.Empty<DialogResponseBinaryOverlay>();
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         #region Script
         private IScriptFieldsGetter? _Script;
         public IScriptFieldsGetter Script => _Script ?? new ScriptFields();
@@ -2661,28 +2627,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected DialogItemBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DialogItemBinaryOverlay DialogItemFactory(
+        public static IDialogItemGetter DialogItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DialogItemBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2692,20 +2661,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static DialogItemBinaryOverlay DialogItemFactory(
+        public static IDialogItemGetter DialogItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2715,9 +2684,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
@@ -2746,31 +2715,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TRDT:
                 case RecordTypeInts.NAM1:
                 case RecordTypeInts.NAM2:
                 {
-                    this.Responses = this.ParseRepeatedTypelessSubrecord<DialogResponseBinaryOverlay>(
+                    this.Responses = this.ParseRepeatedTypelessSubrecord<IDialogResponseGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: DialogResponse_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: DialogResponse_Registration.TriggerSpecs,
                         factory: DialogResponseBinaryOverlay.DialogResponseFactory);
                     return (int)DialogItem_FieldIndex.Responses;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)DialogItem_FieldIndex.Conditions;
@@ -2786,7 +2756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.Choices;
                 }
                 case RecordTypeInts.TCLF:
@@ -2800,7 +2770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)DialogItem_FieldIndex.LinkFrom;
                 }
                 case RecordTypeInts.SCHD:
@@ -2809,7 +2779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this._Script = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)DialogItem_FieldIndex.Script;
                 }
                 default:
@@ -2819,17 +2789,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogItemMixIn.ToString(
+            DialogItemMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

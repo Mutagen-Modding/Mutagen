@@ -3,71 +3,66 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda.Oblivion;
+
+public partial class ScriptFields
 {
-    public partial class ScriptFields
+    public enum ScriptType
     {
-        public enum ScriptType
-        {
-            Object = 0,
-            Quest = 1,
-            MagicEffect = 0x100
-        }
-
-        public IEnumerable<ScriptObjectReference>? ObjectReferences => this.References?.WhereCastable<AScriptReference, ScriptObjectReference>();
-        public IEnumerable<ScriptVariableReference>? VariableReferences => this.References?.WhereCastable<AScriptReference, ScriptVariableReference>();
-
-        #region CompiledScript
-        protected MemorySlice<byte>? _CompiledScript;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MemorySlice<byte>? CompiledScript
-        {
-            get => this._CompiledScript;
-            set
-            {
-                this._CompiledScript = value;
-                this.MetadataSummary.CompiledSizeInternal = value?.Length ?? 0;
-            }
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<byte>? IScriptFieldsGetter.CompiledScript => this.CompiledScript ?? default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        Object = 0,
+        Quest = 1,
+        MagicEffect = 0x100
     }
 
-    namespace Internals
+    public IEnumerable<ScriptObjectReference>? ObjectReferences => this.References?.WhereCastable<AScriptReference, ScriptObjectReference>();
+    public IEnumerable<ScriptVariableReference>? VariableReferences => this.References?.WhereCastable<AScriptReference, ScriptVariableReference>();
+
+    #region CompiledScript
+    protected MemorySlice<byte>? _CompiledScript;
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public MemorySlice<byte>? CompiledScript
     {
-        public partial class ScriptFieldsBinaryWriteTranslation
+        get => this._CompiledScript;
+        set
         {
-            public static partial void WriteBinaryMetadataSummaryOldCustom(MutagenWriter writer, IScriptFieldsGetter item)
-            {
-            }
+            this._CompiledScript = value;
+            this.MetadataSummary.CompiledSizeInternal = value?.Length ?? 0;
         }
+    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ReadOnlyMemorySlice<byte>? IScriptFieldsGetter.CompiledScript => this.CompiledScript ?? default(ReadOnlyMemorySlice<byte>?);
+    #endregion
+}
 
-        public partial class ScriptFieldsBinaryCreateTranslation
-        {
-            private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
-                new KeyValuePair<RecordType, RecordType>(
-                    new RecordType("SCHR"),
-                    new RecordType("SCHD")));
+partial class ScriptFieldsBinaryWriteTranslation
+{
+    public static partial void WriteBinaryMetadataSummaryOldCustom(MutagenWriter writer, IScriptFieldsGetter item)
+    {
+    }
+}
 
-            public static partial ParseResult FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item, PreviousParse lastParsed)
-            {
-                item.MetadataSummary.CopyInFromBinary(
-                    frame: frame,
-                    translationParams: metaConverter);
-                return lastParsed;
-            }
-        }
+partial class ScriptFieldsBinaryCreateTranslation
+{
+    private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
+        new KeyValuePair<RecordType, RecordType>(
+            new RecordType("SCHR"),
+            new RecordType("SCHD")));
 
-        public partial class ScriptFieldsBinaryOverlay
-        {
-            public partial ParseResult MetadataSummaryOldCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-            {
-                return lastParsed;
-            }
-        }
+    public static partial ParseResult FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item, PreviousParse lastParsed)
+    {
+        item.MetadataSummary.CopyInFromBinary(
+            frame: frame,
+            translationParams: metaConverter);
+        return lastParsed;
+    }
+}
+
+partial class ScriptFieldsBinaryOverlay
+{
+    public partial ParseResult MetadataSummaryOldCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+    {
+        return lastParsed;
     }
 }

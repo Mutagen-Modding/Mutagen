@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,6 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         /// <summary>
@@ -183,12 +185,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkMixIn.ToString(
+            PerkMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -458,9 +461,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -479,9 +482,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, APerkEffect.Mask<R>?>>();
                         obj.Effects.Specific = l;
-                        foreach (var item in Effects.Specific.WithIndex())
+                        foreach (var item in Effects.Specific)
                         {
-                            MaskItemIndexed<R, APerkEffect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, APerkEffect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, APerkEffect.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, APerkEffect.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -492,116 +495,103 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Perk.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Perk.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Perk.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Perk.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Perk.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Perk.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(fg);
+                        Icons?.Print(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Trait ?? true)
                     {
-                        fg.AppendItem(Trait, "Trait");
+                        sb.AppendItem(Trait, "Trait");
                     }
                     if (printMask?.Level ?? true)
                     {
-                        fg.AppendItem(Level, "Level");
+                        sb.AppendItem(Level, "Level");
                     }
                     if (printMask?.NumRanks ?? true)
                     {
-                        fg.AppendItem(NumRanks, "NumRanks");
+                        sb.AppendItem(NumRanks, "NumRanks");
                     }
                     if (printMask?.Playable ?? true)
                     {
-                        fg.AppendItem(Playable, "Playable");
+                        sb.AppendItem(Playable, "Playable");
                     }
                     if (printMask?.Hidden ?? true)
                     {
-                        fg.AppendItem(Hidden, "Hidden");
+                        sb.AppendItem(Hidden, "Hidden");
                     }
                     if (printMask?.NextPerk ?? true)
                     {
-                        fg.AppendItem(NextPerk, "NextPerk");
+                        sb.AppendItem(NextPerk, "NextPerk");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
                     {
-                        fg.AppendLine("Effects =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Effects =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(EffectsItem.Overall);
+                            sb.AppendItem(EffectsItem.Overall);
                             if (EffectsItem.Specific != null)
                             {
                                 foreach (var subItem in EffectsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -785,91 +775,92 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
-                Icons?.ToString(fg);
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                Icons?.Print(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Trait, "Trait");
-                fg.AppendItem(Level, "Level");
-                fg.AppendItem(NumRanks, "NumRanks");
-                fg.AppendItem(Playable, "Playable");
-                fg.AppendItem(Hidden, "Hidden");
-                fg.AppendItem(NextPerk, "NextPerk");
+                {
+                    sb.AppendItem(Trait, "Trait");
+                }
+                {
+                    sb.AppendItem(Level, "Level");
+                }
+                {
+                    sb.AppendItem(NumRanks, "NumRanks");
+                }
+                {
+                    sb.AppendItem(Playable, "Playable");
+                }
+                {
+                    sb.AppendItem(Hidden, "Hidden");
+                }
+                {
+                    sb.AppendItem(NextPerk, "NextPerk");
+                }
                 if (Effects is {} EffectsItem)
                 {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Effects =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(EffectsItem.Overall);
+                        sb.AppendItem(EffectsItem.Overall);
                         if (EffectsItem.Specific != null)
                         {
                             foreach (var subItem in EffectsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -975,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Perk_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSetterCommon.Instance.RemapLinks(this, mapping);
         public Perk(
             FormKey formKey,
@@ -1062,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1072,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Perk CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Perk();
             ((PerkSetterCommon)((IPerkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1087,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Perk item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1097,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1162,6 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasIconsGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPerkGetter>,
         IMapsToGetter<IPerkGetter>,
         INamedGetter,
@@ -1170,7 +1162,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -1221,26 +1218,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPerkGetter item,
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
-            return ((PerkCommon)((IPerkGetter)item).CommonInstance()!).ToString(
+            return ((PerkCommon)((IPerkGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPerkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
-            ((PerkCommon)((IPerkGetter)item).CommonInstance()!).ToString(
+            ((PerkCommon)((IPerkGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1335,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkSetterCommon)((IPerkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1350,10 +1347,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Perk_FieldIndex
+    internal enum Perk_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1378,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Perk_Registration : ILoquiRegistration
+    internal partial class Perk_Registration : ILoquiRegistration
     {
         public static readonly Perk_Registration Instance = new Perk_Registration();
 
@@ -1420,6 +1417,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PERK;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.PERK);
+            var all = RecordCollection.Factory(
+                RecordTypes.PERK,
+                RecordTypes.VMAD,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.ICON,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.DATA,
+                RecordTypes.NNAM,
+                RecordTypes.PRKE,
+                RecordTypes.PRKF,
+                RecordTypes.PRKC);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1453,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class PerkSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly PerkSetterCommon Instance = new PerkSetterCommon();
 
@@ -1504,7 +1521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPerkInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPerkInternal>(
                 record: item,
@@ -1517,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Perk)item,
@@ -1528,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Perk)item,
@@ -1539,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkCommon : SkyrimMajorRecordCommon
+    internal partial class PerkCommon : SkyrimMajorRecordCommon
     {
         public new static readonly PerkCommon Instance = new PerkCommon();
 
@@ -1563,7 +1580,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Perk.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -1594,136 +1610,126 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPerkGetter item,
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPerkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Perk.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Perk =>");
+                sb.AppendLine($"Perk =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Perk) =>");
+                sb.AppendLine($"{name} (Perk) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Perk.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(fg, "Icons");
+                IconsItem?.Print(sb, "Icons");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Trait ?? true)
             {
-                fg.AppendItem(item.Trait, "Trait");
+                sb.AppendItem(item.Trait, "Trait");
             }
             if (printMask?.Level ?? true)
             {
-                fg.AppendItem(item.Level, "Level");
+                sb.AppendItem(item.Level, "Level");
             }
             if (printMask?.NumRanks ?? true)
             {
-                fg.AppendItem(item.NumRanks, "NumRanks");
+                sb.AppendItem(item.NumRanks, "NumRanks");
             }
             if (printMask?.Playable ?? true)
             {
-                fg.AppendItem(item.Playable, "Playable");
+                sb.AppendItem(item.Playable, "Playable");
             }
             if (printMask?.Hidden ?? true)
             {
-                fg.AppendItem(item.Hidden, "Hidden");
+                sb.AppendItem(item.Hidden, "Hidden");
             }
             if (printMask?.NextPerk ?? true)
             {
-                fg.AppendItem(item.NextPerk.FormKeyNullable, "NextPerk");
+                sb.AppendItem(item.NextPerk.FormKeyNullable, "NextPerk");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
-                fg.AppendLine("Effects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Effects =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Effects)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1799,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
             {
@@ -1827,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {
-                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+                if (!lhs.Effects.SequenceEqual(rhs.Effects, (l, r) => ((APerkEffectCommon)((IAPerkEffectGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Perk_FieldIndex.Effects)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -1906,30 +1912,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.NextPerk.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.NextPerk, out var NextPerkInfo))
             {
-                yield return FormLinkInformation.Factory(obj.NextPerk);
+                yield return NextPerkInfo;
             }
             foreach (var item in obj.Effects.WhereCastable<IAPerkEffectGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1974,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class PerkSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly PerkSetterTranslationCommon Instance = new PerkSetterTranslationCommon();
 
@@ -2265,7 +2271,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Perk_Registration.Instance;
-        public new static Perk_Registration StaticRegistration => Perk_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkCommon.Instance;
         [DebuggerStepThrough]
@@ -2283,13 +2289,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
+        public new static readonly PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkGetter item,
@@ -2303,7 +2309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IPerkGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2338,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2379,7 +2385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2390,12 +2396,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2407,7 +2416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkGetter)item,
@@ -2418,7 +2427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkGetter)item,
@@ -2429,7 +2438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkGetter)item,
@@ -2439,9 +2448,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class PerkBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static PerkBinaryCreateTranslation Instance = new PerkBinaryCreateTranslation();
+        public new static readonly PerkBinaryCreateTranslation Instance = new PerkBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PERK;
         public static void FillBinaryStructs(
@@ -2460,7 +2469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2492,7 +2501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Perk_FieldIndex.Icons;
                 }
                 case RecordTypeInts.CTDA:
@@ -2500,7 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)Perk_FieldIndex.Conditions;
@@ -2536,7 +2545,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2557,16 +2567,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkBinaryOverlay :
+    internal partial class PerkBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IPerkGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Perk_Registration.Instance;
-        public new static Perk_Registration StaticRegistration => Perk_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkCommon.Instance;
         [DebuggerStepThrough]
@@ -2574,14 +2584,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2594,11 +2604,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2610,47 +2621,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
-        private int? _DATALocation;
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        private RangeInt32? _DATALocation;
         public Perk.DATADataType DATADataTypeState { get; private set; }
         #region Trait
-        private int _TraitLocation => _DATALocation!.Value;
+        private int _TraitLocation => _DATALocation!.Value.Min;
         private bool _Trait_IsSet => _DATALocation.HasValue;
-        public Boolean Trait => _Trait_IsSet ? _data.Slice(_TraitLocation, 1)[0] == 1 : default;
+        public Boolean Trait => _Trait_IsSet ? _recordData.Slice(_TraitLocation, 1)[0] >= 1 : default;
         #endregion
         #region Level
-        private int _LevelLocation => _DATALocation!.Value + 0x1;
+        private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Level_IsSet => _DATALocation.HasValue;
-        public Byte Level => _Level_IsSet ? _data.Span[_LevelLocation] : default;
+        public Byte Level => _Level_IsSet ? _recordData.Span[_LevelLocation] : default;
         #endregion
         #region NumRanks
-        private int _NumRanksLocation => _DATALocation!.Value + 0x2;
+        private int _NumRanksLocation => _DATALocation!.Value.Min + 0x2;
         private bool _NumRanks_IsSet => _DATALocation.HasValue;
-        public Byte NumRanks => _NumRanks_IsSet ? _data.Span[_NumRanksLocation] : default;
+        public Byte NumRanks => _NumRanks_IsSet ? _recordData.Span[_NumRanksLocation] : default;
         #endregion
         #region Playable
-        private int _PlayableLocation => _DATALocation!.Value + 0x3;
+        private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Playable_IsSet => _DATALocation.HasValue;
-        public Boolean Playable => _Playable_IsSet ? _data.Slice(_PlayableLocation, 1)[0] == 1 : default;
+        public Boolean Playable => _Playable_IsSet ? _recordData.Slice(_PlayableLocation, 1)[0] >= 1 : default;
         #endregion
         #region Hidden
-        private int _HiddenLocation => _DATALocation!.Value + 0x4;
+        private int _HiddenLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Hidden_IsSet => _DATALocation.HasValue;
-        public Boolean Hidden => _Hidden_IsSet ? _data.Slice(_HiddenLocation, 1)[0] == 1 : default;
+        public Boolean Hidden => _Hidden_IsSet ? _recordData.Slice(_HiddenLocation, 1)[0] >= 1 : default;
         #endregion
         #region NextPerk
         private int? _NextPerkLocation;
-        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        public IFormLinkNullableGetter<IPerkGetter> NextPerk => _NextPerkLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextPerkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
         #endregion
         #region Effects
         partial void EffectsCustomParse(
@@ -2667,28 +2671,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PerkBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PerkBinaryOverlay PerkFactory(
+        public static IPerkGetter PerkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2698,20 +2705,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PerkBinaryOverlay PerkFactory(
+        public static IPerkGetter PerkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2721,9 +2728,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -2746,22 +2753,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Perk_FieldIndex.Icons;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)Perk_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Perk_FieldIndex.Hidden;
                 }
                 case RecordTypeInts.NNAM:
@@ -2786,17 +2798,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkMixIn.ToString(
+            PerkMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

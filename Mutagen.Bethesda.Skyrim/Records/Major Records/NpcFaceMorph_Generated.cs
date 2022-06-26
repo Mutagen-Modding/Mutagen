@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -107,12 +109,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcFaceMorphMixIn.ToString(
+            NpcFaceMorphMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -378,102 +381,97 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NpcFaceMorph.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NpcFaceMorph.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NpcFaceMorph.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NpcFaceMorph.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NpcFaceMorph.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcFaceMorph.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.NoseLongVsShort ?? true)
                     {
-                        fg.AppendItem(NoseLongVsShort, "NoseLongVsShort");
+                        sb.AppendItem(NoseLongVsShort, "NoseLongVsShort");
                     }
                     if (printMask?.NoseUpVsDown ?? true)
                     {
-                        fg.AppendItem(NoseUpVsDown, "NoseUpVsDown");
+                        sb.AppendItem(NoseUpVsDown, "NoseUpVsDown");
                     }
                     if (printMask?.JawUpVsDown ?? true)
                     {
-                        fg.AppendItem(JawUpVsDown, "JawUpVsDown");
+                        sb.AppendItem(JawUpVsDown, "JawUpVsDown");
                     }
                     if (printMask?.JawNarrowVsWide ?? true)
                     {
-                        fg.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
+                        sb.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
                     }
                     if (printMask?.JawForwardVsBack ?? true)
                     {
-                        fg.AppendItem(JawForwardVsBack, "JawForwardVsBack");
+                        sb.AppendItem(JawForwardVsBack, "JawForwardVsBack");
                     }
                     if (printMask?.CheeksUpVsDown ?? true)
                     {
-                        fg.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
+                        sb.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
                     }
                     if (printMask?.CheeksForwardVsBack ?? true)
                     {
-                        fg.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
+                        sb.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
                     }
                     if (printMask?.EyesUpVsDown ?? true)
                     {
-                        fg.AppendItem(EyesUpVsDown, "EyesUpVsDown");
+                        sb.AppendItem(EyesUpVsDown, "EyesUpVsDown");
                     }
                     if (printMask?.EyesInVsOut ?? true)
                     {
-                        fg.AppendItem(EyesInVsOut, "EyesInVsOut");
+                        sb.AppendItem(EyesInVsOut, "EyesInVsOut");
                     }
                     if (printMask?.BrowsUpVsDown ?? true)
                     {
-                        fg.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
+                        sb.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
                     }
                     if (printMask?.BrowsInVsOut ?? true)
                     {
-                        fg.AppendItem(BrowsInVsOut, "BrowsInVsOut");
+                        sb.AppendItem(BrowsInVsOut, "BrowsInVsOut");
                     }
                     if (printMask?.BrowsForwardVsBack ?? true)
                     {
-                        fg.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
+                        sb.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
                     }
                     if (printMask?.LipsUpVsDown ?? true)
                     {
-                        fg.AppendItem(LipsUpVsDown, "LipsUpVsDown");
+                        sb.AppendItem(LipsUpVsDown, "LipsUpVsDown");
                     }
                     if (printMask?.LipsInVsOut ?? true)
                     {
-                        fg.AppendItem(LipsInVsOut, "LipsInVsOut");
+                        sb.AppendItem(LipsInVsOut, "LipsInVsOut");
                     }
                     if (printMask?.ChinNarrowVsWide ?? true)
                     {
-                        fg.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
+                        sb.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
                     }
                     if (printMask?.ChinUpVsDown ?? true)
                     {
-                        fg.AppendItem(ChinUpVsDown, "ChinUpVsDown");
+                        sb.AppendItem(ChinUpVsDown, "ChinUpVsDown");
                     }
                     if (printMask?.ChinUnderbiteVsOverbite ?? true)
                     {
-                        fg.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
+                        sb.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
                     }
                     if (printMask?.EyesForwardVsBack ?? true)
                     {
-                        fg.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
+                        sb.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -728,54 +726,83 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NoseLongVsShort, "NoseLongVsShort");
-                fg.AppendItem(NoseUpVsDown, "NoseUpVsDown");
-                fg.AppendItem(JawUpVsDown, "JawUpVsDown");
-                fg.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
-                fg.AppendItem(JawForwardVsBack, "JawForwardVsBack");
-                fg.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
-                fg.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
-                fg.AppendItem(EyesUpVsDown, "EyesUpVsDown");
-                fg.AppendItem(EyesInVsOut, "EyesInVsOut");
-                fg.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
-                fg.AppendItem(BrowsInVsOut, "BrowsInVsOut");
-                fg.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
-                fg.AppendItem(LipsUpVsDown, "LipsUpVsDown");
-                fg.AppendItem(LipsInVsOut, "LipsInVsOut");
-                fg.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
-                fg.AppendItem(ChinUpVsDown, "ChinUpVsDown");
-                fg.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
-                fg.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(NoseLongVsShort, "NoseLongVsShort");
+                }
+                {
+                    sb.AppendItem(NoseUpVsDown, "NoseUpVsDown");
+                }
+                {
+                    sb.AppendItem(JawUpVsDown, "JawUpVsDown");
+                }
+                {
+                    sb.AppendItem(JawNarrowVsWide, "JawNarrowVsWide");
+                }
+                {
+                    sb.AppendItem(JawForwardVsBack, "JawForwardVsBack");
+                }
+                {
+                    sb.AppendItem(CheeksUpVsDown, "CheeksUpVsDown");
+                }
+                {
+                    sb.AppendItem(CheeksForwardVsBack, "CheeksForwardVsBack");
+                }
+                {
+                    sb.AppendItem(EyesUpVsDown, "EyesUpVsDown");
+                }
+                {
+                    sb.AppendItem(EyesInVsOut, "EyesInVsOut");
+                }
+                {
+                    sb.AppendItem(BrowsUpVsDown, "BrowsUpVsDown");
+                }
+                {
+                    sb.AppendItem(BrowsInVsOut, "BrowsInVsOut");
+                }
+                {
+                    sb.AppendItem(BrowsForwardVsBack, "BrowsForwardVsBack");
+                }
+                {
+                    sb.AppendItem(LipsUpVsDown, "LipsUpVsDown");
+                }
+                {
+                    sb.AppendItem(LipsInVsOut, "LipsInVsOut");
+                }
+                {
+                    sb.AppendItem(ChinNarrowVsWide, "ChinNarrowVsWide");
+                }
+                {
+                    sb.AppendItem(ChinUpVsDown, "ChinUpVsDown");
+                }
+                {
+                    sb.AppendItem(ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
+                }
+                {
+                    sb.AppendItem(EyesForwardVsBack, "EyesForwardVsBack");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -917,10 +944,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = NpcFaceMorph_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcFaceMorphBinaryWriteTranslation.Instance;
@@ -928,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFaceMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -938,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NpcFaceMorph CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcFaceMorph();
             ((NpcFaceMorphSetterCommon)((INpcFaceMorphGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -953,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcFaceMorph item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -963,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1059,26 +1082,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcFaceMorphGetter item,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
-            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).ToString(
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
-            ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).ToString(
+            ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1184,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcFaceMorph item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcFaceMorphSetterCommon)((INpcFaceMorphGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1199,10 +1222,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcFaceMorph_FieldIndex
+    internal enum NpcFaceMorph_FieldIndex
     {
         NoseLongVsShort = 0,
         NoseUpVsDown = 1,
@@ -1227,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NpcFaceMorph_Registration : ILoquiRegistration
+    internal partial class NpcFaceMorph_Registration : ILoquiRegistration
     {
         public static readonly NpcFaceMorph_Registration Instance = new NpcFaceMorph_Registration();
 
@@ -1269,6 +1292,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NAM9;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.NAM9);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcFaceMorphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1302,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcFaceMorphSetterCommon
+    internal partial class NpcFaceMorphSetterCommon
     {
         public static readonly NpcFaceMorphSetterCommon Instance = new NpcFaceMorphSetterCommon();
 
@@ -1343,12 +1372,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INpcFaceMorph item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NAM9),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1359,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcFaceMorphCommon
+    internal partial class NpcFaceMorphCommon
     {
         public static readonly NpcFaceMorphCommon Instance = new NpcFaceMorphCommon();
 
@@ -1383,7 +1412,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcFaceMorph.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NoseLongVsShort = item.NoseLongVsShort.EqualsWithin(rhs.NoseLongVsShort);
             ret.NoseUpVsDown = item.NoseUpVsDown.EqualsWithin(rhs.NoseUpVsDown);
             ret.JawUpVsDown = item.JawUpVsDown.EqualsWithin(rhs.JawUpVsDown);
@@ -1405,125 +1433,123 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
         }
         
-        public string ToString(
+        public string Print(
             INpcFaceMorphGetter item,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcFaceMorph =>");
+                sb.AppendLine($"NpcFaceMorph =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcFaceMorph) =>");
+                sb.AppendLine($"{name} (NpcFaceMorph) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcFaceMorphGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcFaceMorph.Mask<bool>? printMask = null)
         {
             if (printMask?.NoseLongVsShort ?? true)
             {
-                fg.AppendItem(item.NoseLongVsShort, "NoseLongVsShort");
+                sb.AppendItem(item.NoseLongVsShort, "NoseLongVsShort");
             }
             if (printMask?.NoseUpVsDown ?? true)
             {
-                fg.AppendItem(item.NoseUpVsDown, "NoseUpVsDown");
+                sb.AppendItem(item.NoseUpVsDown, "NoseUpVsDown");
             }
             if (printMask?.JawUpVsDown ?? true)
             {
-                fg.AppendItem(item.JawUpVsDown, "JawUpVsDown");
+                sb.AppendItem(item.JawUpVsDown, "JawUpVsDown");
             }
             if (printMask?.JawNarrowVsWide ?? true)
             {
-                fg.AppendItem(item.JawNarrowVsWide, "JawNarrowVsWide");
+                sb.AppendItem(item.JawNarrowVsWide, "JawNarrowVsWide");
             }
             if (printMask?.JawForwardVsBack ?? true)
             {
-                fg.AppendItem(item.JawForwardVsBack, "JawForwardVsBack");
+                sb.AppendItem(item.JawForwardVsBack, "JawForwardVsBack");
             }
             if (printMask?.CheeksUpVsDown ?? true)
             {
-                fg.AppendItem(item.CheeksUpVsDown, "CheeksUpVsDown");
+                sb.AppendItem(item.CheeksUpVsDown, "CheeksUpVsDown");
             }
             if (printMask?.CheeksForwardVsBack ?? true)
             {
-                fg.AppendItem(item.CheeksForwardVsBack, "CheeksForwardVsBack");
+                sb.AppendItem(item.CheeksForwardVsBack, "CheeksForwardVsBack");
             }
             if (printMask?.EyesUpVsDown ?? true)
             {
-                fg.AppendItem(item.EyesUpVsDown, "EyesUpVsDown");
+                sb.AppendItem(item.EyesUpVsDown, "EyesUpVsDown");
             }
             if (printMask?.EyesInVsOut ?? true)
             {
-                fg.AppendItem(item.EyesInVsOut, "EyesInVsOut");
+                sb.AppendItem(item.EyesInVsOut, "EyesInVsOut");
             }
             if (printMask?.BrowsUpVsDown ?? true)
             {
-                fg.AppendItem(item.BrowsUpVsDown, "BrowsUpVsDown");
+                sb.AppendItem(item.BrowsUpVsDown, "BrowsUpVsDown");
             }
             if (printMask?.BrowsInVsOut ?? true)
             {
-                fg.AppendItem(item.BrowsInVsOut, "BrowsInVsOut");
+                sb.AppendItem(item.BrowsInVsOut, "BrowsInVsOut");
             }
             if (printMask?.BrowsForwardVsBack ?? true)
             {
-                fg.AppendItem(item.BrowsForwardVsBack, "BrowsForwardVsBack");
+                sb.AppendItem(item.BrowsForwardVsBack, "BrowsForwardVsBack");
             }
             if (printMask?.LipsUpVsDown ?? true)
             {
-                fg.AppendItem(item.LipsUpVsDown, "LipsUpVsDown");
+                sb.AppendItem(item.LipsUpVsDown, "LipsUpVsDown");
             }
             if (printMask?.LipsInVsOut ?? true)
             {
-                fg.AppendItem(item.LipsInVsOut, "LipsInVsOut");
+                sb.AppendItem(item.LipsInVsOut, "LipsInVsOut");
             }
             if (printMask?.ChinNarrowVsWide ?? true)
             {
-                fg.AppendItem(item.ChinNarrowVsWide, "ChinNarrowVsWide");
+                sb.AppendItem(item.ChinNarrowVsWide, "ChinNarrowVsWide");
             }
             if (printMask?.ChinUpVsDown ?? true)
             {
-                fg.AppendItem(item.ChinUpVsDown, "ChinUpVsDown");
+                sb.AppendItem(item.ChinUpVsDown, "ChinUpVsDown");
             }
             if (printMask?.ChinUnderbiteVsOverbite ?? true)
             {
-                fg.AppendItem(item.ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
+                sb.AppendItem(item.ChinUnderbiteVsOverbite, "ChinUnderbiteVsOverbite");
             }
             if (printMask?.EyesForwardVsBack ?? true)
             {
-                fg.AppendItem(item.EyesForwardVsBack, "EyesForwardVsBack");
+                sb.AppendItem(item.EyesForwardVsBack, "EyesForwardVsBack");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1647,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcFaceMorphGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcFaceMorphGetter obj)
         {
             yield break;
         }
@@ -1655,7 +1681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcFaceMorphSetterTranslationCommon
+    internal partial class NpcFaceMorphSetterTranslationCommon
     {
         public static readonly NpcFaceMorphSetterTranslationCommon Instance = new NpcFaceMorphSetterTranslationCommon();
 
@@ -1805,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceMorph_Registration.Instance;
-        public static NpcFaceMorph_Registration StaticRegistration => NpcFaceMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceMorphCommon.Instance;
         [DebuggerStepThrough]
@@ -1829,11 +1855,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcFaceMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcFaceMorphBinaryWriteTranslation Instance = new NpcFaceMorphBinaryWriteTranslation();
+        public static readonly NpcFaceMorphBinaryWriteTranslation Instance = new NpcFaceMorphBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcFaceMorphGetter item,
@@ -1901,12 +1927,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INpcFaceMorphGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NAM9),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1918,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcFaceMorphGetter)item,
@@ -1928,9 +1954,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcFaceMorphBinaryCreateTranslation
+    internal partial class NpcFaceMorphBinaryCreateTranslation
     {
-        public readonly static NpcFaceMorphBinaryCreateTranslation Instance = new NpcFaceMorphBinaryCreateTranslation();
+        public static readonly NpcFaceMorphBinaryCreateTranslation Instance = new NpcFaceMorphBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcFaceMorph item,
@@ -1968,7 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INpcFaceMorphGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFaceMorphBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1981,16 +2007,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcFaceMorphBinaryOverlay :
+    internal partial class NpcFaceMorphBinaryOverlay :
         PluginBinaryOverlay,
         INpcFaceMorphGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcFaceMorph_Registration.Instance;
-        public static NpcFaceMorph_Registration StaticRegistration => NpcFaceMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcFaceMorph_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcFaceMorphCommon.Instance;
         [DebuggerStepThrough]
@@ -2004,7 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcFaceMorphBinaryWriteTranslation.Instance;
@@ -2012,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcFaceMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2020,25 +2046,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single NoseLongVsShort => _data.Slice(0x0, 0x4).Float();
-        public Single NoseUpVsDown => _data.Slice(0x4, 0x4).Float();
-        public Single JawUpVsDown => _data.Slice(0x8, 0x4).Float();
-        public Single JawNarrowVsWide => _data.Slice(0xC, 0x4).Float();
-        public Single JawForwardVsBack => _data.Slice(0x10, 0x4).Float();
-        public Single CheeksUpVsDown => _data.Slice(0x14, 0x4).Float();
-        public Single CheeksForwardVsBack => _data.Slice(0x18, 0x4).Float();
-        public Single EyesUpVsDown => _data.Slice(0x1C, 0x4).Float();
-        public Single EyesInVsOut => _data.Slice(0x20, 0x4).Float();
-        public Single BrowsUpVsDown => _data.Slice(0x24, 0x4).Float();
-        public Single BrowsInVsOut => _data.Slice(0x28, 0x4).Float();
-        public Single BrowsForwardVsBack => _data.Slice(0x2C, 0x4).Float();
-        public Single LipsUpVsDown => _data.Slice(0x30, 0x4).Float();
-        public Single LipsInVsOut => _data.Slice(0x34, 0x4).Float();
-        public Single ChinNarrowVsWide => _data.Slice(0x38, 0x4).Float();
-        public Single ChinUpVsDown => _data.Slice(0x3C, 0x4).Float();
-        public Single ChinUnderbiteVsOverbite => _data.Slice(0x40, 0x4).Float();
-        public Single EyesForwardVsBack => _data.Slice(0x44, 0x4).Float();
-        public Single Unknown => _data.Slice(0x48, 0x4).Float();
+        public Single NoseLongVsShort => _structData.Slice(0x0, 0x4).Float();
+        public Single NoseUpVsDown => _structData.Slice(0x4, 0x4).Float();
+        public Single JawUpVsDown => _structData.Slice(0x8, 0x4).Float();
+        public Single JawNarrowVsWide => _structData.Slice(0xC, 0x4).Float();
+        public Single JawForwardVsBack => _structData.Slice(0x10, 0x4).Float();
+        public Single CheeksUpVsDown => _structData.Slice(0x14, 0x4).Float();
+        public Single CheeksForwardVsBack => _structData.Slice(0x18, 0x4).Float();
+        public Single EyesUpVsDown => _structData.Slice(0x1C, 0x4).Float();
+        public Single EyesInVsOut => _structData.Slice(0x20, 0x4).Float();
+        public Single BrowsUpVsDown => _structData.Slice(0x24, 0x4).Float();
+        public Single BrowsInVsOut => _structData.Slice(0x28, 0x4).Float();
+        public Single BrowsForwardVsBack => _structData.Slice(0x2C, 0x4).Float();
+        public Single LipsUpVsDown => _structData.Slice(0x30, 0x4).Float();
+        public Single LipsInVsOut => _structData.Slice(0x34, 0x4).Float();
+        public Single ChinNarrowVsWide => _structData.Slice(0x38, 0x4).Float();
+        public Single ChinUpVsDown => _structData.Slice(0x3C, 0x4).Float();
+        public Single ChinUnderbiteVsOverbite => _structData.Slice(0x40, 0x4).Float();
+        public Single EyesForwardVsBack => _structData.Slice(0x44, 0x4).Float();
+        public Single Unknown => _structData.Slice(0x48, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2046,25 +2072,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NpcFaceMorphBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NpcFaceMorphBinaryOverlay NpcFaceMorphFactory(
+        public static INpcFaceMorphGetter NpcFaceMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcFaceMorphBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2073,25 +2104,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NpcFaceMorphBinaryOverlay NpcFaceMorphFactory(
+        public static INpcFaceMorphGetter NpcFaceMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcFaceMorphFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcFaceMorphMixIn.ToString(
+            NpcFaceMorphMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

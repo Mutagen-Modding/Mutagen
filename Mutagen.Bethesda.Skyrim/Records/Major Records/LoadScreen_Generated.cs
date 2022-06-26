@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -135,12 +136,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LoadScreenMixIn.ToString(
+            LoadScreenMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -354,9 +356,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -372,81 +374,72 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LoadScreen.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LoadScreen.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LoadScreen.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LoadScreen.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LoadScreen.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LoadScreen.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Icons?.Overall ?? true)
                     {
-                        Icons?.ToString(fg);
+                        Icons?.Print(sb);
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.LoadingScreenNif ?? true)
                     {
-                        fg.AppendItem(LoadingScreenNif, "LoadingScreenNif");
+                        sb.AppendItem(LoadingScreenNif, "LoadingScreenNif");
                     }
                     if (printMask?.InitialScale ?? true)
                     {
-                        fg.AppendItem(InitialScale, "InitialScale");
+                        sb.AppendItem(InitialScale, "InitialScale");
                     }
                     if (printMask?.InitialRotation ?? true)
                     {
-                        fg.AppendItem(InitialRotation, "InitialRotation");
+                        sb.AppendItem(InitialRotation, "InitialRotation");
                     }
                     if (printMask?.RotationOffsetConstraints?.Overall ?? true)
                     {
-                        RotationOffsetConstraints?.ToString(fg);
+                        RotationOffsetConstraints?.Print(sb);
                     }
                     if (printMask?.InitialTranslationOffset ?? true)
                     {
-                        fg.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
+                        sb.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
                     }
                     if (printMask?.CameraPath ?? true)
                     {
-                        fg.AppendItem(CameraPath, "CameraPath");
+                        sb.AppendItem(CameraPath, "CameraPath");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -590,66 +583,65 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Icons?.ToString(fg);
-                fg.AppendItem(Description, "Description");
+                base.PrintFillInternal(sb);
+                Icons?.Print(sb);
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(LoadingScreenNif, "LoadingScreenNif");
-                fg.AppendItem(InitialScale, "InitialScale");
-                fg.AppendItem(InitialRotation, "InitialRotation");
-                RotationOffsetConstraints?.ToString(fg);
-                fg.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
-                fg.AppendItem(CameraPath, "CameraPath");
+                {
+                    sb.AppendItem(LoadingScreenNif, "LoadingScreenNif");
+                }
+                {
+                    sb.AppendItem(InitialScale, "InitialScale");
+                }
+                {
+                    sb.AppendItem(InitialRotation, "InitialRotation");
+                }
+                RotationOffsetConstraints?.Print(sb);
+                {
+                    sb.AppendItem(InitialTranslationOffset, "InitialTranslationOffset");
+                }
+                {
+                    sb.AppendItem(CameraPath, "CameraPath");
+                }
             }
             #endregion
 
@@ -740,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenSetterCommon.Instance.RemapLinks(this, mapping);
         public LoadScreen(
             FormKey formKey,
@@ -823,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -833,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LoadScreen CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreen();
             ((LoadScreenSetterCommon)((ILoadScreenGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -848,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LoadScreen item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -858,7 +850,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -958,26 +950,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILoadScreenGetter item,
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
-            return ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).ToString(
+            return ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILoadScreenGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
-            ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).ToString(
+            ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1072,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILoadScreenInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LoadScreenSetterCommon)((ILoadScreenGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1087,10 +1079,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LoadScreen_FieldIndex
+    internal enum LoadScreen_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1111,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LoadScreen_Registration : ILoquiRegistration
+    internal partial class LoadScreen_Registration : ILoquiRegistration
     {
         public static readonly LoadScreen_Registration Instance = new LoadScreen_Registration();
 
@@ -1153,6 +1145,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LSCR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.LSCR);
+            var all = RecordCollection.Factory(
+                RecordTypes.LSCR,
+                RecordTypes.ICON,
+                RecordTypes.DESC,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.NNAM,
+                RecordTypes.SNAM,
+                RecordTypes.RNAM,
+                RecordTypes.ONAM,
+                RecordTypes.XNAM,
+                RecordTypes.MOD2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1186,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LoadScreenSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LoadScreenSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LoadScreenSetterCommon Instance = new LoadScreenSetterCommon();
 
@@ -1231,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILoadScreenInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILoadScreenInternal>(
                 record: item,
@@ -1244,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LoadScreen)item,
@@ -1255,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LoadScreen)item,
@@ -1266,7 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LoadScreenCommon : SkyrimMajorRecordCommon
+    internal partial class LoadScreenCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LoadScreenCommon Instance = new LoadScreenCommon();
 
@@ -1290,7 +1301,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LoadScreen.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Icons = EqualsMaskHelper.EqualsHelper(
                 item.Icons,
                 rhs.Icons,
@@ -1314,109 +1324,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILoadScreenGetter item,
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILoadScreenGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LoadScreen.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LoadScreen =>");
+                sb.AppendLine($"LoadScreen =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LoadScreen) =>");
+                sb.AppendLine($"{name} (LoadScreen) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILoadScreenGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LoadScreen.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
-                IconsItem?.ToString(fg, "Icons");
+                IconsItem?.Print(sb, "Icons");
             }
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.LoadingScreenNif ?? true)
             {
-                fg.AppendItem(item.LoadingScreenNif.FormKey, "LoadingScreenNif");
+                sb.AppendItem(item.LoadingScreenNif.FormKey, "LoadingScreenNif");
             }
             if ((printMask?.InitialScale ?? true)
                 && item.InitialScale is {} InitialScaleItem)
             {
-                fg.AppendItem(InitialScaleItem, "InitialScale");
+                sb.AppendItem(InitialScaleItem, "InitialScale");
             }
             if ((printMask?.InitialRotation ?? true)
                 && item.InitialRotation is {} InitialRotationItem)
             {
-                fg.AppendItem(InitialRotationItem, "InitialRotation");
+                sb.AppendItem(InitialRotationItem, "InitialRotation");
             }
             if ((printMask?.RotationOffsetConstraints?.Overall ?? true)
                 && item.RotationOffsetConstraints is {} RotationOffsetConstraintsItem)
             {
-                RotationOffsetConstraintsItem?.ToString(fg, "RotationOffsetConstraints");
+                RotationOffsetConstraintsItem?.Print(sb, "RotationOffsetConstraints");
             }
             if ((printMask?.InitialTranslationOffset ?? true)
                 && item.InitialTranslationOffset is {} InitialTranslationOffsetItem)
             {
-                fg.AppendItem(InitialTranslationOffsetItem, "InitialTranslationOffset");
+                sb.AppendItem(InitialTranslationOffsetItem, "InitialTranslationOffset");
             }
             if ((printMask?.CameraPath ?? true)
                 && item.CameraPath is {} CameraPathItem)
             {
-                fg.AppendItem(CameraPathItem, "CameraPath");
+                sb.AppendItem(CameraPathItem, "CameraPath");
             }
         }
         
@@ -1480,7 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
             {
@@ -1588,14 +1592,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILoadScreenGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILoadScreenGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1641,7 +1645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LoadScreenSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LoadScreenSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LoadScreenSetterTranslationCommon Instance = new LoadScreenSetterTranslationCommon();
 
@@ -1896,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration StaticRegistration => LoadScreen_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LoadScreen_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LoadScreenCommon.Instance;
         [DebuggerStepThrough]
@@ -1914,18 +1918,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LoadScreenBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LoadScreenBinaryWriteTranslation Instance = new LoadScreenBinaryWriteTranslation();
+        public new static readonly LoadScreenBinaryWriteTranslation Instance = new LoadScreenBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILoadScreenGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1947,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1991,7 +1995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILoadScreenGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2002,12 +2006,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2019,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILoadScreenGetter)item,
@@ -2030,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILoadScreenGetter)item,
@@ -2041,7 +2048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILoadScreenGetter)item,
@@ -2051,9 +2058,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LoadScreenBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LoadScreenBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LoadScreenBinaryCreateTranslation Instance = new LoadScreenBinaryCreateTranslation();
+        public new static readonly LoadScreenBinaryCreateTranslation Instance = new LoadScreenBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LSCR;
         public static void FillBinaryStructs(
@@ -2072,7 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2081,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
@@ -2098,7 +2105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)LoadScreen_FieldIndex.Conditions;
@@ -2148,7 +2155,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2165,16 +2173,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LoadScreenBinaryOverlay :
+    internal partial class LoadScreenBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILoadScreenGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreen_Registration.Instance;
-        public new static LoadScreen_Registration StaticRegistration => LoadScreen_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LoadScreen_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LoadScreenCommon.Instance;
         [DebuggerStepThrough]
@@ -2182,14 +2190,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2203,36 +2211,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IIconsGetter? Icons { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoadingScreenNif
         private int? _LoadingScreenNifLocation;
-        public IFormLinkGetter<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
+        public IFormLinkGetter<IStaticGetter> LoadingScreenNif => _LoadingScreenNifLocation.HasValue ? new FormLink<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoadingScreenNifLocation.Value, _package.MetaData.Constants)))) : FormLink<IStaticGetter>.Null;
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;
-        public Single? InitialScale => _InitialScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _InitialScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? InitialScale => _InitialScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _InitialScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region InitialRotation
         private int? _InitialRotationLocation;
-        public P3Int16? InitialRotation => _InitialRotationLocation.HasValue ? P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialRotationLocation.Value, _package.MetaData.Constants)) : default(P3Int16?);
+        public P3Int16? InitialRotation => _InitialRotationLocation.HasValue ? P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InitialRotationLocation.Value, _package.MetaData.Constants)) : default(P3Int16?);
         #endregion
         public IInt16MinMaxGetter? RotationOffsetConstraints { get; private set; }
         #region InitialTranslationOffset
         private int? _InitialTranslationOffsetLocation;
-        public P3Float? InitialTranslationOffset => _InitialTranslationOffsetLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialTranslationOffsetLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        public P3Float? InitialTranslationOffset => _InitialTranslationOffsetLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InitialTranslationOffsetLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
-        public String? CameraPath => _CameraPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? CameraPath => _CameraPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2241,28 +2242,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LoadScreenBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LoadScreenBinaryOverlay LoadScreenFactory(
+        public static ILoadScreenGetter LoadScreenFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LoadScreenBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2272,20 +2276,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LoadScreenBinaryOverlay LoadScreenFactory(
+        public static ILoadScreenGetter LoadScreenFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LoadScreenFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2295,9 +2299,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ICON:
@@ -2305,7 +2309,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
@@ -2315,12 +2319,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)LoadScreen_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NNAM:
@@ -2344,7 +2353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.RotationOffsetConstraints = Int16MinMaxBinaryOverlay.Int16MinMaxFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:
@@ -2364,17 +2373,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LoadScreenMixIn.ToString(
+            LoadScreenMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

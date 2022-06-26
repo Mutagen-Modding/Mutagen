@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -75,12 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceMixIn.ToString(
+            LocationReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -202,38 +204,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LocationReference.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LocationReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationReference.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LocationReference.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LocationReference.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationReference.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Actor ?? true)
                     {
-                        fg.AppendItem(Actor, "Actor");
+                        sb.AppendItem(Actor, "Actor");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if (printMask?.Grid ?? true)
                     {
-                        fg.AppendItem(Grid, "Grid");
+                        sb.AppendItem(Grid, "Grid");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -328,38 +325,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Actor, "Actor");
-                fg.AppendItem(Location, "Location");
-                fg.AppendItem(Grid, "Grid");
+                {
+                    sb.AppendItem(Actor, "Actor");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Grid, "Grid");
+                }
             }
             #endregion
 
@@ -438,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -449,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -459,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LocationReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationReference();
             ((LocationReferenceSetterCommon)((ILocationReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -474,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -484,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -550,26 +544,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationReferenceGetter item,
             string? name = null,
             LocationReference.Mask<bool>? printMask = null)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).ToString(
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationReference.Mask<bool>? printMask = null)
         {
-            ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).ToString(
+            ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -675,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationReferenceSetterCommon)((ILocationReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -690,10 +684,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationReference_FieldIndex
+    internal enum LocationReference_FieldIndex
     {
         Actor = 0,
         Location = 1,
@@ -702,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationReference_Registration : ILoquiRegistration
+    internal partial class LocationReference_Registration : ILoquiRegistration
     {
         public static readonly LocationReference_Registration Instance = new LocationReference_Registration();
 
@@ -776,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationReferenceSetterCommon
+    internal partial class LocationReferenceSetterCommon
     {
         public static readonly LocationReferenceSetterCommon Instance = new LocationReferenceSetterCommon();
 
@@ -803,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILocationReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -815,7 +809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationReferenceCommon
+    internal partial class LocationReferenceCommon
     {
         public static readonly LocationReferenceCommon Instance = new LocationReferenceCommon();
 
@@ -839,67 +833,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Actor = item.Actor.Equals(rhs.Actor);
             ret.Location = item.Location.Equals(rhs.Location);
             ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         
-        public string ToString(
+        public string Print(
             ILocationReferenceGetter item,
             string? name = null,
             LocationReference.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationReference =>");
+                sb.AppendLine($"LocationReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationReference) =>");
+                sb.AppendLine($"{name} (LocationReference) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Actor ?? true)
             {
-                fg.AppendItem(item.Actor.FormKey, "Actor");
+                sb.AppendItem(item.Actor.FormKey, "Actor");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                sb.AppendItem(item.Location.FormKey, "Location");
             }
             if (printMask?.Grid ?? true)
             {
-                fg.AppendItem(item.Grid, "Grid");
+                sb.AppendItem(item.Grid, "Grid");
             }
         }
         
@@ -943,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationReferenceGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Actor);
             yield return FormLinkInformation.Factory(obj.Location);
@@ -953,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationReferenceSetterTranslationCommon
+    internal partial class LocationReferenceSetterTranslationCommon
     {
         public static readonly LocationReferenceSetterTranslationCommon Instance = new LocationReferenceSetterTranslationCommon();
 
@@ -1039,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReference_Registration.Instance;
-        public static LocationReference_Registration StaticRegistration => LocationReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1063,11 +1054,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationReferenceBinaryWriteTranslation Instance = new LocationReferenceBinaryWriteTranslation();
+        public static readonly LocationReferenceBinaryWriteTranslation Instance = new LocationReferenceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationReferenceGetter item,
@@ -1088,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILocationReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1098,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationReferenceGetter)item,
@@ -1108,9 +1099,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationReferenceBinaryCreateTranslation
+    internal partial class LocationReferenceBinaryCreateTranslation
     {
-        public readonly static LocationReferenceBinaryCreateTranslation Instance = new LocationReferenceBinaryCreateTranslation();
+        public static readonly LocationReferenceBinaryCreateTranslation Instance = new LocationReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationReference item,
@@ -1134,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILocationReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1147,16 +1138,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationReferenceBinaryOverlay :
+    internal partial class LocationReferenceBinaryOverlay :
         PluginBinaryOverlay,
         ILocationReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReference_Registration.Instance;
-        public static LocationReference_Registration StaticRegistration => LocationReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1170,16 +1161,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1187,9 +1178,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Actor => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4), swapCoords: true);
+        public IFormLinkGetter<ILinkedReferenceGetter> Actor => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1197,24 +1188,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LocationReferenceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationReferenceBinaryOverlay LocationReferenceFactory(
+        public static ILocationReferenceGetter LocationReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LocationReferenceBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xC),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1223,25 +1220,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LocationReferenceBinaryOverlay LocationReferenceFactory(
+        public static ILocationReferenceGetter LocationReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceMixIn.ToString(
+            LocationReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

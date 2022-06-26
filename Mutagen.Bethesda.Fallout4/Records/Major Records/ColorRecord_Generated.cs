@@ -5,32 +5,37 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +56,74 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IColorRecordGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Data
+        public AColorRecordData Data { get; set; } = new ColorData();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAColorRecordDataGetter IColorRecordGetter.Data => Data;
+        #endregion
+        #region Flags
+        public ColorRecord.Flag Flags { get; set; } = default;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IColorRecordGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ColorRecordMixIn.ToString(
+            ColorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +139,10 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Data = new MaskItem<TItem, AColorRecordData.Mask<TItem>?>(initialValue, new AColorRecordData.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -83,7 +151,11 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Data,
+                TItem Flags,
+                TItem Conditions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +164,10 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Data = new MaskItem<TItem, AColorRecordData.Mask<TItem>?>(Data, new AColorRecordData.Mask<TItem>(Data));
+                this.Flags = Flags;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -100,6 +176,13 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public MaskItem<TItem, AColorRecordData.Mask<TItem>?>? Data { get; set; }
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
             #region Equals
@@ -113,11 +196,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Data);
+                hash.Add(this.Flags);
+                hash.Add(this.Conditions);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +219,25 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -136,6 +246,25 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -151,30 +280,74 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Data = this.Data == null ? null : new MaskItem<R, AColorRecordData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ColorRecord.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ColorRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ColorRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ColorRecord.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ColorRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ColorRecord.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +357,27 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, AColorRecordData.ErrorMask?>? Data;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case ColorRecord_FieldIndex.Name:
+                        return Name;
+                    case ColorRecord_FieldIndex.Data:
+                        return Data;
+                    case ColorRecord_FieldIndex.Flags:
+                        return Flags;
+                    case ColorRecord_FieldIndex.Conditions:
+                        return Conditions;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +388,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case ColorRecord_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ColorRecord_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, AColorRecordData.ErrorMask?>(ex, null);
+                        break;
+                    case ColorRecord_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ColorRecord_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +411,18 @@ namespace Mutagen.Bethesda.Fallout4
                 ColorRecord_FieldIndex enu = (ColorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case ColorRecord_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case ColorRecord_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, AColorRecordData.ErrorMask?>?)obj;
+                        break;
+                    case ColorRecord_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case ColorRecord_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +432,61 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Data != null) return true;
+                if (Flags != null) return true;
+                if (Conditions != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -263,6 +495,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +520,33 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public AColorRecordData.TranslationMask? Data;
+            public bool Flags;
+            public Condition.TranslationMask? Conditions;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -304,6 +558,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ColorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ColorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public ColorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -373,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ColorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +639,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ColorRecord CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ColorRecord();
             ((ColorRecordSetterCommon)((IColorRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ColorRecord item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +664,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -427,8 +683,20 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IColorRecord :
         IColorRecordGetter,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<IColorRecordInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IColorRecordInternal>,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new AColorRecordData Data { get; set; }
+        new ColorRecord.Flag Flags { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface IColorRecordInternal :
@@ -442,10 +710,24 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IColorRecordGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IColorRecordGetter>,
-        IMapsToGetter<IColorRecordGetter>
+        IMapsToGetter<IColorRecordGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IAColorRecordDataGetter Data { get; }
+        ColorRecord.Flag Flags { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
 
@@ -470,26 +752,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IColorRecordGetter item,
             string? name = null,
             ColorRecord.Mask<bool>? printMask = null)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).ToString(
+            return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IColorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ColorRecord.Mask<bool>? printMask = null)
         {
-            ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).ToString(
+            ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +866,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IColorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ColorRecordSetterCommon)((IColorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +881,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ColorRecord_FieldIndex
+    internal enum ColorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +892,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Data = 7,
+        Flags = 8,
+        Conditions = 9,
     }
     #endregion
 
     #region Registration
-    public partial class ColorRecord_Registration : ILoquiRegistration
+    internal partial class ColorRecord_Registration : ILoquiRegistration
     {
         public static readonly ColorRecord_Registration Instance = new ColorRecord_Registration();
 
@@ -627,9 +913,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "4776d5fb-36ec-48ab-9106-fa275bfd7cc4";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ColorRecord.Mask<>);
 
@@ -656,6 +942,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CLFM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CLFM);
+            var all = RecordCollection.Factory(
+                RecordTypes.CLFM,
+                RecordTypes.FULL,
+                RecordTypes.CNAM,
+                RecordTypes.FNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ColorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +989,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ColorRecordSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ColorRecordSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ColorRecordSetterCommon Instance = new ColorRecordSetterCommon();
 
@@ -698,6 +998,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IColorRecordInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Data.Clear();
+            item.Flags = default;
+            item.Conditions.Clear();
             base.Clear(item);
         }
         
@@ -715,6 +1019,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IColorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Conditions.RemapLinks(mapping);
         }
         
         #endregion
@@ -723,7 +1028,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IColorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IColorRecordInternal>(
                 record: item,
@@ -736,7 +1041,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ColorRecord)item,
@@ -747,7 +1052,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ColorRecord)item,
@@ -758,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ColorRecordCommon : Fallout4MajorRecordCommon
+    internal partial class ColorRecordCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ColorRecordCommon Instance = new ColorRecordCommon();
 
@@ -782,58 +1087,89 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ColorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IColorRecordGetter item,
             string? name = null,
             ColorRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IColorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ColorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ColorRecord =>");
+                sb.AppendLine($"ColorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ColorRecord) =>");
+                sb.AppendLine($"{name} (ColorRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IColorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ColorRecord.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Data?.Overall ?? true)
+            {
+                item.Data?.Print(sb, "Data");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static ColorRecord_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1218,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((AColorRecordDataCommon)((IAColorRecordDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)ColorRecord_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ColorRecord_FieldIndex.Conditions)))) return false;
+            }
             return true;
         }
         
@@ -910,6 +1266,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IColorRecordGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Data);
+            hash.Add(item.Flags);
+            hash.Add(item.Conditions);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,11 +1296,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IColorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IColorRecordGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -980,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ColorRecordSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ColorRecordSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ColorRecordSetterTranslationCommon Instance = new ColorRecordSetterTranslationCommon();
 
@@ -1013,6 +1381,60 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)ColorRecord_FieldIndex.Data);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Data) ?? true))
+                    {
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ColorRecord_FieldIndex.Data),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ColorRecord_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)ColorRecord_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +1557,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorRecord_Registration.Instance;
-        public new static ColorRecord_Registration StaticRegistration => ColorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ColorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +1575,78 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ColorRecordBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
+        public new static readonly ColorRecordBinaryWriteTranslation Instance = new ColorRecordBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IColorRecordGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            ColorRecordBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+            ColorRecordBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IColorRecordGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IColorRecordGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IColorRecordGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IColorRecordGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
 
         public void Write(
             MutagenWriter writer,
             IColorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1175,10 +1657,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +1677,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IColorRecordGetter)item,
@@ -1201,7 +1688,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IColorRecordGetter)item,
@@ -1212,7 +1699,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IColorRecordGetter)item,
@@ -1222,9 +1709,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ColorRecordBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ColorRecordBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
+        public new static readonly ColorRecordBinaryCreateTranslation Instance = new ColorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLFM;
         public static void FillBinaryStructs(
@@ -1235,6 +1722,71 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 frame: frame);
         }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IColorRecordInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ColorRecord_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    ColorRecordBinaryCreateTranslation.FillBinaryDataCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)ColorRecord_FieldIndex.Data;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    ColorRecordBinaryCreateTranslation.FillBinaryFlagsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)ColorRecord_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)ColorRecord_FieldIndex.Conditions;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            IColorRecordInternal item);
+
+        public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IColorRecordInternal item);
 
     }
 
@@ -1249,16 +1801,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ColorRecordBinaryOverlay :
+    internal partial class ColorRecordBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IColorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ColorRecord_Registration.Instance;
-        public new static ColorRecord_Registration StaticRegistration => ColorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ColorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ColorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +1818,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ColorRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ColorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ColorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1282,6 +1835,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IColorRecord);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Data
+        partial void DataCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public partial IAColorRecordDataGetter GetDataCustom();
+        public IAColorRecordDataGetter Data => GetDataCustom();
+        #endregion
+        #region Flags
+        partial void FlagsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public partial ColorRecord.Flag GetFlagsCustom();
+        public ColorRecord.Flag Flags => GetFlagsCustom();
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +1871,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected ColorRecordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ColorRecordBinaryOverlay ColorRecordFactory(
+        public static IColorRecordGetter ColorRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ColorRecordBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +1905,90 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ColorRecordBinaryOverlay ColorRecordFactory(
+        public static IColorRecordGetter ColorRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ColorRecordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ColorRecord_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    DataCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)ColorRecord_FieldIndex.Data;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    FlagsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return (int)ColorRecord_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)ColorRecord_FieldIndex.Conditions;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ColorRecordMixIn.ToString(
+            ColorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

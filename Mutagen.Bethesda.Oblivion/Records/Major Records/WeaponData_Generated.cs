@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -75,12 +77,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeaponDataMixIn.ToString(
+            WeaponDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -247,58 +250,53 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeaponData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeaponData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeaponData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeaponData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeaponData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeaponData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Reach ?? true)
                     {
-                        fg.AppendItem(Reach, "Reach");
+                        sb.AppendItem(Reach, "Reach");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -443,43 +441,50 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Reach, "Reach");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Damage, "Damage");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Reach, "Reach");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
             }
             #endregion
 
@@ -577,10 +582,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = WeaponData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;
@@ -588,7 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -598,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static WeaponData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeaponData();
             ((WeaponDataSetterCommon)((IWeaponDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -613,7 +614,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeaponData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -623,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -699,26 +700,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeaponDataGetter item,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).ToString(
+            return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).ToString(
+            ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -824,7 +825,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWeaponData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeaponDataSetterCommon)((IWeaponDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -839,10 +840,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WeaponData_FieldIndex
+    internal enum WeaponData_FieldIndex
     {
         Type = 0,
         Speed = 1,
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WeaponData_Registration : ILoquiRegistration
+    internal partial class WeaponData_Registration : ILoquiRegistration
     {
         public static readonly WeaponData_Registration Instance = new WeaponData_Registration();
 
@@ -898,6 +899,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -931,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeaponDataSetterCommon
+    internal partial class WeaponDataSetterCommon
     {
         public static readonly WeaponDataSetterCommon Instance = new WeaponDataSetterCommon();
 
@@ -961,12 +968,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IWeaponData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -977,7 +984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeaponDataCommon
+    internal partial class WeaponDataCommon
     {
         public static readonly WeaponDataCommon Instance = new WeaponDataCommon();
 
@@ -1001,7 +1008,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeaponData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
             ret.Reach = item.Reach.EqualsWithin(rhs.Reach);
@@ -1012,81 +1018,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Damage = item.Damage == rhs.Damage;
         }
         
-        public string ToString(
+        public string Print(
             IWeaponDataGetter item,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeaponData =>");
+                sb.AppendLine($"WeaponData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeaponData) =>");
+                sb.AppendLine($"{name} (WeaponData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeaponData.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Reach ?? true)
             {
-                fg.AppendItem(item.Reach, "Reach");
+                sb.AppendItem(item.Reach, "Reach");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
         }
         
@@ -1155,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponDataGetter obj)
         {
             yield break;
         }
@@ -1163,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeaponDataSetterTranslationCommon
+    internal partial class WeaponDataSetterTranslationCommon
     {
         public static readonly WeaponDataSetterTranslationCommon Instance = new WeaponDataSetterTranslationCommon();
 
@@ -1269,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponData_Registration.Instance;
-        public static WeaponData_Registration StaticRegistration => WeaponData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1293,11 +1297,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeaponDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
+        public static readonly WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeaponDataGetter item,
@@ -1328,12 +1332,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IWeaponDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1345,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeaponDataGetter)item,
@@ -1355,9 +1359,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeaponDataBinaryCreateTranslation
+    internal partial class WeaponDataBinaryCreateTranslation
     {
-        public readonly static WeaponDataBinaryCreateTranslation Instance = new WeaponDataBinaryCreateTranslation();
+        public static readonly WeaponDataBinaryCreateTranslation Instance = new WeaponDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeaponData item,
@@ -1388,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IWeaponDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1401,16 +1405,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeaponDataBinaryOverlay :
+    internal partial class WeaponDataBinaryOverlay :
         PluginBinaryOverlay,
         IWeaponDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponData_Registration.Instance;
-        public static WeaponData_Registration StaticRegistration => WeaponData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1424,7 +1428,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;
@@ -1432,7 +1436,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1440,14 +1444,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Weapon.WeaponType Type => (Weapon.WeaponType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Single Speed => _data.Slice(0x4, 0x4).Float();
-        public Single Reach => _data.Slice(0x8, 0x4).Float();
-        public Weapon.WeaponFlag Flags => (Weapon.WeaponFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Single Weight => _data.Slice(0x18, 0x4).Float();
-        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1C, 0x2));
+        public Weapon.WeaponType Type => (Weapon.WeaponType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Single Speed => _structData.Slice(0x4, 0x4).Float();
+        public Single Reach => _structData.Slice(0x8, 0x4).Float();
+        public Weapon.WeaponFlag Flags => (Weapon.WeaponFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x10, 0x4));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Single Weight => _structData.Slice(0x18, 0x4).Float();
+        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x1C, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1455,25 +1459,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected WeaponDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeaponDataBinaryOverlay WeaponDataFactory(
+        public static IWeaponDataGetter WeaponDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1E,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeaponDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x1E + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1482,25 +1491,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static WeaponDataBinaryOverlay WeaponDataFactory(
+        public static IWeaponDataGetter WeaponDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeaponDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeaponDataMixIn.ToString(
+            WeaponDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

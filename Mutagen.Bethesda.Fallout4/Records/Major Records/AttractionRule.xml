@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AttractionRule" recordType="AORU" objType="Record" baseClass="Fallout4MajorRecord" GUID="ef7fcf3c-9d9e-47a9-aaf1-f79e945aceee" ID="31">
+    <Fields>
+      <Data recordType="AOR2" >
+        <Fields>
+          <Float name="Radius" />
+          <Float name="MinDelay" />
+          <Float name="MaxDelay" />
+          <Bool name="RequiresLineOfSight" byteLength="1" />
+          <Bool name="IsCombatTarget" byteLength="1" />
+          <UInt16 name="Unused" />
+        </Fields>
+      </Data>
+    </Fields>
   </Object>
 </Loqui>

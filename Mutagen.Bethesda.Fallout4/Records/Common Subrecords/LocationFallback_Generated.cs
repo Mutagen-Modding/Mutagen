@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -58,12 +60,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationFallbackMixIn.ToString(
+            LocationFallbackMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -184,34 +187,29 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LocationFallback.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LocationFallback.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationFallback.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LocationFallback.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LocationFallback.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationFallback.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -285,38 +283,33 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Data, "Data");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -385,7 +378,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LocationFallbackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationFallbackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -395,7 +388,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static LocationFallback CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationFallback();
             ((LocationFallbackSetterCommon)((ILocationFallbackGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -410,7 +403,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationFallback item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -420,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -477,26 +470,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationFallbackGetter item,
             string? name = null,
             LocationFallback.Mask<bool>? printMask = null)
         {
-            return ((LocationFallbackCommon)((ILocationFallbackGetter)item).CommonInstance()!).ToString(
+            return ((LocationFallbackCommon)((ILocationFallbackGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationFallbackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationFallback.Mask<bool>? printMask = null)
         {
-            ((LocationFallbackCommon)((ILocationFallbackGetter)item).CommonInstance()!).ToString(
+            ((LocationFallbackCommon)((ILocationFallbackGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -577,7 +570,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILocationFallback item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationFallbackSetterCommon)((ILocationFallbackGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -592,10 +585,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationFallback_FieldIndex
+    internal enum LocationFallback_FieldIndex
     {
         Type = 0,
         Data = 1,
@@ -603,7 +596,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LocationFallback_Registration : ILoquiRegistration
+    internal partial class LocationFallback_Registration : ILoquiRegistration
     {
         public static readonly LocationFallback_Registration Instance = new LocationFallback_Registration();
 
@@ -677,7 +670,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationFallbackSetterCommon : ALocationTargetSetterCommon
+    internal partial class LocationFallbackSetterCommon : ALocationTargetSetterCommon
     {
         public new static readonly LocationFallbackSetterCommon Instance = new LocationFallbackSetterCommon();
 
@@ -708,7 +701,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ILocationFallback item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -720,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationFallback)item,
@@ -731,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationFallbackCommon : ALocationTargetCommon
+    internal partial class LocationFallbackCommon : ALocationTargetCommon
     {
         public new static readonly LocationFallbackCommon Instance = new LocationFallbackCommon();
 
@@ -755,67 +748,64 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             LocationFallback.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILocationFallbackGetter item,
             string? name = null,
             LocationFallback.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationFallbackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationFallback.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationFallback =>");
+                sb.AppendLine($"LocationFallback =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationFallback) =>");
+                sb.AppendLine($"{name} (LocationFallback) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationFallbackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationFallback.Mask<bool>? printMask = null)
         {
             ALocationTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Data ?? true)
             {
-                fg.AppendItem(item.Data, "Data");
+                sb.AppendItem(item.Data, "Data");
             }
         }
         
@@ -881,9 +871,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationFallbackGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationFallbackGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -893,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationFallbackSetterTranslationCommon : ALocationTargetSetterTranslationCommon
+    internal partial class LocationFallbackSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {
         public new static readonly LocationFallbackSetterTranslationCommon Instance = new LocationFallbackSetterTranslationCommon();
 
@@ -997,7 +987,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationFallback_Registration.Instance;
-        public new static LocationFallback_Registration StaticRegistration => LocationFallback_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationFallback_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationFallbackCommon.Instance;
         [DebuggerStepThrough]
@@ -1015,13 +1005,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationFallbackBinaryWriteTranslation :
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationFallbackBinaryWriteTranslation Instance = new LocationFallbackBinaryWriteTranslation();
+        public new static readonly LocationFallbackBinaryWriteTranslation Instance = new LocationFallbackBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationFallbackGetter item,
@@ -1037,7 +1027,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             ILocationFallbackGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1047,7 +1037,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationFallbackGetter)item,
@@ -1058,7 +1048,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationFallbackGetter)item,
@@ -1068,9 +1058,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationFallbackBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
+    internal partial class LocationFallbackBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationFallbackBinaryCreateTranslation Instance = new LocationFallbackBinaryCreateTranslation();
+        public new static readonly LocationFallbackBinaryCreateTranslation Instance = new LocationFallbackBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationFallback item,
@@ -1095,16 +1085,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationFallbackBinaryOverlay :
+    internal partial class LocationFallbackBinaryOverlay :
         ALocationTargetBinaryOverlay,
         ILocationFallbackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationFallback_Registration.Instance;
-        public new static LocationFallback_Registration StaticRegistration => LocationFallback_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationFallback_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationFallbackCommon.Instance;
         [DebuggerStepThrough]
@@ -1112,13 +1102,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationFallbackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationFallbackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1126,8 +1116,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public LocationTargetRadius.LocationType Type => (LocationTargetRadius.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public LocationTargetRadius.LocationType Type => (LocationTargetRadius.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1135,24 +1125,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected LocationFallbackBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationFallbackBinaryOverlay LocationFallbackFactory(
+        public static ILocationFallbackGetter LocationFallbackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LocationFallbackBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1161,25 +1157,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static LocationFallbackBinaryOverlay LocationFallbackFactory(
+        public static ILocationFallbackGetter LocationFallbackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationFallbackFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationFallbackMixIn.ToString(
+            LocationFallbackMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

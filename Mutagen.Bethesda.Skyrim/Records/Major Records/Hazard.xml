@@ -24,5 +24,6 @@
       </Data>
     </Fields>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

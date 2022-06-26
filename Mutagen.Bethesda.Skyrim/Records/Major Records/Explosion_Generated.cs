@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -69,13 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IExplosionGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -208,14 +210,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IImpactDataSetGetter> IExplosionGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region PlacedObject
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _PlacedObject = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> PlacedObject
+        private readonly IFormLink<IExplodeSpawnGetter> _PlacedObject = new FormLink<IExplodeSpawnGetter>();
+        public IFormLink<IExplodeSpawnGetter> PlacedObject
         {
             get => _PlacedObject;
             set => _PlacedObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
+        IFormLinkGetter<IExplodeSpawnGetter> IExplosionGetter.PlacedObject => this.PlacedObject;
         #endregion
         #region SpawnProjectile
         private readonly IFormLink<IProjectileGetter> _SpawnProjectile = new FormLink<IProjectileGetter>();
@@ -287,12 +289,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ExplosionMixIn.ToString(
+            ExplosionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -595,106 +598,101 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Explosion.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Explosion.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Explosion.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Explosion.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Explosion.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Explosion.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.ObjectEffect ?? true)
                     {
-                        fg.AppendItem(ObjectEffect, "ObjectEffect");
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.Light ?? true)
                     {
-                        fg.AppendItem(Light, "Light");
+                        sb.AppendItem(Light, "Light");
                     }
                     if (printMask?.Sound1 ?? true)
                     {
-                        fg.AppendItem(Sound1, "Sound1");
+                        sb.AppendItem(Sound1, "Sound1");
                     }
                     if (printMask?.Sound2 ?? true)
                     {
-                        fg.AppendItem(Sound2, "Sound2");
+                        sb.AppendItem(Sound2, "Sound2");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.PlacedObject ?? true)
                     {
-                        fg.AppendItem(PlacedObject, "PlacedObject");
+                        sb.AppendItem(PlacedObject, "PlacedObject");
                     }
                     if (printMask?.SpawnProjectile ?? true)
                     {
-                        fg.AppendItem(SpawnProjectile, "SpawnProjectile");
+                        sb.AppendItem(SpawnProjectile, "SpawnProjectile");
                     }
                     if (printMask?.Force ?? true)
                     {
-                        fg.AppendItem(Force, "Force");
+                        sb.AppendItem(Force, "Force");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.ISRadius ?? true)
                     {
-                        fg.AppendItem(ISRadius, "ISRadius");
+                        sb.AppendItem(ISRadius, "ISRadius");
                     }
                     if (printMask?.VerticalOffsetMult ?? true)
                     {
-                        fg.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
+                        sb.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -948,56 +946,81 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(ObjectEffect, "ObjectEffect");
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(Light, "Light");
-                fg.AppendItem(Sound1, "Sound1");
-                fg.AppendItem(Sound2, "Sound2");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(PlacedObject, "PlacedObject");
-                fg.AppendItem(SpawnProjectile, "SpawnProjectile");
-                fg.AppendItem(Force, "Force");
-                fg.AppendItem(Damage, "Damage");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(ISRadius, "ISRadius");
-                fg.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(Sound1, "Sound1");
+                }
+                {
+                    sb.AppendItem(Sound2, "Sound2");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(PlacedObject, "PlacedObject");
+                }
+                {
+                    sb.AppendItem(SpawnProjectile, "SpawnProjectile");
+                }
+                {
+                    sb.AppendItem(Force, "Force");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(ISRadius, "ISRadius");
+                }
+                {
+                    sb.AppendItem(VerticalOffsetMult, "VerticalOffsetMult");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -1132,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Explosion_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ExplosionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExplosionCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExplosionSetterCommon.Instance.RemapLinks(this, mapping);
         public Explosion(
             FormKey formKey,
@@ -1217,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExplosionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1227,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Explosion CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Explosion();
             ((ExplosionSetterCommon)((IExplosionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1242,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Explosion item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1252,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1269,6 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IExplosion :
+        IExplodeSpawn,
         IExplosionGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IExplosionInternal>,
@@ -1276,7 +1300,6 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired,
         IObjectBounded,
-        IObjectBoundedOptional,
         IScripted,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
@@ -1287,7 +1310,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
@@ -1304,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLink<ISoundDescriptorGetter> Sound1 { get; set; }
         new IFormLink<ISoundDescriptorGetter> Sound2 { get; set; }
         new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> PlacedObject { get; set; }
+        new IFormLink<IExplodeSpawnGetter> PlacedObject { get; set; }
         new IFormLink<IProjectileGetter> SpawnProjectile { get; set; }
         new Single Force { get; set; }
         new Single Damage { get; set; }
@@ -1327,14 +1350,15 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IExplosionGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IExplosionGetter>,
         IMapsToGetter<IExplosionGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
@@ -1342,13 +1366,13 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScriptedGetter
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -1370,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<ISoundDescriptorGetter> Sound1 { get; }
         IFormLinkGetter<ISoundDescriptorGetter> Sound2 { get; }
         IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> PlacedObject { get; }
+        IFormLinkGetter<IExplodeSpawnGetter> PlacedObject { get; }
         IFormLinkGetter<IProjectileGetter> SpawnProjectile { get; }
         Single Force { get; }
         Single Damage { get; }
@@ -1404,26 +1428,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IExplosionGetter item,
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
-            return ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).ToString(
+            return ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IExplosionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
-            ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).ToString(
+            ((ExplosionCommon)((IExplosionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1518,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IExplosionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ExplosionSetterCommon)((IExplosionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1533,10 +1557,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Explosion_FieldIndex
+    internal enum Explosion_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1568,7 +1592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Explosion_Registration : ILoquiRegistration
+    internal partial class Explosion_Registration : ILoquiRegistration
     {
         public static readonly Explosion_Registration Instance = new Explosion_Registration();
 
@@ -1610,6 +1634,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.EXPL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.EXPL);
+            var all = RecordCollection.Factory(
+                RecordTypes.EXPL,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.EITM,
+                RecordTypes.MNAM,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ExplosionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1643,7 +1682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ExplosionSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ExplosionSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ExplosionSetterCommon Instance = new ExplosionSetterCommon();
 
@@ -1707,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IExplosionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IExplosionInternal>(
                 record: item,
@@ -1720,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Explosion)item,
@@ -1731,7 +1770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Explosion)item,
@@ -1742,7 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ExplosionCommon : SkyrimMajorRecordCommon
+    internal partial class ExplosionCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ExplosionCommon Instance = new ExplosionCommon();
 
@@ -1766,7 +1805,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Explosion.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -1798,136 +1836,134 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IExplosionGetter item,
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IExplosionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Explosion.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Explosion =>");
+                sb.AppendLine($"Explosion =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Explosion) =>");
+                sb.AppendLine($"{name} (Explosion) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IExplosionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Explosion.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.ObjectEffect ?? true)
             {
-                fg.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light.FormKey, "Light");
+                sb.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(item.Sound1.FormKey, "Sound1");
+                sb.AppendItem(item.Sound1.FormKey, "Sound1");
             }
             if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(item.Sound2.FormKey, "Sound2");
+                sb.AppendItem(item.Sound2.FormKey, "Sound2");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.PlacedObject ?? true)
             {
-                fg.AppendItem(item.PlacedObject.FormKey, "PlacedObject");
+                sb.AppendItem(item.PlacedObject.FormKey, "PlacedObject");
             }
             if (printMask?.SpawnProjectile ?? true)
             {
-                fg.AppendItem(item.SpawnProjectile.FormKey, "SpawnProjectile");
+                sb.AppendItem(item.SpawnProjectile.FormKey, "SpawnProjectile");
             }
             if (printMask?.Force ?? true)
             {
-                fg.AppendItem(item.Force, "Force");
+                sb.AppendItem(item.Force, "Force");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.ISRadius ?? true)
             {
-                fg.AppendItem(item.ISRadius, "ISRadius");
+                sb.AppendItem(item.ISRadius, "ISRadius");
             }
             if (printMask?.VerticalOffsetMult ?? true)
             {
-                fg.AppendItem(item.VerticalOffsetMult, "VerticalOffsetMult");
+                sb.AppendItem(item.VerticalOffsetMult, "VerticalOffsetMult");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2149,33 +2185,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IExplosionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IExplosionGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.ObjectEffect.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObjectEffect);
+                yield return ObjectEffectInfo;
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+                yield return ImageSpaceModifierInfo;
             }
             yield return FormLinkInformation.Factory(obj.Light);
             yield return FormLinkInformation.Factory(obj.Sound1);
@@ -2224,7 +2260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ExplosionSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ExplosionSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ExplosionSetterTranslationCommon Instance = new ExplosionSetterTranslationCommon();
 
@@ -2521,7 +2557,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -2539,13 +2575,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ExplosionBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ExplosionBinaryWriteTranslation Instance = new ExplosionBinaryWriteTranslation();
+        public new static readonly ExplosionBinaryWriteTranslation Instance = new ExplosionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IExplosionGetter item,
@@ -2559,7 +2595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IExplosionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2656,7 +2692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IExplosionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2667,12 +2703,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2684,7 +2723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IExplosionGetter)item,
@@ -2695,7 +2734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IExplosionGetter)item,
@@ -2706,7 +2745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IExplosionGetter)item,
@@ -2716,9 +2755,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ExplosionBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ExplosionBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
+        public new static readonly ExplosionBinaryCreateTranslation Instance = new ExplosionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EXPL;
         public static void FillBinaryStructs(
@@ -2737,7 +2776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2765,7 +2804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:
@@ -2825,7 +2864,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2842,16 +2882,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ExplosionBinaryOverlay :
+    internal partial class ExplosionBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IExplosionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Explosion_Registration.Instance;
-        public new static Explosion_Registration StaticRegistration => Explosion_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Explosion_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ExplosionCommon.Instance;
         [DebuggerStepThrough]
@@ -2859,14 +2899,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ExplosionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExplosionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ExplosionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExplosionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2878,16 +2918,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2900,78 +2941,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Explosion.DATADataType DATADataTypeState { get; private set; }
         #region Light
-        private int _LightLocation => _DATALocation!.Value;
+        private int _LightLocation => _DATALocation!.Value.Min;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region Sound1
-        private int _Sound1Location => _DATALocation!.Value + 0x4;
+        private int _Sound1Location => _DATALocation!.Value.Min + 0x4;
         private bool _Sound1_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound1 => _Sound1_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Sound1Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound1 => _Sound1_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_Sound1Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Sound2
-        private int _Sound2Location => _DATALocation!.Value + 0x8;
+        private int _Sound2Location => _DATALocation!.Value.Min + 0x8;
         private bool _Sound2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound2 => _Sound2_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Sound2Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound2 => _Sound2_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_Sound2Location, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region ImpactDataSet
-        private int _ImpactDataSetLocation => _DATALocation!.Value + 0xC;
+        private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region PlacedObject
-        private int _PlacedObjectLocation => _DATALocation!.Value + 0x10;
+        private int _PlacedObjectLocation => _DATALocation!.Value.Min + 0x10;
         private bool _PlacedObject_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkGetter<IExplodeSpawnGetter> PlacedObject => _PlacedObject_IsSet ? new FormLink<IExplodeSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PlacedObjectLocation, 0x4)))) : FormLink<IExplodeSpawnGetter>.Null;
         #endregion
         #region SpawnProjectile
-        private int _SpawnProjectileLocation => _DATALocation!.Value + 0x14;
+        private int _SpawnProjectileLocation => _DATALocation!.Value.Min + 0x14;
         private bool _SpawnProjectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpawnProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> SpawnProjectile => _SpawnProjectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SpawnProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Force
-        private int _ForceLocation => _DATALocation!.Value + 0x18;
+        private int _ForceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Force_IsSet => _DATALocation.HasValue;
-        public Single Force => _Force_IsSet ? _data.Slice(_ForceLocation, 4).Float() : default;
+        public Single Force => _Force_IsSet ? _recordData.Slice(_ForceLocation, 4).Float() : default;
         #endregion
         #region Damage
-        private int _DamageLocation => _DATALocation!.Value + 0x1C;
+        private int _DamageLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? _data.Slice(_DamageLocation, 4).Float() : default;
+        public Single Damage => _Damage_IsSet ? _recordData.Slice(_DamageLocation, 4).Float() : default;
         #endregion
         #region Radius
-        private int _RadiusLocation => _DATALocation!.Value + 0x20;
+        private int _RadiusLocation => _DATALocation!.Value.Min + 0x20;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region ISRadius
-        private int _ISRadiusLocation => _DATALocation!.Value + 0x24;
+        private int _ISRadiusLocation => _DATALocation!.Value.Min + 0x24;
         private bool _ISRadius_IsSet => _DATALocation.HasValue;
-        public Single ISRadius => _ISRadius_IsSet ? _data.Slice(_ISRadiusLocation, 4).Float() : default;
+        public Single ISRadius => _ISRadius_IsSet ? _recordData.Slice(_ISRadiusLocation, 4).Float() : default;
         #endregion
         #region VerticalOffsetMult
-        private int _VerticalOffsetMultLocation => _DATALocation!.Value + 0x28;
+        private int _VerticalOffsetMultLocation => _DATALocation!.Value.Min + 0x28;
         private bool _VerticalOffsetMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break0);
-        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _data.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
+        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _recordData.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x2C;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break1);
-        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region SoundLevel
-        private int _SoundLevelLocation => _DATALocation!.Value + 0x30;
+        private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x30;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break2);
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2980,28 +3021,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ExplosionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ExplosionBinaryOverlay ExplosionFactory(
+        public static IExplosionGetter ExplosionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ExplosionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -3011,20 +3055,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ExplosionBinaryOverlay ExplosionFactory(
+        public static IExplosionGetter ExplosionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ExplosionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3034,9 +3078,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3059,7 +3103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:
@@ -3074,8 +3118,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {
                         this.DATADataTypeState |= Explosion.DATADataType.Break0;
@@ -3097,17 +3141,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ExplosionMixIn.ToString(
+            ExplosionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

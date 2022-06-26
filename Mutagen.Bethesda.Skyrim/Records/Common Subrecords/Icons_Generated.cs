@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,19 +17,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,12 +60,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            IconsMixIn.ToString(
+            IconsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -177,34 +179,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Icons.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Icons.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Icons.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Icons.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Icons.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Icons.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.LargeIconFilename ?? true)
                     {
-                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                        sb.AppendItem(LargeIconFilename, "LargeIconFilename");
                     }
                     if (printMask?.SmallIconFilename ?? true)
                     {
-                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                        sb.AppendItem(SmallIconFilename, "SmallIconFilename");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -289,37 +286,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                {
+                    sb.AppendItem(LargeIconFilename, "LargeIconFilename");
+                }
+                {
+                    sb.AppendItem(SmallIconFilename, "SmallIconFilename");
+                }
             }
             #endregion
 
@@ -393,10 +385,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = Icons_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IconsBinaryWriteTranslation.Instance;
@@ -404,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IconsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -414,7 +402,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Icons CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Icons();
             ((IconsSetterCommon)((IIconsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -429,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Icons item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -439,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -501,26 +489,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IIconsGetter item,
             string? name = null,
             Icons.Mask<bool>? printMask = null)
         {
-            return ((IconsCommon)((IIconsGetter)item).CommonInstance()!).ToString(
+            return ((IconsCommon)((IIconsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IIconsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Icons.Mask<bool>? printMask = null)
         {
-            ((IconsCommon)((IIconsGetter)item).CommonInstance()!).ToString(
+            ((IconsCommon)((IIconsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -626,7 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IIcons item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IconsSetterCommon)((IIconsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -641,10 +629,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Icons_FieldIndex
+    internal enum Icons_FieldIndex
     {
         LargeIconFilename = 0,
         SmallIconFilename = 1,
@@ -652,7 +640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Icons_Registration : ILoquiRegistration
+    internal partial class Icons_Registration : ILoquiRegistration
     {
         public static readonly Icons_Registration Instance = new Icons_Registration();
 
@@ -694,6 +682,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ICON;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.ICON);
+            var all = RecordCollection.Factory(
+                RecordTypes.ICON,
+                RecordTypes.MICO);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(IconsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -727,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IconsSetterCommon
+    internal partial class IconsSetterCommon
     {
         public static readonly IconsSetterCommon Instance = new IconsSetterCommon();
 
@@ -751,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IIcons item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -764,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IconsCommon
+    internal partial class IconsCommon
     {
         public static readonly IconsCommon Instance = new IconsCommon();
 
@@ -788,63 +785,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Icons.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
             ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
         }
         
-        public string ToString(
+        public string Print(
             IIconsGetter item,
             string? name = null,
             Icons.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IIconsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Icons.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Icons =>");
+                sb.AppendLine($"Icons =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Icons) =>");
+                sb.AppendLine($"{name} (Icons) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IIconsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Icons.Mask<bool>? printMask = null)
         {
             if (printMask?.LargeIconFilename ?? true)
             {
-                fg.AppendItem(item.LargeIconFilename, "LargeIconFilename");
+                sb.AppendItem(item.LargeIconFilename, "LargeIconFilename");
             }
             if ((printMask?.SmallIconFilename ?? true)
                 && item.SmallIconFilename is {} SmallIconFilenameItem)
             {
-                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+                sb.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
             }
         }
         
@@ -886,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIconsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIconsGetter obj)
         {
             yield break;
         }
@@ -894,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IconsSetterTranslationCommon
+    internal partial class IconsSetterTranslationCommon
     {
         public static readonly IconsSetterTranslationCommon Instance = new IconsSetterTranslationCommon();
 
@@ -976,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Icons_Registration.Instance;
-        public static Icons_Registration StaticRegistration => Icons_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IconsCommon.Instance;
         [DebuggerStepThrough]
@@ -1000,16 +994,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IconsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IconsBinaryWriteTranslation Instance = new IconsBinaryWriteTranslation();
+        public static readonly IconsBinaryWriteTranslation Instance = new IconsBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IIconsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1026,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IIconsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1037,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIconsGetter)item,
@@ -1047,9 +1041,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IconsBinaryCreateTranslation
+    internal partial class IconsBinaryCreateTranslation
     {
-        public readonly static IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
+        public static readonly IconsBinaryCreateTranslation Instance = new IconsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IIcons item,
@@ -1064,14 +1058,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.LargeIconFilename) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.LargeIconFilename, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LargeIconFilename = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1102,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IIconsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IconsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1115,16 +1109,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IconsBinaryOverlay :
+    internal partial class IconsBinaryOverlay :
         PluginBinaryOverlay,
         IIconsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Icons_Registration.Instance;
-        public static Icons_Registration StaticRegistration => Icons_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Icons_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IconsCommon.Instance;
         [DebuggerStepThrough]
@@ -1138,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IconsBinaryWriteTranslation.Instance;
@@ -1146,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IconsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1156,11 +1150,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
-        public String LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region SmallIconFilename
         private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1169,42 +1163,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected IconsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static IconsBinaryOverlay IconsFactory(
+        public static IIconsGetter IconsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new IconsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static IconsBinaryOverlay IconsFactory(
+        public static IIconsGetter IconsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return IconsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1214,14 +1214,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Icons_FieldIndex.LargeIconFilename) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Icons_FieldIndex.LargeIconFilename, translationParams)) return ParseResult.Stop;
                     _LargeIconFilenameLocation = (stream.Position - offset);
                     return (int)Icons_FieldIndex.LargeIconFilename;
                 }
@@ -1236,12 +1236,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            IconsMixIn.ToString(
+            IconsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

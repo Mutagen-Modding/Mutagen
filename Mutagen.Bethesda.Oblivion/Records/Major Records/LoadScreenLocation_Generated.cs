@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -75,12 +76,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LoadScreenLocationMixIn.ToString(
+            LoadScreenLocationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -202,38 +204,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LoadScreenLocation.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LoadScreenLocation.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LoadScreenLocation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LoadScreenLocation.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LoadScreenLocation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LoadScreenLocation.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Direct ?? true)
                     {
-                        fg.AppendItem(Direct, "Direct");
+                        sb.AppendItem(Direct, "Direct");
                     }
                     if (printMask?.Indirect ?? true)
                     {
-                        fg.AppendItem(Indirect, "Indirect");
+                        sb.AppendItem(Indirect, "Indirect");
                     }
                     if (printMask?.GridPoint ?? true)
                     {
-                        fg.AppendItem(GridPoint, "GridPoint");
+                        sb.AppendItem(GridPoint, "GridPoint");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -328,38 +325,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Direct, "Direct");
-                fg.AppendItem(Indirect, "Indirect");
-                fg.AppendItem(GridPoint, "GridPoint");
+                {
+                    sb.AppendItem(Direct, "Direct");
+                }
+                {
+                    sb.AppendItem(Indirect, "Indirect");
+                }
+                {
+                    sb.AppendItem(GridPoint, "GridPoint");
+                }
             }
             #endregion
 
@@ -438,8 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LoadScreenLocation_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenLocationCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenLocationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -450,7 +443,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -460,7 +453,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LoadScreenLocation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LoadScreenLocation();
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -475,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LoadScreenLocation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -485,7 +478,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -551,26 +544,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILoadScreenLocationGetter item,
             string? name = null,
             LoadScreenLocation.Mask<bool>? printMask = null)
         {
-            return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).ToString(
+            return ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILoadScreenLocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LoadScreenLocation.Mask<bool>? printMask = null)
         {
-            ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).ToString(
+            ((LoadScreenLocationCommon)((ILoadScreenLocationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -676,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILoadScreenLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LoadScreenLocationSetterCommon)((ILoadScreenLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -691,10 +684,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LoadScreenLocation_FieldIndex
+    internal enum LoadScreenLocation_FieldIndex
     {
         Direct = 0,
         Indirect = 1,
@@ -703,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LoadScreenLocation_Registration : ILoquiRegistration
+    internal partial class LoadScreenLocation_Registration : ILoquiRegistration
     {
         public static readonly LoadScreenLocation_Registration Instance = new LoadScreenLocation_Registration();
 
@@ -745,6 +738,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.LNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenLocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -778,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LoadScreenLocationSetterCommon
+    internal partial class LoadScreenLocationSetterCommon
     {
         public static readonly LoadScreenLocationSetterCommon Instance = new LoadScreenLocationSetterCommon();
 
@@ -805,12 +804,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILoadScreenLocation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.LNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -821,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LoadScreenLocationCommon
+    internal partial class LoadScreenLocationCommon
     {
         public static readonly LoadScreenLocationCommon Instance = new LoadScreenLocationCommon();
 
@@ -845,67 +844,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoadScreenLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Direct = item.Direct.Equals(rhs.Direct);
             ret.Indirect = item.Indirect.Equals(rhs.Indirect);
             ret.GridPoint = item.GridPoint.Equals(rhs.GridPoint);
         }
         
-        public string ToString(
+        public string Print(
             ILoadScreenLocationGetter item,
             string? name = null,
             LoadScreenLocation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILoadScreenLocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LoadScreenLocation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LoadScreenLocation =>");
+                sb.AppendLine($"LoadScreenLocation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LoadScreenLocation) =>");
+                sb.AppendLine($"{name} (LoadScreenLocation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILoadScreenLocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LoadScreenLocation.Mask<bool>? printMask = null)
         {
             if (printMask?.Direct ?? true)
             {
-                fg.AppendItem(item.Direct.FormKey, "Direct");
+                sb.AppendItem(item.Direct.FormKey, "Direct");
             }
             if (printMask?.Indirect ?? true)
             {
-                fg.AppendItem(item.Indirect.FormKey, "Indirect");
+                sb.AppendItem(item.Indirect.FormKey, "Indirect");
             }
             if (printMask?.GridPoint ?? true)
             {
-                fg.AppendItem(item.GridPoint, "GridPoint");
+                sb.AppendItem(item.GridPoint, "GridPoint");
             }
         }
         
@@ -949,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILoadScreenLocationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILoadScreenLocationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Direct);
             yield return FormLinkInformation.Factory(obj.Indirect);
@@ -959,7 +955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LoadScreenLocationSetterTranslationCommon
+    internal partial class LoadScreenLocationSetterTranslationCommon
     {
         public static readonly LoadScreenLocationSetterTranslationCommon Instance = new LoadScreenLocationSetterTranslationCommon();
 
@@ -1045,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1069,11 +1065,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LoadScreenLocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
+        public static readonly LoadScreenLocationBinaryWriteTranslation Instance = new LoadScreenLocationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILoadScreenLocationGetter item,
@@ -1093,12 +1089,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILoadScreenLocationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.LNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1110,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILoadScreenLocationGetter)item,
@@ -1120,9 +1116,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LoadScreenLocationBinaryCreateTranslation
+    internal partial class LoadScreenLocationBinaryCreateTranslation
     {
-        public readonly static LoadScreenLocationBinaryCreateTranslation Instance = new LoadScreenLocationBinaryCreateTranslation();
+        public static readonly LoadScreenLocationBinaryCreateTranslation Instance = new LoadScreenLocationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILoadScreenLocation item,
@@ -1144,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILoadScreenLocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1157,16 +1153,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LoadScreenLocationBinaryOverlay :
+    internal partial class LoadScreenLocationBinaryOverlay :
         PluginBinaryOverlay,
         ILoadScreenLocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LoadScreenLocation_Registration.Instance;
-        public static LoadScreenLocation_Registration StaticRegistration => LoadScreenLocation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LoadScreenLocation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LoadScreenLocationCommon.Instance;
         [DebuggerStepThrough]
@@ -1180,16 +1176,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenLocationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenLocationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LoadScreenLocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LoadScreenLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1197,9 +1193,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public P2Int16 GridPoint => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4));
+        public IFormLinkGetter<IPlaceGetter> Direct => new FormLink<IPlaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public P2Int16 GridPoint => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1207,25 +1203,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected LoadScreenLocationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LoadScreenLocationBinaryOverlay LoadScreenLocationFactory(
+        public static ILoadScreenLocationGetter LoadScreenLocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LoadScreenLocationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1234,25 +1235,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static LoadScreenLocationBinaryOverlay LoadScreenLocationFactory(
+        public static ILoadScreenLocationGetter LoadScreenLocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LoadScreenLocationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LoadScreenLocationMixIn.ToString(
+            LoadScreenLocationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

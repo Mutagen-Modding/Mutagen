@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundOutputChannelMixIn.ToString(
+            SoundOutputChannelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -246,58 +249,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SoundOutputChannel.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SoundOutputChannel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SoundOutputChannel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SoundOutputChannel.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SoundOutputChannel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundOutputChannel.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.L ?? true)
                     {
-                        fg.AppendItem(L, "L");
+                        sb.AppendItem(L, "L");
                     }
                     if (printMask?.R ?? true)
                     {
-                        fg.AppendItem(R, "R");
+                        sb.AppendItem(R, "R");
                     }
                     if (printMask?.C ?? true)
                     {
-                        fg.AppendItem(C, "C");
+                        sb.AppendItem(C, "C");
                     }
                     if (printMask?.LFE ?? true)
                     {
-                        fg.AppendItem(LFE, "LFE");
+                        sb.AppendItem(LFE, "LFE");
                     }
                     if (printMask?.RL ?? true)
                     {
-                        fg.AppendItem(RL, "RL");
+                        sb.AppendItem(RL, "RL");
                     }
                     if (printMask?.RR ?? true)
                     {
-                        fg.AppendItem(RR, "RR");
+                        sb.AppendItem(RR, "RR");
                     }
                     if (printMask?.BL ?? true)
                     {
-                        fg.AppendItem(BL, "BL");
+                        sb.AppendItem(BL, "BL");
                     }
                     if (printMask?.BR ?? true)
                     {
-                        fg.AppendItem(BR, "BR");
+                        sb.AppendItem(BR, "BR");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -442,43 +440,50 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(L, "L");
-                fg.AppendItem(R, "R");
-                fg.AppendItem(C, "C");
-                fg.AppendItem(LFE, "LFE");
-                fg.AppendItem(RL, "RL");
-                fg.AppendItem(RR, "RR");
-                fg.AppendItem(BL, "BL");
-                fg.AppendItem(BR, "BR");
+                {
+                    sb.AppendItem(L, "L");
+                }
+                {
+                    sb.AppendItem(R, "R");
+                }
+                {
+                    sb.AppendItem(C, "C");
+                }
+                {
+                    sb.AppendItem(LFE, "LFE");
+                }
+                {
+                    sb.AppendItem(RL, "RL");
+                }
+                {
+                    sb.AppendItem(RR, "RR");
+                }
+                {
+                    sb.AppendItem(BL, "BL");
+                }
+                {
+                    sb.AppendItem(BR, "BR");
+                }
             }
             #endregion
 
@@ -583,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputChannelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -593,7 +598,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SoundOutputChannel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundOutputChannel();
             ((SoundOutputChannelSetterCommon)((ISoundOutputChannelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -608,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundOutputChannel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -618,7 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -692,26 +697,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISoundOutputChannelGetter item,
             string? name = null,
             SoundOutputChannel.Mask<bool>? printMask = null)
         {
-            return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).ToString(
+            return ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISoundOutputChannelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundOutputChannel.Mask<bool>? printMask = null)
         {
-            ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).ToString(
+            ((SoundOutputChannelCommon)((ISoundOutputChannelGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -817,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISoundOutputChannel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundOutputChannelSetterCommon)((ISoundOutputChannelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -832,10 +837,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundOutputChannel_FieldIndex
+    internal enum SoundOutputChannel_FieldIndex
     {
         L = 0,
         R = 1,
@@ -849,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundOutputChannel_Registration : ILoquiRegistration
+    internal partial class SoundOutputChannel_Registration : ILoquiRegistration
     {
         public static readonly SoundOutputChannel_Registration Instance = new SoundOutputChannel_Registration();
 
@@ -923,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundOutputChannelSetterCommon
+    internal partial class SoundOutputChannelSetterCommon
     {
         public static readonly SoundOutputChannelSetterCommon Instance = new SoundOutputChannelSetterCommon();
 
@@ -953,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISoundOutputChannel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -965,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputChannelCommon
+    internal partial class SoundOutputChannelCommon
     {
         public static readonly SoundOutputChannelCommon Instance = new SoundOutputChannelCommon();
 
@@ -989,7 +994,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoundOutputChannel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.L = item.L == rhs.L;
             ret.R = item.R == rhs.R;
             ret.C = item.C == rhs.C;
@@ -1000,81 +1004,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BR = item.BR == rhs.BR;
         }
         
-        public string ToString(
+        public string Print(
             ISoundOutputChannelGetter item,
             string? name = null,
             SoundOutputChannel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISoundOutputChannelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundOutputChannel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundOutputChannel =>");
+                sb.AppendLine($"SoundOutputChannel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundOutputChannel) =>");
+                sb.AppendLine($"{name} (SoundOutputChannel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundOutputChannelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundOutputChannel.Mask<bool>? printMask = null)
         {
             if (printMask?.L ?? true)
             {
-                fg.AppendItem(item.L, "L");
+                sb.AppendItem(item.L, "L");
             }
             if (printMask?.R ?? true)
             {
-                fg.AppendItem(item.R, "R");
+                sb.AppendItem(item.R, "R");
             }
             if (printMask?.C ?? true)
             {
-                fg.AppendItem(item.C, "C");
+                sb.AppendItem(item.C, "C");
             }
             if (printMask?.LFE ?? true)
             {
-                fg.AppendItem(item.LFE, "LFE");
+                sb.AppendItem(item.LFE, "LFE");
             }
             if (printMask?.RL ?? true)
             {
-                fg.AppendItem(item.RL, "RL");
+                sb.AppendItem(item.RL, "RL");
             }
             if (printMask?.RR ?? true)
             {
-                fg.AppendItem(item.RR, "RR");
+                sb.AppendItem(item.RR, "RR");
             }
             if (printMask?.BL ?? true)
             {
-                fg.AppendItem(item.BL, "BL");
+                sb.AppendItem(item.BL, "BL");
             }
             if (printMask?.BR ?? true)
             {
-                fg.AppendItem(item.BR, "BR");
+                sb.AppendItem(item.BR, "BR");
             }
         }
         
@@ -1143,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundOutputChannelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundOutputChannelGetter obj)
         {
             yield break;
         }
@@ -1151,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundOutputChannelSetterTranslationCommon
+    internal partial class SoundOutputChannelSetterTranslationCommon
     {
         public static readonly SoundOutputChannelSetterTranslationCommon Instance = new SoundOutputChannelSetterTranslationCommon();
 
@@ -1257,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannel_Registration.Instance;
-        public static SoundOutputChannel_Registration StaticRegistration => SoundOutputChannel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundOutputChannel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelCommon.Instance;
         [DebuggerStepThrough]
@@ -1281,11 +1283,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundOutputChannelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundOutputChannelBinaryWriteTranslation Instance = new SoundOutputChannelBinaryWriteTranslation();
+        public static readonly SoundOutputChannelBinaryWriteTranslation Instance = new SoundOutputChannelBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundOutputChannelGetter item,
@@ -1304,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISoundOutputChannelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1314,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundOutputChannelGetter)item,
@@ -1324,9 +1326,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundOutputChannelBinaryCreateTranslation
+    internal partial class SoundOutputChannelBinaryCreateTranslation
     {
-        public readonly static SoundOutputChannelBinaryCreateTranslation Instance = new SoundOutputChannelBinaryCreateTranslation();
+        public static readonly SoundOutputChannelBinaryCreateTranslation Instance = new SoundOutputChannelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundOutputChannel item,
@@ -1353,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISoundOutputChannelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputChannelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1366,16 +1368,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundOutputChannelBinaryOverlay :
+    internal partial class SoundOutputChannelBinaryOverlay :
         PluginBinaryOverlay,
         ISoundOutputChannelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundOutputChannel_Registration.Instance;
-        public static SoundOutputChannel_Registration StaticRegistration => SoundOutputChannel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundOutputChannel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundOutputChannelCommon.Instance;
         [DebuggerStepThrough]
@@ -1389,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundOutputChannelBinaryWriteTranslation.Instance;
@@ -1397,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundOutputChannelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1405,14 +1407,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Byte L => _data.Span[0x0];
-        public Byte R => _data.Span[0x1];
-        public Byte C => _data.Span[0x2];
-        public Byte LFE => _data.Span[0x3];
-        public Byte RL => _data.Span[0x4];
-        public Byte RR => _data.Span[0x5];
-        public Byte BL => _data.Span[0x6];
-        public Byte BR => _data.Span[0x7];
+        public Byte L => _structData.Span[0x0];
+        public Byte R => _structData.Span[0x1];
+        public Byte C => _structData.Span[0x2];
+        public Byte LFE => _structData.Span[0x3];
+        public Byte RL => _structData.Span[0x4];
+        public Byte RR => _structData.Span[0x5];
+        public Byte BL => _structData.Span[0x6];
+        public Byte BR => _structData.Span[0x7];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1420,24 +1422,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SoundOutputChannelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SoundOutputChannelBinaryOverlay SoundOutputChannelFactory(
+        public static ISoundOutputChannelGetter SoundOutputChannelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundOutputChannelBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1446,25 +1454,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static SoundOutputChannelBinaryOverlay SoundOutputChannelFactory(
+        public static ISoundOutputChannelGetter SoundOutputChannelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundOutputChannelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundOutputChannelMixIn.ToString(
+            SoundOutputChannelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

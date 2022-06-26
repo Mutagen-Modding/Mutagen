@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -88,12 +89,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FurnitureMarkerMixIn.ToString(
+            FurnitureMarkerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -240,42 +242,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FurnitureMarker.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FurnitureMarker.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FurnitureMarker.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FurnitureMarker.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FurnitureMarker.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FurnitureMarker.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Enabled ?? true)
                     {
-                        fg.AppendItem(Enabled, "Enabled");
+                        sb.AppendItem(Enabled, "Enabled");
                     }
                     if (printMask?.DisabledEntryPoints?.Overall ?? true)
                     {
-                        DisabledEntryPoints?.ToString(fg);
+                        DisabledEntryPoints?.Print(sb);
                     }
                     if (printMask?.MarkerKeyword ?? true)
                     {
-                        fg.AppendItem(MarkerKeyword, "MarkerKeyword");
+                        sb.AppendItem(MarkerKeyword, "MarkerKeyword");
                     }
                     if (printMask?.EntryPoints?.Overall ?? true)
                     {
-                        EntryPoints?.ToString(fg);
+                        EntryPoints?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -380,39 +377,34 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Enabled, "Enabled");
-                DisabledEntryPoints?.ToString(fg);
-                fg.AppendItem(MarkerKeyword, "MarkerKeyword");
-                EntryPoints?.ToString(fg);
+                {
+                    sb.AppendItem(Enabled, "Enabled");
+                }
+                DisabledEntryPoints?.Print(sb);
+                {
+                    sb.AppendItem(MarkerKeyword, "MarkerKeyword");
+                }
+                EntryPoints?.Print(sb);
             }
             #endregion
 
@@ -493,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => FurnitureMarkerCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureMarkerCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureMarkerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -504,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -514,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static FurnitureMarker CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FurnitureMarker();
             ((FurnitureMarkerSetterCommon)((IFurnitureMarkerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -529,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FurnitureMarker item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -539,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -607,26 +599,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFurnitureMarkerGetter item,
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).ToString(
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFurnitureMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
-            ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).ToString(
+            ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -732,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFurnitureMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FurnitureMarkerSetterCommon)((IFurnitureMarkerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -747,10 +739,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FurnitureMarker_FieldIndex
+    internal enum FurnitureMarker_FieldIndex
     {
         Enabled = 0,
         DisabledEntryPoints = 1,
@@ -760,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FurnitureMarker_Registration : ILoquiRegistration
+    internal partial class FurnitureMarker_Registration : ILoquiRegistration
     {
         public static readonly FurnitureMarker_Registration Instance = new FurnitureMarker_Registration();
 
@@ -834,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FurnitureMarkerSetterCommon
+    internal partial class FurnitureMarkerSetterCommon
     {
         public static readonly FurnitureMarkerSetterCommon Instance = new FurnitureMarkerSetterCommon();
 
@@ -861,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IFurnitureMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -873,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FurnitureMarkerCommon
+    internal partial class FurnitureMarkerCommon
     {
         public static readonly FurnitureMarkerCommon Instance = new FurnitureMarkerCommon();
 
@@ -897,7 +889,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FurnitureMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Enabled = item.Enabled == rhs.Enabled;
             ret.DisabledEntryPoints = EqualsMaskHelper.EqualsHelper(
                 item.DisabledEntryPoints,
@@ -912,67 +903,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IFurnitureMarkerGetter item,
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFurnitureMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FurnitureMarker =>");
+                sb.AppendLine($"FurnitureMarker =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FurnitureMarker) =>");
+                sb.AppendLine($"{name} (FurnitureMarker) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFurnitureMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FurnitureMarker.Mask<bool>? printMask = null)
         {
             if (printMask?.Enabled ?? true)
             {
-                fg.AppendItem(item.Enabled, "Enabled");
+                sb.AppendItem(item.Enabled, "Enabled");
             }
             if ((printMask?.DisabledEntryPoints?.Overall ?? true)
                 && item.DisabledEntryPoints is {} DisabledEntryPointsItem)
             {
-                DisabledEntryPointsItem?.ToString(fg, "DisabledEntryPoints");
+                DisabledEntryPointsItem?.Print(sb, "DisabledEntryPoints");
             }
             if (printMask?.MarkerKeyword ?? true)
             {
-                fg.AppendItem(item.MarkerKeyword.FormKeyNullable, "MarkerKeyword");
+                sb.AppendItem(item.MarkerKeyword.FormKeyNullable, "MarkerKeyword");
             }
             if ((printMask?.EntryPoints?.Overall ?? true)
                 && item.EntryPoints is {} EntryPointsItem)
             {
-                EntryPointsItem?.ToString(fg, "EntryPoints");
+                EntryPointsItem?.Print(sb, "EntryPoints");
             }
         }
         
@@ -1035,11 +1024,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFurnitureMarkerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFurnitureMarkerGetter obj)
         {
-            if (obj.MarkerKeyword.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MarkerKeyword, out var MarkerKeywordInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MarkerKeyword);
+                yield return MarkerKeywordInfo;
             }
             yield break;
         }
@@ -1047,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FurnitureMarkerSetterTranslationCommon
+    internal partial class FurnitureMarkerSetterTranslationCommon
     {
         public static readonly FurnitureMarkerSetterTranslationCommon Instance = new FurnitureMarkerSetterTranslationCommon();
 
@@ -1181,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1205,11 +1194,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FurnitureMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FurnitureMarkerBinaryWriteTranslation Instance = new FurnitureMarkerBinaryWriteTranslation();
+        public static readonly FurnitureMarkerBinaryWriteTranslation Instance = new FurnitureMarkerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFurnitureMarkerGetter item,
@@ -1236,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IFurnitureMarkerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1246,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFurnitureMarkerGetter)item,
@@ -1256,9 +1245,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FurnitureMarkerBinaryCreateTranslation
+    internal partial class FurnitureMarkerBinaryCreateTranslation
     {
-        public readonly static FurnitureMarkerBinaryCreateTranslation Instance = new FurnitureMarkerBinaryCreateTranslation();
+        public static readonly FurnitureMarkerBinaryCreateTranslation Instance = new FurnitureMarkerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFurnitureMarker item,
@@ -1284,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IFurnitureMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1297,16 +1286,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FurnitureMarkerBinaryOverlay :
+    internal partial class FurnitureMarkerBinaryOverlay :
         PluginBinaryOverlay,
         IFurnitureMarkerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FurnitureMarker_Registration.Instance;
-        public static FurnitureMarker_Registration StaticRegistration => FurnitureMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FurnitureMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FurnitureMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1320,16 +1309,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => FurnitureMarkerCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FurnitureMarkerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FurnitureMarkerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FurnitureMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1337,10 +1326,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Boolean Enabled => _data.Slice(0x0, 0x1)[0] == 1;
-        public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x1), _package), _package, default(TypedParseParams));
-        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5, 0x4))));
-        public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(new OverlayStream(_data.Slice(0x9), _package), _package, default(TypedParseParams));
+        public Boolean Enabled => _structData.Slice(0x0, 0x1)[0] >= 1;
+        public IEntryPointsGetter DisabledEntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(_structData.Slice(0x1), _package, default(TypedParseParams));
+        public IFormLinkNullableGetter<IKeywordGetter> MarkerKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5, 0x4))));
+        public IEntryPointsGetter EntryPoints => EntryPointsBinaryOverlay.EntryPointsFactory(_structData.Slice(0x9), _package, default(TypedParseParams));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1348,24 +1337,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected FurnitureMarkerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FurnitureMarkerBinaryOverlay FurnitureMarkerFactory(
+        public static IFurnitureMarkerGetter FurnitureMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xD,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new FurnitureMarkerBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xD),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xD;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1374,25 +1369,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static FurnitureMarkerBinaryOverlay FurnitureMarkerFactory(
+        public static IFurnitureMarkerGetter FurnitureMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FurnitureMarkerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FurnitureMarkerMixIn.ToString(
+            FurnitureMarkerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

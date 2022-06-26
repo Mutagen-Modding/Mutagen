@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,20 +21,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -191,12 +192,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceMixIn.ToString(
+            WorldspaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -476,9 +478,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>>();
                         obj.SubCells.Specific = l;
-                        foreach (var item in SubCells.Specific.WithIndex())
+                        foreach (var item in SubCells.Specific)
                         {
-                            MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceBlock.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -488,105 +490,96 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Worldspace.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Worldspace.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Worldspace.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Worldspace.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Worldspace.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Worldspace.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Parent, "Parent");
+                        sb.AppendItem(Parent, "Parent");
                     }
                     if (printMask?.Climate ?? true)
                     {
-                        fg.AppendItem(Climate, "Climate");
+                        sb.AppendItem(Climate, "Climate");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendItem(Water, "Water");
+                        sb.AppendItem(Water, "Water");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.MapData?.Overall ?? true)
                     {
-                        MapData?.ToString(fg);
+                        MapData?.Print(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ObjectBoundsMin ?? true)
                     {
-                        fg.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                        sb.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
                     }
                     if (printMask?.ObjectBoundsMax ?? true)
                     {
-                        fg.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
+                        sb.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
                     }
                     if (printMask?.Music ?? true)
                     {
-                        fg.AppendItem(Music, "Music");
+                        sb.AppendItem(Music, "Music");
                     }
                     if (printMask?.OffsetData ?? true)
                     {
-                        fg.AppendItem(OffsetData, "OffsetData");
+                        sb.AppendItem(OffsetData, "OffsetData");
                     }
                     if (printMask?.Road?.Overall ?? true)
                     {
-                        Road?.ToString(fg);
+                        Road?.Print(sb);
                     }
                     if (printMask?.TopCell?.Overall ?? true)
                     {
-                        TopCell?.ToString(fg);
+                        TopCell?.Print(sb);
                     }
                     if (printMask?.SubCellsTimestamp ?? true)
                     {
-                        fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                        sb.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
                     }
                     if ((printMask?.SubCells?.Overall ?? true)
                         && SubCells is {} SubCellsItem)
                     {
-                        fg.AppendLine("SubCells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SubCells =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(SubCellsItem.Overall);
+                            sb.AppendItem(SubCellsItem.Overall);
                             if (SubCellsItem.Specific != null)
                             {
                                 foreach (var subItem in SubCellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -790,71 +783,80 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Parent, "Parent");
-                fg.AppendItem(Climate, "Climate");
-                fg.AppendItem(Water, "Water");
-                fg.AppendItem(Icon, "Icon");
-                MapData?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
-                fg.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
-                fg.AppendItem(Music, "Music");
-                fg.AppendItem(OffsetData, "OffsetData");
-                Road?.ToString(fg);
-                TopCell?.ToString(fg);
-                fg.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(Climate, "Climate");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                MapData?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(ObjectBoundsMin, "ObjectBoundsMin");
+                }
+                {
+                    sb.AppendItem(ObjectBoundsMax, "ObjectBoundsMax");
+                }
+                {
+                    sb.AppendItem(Music, "Music");
+                }
+                {
+                    sb.AppendItem(OffsetData, "OffsetData");
+                }
+                Road?.Print(sb);
+                TopCell?.Print(sb);
+                {
+                    sb.AppendItem(SubCellsTimestamp, "SubCellsTimestamp");
+                }
                 if (SubCells is {} SubCellsItem)
                 {
-                    fg.AppendLine("SubCells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SubCells =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(SubCellsItem.Overall);
+                        sb.AppendItem(SubCellsItem.Overall);
                         if (SubCellsItem.Specific != null)
                         {
                             foreach (var subItem in SubCellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -969,7 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(FormKey formKey)
         {
@@ -1064,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1074,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Worldspace CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Worldspace();
             ((WorldspaceSetterCommon)((IWorldspaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1089,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Worldspace item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1099,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1207,26 +1209,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWorldspaceGetter item,
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWorldspaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
-            ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1314,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IWorldspaceGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1344,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1533,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWorldspaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceSetterCommon)((IWorldspaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1548,10 +1550,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Worldspace_FieldIndex
+    internal enum Worldspace_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1577,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Worldspace_Registration : ILoquiRegistration
+    internal partial class Worldspace_Registration : ILoquiRegistration
     {
         public static readonly Worldspace_Registration Instance = new Worldspace_Registration();
 
@@ -1619,6 +1621,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WRLD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.WRLD);
+            var all = RecordCollection.Factory(
+                RecordTypes.WRLD,
+                RecordTypes.FULL,
+                RecordTypes.WNAM,
+                RecordTypes.CNAM,
+                RecordTypes.NAM2,
+                RecordTypes.ICON,
+                RecordTypes.MNAM,
+                RecordTypes.DATA,
+                RecordTypes.NAM0,
+                RecordTypes.NAM9,
+                RecordTypes.SNAM,
+                RecordTypes.OFST,
+                RecordTypes.XXXX,
+                RecordTypes.ROAD,
+                RecordTypes.CELL,
+                RecordTypes.GRUP,
+                RecordTypes.XCLC,
+                RecordTypes.XCLL,
+                RecordTypes.XCLR,
+                RecordTypes.XCMT,
+                RecordTypes.XCLW,
+                RecordTypes.XCCM,
+                RecordTypes.XCWT,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XGLB,
+                RecordTypes.PGRD,
+                RecordTypes.LAND,
+                RecordTypes.ACRE,
+                RecordTypes.ACHR,
+                RecordTypes.REFR);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1652,7 +1692,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceSetterCommon : PlaceSetterCommon
+    internal partial class WorldspaceSetterCommon : PlaceSetterCommon
     {
         public new static readonly WorldspaceSetterCommon Instance = new WorldspaceSetterCommon();
 
@@ -1907,7 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IWorldspaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
@@ -1923,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IPlaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Worldspace)item,
@@ -1934,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Worldspace)item,
@@ -1945,7 +1985,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Worldspace)item,
@@ -1956,7 +1996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WorldspaceCommon : PlaceCommon
+    internal partial class WorldspaceCommon : PlaceCommon
     {
         public new static readonly WorldspaceCommon Instance = new WorldspaceCommon();
 
@@ -1980,7 +2020,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Worldspace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Climate = item.Climate.Equals(rhs.Climate);
@@ -2014,137 +2053,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IWorldspaceGetter item,
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWorldspaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Worldspace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Worldspace =>");
+                sb.AppendLine($"Worldspace =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Worldspace) =>");
+                sb.AppendLine($"{name} (Worldspace) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Worldspace.Mask<bool>? printMask = null)
         {
             PlaceCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if (printMask?.Climate ?? true)
             {
-                fg.AppendItem(item.Climate.FormKeyNullable, "Climate");
+                sb.AppendItem(item.Climate.FormKeyNullable, "Climate");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKeyNullable, "Water");
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.MapData?.Overall ?? true)
                 && item.MapData is {} MapDataItem)
             {
-                MapDataItem?.ToString(fg, "MapData");
+                MapDataItem?.Print(sb, "MapData");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.ObjectBoundsMin ?? true)
                 && item.ObjectBoundsMin is {} ObjectBoundsMinItem)
             {
-                fg.AppendItem(ObjectBoundsMinItem, "ObjectBoundsMin");
+                sb.AppendItem(ObjectBoundsMinItem, "ObjectBoundsMin");
             }
             if ((printMask?.ObjectBoundsMax ?? true)
                 && item.ObjectBoundsMax is {} ObjectBoundsMaxItem)
             {
-                fg.AppendItem(ObjectBoundsMaxItem, "ObjectBoundsMax");
+                sb.AppendItem(ObjectBoundsMaxItem, "ObjectBoundsMax");
             }
             if ((printMask?.Music ?? true)
                 && item.Music is {} MusicItem)
             {
-                fg.AppendItem(MusicItem, "Music");
+                sb.AppendItem(MusicItem, "Music");
             }
             if ((printMask?.OffsetData ?? true)
                 && item.OffsetData is {} OffsetDataItem)
             {
-                fg.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
+                sb.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
             }
             if ((printMask?.Road?.Overall ?? true)
                 && item.Road is {} RoadItem)
             {
-                RoadItem?.ToString(fg, "Road");
+                RoadItem?.Print(sb, "Road");
             }
             if ((printMask?.TopCell?.Overall ?? true)
                 && item.TopCell is {} TopCellItem)
             {
-                TopCellItem?.ToString(fg, "TopCell");
+                TopCellItem?.Print(sb, "TopCell");
             }
             if (printMask?.SubCellsTimestamp ?? true)
             {
-                fg.AppendItem(item.SubCellsTimestamp, "SubCellsTimestamp");
+                sb.AppendItem(item.SubCellsTimestamp, "SubCellsTimestamp");
             }
             if (printMask?.SubCells?.Overall ?? true)
             {
-                fg.AppendLine("SubCells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SubCells =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.SubCells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -2281,7 +2314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
-                if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
+                if (!lhs.SubCells.SequenceEqual(rhs.SubCells, (l, r) => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.SubCells)))) return false;
             }
             return true;
         }
@@ -2395,32 +2428,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Parent);
+                yield return ParentInfo;
             }
-            if (obj.Climate.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Climate, out var ClimateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Climate);
+                yield return ClimateInfo;
             }
-            if (obj.Water.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Water);
+                yield return WaterInfo;
             }
             if (obj.TopCell is {} TopCellItems)
             {
-                foreach (var item in TopCellItems.ContainedFormLinks)
+                foreach (var item in TopCellItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2646,50 +2679,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
-                case "IPlaced":
-                {
-                    if (!Worldspace_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            yield return TopCellitem;
-                            foreach (var item in TopCellitem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -3185,53 +3183,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item;
                     }
                     yield break;
-                case "IPlaced":
-                case "IPlacedGetter":
-                {
-                    {
-                        if (obj.TopCell is {} WorldspaceTopCellitem)
-                        {
-                            foreach (var item in ((CellCommon)((ICellGetter)WorldspaceTopCellitem).CommonInstance()!).EnumerateMajorRecordContexts(
-                                obj: WorldspaceTopCellitem,
-                                linkCache: linkCache,
-                                type: type,
-                                modKey: modKey,
-                                parent: curContext,
-                                throwIfUnknown: false,
-                                getOrAddAsOverride: (m, r) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    if (baseRec.TopCell != null) return baseRec.TopCell;
-                                    var copy = r.DeepCopy(ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = copy;
-                                    return copy;
-                                },
-                                duplicateInto: (m, r, e) =>
-                                {
-                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
-                                    baseRec.TopCell = dupRec;
-                                    return dupRec;
-                                }))
-                            {
-                                yield return item;
-                            }
-                        }
-                    }
-                    foreach (var item in obj.SubCells.EnumerateMajorRecordContexts(
-                        type: type,
-                        modKey: modKey,
-                        parent: curContext,
-                        linkCache: linkCache,
-                        throwIfUnknown: false,
-                        worldspace: obj,
-                        getOrAddAsOverride: getOrAddAsOverride))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IWorldspaceGetter, IOblivionMod, IOblivionModGetter>(
+                        GameCategory.Oblivion,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -3292,7 +3258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WorldspaceSetterTranslationCommon : PlaceSetterTranslationCommon
+    internal partial class WorldspaceSetterTranslationCommon : PlaceSetterTranslationCommon
     {
         public new static readonly WorldspaceSetterTranslationCommon Instance = new WorldspaceSetterTranslationCommon();
 
@@ -3630,7 +3596,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
-        public new static Worldspace_Registration StaticRegistration => Worldspace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceCommon.Instance;
         [DebuggerStepThrough]
@@ -3648,13 +3614,13 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WorldspaceBinaryWriteTranslation :
         PlaceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
+        public new static readonly WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceGetter item,
@@ -3668,7 +3634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IWorldspaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -3742,7 +3708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -3753,12 +3719,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -3773,7 +3742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3784,7 +3753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IPlaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3795,7 +3764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3806,7 +3775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWorldspaceGetter)item,
@@ -3816,9 +3785,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WorldspaceBinaryCreateTranslation : PlaceBinaryCreateTranslation
+    internal partial class WorldspaceBinaryCreateTranslation : PlaceBinaryCreateTranslation
     {
-        public new readonly static WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
+        public new static readonly WorldspaceBinaryCreateTranslation Instance = new WorldspaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WRLD;
         public static void FillBinaryStructs(
@@ -3837,7 +3806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3917,7 +3886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = frame.ReadSubrecordFrame();
+                    var overflowHeader = frame.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
@@ -3927,7 +3896,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3955,16 +3925,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WorldspaceBinaryOverlay :
+    internal partial class WorldspaceBinaryOverlay :
         PlaceBinaryOverlay,
         IWorldspaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
-        public new static Worldspace_Registration StaticRegistration => Worldspace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WorldspaceCommon.Instance;
         [DebuggerStepThrough]
@@ -3972,9 +3942,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -3985,7 +3955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => WorldspaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3997,7 +3967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -4005,45 +3975,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region MapData
         private RangeInt32? _MapDataLocation;
-        public IMapDataGetter? MapData => _MapDataLocation.HasValue ? MapDataBinaryOverlay.MapDataFactory(new OverlayStream(_data.Slice(_MapDataLocation!.Value.Min), _package), _package) : default;
+        public IMapDataGetter? MapData => _MapDataLocation.HasValue ? MapDataBinaryOverlay.MapDataFactory(_recordData.Slice(_MapDataLocation!.Value.Min), _package) : default;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Worldspace.Flag? Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag?);
+        public Worldspace.Flag? Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Worldspace.Flag?);
         #endregion
         #region ObjectBoundsMin
         private int? _ObjectBoundsMinLocation;
-        public P2Float? ObjectBoundsMin => _ObjectBoundsMinLocation.HasValue ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectBoundsMinLocation.Value, _package.MetaData.Constants)) : default(P2Float?);
+        public P2Float? ObjectBoundsMin => _ObjectBoundsMinLocation.HasValue ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectBoundsMinLocation.Value, _package.MetaData.Constants)) : default(P2Float?);
         #endregion
         #region ObjectBoundsMax
         private int? _ObjectBoundsMaxLocation;
-        public P2Float? ObjectBoundsMax => _ObjectBoundsMaxLocation.HasValue ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectBoundsMaxLocation.Value, _package.MetaData.Constants)) : default(P2Float?);
+        public P2Float? ObjectBoundsMax => _ObjectBoundsMaxLocation.HasValue ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectBoundsMaxLocation.Value, _package.MetaData.Constants)) : default(P2Float?);
         #endregion
         #region Music
         private int? _MusicLocation;
-        public MusicType? Music => _MusicLocation.HasValue ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation!.Value, _package.MetaData.Constants)) : default(MusicType?);
+        public MusicType? Music => _MusicLocation.HasValue ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation!.Value, _package.MetaData.Constants)) : default(MusicType?);
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;
         private int? _OffsetDataLengthOverride;
         public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
-            _data,
+            _recordData,
             _package.MetaData.Constants,
             _OffsetDataLocation,
             _OffsetDataLengthOverride);
@@ -4059,29 +4029,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected WorldspaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WorldspaceBinaryOverlay WorldspaceFactory(
+        public static IWorldspaceGetter WorldspaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             var origStream = stream;
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -4091,7 +4064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: origStream,
@@ -4100,15 +4073,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static WorldspaceBinaryOverlay WorldspaceFactory(
+        public static IWorldspaceGetter WorldspaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -4118,9 +4091,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -4185,7 +4158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = stream.ReadSubrecordFrame();
+                    var overflowHeader = stream.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
@@ -4195,17 +4168,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceMixIn.ToString(
+            WorldspaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

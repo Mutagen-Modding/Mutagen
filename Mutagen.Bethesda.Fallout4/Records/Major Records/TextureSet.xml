@@ -17,5 +17,6 @@
       <String name="Material" recordType="MNAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
   </Object>
 </Loqui>

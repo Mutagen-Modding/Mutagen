@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,17 +27,16 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -70,13 +71,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? INpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -554,12 +556,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.ToString(
+            NpcMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1286,9 +1289,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, RankPlacement.Mask<R>?>>();
                         obj.Factions.Specific = l;
-                        foreach (var item in Factions.Specific.WithIndex())
+                        foreach (var item in Factions.Specific)
                         {
-                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RankPlacement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RankPlacement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1305,9 +1308,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ActorEffect.Specific = l;
-                        foreach (var item in ActorEffect.Specific.WithIndex())
+                        foreach (var item in ActorEffect.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1323,9 +1326,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
                         obj.Attacks.Specific = l;
-                        foreach (var item in Attacks.Specific.WithIndex())
+                        foreach (var item in Attacks.Specific)
                         {
-                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1342,9 +1345,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, PerkPlacement.Mask<R>?>>();
                         obj.Perks.Specific = l;
-                        foreach (var item in Perks.Specific.WithIndex())
+                        foreach (var item in Perks.Specific)
                         {
-                            MaskItemIndexed<R, PerkPlacement.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PerkPlacement.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PerkPlacement.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PerkPlacement.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1357,9 +1360,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
                         obj.Items.Specific = l;
-                        foreach (var item in Items.Specific.WithIndex())
+                        foreach (var item in Items.Specific)
                         {
-                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1373,9 +1376,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Packages.Specific = l;
-                        foreach (var item in Packages.Specific.WithIndex())
+                        foreach (var item in Packages.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1387,9 +1390,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1405,9 +1408,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.HeadParts.Specific = l;
-                        foreach (var item in HeadParts.Specific.WithIndex())
+                        foreach (var item in HeadParts.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1435,9 +1438,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, TintLayer.Mask<R>?>>();
                         obj.TintLayers.Specific = l;
-                        foreach (var item in TintLayers.Specific.WithIndex())
+                        foreach (var item in TintLayers.Specific)
                         {
-                            MaskItemIndexed<R, TintLayer.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, TintLayer.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, TintLayer.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TintLayer.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1447,377 +1450,344 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Npc.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Npc.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Npc.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Npc.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Configuration?.Overall ?? true)
                     {
-                        Configuration?.ToString(fg);
+                        Configuration?.Print(sb);
                     }
                     if ((printMask?.Factions?.Overall ?? true)
                         && Factions is {} FactionsItem)
                     {
-                        fg.AppendLine("Factions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Factions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FactionsItem.Overall);
+                            sb.AppendItem(FactionsItem.Overall);
                             if (FactionsItem.Specific != null)
                             {
                                 foreach (var subItem in FactionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.DeathItem ?? true)
                     {
-                        fg.AppendItem(DeathItem, "DeathItem");
+                        sb.AppendItem(DeathItem, "DeathItem");
                     }
                     if (printMask?.Voice ?? true)
                     {
-                        fg.AppendItem(Voice, "Voice");
+                        sb.AppendItem(Voice, "Voice");
                     }
                     if (printMask?.Template ?? true)
                     {
-                        fg.AppendItem(Template, "Template");
+                        sb.AppendItem(Template, "Template");
                     }
                     if (printMask?.Race ?? true)
                     {
-                        fg.AppendItem(Race, "Race");
+                        sb.AppendItem(Race, "Race");
                     }
                     if ((printMask?.ActorEffect?.Overall ?? true)
                         && ActorEffect is {} ActorEffectItem)
                     {
-                        fg.AppendLine("ActorEffect =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorEffect =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorEffectItem.Overall);
+                            sb.AppendItem(ActorEffectItem.Overall);
                             if (ActorEffectItem.Specific != null)
                             {
                                 foreach (var subItem in ActorEffectItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.Print(sb);
                     }
                     if (printMask?.WornArmor ?? true)
                     {
-                        fg.AppendItem(WornArmor, "WornArmor");
+                        sb.AppendItem(WornArmor, "WornArmor");
                     }
                     if (printMask?.FarAwayModel ?? true)
                     {
-                        fg.AppendItem(FarAwayModel, "FarAwayModel");
+                        sb.AppendItem(FarAwayModel, "FarAwayModel");
                     }
                     if (printMask?.AttackRace ?? true)
                     {
-                        fg.AppendItem(AttackRace, "AttackRace");
+                        sb.AppendItem(AttackRace, "AttackRace");
                     }
                     if ((printMask?.Attacks?.Overall ?? true)
                         && Attacks is {} AttacksItem)
                     {
-                        fg.AppendLine("Attacks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Attacks =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AttacksItem.Overall);
+                            sb.AppendItem(AttacksItem.Overall);
                             if (AttacksItem.Specific != null)
                             {
                                 foreach (var subItem in AttacksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.SpectatorOverridePackageList ?? true)
                     {
-                        fg.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
+                        sb.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
                     }
                     if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
                     {
-                        fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
+                        sb.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
                     }
                     if (printMask?.GuardWarnOverridePackageList ?? true)
                     {
-                        fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
+                        sb.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
                     }
                     if (printMask?.CombatOverridePackageList ?? true)
                     {
-                        fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                        sb.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
                     }
                     if ((printMask?.Perks?.Overall ?? true)
                         && Perks is {} PerksItem)
                     {
-                        fg.AppendLine("Perks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Perks =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PerksItem.Overall);
+                            sb.AppendItem(PerksItem.Overall);
                             if (PerksItem.Specific != null)
                             {
                                 foreach (var subItem in PerksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Items?.Overall ?? true)
                         && Items is {} ItemsItem)
                     {
-                        fg.AppendLine("Items =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ItemsItem.Overall);
+                            sb.AppendItem(ItemsItem.Overall);
                             if (ItemsItem.Specific != null)
                             {
                                 foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.AIData?.Overall ?? true)
                     {
-                        AIData?.ToString(fg);
+                        AIData?.Print(sb);
                     }
                     if ((printMask?.Packages?.Overall ?? true)
                         && Packages is {} PackagesItem)
                     {
-                        fg.AppendLine("Packages =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Packages =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PackagesItem.Overall);
+                            sb.AppendItem(PackagesItem.Overall);
                             if (PackagesItem.Specific != null)
                             {
                                 foreach (var subItem in PackagesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Class ?? true)
                     {
-                        fg.AppendItem(Class, "Class");
+                        sb.AppendItem(Class, "Class");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.ShortName ?? true)
                     {
-                        fg.AppendItem(ShortName, "ShortName");
+                        sb.AppendItem(ShortName, "ShortName");
                     }
                     if (printMask?.PlayerSkills?.Overall ?? true)
                     {
-                        PlayerSkills?.ToString(fg);
+                        PlayerSkills?.Print(sb);
                     }
                     if ((printMask?.HeadParts?.Overall ?? true)
                         && HeadParts is {} HeadPartsItem)
                     {
-                        fg.AppendLine("HeadParts =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HeadParts =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HeadPartsItem.Overall);
+                            sb.AppendItem(HeadPartsItem.Overall);
                             if (HeadPartsItem.Specific != null)
                             {
                                 foreach (var subItem in HeadPartsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.HairColor ?? true)
                     {
-                        fg.AppendItem(HairColor, "HairColor");
+                        sb.AppendItem(HairColor, "HairColor");
                     }
                     if (printMask?.CombatStyle ?? true)
                     {
-                        fg.AppendItem(CombatStyle, "CombatStyle");
+                        sb.AppendItem(CombatStyle, "CombatStyle");
                     }
                     if (printMask?.GiftFilter ?? true)
                     {
-                        fg.AppendItem(GiftFilter, "GiftFilter");
+                        sb.AppendItem(GiftFilter, "GiftFilter");
                     }
                     if (printMask?.NAM5 ?? true)
                     {
-                        fg.AppendItem(NAM5, "NAM5");
+                        sb.AppendItem(NAM5, "NAM5");
                     }
                     if (printMask?.Height ?? true)
                     {
-                        fg.AppendItem(Height, "Height");
+                        sb.AppendItem(Height, "Height");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.Sound?.Overall ?? true)
                     {
-                        Sound?.ToString(fg);
+                        Sound?.Print(sb);
                     }
                     if (printMask?.DefaultOutfit ?? true)
                     {
-                        fg.AppendItem(DefaultOutfit, "DefaultOutfit");
+                        sb.AppendItem(DefaultOutfit, "DefaultOutfit");
                     }
                     if (printMask?.SleepingOutfit ?? true)
                     {
-                        fg.AppendItem(SleepingOutfit, "SleepingOutfit");
+                        sb.AppendItem(SleepingOutfit, "SleepingOutfit");
                     }
                     if (printMask?.DefaultPackageList ?? true)
                     {
-                        fg.AppendItem(DefaultPackageList, "DefaultPackageList");
+                        sb.AppendItem(DefaultPackageList, "DefaultPackageList");
                     }
                     if (printMask?.CrimeFaction ?? true)
                     {
-                        fg.AppendItem(CrimeFaction, "CrimeFaction");
+                        sb.AppendItem(CrimeFaction, "CrimeFaction");
                     }
                     if (printMask?.HeadTexture ?? true)
                     {
-                        fg.AppendItem(HeadTexture, "HeadTexture");
+                        sb.AppendItem(HeadTexture, "HeadTexture");
                     }
                     if (printMask?.TextureLighting ?? true)
                     {
-                        fg.AppendItem(TextureLighting, "TextureLighting");
+                        sb.AppendItem(TextureLighting, "TextureLighting");
                     }
                     if (printMask?.FaceMorph?.Overall ?? true)
                     {
-                        FaceMorph?.ToString(fg);
+                        FaceMorph?.Print(sb);
                     }
                     if (printMask?.FaceParts?.Overall ?? true)
                     {
-                        FaceParts?.ToString(fg);
+                        FaceParts?.Print(sb);
                     }
                     if ((printMask?.TintLayers?.Overall ?? true)
                         && TintLayers is {} TintLayersItem)
                     {
-                        fg.AppendLine("TintLayers =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("TintLayers =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TintLayersItem.Overall);
+                            sb.AppendItem(TintLayersItem.Overall);
                             if (TintLayersItem.Specific != null)
                             {
                                 foreach (var subItem in TintLayersItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -2321,269 +2291,286 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                Configuration?.ToString(fg);
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                Configuration?.Print(sb);
                 if (Factions is {} FactionsItem)
                 {
-                    fg.AppendLine("Factions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Factions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FactionsItem.Overall);
+                        sb.AppendItem(FactionsItem.Overall);
                         if (FactionsItem.Specific != null)
                         {
                             foreach (var subItem in FactionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(DeathItem, "DeathItem");
-                fg.AppendItem(Voice, "Voice");
-                fg.AppendItem(Template, "Template");
-                fg.AppendItem(Race, "Race");
+                {
+                    sb.AppendItem(DeathItem, "DeathItem");
+                }
+                {
+                    sb.AppendItem(Voice, "Voice");
+                }
+                {
+                    sb.AppendItem(Template, "Template");
+                }
+                {
+                    sb.AppendItem(Race, "Race");
+                }
                 if (ActorEffect is {} ActorEffectItem)
                 {
-                    fg.AppendLine("ActorEffect =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorEffect =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorEffectItem.Overall);
+                        sb.AppendItem(ActorEffectItem.Overall);
                         if (ActorEffectItem.Specific != null)
                         {
                             foreach (var subItem in ActorEffectItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                Destructible?.ToString(fg);
-                fg.AppendItem(WornArmor, "WornArmor");
-                fg.AppendItem(FarAwayModel, "FarAwayModel");
-                fg.AppendItem(AttackRace, "AttackRace");
+                Destructible?.Print(sb);
+                {
+                    sb.AppendItem(WornArmor, "WornArmor");
+                }
+                {
+                    sb.AppendItem(FarAwayModel, "FarAwayModel");
+                }
+                {
+                    sb.AppendItem(AttackRace, "AttackRace");
+                }
                 if (Attacks is {} AttacksItem)
                 {
-                    fg.AppendLine("Attacks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Attacks =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AttacksItem.Overall);
+                        sb.AppendItem(AttacksItem.Overall);
                         if (AttacksItem.Specific != null)
                         {
                             foreach (var subItem in AttacksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
-                fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
-                fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
-                fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                {
+                    sb.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
+                }
+                {
+                    sb.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
+                }
+                {
+                    sb.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
+                }
+                {
+                    sb.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                }
                 if (Perks is {} PerksItem)
                 {
-                    fg.AppendLine("Perks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Perks =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PerksItem.Overall);
+                        sb.AppendItem(PerksItem.Overall);
                         if (PerksItem.Specific != null)
                         {
                             foreach (var subItem in PerksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Items is {} ItemsItem)
                 {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ItemsItem.Overall);
+                        sb.AppendItem(ItemsItem.Overall);
                         if (ItemsItem.Specific != null)
                         {
                             foreach (var subItem in ItemsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                AIData?.ToString(fg);
+                AIData?.Print(sb);
                 if (Packages is {} PackagesItem)
                 {
-                    fg.AppendLine("Packages =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Packages =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PackagesItem.Overall);
+                        sb.AppendItem(PackagesItem.Overall);
                         if (PackagesItem.Specific != null)
                         {
                             foreach (var subItem in PackagesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Class, "Class");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(ShortName, "ShortName");
-                PlayerSkills?.ToString(fg);
+                {
+                    sb.AppendItem(Class, "Class");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(ShortName, "ShortName");
+                }
+                PlayerSkills?.Print(sb);
                 if (HeadParts is {} HeadPartsItem)
                 {
-                    fg.AppendLine("HeadParts =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HeadParts =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HeadPartsItem.Overall);
+                        sb.AppendItem(HeadPartsItem.Overall);
                         if (HeadPartsItem.Specific != null)
                         {
                             foreach (var subItem in HeadPartsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(HairColor, "HairColor");
-                fg.AppendItem(CombatStyle, "CombatStyle");
-                fg.AppendItem(GiftFilter, "GiftFilter");
-                fg.AppendItem(NAM5, "NAM5");
-                fg.AppendItem(Height, "Height");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                Sound?.ToString(fg);
-                fg.AppendItem(DefaultOutfit, "DefaultOutfit");
-                fg.AppendItem(SleepingOutfit, "SleepingOutfit");
-                fg.AppendItem(DefaultPackageList, "DefaultPackageList");
-                fg.AppendItem(CrimeFaction, "CrimeFaction");
-                fg.AppendItem(HeadTexture, "HeadTexture");
-                fg.AppendItem(TextureLighting, "TextureLighting");
-                FaceMorph?.ToString(fg);
-                FaceParts?.ToString(fg);
+                {
+                    sb.AppendItem(HairColor, "HairColor");
+                }
+                {
+                    sb.AppendItem(CombatStyle, "CombatStyle");
+                }
+                {
+                    sb.AppendItem(GiftFilter, "GiftFilter");
+                }
+                {
+                    sb.AppendItem(NAM5, "NAM5");
+                }
+                {
+                    sb.AppendItem(Height, "Height");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                Sound?.Print(sb);
+                {
+                    sb.AppendItem(DefaultOutfit, "DefaultOutfit");
+                }
+                {
+                    sb.AppendItem(SleepingOutfit, "SleepingOutfit");
+                }
+                {
+                    sb.AppendItem(DefaultPackageList, "DefaultPackageList");
+                }
+                {
+                    sb.AppendItem(CrimeFaction, "CrimeFaction");
+                }
+                {
+                    sb.AppendItem(HeadTexture, "HeadTexture");
+                }
+                {
+                    sb.AppendItem(TextureLighting, "TextureLighting");
+                }
+                FaceMorph?.Print(sb);
+                FaceParts?.Print(sb);
                 if (TintLayers is {} TintLayersItem)
                 {
-                    fg.AppendLine("TintLayers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("TintLayers =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TintLayersItem.Overall);
+                        sb.AppendItem(TintLayersItem.Overall);
                         if (TintLayersItem.Specific != null)
                         {
                             foreach (var subItem in TintLayersItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -2808,7 +2795,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
         public Npc(
             FormKey formKey,
@@ -2891,7 +2878,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2901,7 +2888,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Npc CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Npc();
             ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2916,7 +2903,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Npc item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2926,7 +2913,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -2953,7 +2940,6 @@ namespace Mutagen.Bethesda.Skyrim
         INpcGetter,
         INpcSpawn,
         IObjectBounded,
-        IObjectBoundedOptional,
         IObjectId,
         IScripted,
         ISkyrimMajorRecordInternal,
@@ -2965,7 +2951,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new NpcConfiguration Configuration { get; set; }
@@ -3036,6 +3022,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAliasVoiceTypeGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILockListGetter,
         ILoquiObject<INpcGetter>,
@@ -3044,7 +3031,6 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         INpcSpawnGetter,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
         IObjectIdGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
@@ -3053,13 +3039,13 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScriptedGetter
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -3144,26 +3130,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcGetter item,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).ToString(
+            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).ToString(
+            ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3258,7 +3244,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -3273,10 +3259,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Npc_FieldIndex
+    internal enum Npc_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3333,7 +3319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Npc_Registration : ILoquiRegistration
+    internal partial class Npc_Registration : ILoquiRegistration
     {
         public static readonly Npc_Registration Instance = new Npc_Registration();
 
@@ -3375,6 +3361,74 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.NPC_);
+            var all = RecordCollection.Factory(
+                RecordTypes.NPC_,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.ACBS,
+                RecordTypes.SNAM,
+                RecordTypes.INAM,
+                RecordTypes.VTCK,
+                RecordTypes.TPLT,
+                RecordTypes.RNAM,
+                RecordTypes.SPLO,
+                RecordTypes.SPCT,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.DMDL,
+                RecordTypes.WNAM,
+                RecordTypes.ANAM,
+                RecordTypes.ATKR,
+                RecordTypes.ATKD,
+                RecordTypes.ATKE,
+                RecordTypes.SPOR,
+                RecordTypes.OCOR,
+                RecordTypes.GWOR,
+                RecordTypes.ECOR,
+                RecordTypes.PRKR,
+                RecordTypes.PRKZ,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.COED,
+                RecordTypes.AIDT,
+                RecordTypes.PKID,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CNAM,
+                RecordTypes.FULL,
+                RecordTypes.SHRT,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.PNAM,
+                RecordTypes.HCLF,
+                RecordTypes.ZNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM5,
+                RecordTypes.NAM6,
+                RecordTypes.NAM7,
+                RecordTypes.NAM8,
+                RecordTypes.CSCR,
+                RecordTypes.CSDT,
+                RecordTypes.CSDI,
+                RecordTypes.CSDC,
+                RecordTypes.DOFT,
+                RecordTypes.SOFT,
+                RecordTypes.DPLT,
+                RecordTypes.CRIF,
+                RecordTypes.FTST,
+                RecordTypes.QNAM,
+                RecordTypes.NAM9,
+                RecordTypes.NAMA,
+                RecordTypes.TINI,
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIAS);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3408,7 +3462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class NpcSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
 
@@ -3518,7 +3572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<INpcInternal>(
                 record: item,
@@ -3531,7 +3585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Npc)item,
@@ -3542,7 +3596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Npc)item,
@@ -3553,7 +3607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcCommon : SkyrimMajorRecordCommon
+    internal partial class NpcCommon : SkyrimMajorRecordCommon
     {
         public new static readonly NpcCommon Instance = new NpcCommon();
 
@@ -3577,7 +3631,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Npc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -3677,372 +3730,334 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             INpcGetter item,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Npc.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Npc =>");
+                sb.AppendLine($"Npc =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Npc) =>");
+                sb.AppendLine($"{name} (Npc) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Npc.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if (printMask?.Configuration?.Overall ?? true)
             {
-                item.Configuration?.ToString(fg, "Configuration");
+                item.Configuration?.Print(sb, "Configuration");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
-                fg.AppendLine("Factions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Factions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Factions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.DeathItem ?? true)
             {
-                fg.AppendItem(item.DeathItem.FormKeyNullable, "DeathItem");
+                sb.AppendItem(item.DeathItem.FormKeyNullable, "DeathItem");
             }
             if (printMask?.Voice ?? true)
             {
-                fg.AppendItem(item.Voice.FormKeyNullable, "Voice");
+                sb.AppendItem(item.Voice.FormKeyNullable, "Voice");
             }
             if (printMask?.Template ?? true)
             {
-                fg.AppendItem(item.Template.FormKeyNullable, "Template");
+                sb.AppendItem(item.Template.FormKeyNullable, "Template");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKey, "Race");
+                sb.AppendItem(item.Race.FormKey, "Race");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
                 && item.ActorEffect is {} ActorEffectItem)
             {
-                fg.AppendLine("ActorEffect =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorEffect =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorEffectItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.Print(sb, "Destructible");
             }
             if (printMask?.WornArmor ?? true)
             {
-                fg.AppendItem(item.WornArmor.FormKeyNullable, "WornArmor");
+                sb.AppendItem(item.WornArmor.FormKeyNullable, "WornArmor");
             }
             if (printMask?.FarAwayModel ?? true)
             {
-                fg.AppendItem(item.FarAwayModel.FormKeyNullable, "FarAwayModel");
+                sb.AppendItem(item.FarAwayModel.FormKeyNullable, "FarAwayModel");
             }
             if (printMask?.AttackRace ?? true)
             {
-                fg.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
+                sb.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
             }
             if (printMask?.Attacks?.Overall ?? true)
             {
-                fg.AppendLine("Attacks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Attacks =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Attacks)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.SpectatorOverridePackageList ?? true)
             {
-                fg.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
+                sb.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
             }
             if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
             {
-                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
+                sb.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
             }
             if (printMask?.GuardWarnOverridePackageList ?? true)
             {
-                fg.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
+                sb.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
             }
             if (printMask?.CombatOverridePackageList ?? true)
             {
-                fg.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
+                sb.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
             }
             if ((printMask?.Perks?.Overall ?? true)
                 && item.Perks is {} PerksItem)
             {
-                fg.AppendLine("Perks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Perks =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in PerksItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Items?.Overall ?? true)
                 && item.Items is {} ItemsItem)
             {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ItemsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.AIData?.Overall ?? true)
             {
-                item.AIData?.ToString(fg, "AIData");
+                item.AIData?.Print(sb, "AIData");
             }
             if (printMask?.Packages?.Overall ?? true)
             {
-                fg.AppendLine("Packages =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Packages =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Packages)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Class ?? true)
             {
-                fg.AppendItem(item.Class.FormKey, "Class");
+                sb.AppendItem(item.Class.FormKey, "Class");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ShortName ?? true)
                 && item.ShortName is {} ShortNameItem)
             {
-                fg.AppendItem(ShortNameItem, "ShortName");
+                sb.AppendItem(ShortNameItem, "ShortName");
             }
             if ((printMask?.PlayerSkills?.Overall ?? true)
                 && item.PlayerSkills is {} PlayerSkillsItem)
             {
-                PlayerSkillsItem?.ToString(fg, "PlayerSkills");
+                PlayerSkillsItem?.Print(sb, "PlayerSkills");
             }
             if (printMask?.HeadParts?.Overall ?? true)
             {
-                fg.AppendLine("HeadParts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HeadParts =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.HeadParts)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.HairColor ?? true)
             {
-                fg.AppendItem(item.HairColor.FormKeyNullable, "HairColor");
+                sb.AppendItem(item.HairColor.FormKeyNullable, "HairColor");
             }
             if (printMask?.CombatStyle ?? true)
             {
-                fg.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
+                sb.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
             if (printMask?.GiftFilter ?? true)
             {
-                fg.AppendItem(item.GiftFilter.FormKeyNullable, "GiftFilter");
+                sb.AppendItem(item.GiftFilter.FormKeyNullable, "GiftFilter");
             }
             if (printMask?.NAM5 ?? true)
             {
-                fg.AppendItem(item.NAM5, "NAM5");
+                sb.AppendItem(item.NAM5, "NAM5");
             }
             if (printMask?.Height ?? true)
             {
-                fg.AppendItem(item.Height, "Height");
+                sb.AppendItem(item.Height, "Height");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if ((printMask?.Sound?.Overall ?? true)
                 && item.Sound is {} SoundItem)
             {
-                SoundItem?.ToString(fg, "Sound");
+                SoundItem?.Print(sb, "Sound");
             }
             if (printMask?.DefaultOutfit ?? true)
             {
-                fg.AppendItem(item.DefaultOutfit.FormKeyNullable, "DefaultOutfit");
+                sb.AppendItem(item.DefaultOutfit.FormKeyNullable, "DefaultOutfit");
             }
             if (printMask?.SleepingOutfit ?? true)
             {
-                fg.AppendItem(item.SleepingOutfit.FormKeyNullable, "SleepingOutfit");
+                sb.AppendItem(item.SleepingOutfit.FormKeyNullable, "SleepingOutfit");
             }
             if (printMask?.DefaultPackageList ?? true)
             {
-                fg.AppendItem(item.DefaultPackageList.FormKeyNullable, "DefaultPackageList");
+                sb.AppendItem(item.DefaultPackageList.FormKeyNullable, "DefaultPackageList");
             }
             if (printMask?.CrimeFaction ?? true)
             {
-                fg.AppendItem(item.CrimeFaction.FormKeyNullable, "CrimeFaction");
+                sb.AppendItem(item.CrimeFaction.FormKeyNullable, "CrimeFaction");
             }
             if (printMask?.HeadTexture ?? true)
             {
-                fg.AppendItem(item.HeadTexture.FormKeyNullable, "HeadTexture");
+                sb.AppendItem(item.HeadTexture.FormKeyNullable, "HeadTexture");
             }
             if ((printMask?.TextureLighting ?? true)
                 && item.TextureLighting is {} TextureLightingItem)
             {
-                fg.AppendItem(TextureLightingItem, "TextureLighting");
+                sb.AppendItem(TextureLightingItem, "TextureLighting");
             }
             if ((printMask?.FaceMorph?.Overall ?? true)
                 && item.FaceMorph is {} FaceMorphItem)
             {
-                FaceMorphItem?.ToString(fg, "FaceMorph");
+                FaceMorphItem?.Print(sb, "FaceMorph");
             }
             if ((printMask?.FaceParts?.Overall ?? true)
                 && item.FaceParts is {} FacePartsItem)
             {
-                FacePartsItem?.ToString(fg, "FaceParts");
+                FacePartsItem?.Print(sb, "FaceParts");
             }
             if (printMask?.TintLayers?.Overall ?? true)
             {
-                fg.AppendLine("TintLayers =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("TintLayers =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.TintLayers)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -4118,7 +4133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
-                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+                if (!lhs.Factions.SequenceEqual(rhs.Factions, (l, r) => ((RankPlacementCommon)((IRankPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Factions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
@@ -4162,7 +4177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
@@ -4182,11 +4197,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Perks) ?? true))
             {
-                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks)) return false;
+                if (!lhs.Perks.SequenceEqualNullable(rhs.Perks, (l, r) => ((PerkPlacementCommon)((IPerkPlacementGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Perks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
@@ -4306,7 +4321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TintLayers) ?? true))
             {
-                if (!lhs.TintLayers.SequenceEqualNullable(rhs.TintLayers)) return false;
+                if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers, (l, r) => ((TintLayerCommon)((ITintLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Npc_FieldIndex.TintLayers)))) return false;
             }
             return true;
         }
@@ -4431,34 +4446,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Factions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DeathItem.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DeathItem, out var DeathItemInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DeathItem);
+                yield return DeathItemInfo;
             }
-            if (obj.Voice.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Voice, out var VoiceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Voice);
+                yield return VoiceInfo;
             }
-            if (obj.Template.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Template);
+                yield return TemplateInfo;
             }
             yield return FormLinkInformation.Factory(obj.Race);
             if (obj.ActorEffect is {} ActorEffectItem)
@@ -4470,46 +4485,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.ContainedFormLinks)
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.WornArmor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WornArmor, out var WornArmorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WornArmor);
+                yield return WornArmorInfo;
             }
-            if (obj.FarAwayModel.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FarAwayModel, out var FarAwayModelInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FarAwayModel);
+                yield return FarAwayModelInfo;
             }
-            if (obj.AttackRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackRace);
+                yield return AttackRaceInfo;
             }
-            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Attacks.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.SpectatorOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpectatorOverridePackageList, out var SpectatorOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpectatorOverridePackageList);
+                yield return SpectatorOverridePackageListInfo;
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObserveDeadBodyOverridePackageList, out var ObserveDeadBodyOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObserveDeadBodyOverridePackageList);
+                yield return ObserveDeadBodyOverridePackageListInfo;
             }
-            if (obj.GuardWarnOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GuardWarnOverridePackageList, out var GuardWarnOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GuardWarnOverridePackageList);
+                yield return GuardWarnOverridePackageListInfo;
             }
-            if (obj.CombatOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatOverridePackageList, out var CombatOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
+                yield return CombatOverridePackageListInfo;
             }
             if (obj.Perks is {} PerksItem)
             {
-                foreach (var item in PerksItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in PerksItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4517,7 +4532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Items is {} ItemsItem)
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4538,44 +4553,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.HairColor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HairColor, out var HairColorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HairColor);
+                yield return HairColorInfo;
             }
-            if (obj.CombatStyle.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatStyle, out var CombatStyleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatStyle);
+                yield return CombatStyleInfo;
             }
-            if (obj.GiftFilter.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GiftFilter, out var GiftFilterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GiftFilter);
+                yield return GiftFilterInfo;
             }
             if (obj.Sound is IFormLinkContainerGetter SoundlinkCont)
             {
-                foreach (var item in SoundlinkCont.ContainedFormLinks)
+                foreach (var item in SoundlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.DefaultOutfit.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DefaultOutfit, out var DefaultOutfitInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DefaultOutfit);
+                yield return DefaultOutfitInfo;
             }
-            if (obj.SleepingOutfit.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SleepingOutfit, out var SleepingOutfitInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SleepingOutfit);
+                yield return SleepingOutfitInfo;
             }
-            if (obj.DefaultPackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DefaultPackageList, out var DefaultPackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DefaultPackageList);
+                yield return DefaultPackageListInfo;
             }
-            if (obj.CrimeFaction.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CrimeFaction, out var CrimeFactionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CrimeFaction);
+                yield return CrimeFactionInfo;
             }
-            if (obj.HeadTexture.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HeadTexture, out var HeadTextureInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HeadTexture);
+                yield return HeadTextureInfo;
             }
             yield break;
         }
@@ -4618,7 +4633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class NpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
 
@@ -5331,7 +5346,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static Npc_Registration StaticRegistration => Npc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]
@@ -5349,18 +5364,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
+        public new static readonly NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             INpcGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -5386,7 +5401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
                 writer: writer,
                 items: item.Factions,
-                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRankPlacementGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RankPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5417,7 +5432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5445,7 +5460,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
                 writer: writer,
                 items: item.Attacks,
-                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5474,7 +5489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Perks,
                 counterType: RecordTypes.PRKZ,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((PerkPlacementBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5487,7 +5502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Items,
                 counterType: RecordTypes.COCT,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5503,7 +5518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5516,7 +5531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5551,7 +5566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHeadPartGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5636,7 +5651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintLayers,
-                transl: (MutagenWriter subWriter, ITintLayerGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ITintLayerGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((TintLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5662,7 +5677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INpcGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -5673,12 +5688,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -5690,7 +5708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcGetter)item,
@@ -5701,7 +5719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcGetter)item,
@@ -5712,7 +5730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcGetter)item,
@@ -5722,9 +5740,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class NpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
+        public new static readonly NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NPC_;
         public static void FillBinaryStructs(
@@ -5743,7 +5761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -5768,7 +5786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RankPlacement>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.SNAM,
+                            triggeringRecord: RankPlacement_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RankPlacement.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Factions;
@@ -5816,7 +5834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
@@ -5843,7 +5861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Attack_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.Attacks;
@@ -5880,7 +5898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.PRKZ,
-                            triggeringRecord: RecordTypes.PRKR,
+                            triggeringRecord: PerkPlacement_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: PerkPlacement.TryCreateFromBinary)
                         .CastExtendedList<PerkPlacement>();
@@ -5894,7 +5912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
-                            triggeringRecord: RecordTypes.CNTO,
+                            triggeringRecord: ContainerEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ContainerEntry.TryCreateFromBinary)
                         .CastExtendedList<ContainerEntry>();
@@ -5914,8 +5932,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Npc_FieldIndex.Packages;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -6019,7 +6037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcInheritSound.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
@@ -6028,7 +6046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Sound = Mutagen.Bethesda.Skyrim.NpcSoundTypes.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
@@ -6085,7 +6103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TintLayers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintLayer>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: TintLayer_Registration.TriggeringRecordTypes,
+                            triggeringRecord: TintLayer_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintLayer.TryCreateFromBinary));
                     return (int)Npc_FieldIndex.TintLayers;
@@ -6097,7 +6115,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -6118,16 +6137,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcBinaryOverlay :
+    internal partial class NpcBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         INpcGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static Npc_Registration StaticRegistration => Npc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcCommon.Instance;
         [DebuggerStepThrough]
@@ -6135,14 +6154,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -6155,85 +6174,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new OverlayStream(_data.Slice(_ConfigurationLocation!.Value.Min), _package), _package) : default;
+        private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(_recordData.Slice(_ConfigurationLocation!.Value.Min), _package) : default;
         public INpcConfigurationGetter Configuration => _Configuration ?? new NpcConfiguration();
         #endregion
-        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
+        public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
         #endregion
         #region Voice
         private int? _VoiceLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> Voice => _VoiceLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoiceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<INpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
+        public IFormLinkNullableGetter<INpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcSpawnGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
+        public IFormLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
         #region WornArmor
         private int? _WornArmorLocation;
-        public IFormLinkNullableGetter<IArmorGetter> WornArmor => _WornArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WornArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> WornArmor => _WornArmorLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WornArmorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region FarAwayModel
         private int? _FarAwayModelLocation;
-        public IFormLinkNullableGetter<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> FarAwayModel => _FarAwayModelLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FarAwayModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IPerkPlacementGetter>? Perks { get; private set; }
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region AIData
         private RangeInt32? _AIDataLocation;
-        private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
+        private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(_recordData.Slice(_AIDataLocation!.Value.Min), _package) : default;
         public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region Class
         private int? _ClassLocation;
-        public IFormLinkGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;
+        public IFormLinkGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClassLocation.Value, _package.MetaData.Constants)))) : FormLink<IClassGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -6245,7 +6265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region DataMarker
         public partial ParseResult DataMarkerCustomParse(
@@ -6254,71 +6274,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
-        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new OverlayStream(_data.Slice(_PlayerSkillsLocation!.Value.Min), _package), _package) : default;
+        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(_recordData.Slice(_PlayerSkillsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLinkGetter<IHeadPartGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> HeadParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
         #region HairColor
         private int? _HairColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> HairColor => _HairColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region GiftFilter
         private int? _GiftFilterLocation;
-        public IFormLinkNullableGetter<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> GiftFilter => _GiftFilterLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GiftFilterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region NAM5
         private int? _NAM5Location;
-        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NAM5Location.Value, _package.MetaData.Constants)) : default;
+        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : default;
         #endregion
         #region Height
         private int? _HeightLocation;
-        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
+        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel);
         #endregion
         public IANpcSoundDefinitionGetter? Sound { get; private set; }
         #region DefaultOutfit
         private int? _DefaultOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit => _DefaultOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region SleepingOutfit
         private int? _SleepingOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit => _SleepingOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SleepingOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region DefaultPackageList
         private int? _DefaultPackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> DefaultPackageList => _DefaultPackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultPackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CrimeFaction
         private int? _CrimeFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> CrimeFaction => _CrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region HeadTexture
         private int? _HeadTextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> HeadTexture => _HeadTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region TextureLighting
         private int? _TextureLightingLocation;
-        public Color? TextureLighting => _TextureLightingLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureLightingLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color?);
+        public Color? TextureLighting => _TextureLightingLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLightingLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color?);
         #endregion
         #region FaceMorph
         private RangeInt32? _FaceMorphLocation;
-        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new OverlayStream(_data.Slice(_FaceMorphLocation!.Value.Min), _package), _package) : default;
+        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(_recordData.Slice(_FaceMorphLocation!.Value.Min), _package) : default;
         #endregion
         #region FaceParts
         private RangeInt32? _FacePartsLocation;
-        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new OverlayStream(_data.Slice(_FacePartsLocation!.Value.Min), _package), _package) : default;
+        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(_recordData.Slice(_FacePartsLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = ListExt.Empty<TintLayerBinaryOverlay>();
+        public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = Array.Empty<ITintLayerGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -6326,28 +6346,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NpcBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NpcBinaryOverlay NpcFactory(
+        public static INpcGetter NpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NpcBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -6357,20 +6380,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static NpcBinaryOverlay NpcFactory(
+        public static INpcGetter NpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -6380,9 +6403,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -6402,14 +6425,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
+                    this.Factions = BinaryOverlayList.FactoryByArray<IRankPlacementGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: RankPlacement_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Npc_FieldIndex.Factions;
@@ -6443,7 +6467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        subrecordType: RecordTypes.SPLO,
+                        trigger: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Npc_FieldIndex.ActorEffect;
                 }
@@ -6454,7 +6478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.WNAM:
@@ -6475,10 +6499,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
                 {
-                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Npc_FieldIndex.Attacks;
                 }
@@ -6505,13 +6529,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PRKR:
                 case RecordTypeInts.PRKZ:
                 {
-                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<PerkPlacementBinaryOverlay>(
+                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<IPerkPlacementGetter>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x8,
                         countLength: 4,
                         countType: RecordTypes.PRKZ,
-                        subrecordType: RecordTypes.PRKR,
+                        trigger: RecordTypes.PRKR,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Perks;
@@ -6519,13 +6543,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: RecordTypes.CNTO,
+                        trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)Npc_FieldIndex.Items;
@@ -6546,11 +6570,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Npc_FieldIndex.Packages;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
@@ -6558,7 +6582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Npc_FieldIndex.Keywords;
                 }
@@ -6599,7 +6623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Npc_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HCLF:
@@ -6642,7 +6666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Sound = NpcInheritSoundBinaryOverlay.NpcInheritSoundFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDT:
@@ -6652,7 +6676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Sound = NpcSoundTypesBinaryOverlay.NpcSoundTypesFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Npc_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DOFT:
@@ -6700,10 +6724,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIAS:
                 {
-                    this.TintLayers = this.ParseRepeatedTypelessSubrecord<TintLayerBinaryOverlay>(
+                    this.TintLayers = this.ParseRepeatedTypelessSubrecord<ITintLayerGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: TintLayer_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: TintLayer_Registration.TriggerSpecs,
                         factory: TintLayerBinaryOverlay.TintLayerFactory);
                     return (int)Npc_FieldIndex.TintLayers;
                 }
@@ -6714,17 +6738,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.ToString(
+            NpcMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

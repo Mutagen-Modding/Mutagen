@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,22 +18,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -132,12 +133,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MusicTrackMixIn.ToString(
+            MusicTrackMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -387,9 +389,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.CuePoints.Specific = l;
-                        foreach (var item in CuePoints.Specific.WithIndex())
+                        foreach (var item in CuePoints.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -401,9 +403,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -416,9 +418,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Tracks.Specific = l;
-                        foreach (var item in Tracks.Specific.WithIndex())
+                        foreach (var item in Tracks.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -427,119 +429,106 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MusicTrack.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MusicTrack.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MusicTrack.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MusicTrack.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.FadeOut ?? true)
                     {
-                        fg.AppendItem(FadeOut, "FadeOut");
+                        sb.AppendItem(FadeOut, "FadeOut");
                     }
                     if (printMask?.TrackFilename ?? true)
                     {
-                        fg.AppendItem(TrackFilename, "TrackFilename");
+                        sb.AppendItem(TrackFilename, "TrackFilename");
                     }
                     if (printMask?.FinaleFilename ?? true)
                     {
-                        fg.AppendItem(FinaleFilename, "FinaleFilename");
+                        sb.AppendItem(FinaleFilename, "FinaleFilename");
                     }
                     if (printMask?.LoopData?.Overall ?? true)
                     {
-                        LoopData?.ToString(fg);
+                        LoopData?.Print(sb);
                     }
                     if ((printMask?.CuePoints?.Overall ?? true)
                         && CuePoints is {} CuePointsItem)
                     {
-                        fg.AppendLine("CuePoints =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CuePoints =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CuePointsItem.Overall);
+                            sb.AppendItem(CuePointsItem.Overall);
                             if (CuePointsItem.Specific != null)
                             {
                                 foreach (var subItem in CuePointsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Tracks?.Overall ?? true)
                         && Tracks is {} TracksItem)
                     {
-                        fg.AppendLine("Tracks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Tracks =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TracksItem.Overall);
+                            sb.AppendItem(TracksItem.Overall);
                             if (TracksItem.Specific != null)
                             {
                                 foreach (var subItem in TracksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -683,107 +672,100 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Duration, "Duration");
-                fg.AppendItem(FadeOut, "FadeOut");
-                fg.AppendItem(TrackFilename, "TrackFilename");
-                fg.AppendItem(FinaleFilename, "FinaleFilename");
-                LoopData?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
+                {
+                    sb.AppendItem(FadeOut, "FadeOut");
+                }
+                {
+                    sb.AppendItem(TrackFilename, "TrackFilename");
+                }
+                {
+                    sb.AppendItem(FinaleFilename, "FinaleFilename");
+                }
+                LoopData?.Print(sb);
                 if (CuePoints is {} CuePointsItem)
                 {
-                    fg.AppendLine("CuePoints =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CuePoints =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CuePointsItem.Overall);
+                        sb.AppendItem(CuePointsItem.Overall);
                         if (CuePointsItem.Specific != null)
                         {
                             foreach (var subItem in CuePointsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Tracks is {} TracksItem)
                 {
-                    fg.AppendLine("Tracks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Tracks =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TracksItem.Overall);
+                        sb.AppendItem(TracksItem.Overall);
                         if (TracksItem.Specific != null)
                         {
                             foreach (var subItem in TracksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -876,7 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MusicTrack_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MusicTrackCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MusicTrackCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackSetterCommon.Instance.RemapLinks(this, mapping);
         public MusicTrack(
             FormKey formKey,
@@ -954,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -964,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static MusicTrack CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MusicTrack();
             ((MusicTrackSetterCommon)((IMusicTrackGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -979,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MusicTrack item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -989,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1071,26 +1053,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMusicTrackGetter item,
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
-            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).ToString(
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMusicTrackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
-            ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).ToString(
+            ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1185,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMusicTrackInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MusicTrackSetterCommon)((IMusicTrackGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1200,10 +1182,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MusicTrack_FieldIndex
+    internal enum MusicTrack_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1224,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MusicTrack_Registration : ILoquiRegistration
+    internal partial class MusicTrack_Registration : ILoquiRegistration
     {
         public static readonly MusicTrack_Registration Instance = new MusicTrack_Registration();
 
@@ -1266,6 +1248,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MUST;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MUST);
+            var all = RecordCollection.Factory(
+                RecordTypes.MUST,
+                RecordTypes.CNAM,
+                RecordTypes.FLTV,
+                RecordTypes.DNAM,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.LNAM,
+                RecordTypes.FNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.SNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MusicTrackBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1299,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MusicTrackSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MusicTrackSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MusicTrackSetterCommon Instance = new MusicTrackSetterCommon();
 
@@ -1344,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IMusicTrackInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMusicTrackInternal>(
                 record: item,
@@ -1357,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MusicTrack)item,
@@ -1368,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MusicTrack)item,
@@ -1379,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTrackCommon : SkyrimMajorRecordCommon
+    internal partial class MusicTrackCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MusicTrackCommon Instance = new MusicTrackCommon();
 
@@ -1403,7 +1405,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
             ret.FadeOut = item.FadeOut.EqualsWithin(rhs.FadeOut);
@@ -1429,139 +1430,125 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IMusicTrackGetter item,
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMusicTrackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MusicTrack.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MusicTrack =>");
+                sb.AppendLine($"MusicTrack =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MusicTrack) =>");
+                sb.AppendLine($"{name} (MusicTrack) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMusicTrackGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MusicTrack.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Duration ?? true)
                 && item.Duration is {} DurationItem)
             {
-                fg.AppendItem(DurationItem, "Duration");
+                sb.AppendItem(DurationItem, "Duration");
             }
             if ((printMask?.FadeOut ?? true)
                 && item.FadeOut is {} FadeOutItem)
             {
-                fg.AppendItem(FadeOutItem, "FadeOut");
+                sb.AppendItem(FadeOutItem, "FadeOut");
             }
             if ((printMask?.TrackFilename ?? true)
                 && item.TrackFilename is {} TrackFilenameItem)
             {
-                fg.AppendItem(TrackFilenameItem, "TrackFilename");
+                sb.AppendItem(TrackFilenameItem, "TrackFilename");
             }
             if ((printMask?.FinaleFilename ?? true)
                 && item.FinaleFilename is {} FinaleFilenameItem)
             {
-                fg.AppendItem(FinaleFilenameItem, "FinaleFilename");
+                sb.AppendItem(FinaleFilenameItem, "FinaleFilename");
             }
             if ((printMask?.LoopData?.Overall ?? true)
                 && item.LoopData is {} LoopDataItem)
             {
-                LoopDataItem?.ToString(fg, "LoopData");
+                LoopDataItem?.Print(sb, "LoopData");
             }
             if ((printMask?.CuePoints?.Overall ?? true)
                 && item.CuePoints is {} CuePointsItem)
             {
-                fg.AppendLine("CuePoints =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CuePoints =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CuePointsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Conditions?.Overall ?? true)
                 && item.Conditions is {} ConditionsItem)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ConditionsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Tracks?.Overall ?? true)
                 && item.Tracks is {} TracksItem)
             {
-                fg.AppendLine("Tracks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Tracks =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in TracksItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1645,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MusicTrack_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
             {
@@ -1726,16 +1713,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMusicTrackGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMusicTrackGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Conditions is {} ConditionsItem)
             {
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1788,7 +1775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicTrackSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MusicTrackSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MusicTrackSetterTranslationCommon Instance = new MusicTrackSetterTranslationCommon();
 
@@ -2074,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
@@ -2092,18 +2079,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MusicTrackBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MusicTrackBinaryWriteTranslation Instance = new MusicTrackBinaryWriteTranslation();
+        public new static readonly MusicTrackBinaryWriteTranslation Instance = new MusicTrackBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMusicTrackGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2149,7 +2136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2161,7 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Tracks,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMusicTrackGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2172,7 +2159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IMusicTrackGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2183,12 +2170,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2200,7 +2190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMusicTrackGetter)item,
@@ -2211,7 +2201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMusicTrackGetter)item,
@@ -2222,7 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMusicTrackGetter)item,
@@ -2232,9 +2222,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MusicTrackBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MusicTrackBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
+        public new static readonly MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MUST;
         public static void FillBinaryStructs(
@@ -2253,7 +2243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2317,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary)
                         .CastExtendedList<Condition>();
@@ -2340,7 +2330,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2357,16 +2348,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MusicTrackBinaryOverlay :
+    internal partial class MusicTrackBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMusicTrackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
-        public new static MusicTrack_Registration StaticRegistration => MusicTrack_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
@@ -2374,14 +2365,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MusicTrackCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MusicTrackCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2393,37 +2384,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        public MusicTrack.TypeEnum Type => _TypeLocation.HasValue ? (MusicTrack.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MusicTrack.TypeEnum);
+        public MusicTrack.TypeEnum Type => _TypeLocation.HasValue ? (MusicTrack.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MusicTrack.TypeEnum);
         #endregion
         #region Duration
         private int? _DurationLocation;
-        public Single? Duration => _DurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Duration => _DurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FadeOut
         private int? _FadeOutLocation;
-        public Single? FadeOut => _FadeOutLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeOutLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FadeOut => _FadeOutLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FadeOutLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;
-        public IMusicTrackLoopDataGetter? LoopData => _LoopDataLocation.HasValue ? MusicTrackLoopDataBinaryOverlay.MusicTrackLoopDataFactory(new OverlayStream(_data.Slice(_LoopDataLocation!.Value.Min), _package), _package) : default;
+        public IMusicTrackLoopDataGetter? LoopData => _LoopDataLocation.HasValue ? MusicTrackLoopDataBinaryOverlay.MusicTrackLoopDataFactory(_recordData.Slice(_LoopDataLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<Single>? CuePoints { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IMusicTrackGetter>>? Tracks { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2432,28 +2416,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected MusicTrackBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MusicTrackBinaryOverlay MusicTrackFactory(
+        public static IMusicTrackGetter MusicTrackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MusicTrackBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2463,20 +2450,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MusicTrackBinaryOverlay MusicTrackFactory(
+        public static IMusicTrackGetter MusicTrackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MusicTrackFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2486,9 +2473,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CNAM:
@@ -2523,8 +2510,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.CuePoints = BinaryOverlayList.FactoryByStartIndex<Single>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -2536,18 +2523,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)MusicTrack_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IMusicTrackGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -2563,17 +2553,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MusicTrackMixIn.ToString(
+            MusicTrackMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

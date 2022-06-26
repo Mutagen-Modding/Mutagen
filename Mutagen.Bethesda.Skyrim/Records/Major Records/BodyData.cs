@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class BodyData
 {
-    public partial class BodyData
+    public enum PartIndex
     {
-        public enum PartIndex
-        {
-            BodyTexture
-        }
+        BodyTexture
     }
 }

@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -69,12 +70,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.ToString(
+            SimpleModelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -187,34 +189,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SimpleModel.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SimpleModel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SimpleModel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SimpleModel.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendItem(File, "File");
+                        sb.AppendItem(File, "File");
                     }
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -299,37 +296,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(File, "File");
-                fg.AppendItem(Data, "Data");
+                {
+                    sb.AppendItem(File, "File");
+                }
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -404,8 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = SimpleModel_Registration.TriggeringRecordType;
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -416,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -426,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SimpleModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SimpleModel();
             ((SimpleModelSetterCommon)((ISimpleModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -441,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SimpleModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -451,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -521,26 +512,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISimpleModelGetter item,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
+            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
+            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -646,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SimpleModelSetterCommon)((ISimpleModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -661,10 +652,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SimpleModel_FieldIndex
+    internal enum SimpleModel_FieldIndex
     {
         File = 0,
         Data = 1,
@@ -672,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SimpleModel_Registration : ILoquiRegistration
+    internal partial class SimpleModel_Registration : ILoquiRegistration
     {
         public static readonly SimpleModel_Registration Instance = new SimpleModel_Registration();
 
@@ -714,6 +705,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MODL);
+            var all = RecordCollection.Factory(
+                RecordTypes.MODL,
+                RecordTypes.MODT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SimpleModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SimpleModelSetterCommon
+    internal partial class SimpleModelSetterCommon
     {
         public static readonly SimpleModelSetterCommon Instance = new SimpleModelSetterCommon();
 
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -784,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SimpleModelCommon
+    internal partial class SimpleModelCommon
     {
         public static readonly SimpleModelCommon Instance = new SimpleModelCommon();
 
@@ -808,63 +808,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SimpleModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
         }
         
-        public string ToString(
+        public string Print(
             ISimpleModelGetter item,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SimpleModel =>");
+                sb.AppendLine($"SimpleModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SimpleModel) =>");
+                sb.AppendLine($"{name} (SimpleModel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SimpleModel.Mask<bool>? printMask = null)
         {
             if (printMask?.File ?? true)
             {
-                fg.AppendItem(item.File, "File");
+                sb.AppendItem(item.File, "File");
             }
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
             {
-                fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
+                sb.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
             }
         }
         
@@ -906,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISimpleModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISimpleModelGetter obj)
         {
             yield break;
         }
@@ -914,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SimpleModelSetterTranslationCommon
+    internal partial class SimpleModelSetterTranslationCommon
     {
         public static readonly SimpleModelSetterTranslationCommon Instance = new SimpleModelSetterTranslationCommon();
 
@@ -1003,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static SimpleModel_Registration StaticRegistration => SimpleModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SimpleModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1027,16 +1024,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SimpleModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
+        public static readonly SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISimpleModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1052,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1063,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISimpleModelGetter)item,
@@ -1073,9 +1070,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SimpleModelBinaryCreateTranslation
+    internal partial class SimpleModelBinaryCreateTranslation
     {
-        public readonly static SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
+        public static readonly SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISimpleModel item,
@@ -1090,14 +1087,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1126,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISimpleModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1139,16 +1136,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SimpleModelBinaryOverlay :
+    internal partial class SimpleModelBinaryOverlay :
         PluginBinaryOverlay,
         ISimpleModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static SimpleModel_Registration StaticRegistration => SimpleModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SimpleModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1162,16 +1159,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1181,11 +1178,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region File
         private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Data
         private int? _DataLocation;
-        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1194,42 +1191,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SimpleModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SimpleModelBinaryOverlay SimpleModelFactory(
+        public static ISimpleModelGetter SimpleModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SimpleModelBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static SimpleModelBinaryOverlay SimpleModelFactory(
+        public static ISimpleModelGetter SimpleModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SimpleModelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public virtual ParseResult FillRecordType(
@@ -1239,14 +1242,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     _FileLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.File;
                 }
@@ -1261,12 +1264,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.ToString(
+            SimpleModelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

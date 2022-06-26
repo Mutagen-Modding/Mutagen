@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,21 +18,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, ANavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, Shout, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Spell, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, Shout, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Spell, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
     /// </summary>
     public abstract partial class SkyrimMajorRecord :
         MajorRecord,
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SkyrimMajorRecordMixIn.ToString(
+            SkyrimMajorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -182,34 +184,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SkyrimMajorRecord.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SkyrimMajorRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SkyrimMajorRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SkyrimMajorRecord.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SkyrimMajorRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SkyrimMajorRecord.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FormVersion ?? true)
                     {
-                        fg.AppendItem(FormVersion, "FormVersion");
+                        sb.AppendItem(FormVersion, "FormVersion");
                     }
                     if (printMask?.Version2 ?? true)
                     {
-                        fg.AppendItem(Version2, "Version2");
+                        sb.AppendItem(Version2, "Version2");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -283,38 +280,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
+                }
             }
             #endregion
 
@@ -379,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimMajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimMajorRecordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimMajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public SkyrimMajorRecord(
             FormKey formKey,
@@ -489,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -498,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -515,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, ANavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, Shout, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Spell, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, Shout, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Spell, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
     /// </summary>
     public partial interface ISkyrimMajorRecord :
         IFormLinkContainer,
@@ -536,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, ANavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, Shout, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Spell, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, ArmorAddon, ArtObject, AssociationType, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, ConstructibleObject, Container, Debris, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Eyes, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, Grass, Hair, Hazard, HeadPart, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, Key, Keyword, Landscape, LandscapeTexture, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialType, Message, MiscItem, MoveableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, Npc, ObjectEffect, Outfit, Package, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, Region, Relationship, ReverbParameters, Scene, Scroll, ShaderParticleGeometry, Shout, SoulGem, SoundCategory, SoundDescriptor, SoundMarker, SoundOutputModel, Spell, Static, AStoryManagerNode, TalkingActivator, TextureSet, Tree, VisualEffect, VoiceType, VolumetricLighting, Water, Weapon, Weather, WordOfPower, Worldspace]
     /// </summary>
     public partial interface ISkyrimMajorRecordGetter :
         IMajorRecordGetter,
@@ -572,26 +564,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISkyrimMajorRecordGetter item,
             string? name = null,
             SkyrimMajorRecord.Mask<bool>? printMask = null)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).ToString(
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISkyrimMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SkyrimMajorRecord.Mask<bool>? printMask = null)
         {
-            ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).ToString(
+            ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -679,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ISkyrimMajorRecordGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -709,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ISkyrimMajorRecordInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -898,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -913,10 +905,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SkyrimMajorRecord_FieldIndex
+    internal enum SkyrimMajorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -928,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SkyrimMajorRecord_Registration : ILoquiRegistration
+    internal partial class SkyrimMajorRecord_Registration : ILoquiRegistration
     {
         public static readonly SkyrimMajorRecord_Registration Instance = new SkyrimMajorRecord_Registration();
 
@@ -1002,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SkyrimMajorRecordSetterCommon : MajorRecordSetterCommon
+    internal partial class SkyrimMajorRecordSetterCommon : MajorRecordSetterCommon
     {
         public new static readonly SkyrimMajorRecordSetterCommon Instance = new SkyrimMajorRecordSetterCommon();
 
@@ -1096,14 +1088,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SkyrimMajorRecord)item,
@@ -1114,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimMajorRecordCommon : MajorRecordCommon
+    internal partial class SkyrimMajorRecordCommon : MajorRecordCommon
     {
         public new static readonly SkyrimMajorRecordCommon Instance = new SkyrimMajorRecordCommon();
 
@@ -1138,67 +1130,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISkyrimMajorRecordGetter item,
             string? name = null,
             SkyrimMajorRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISkyrimMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SkyrimMajorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SkyrimMajorRecord =>");
+                sb.AppendLine($"SkyrimMajorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SkyrimMajorRecord) =>");
+                sb.AppendLine($"{name} (SkyrimMajorRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISkyrimMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SkyrimMajorRecord.Mask<bool>? printMask = null)
         {
             MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.FormVersion ?? true)
             {
-                fg.AppendItem(item.FormVersion, "FormVersion");
+                sb.AppendItem(item.FormVersion, "FormVersion");
             }
             if (printMask?.Version2 ?? true)
             {
-                fg.AppendItem(item.Version2, "Version2");
+                sb.AppendItem(item.Version2, "Version2");
             }
         }
         
@@ -1272,9 +1261,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISkyrimMajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkyrimMajorRecordGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1320,6 +1309,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -1356,7 +1353,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
+    internal partial class SkyrimMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
     {
         public new static readonly SkyrimMajorRecordSetterTranslationCommon Instance = new SkyrimMajorRecordSetterTranslationCommon();
 
@@ -1489,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1507,13 +1504,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimMajorRecordBinaryWriteTranslation :
         MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
+        public new static readonly SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISkyrimMajorRecordGetter item,
@@ -1529,17 +1526,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
                 WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    translationParams: translationParams);
+                if (!item.IsDeleted)
+                {
+                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             catch (Exception ex)
             {
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISkyrimMajorRecordGetter)item,
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISkyrimMajorRecordGetter)item,
@@ -1571,9 +1571,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    internal partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
-        public new readonly static SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
+        public new static readonly SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static void FillBinaryStructs(
@@ -1600,16 +1600,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class SkyrimMajorRecordBinaryOverlay :
+    internal abstract partial class SkyrimMajorRecordBinaryOverlay :
         MajorRecordBinaryOverlay,
         ISkyrimMajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SkyrimMajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1617,9 +1617,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimMajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimMajorRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1638,8 +1638,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
+        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1647,10 +1647,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SkyrimMajorRecordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1659,12 +1659,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SkyrimMajorRecordMixIn.ToString(
+            SkyrimMajorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

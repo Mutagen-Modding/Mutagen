@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +66,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RelationMixIn.ToString(
+            RelationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -183,34 +185,29 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Relation.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Relation.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Relation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Relation.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Relation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Relation.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Faction ?? true)
                     {
-                        fg.AppendItem(Faction, "Faction");
+                        sb.AppendItem(Faction, "Faction");
                     }
                     if (printMask?.Modifier ?? true)
                     {
-                        fg.AppendItem(Modifier, "Modifier");
+                        sb.AppendItem(Modifier, "Modifier");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -295,37 +292,32 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Faction, "Faction");
-                fg.AppendItem(Modifier, "Modifier");
+                {
+                    sb.AppendItem(Faction, "Faction");
+                }
+                {
+                    sb.AppendItem(Modifier, "Modifier");
+                }
             }
             #endregion
 
@@ -400,8 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Relation_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RelationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RelationCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -412,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -422,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Relation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Relation();
             ((RelationSetterCommon)((IRelationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -437,7 +428,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Relation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -447,7 +438,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,26 +502,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRelationGetter item,
             string? name = null,
             Relation.Mask<bool>? printMask = null)
         {
-            return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).ToString(
+            return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRelationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Relation.Mask<bool>? printMask = null)
         {
-            ((RelationCommon)((IRelationGetter)item).CommonInstance()!).ToString(
+            ((RelationCommon)((IRelationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -636,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRelation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RelationSetterCommon)((IRelationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -651,10 +642,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Relation_FieldIndex
+    internal enum Relation_FieldIndex
     {
         Faction = 0,
         Modifier = 1,
@@ -662,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Relation_Registration : ILoquiRegistration
+    internal partial class Relation_Registration : ILoquiRegistration
     {
         public static readonly Relation_Registration Instance = new Relation_Registration();
 
@@ -704,6 +695,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RelationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -737,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RelationSetterCommon
+    internal partial class RelationSetterCommon
     {
         public static readonly RelationSetterCommon Instance = new RelationSetterCommon();
 
@@ -762,12 +759,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRelation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -778,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelationCommon
+    internal partial class RelationCommon
     {
         public static readonly RelationCommon Instance = new RelationCommon();
 
@@ -802,62 +799,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Relation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Faction = item.Faction.Equals(rhs.Faction);
             ret.Modifier = item.Modifier == rhs.Modifier;
         }
         
-        public string ToString(
+        public string Print(
             IRelationGetter item,
             string? name = null,
             Relation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRelationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Relation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Relation =>");
+                sb.AppendLine($"Relation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Relation) =>");
+                sb.AppendLine($"{name} (Relation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRelationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Relation.Mask<bool>? printMask = null)
         {
             if (printMask?.Faction ?? true)
             {
-                fg.AppendItem(item.Faction.FormKey, "Faction");
+                sb.AppendItem(item.Faction.FormKey, "Faction");
             }
             if (printMask?.Modifier ?? true)
             {
-                fg.AppendItem(item.Modifier, "Modifier");
+                sb.AppendItem(item.Modifier, "Modifier");
             }
         }
         
@@ -896,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRelationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRelationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Faction);
             yield break;
@@ -905,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelationSetterTranslationCommon
+    internal partial class RelationSetterTranslationCommon
     {
         public static readonly RelationSetterTranslationCommon Instance = new RelationSetterTranslationCommon();
 
@@ -987,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration StaticRegistration => Relation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
         [DebuggerStepThrough]
@@ -1011,11 +1005,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RelationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RelationBinaryWriteTranslation Instance = new RelationBinaryWriteTranslation();
+        public static readonly RelationBinaryWriteTranslation Instance = new RelationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRelationGetter item,
@@ -1030,12 +1024,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRelationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1047,7 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRelationGetter)item,
@@ -1057,9 +1051,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RelationBinaryCreateTranslation
+    internal partial class RelationBinaryCreateTranslation
     {
-        public readonly static RelationBinaryCreateTranslation Instance = new RelationBinaryCreateTranslation();
+        public static readonly RelationBinaryCreateTranslation Instance = new RelationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRelation item,
@@ -1080,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRelationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1093,16 +1087,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RelationBinaryOverlay :
+    internal partial class RelationBinaryOverlay :
         PluginBinaryOverlay,
         IRelationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration StaticRegistration => Relation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelationCommon.Instance;
         [DebuggerStepThrough]
@@ -1116,16 +1110,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RelationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RelationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RelationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1133,8 +1127,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1142,25 +1136,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RelationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RelationBinaryOverlay RelationFactory(
+        public static IRelationGetter RelationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RelationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1169,25 +1168,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static RelationBinaryOverlay RelationFactory(
+        public static IRelationGetter RelationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RelationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RelationMixIn.ToString(
+            RelationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

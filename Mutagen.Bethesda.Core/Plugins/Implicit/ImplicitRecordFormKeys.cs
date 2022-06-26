@@ -1,13 +1,10 @@
-using System;
+namespace Mutagen.Bethesda.Plugins.Implicit;
 
-namespace Mutagen.Bethesda.Plugins.Implicit
+public class ImplicitRecordFormKeys
 {
-    public class ImplicitRecordFormKeys
-    {
-        public static readonly ImplicitRecordFormKeys Instance = new ImplicitRecordFormKeys();
+    public static readonly ImplicitRecordFormKeys Instance = new ImplicitRecordFormKeys();
 
-        private ImplicitRecordFormKeys()
-        {
-        }
+    private ImplicitRecordFormKeys()
+    {
     }
 }

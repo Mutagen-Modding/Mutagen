@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoundCategory" objType="Record" recordType="SNCT" baseClass="Fallout4MajorRecord" GUID="76cd81c2-93d0-4f82-b924-fc7ec052e4b6" ID="636">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Enum name="Flags" enumName="SoundCategory.Flag" byteLength="4" recordType="FNAM" nullable="False" />
+      <FormLink name="Parent" recordType="PNAM" refName="SoundCategory" />
+      <FormLink name="MenuSlider" recordType="ONAM" refName="SoundCategory" />
+      <Float name="StaticVolumeMultiplier" integerType="UShort" recordType="VNAM" divisor="65535" />
+      <Float name="DefaultMenuVolume" integerType="UShort" recordType="UNAM" divisor="65535" />
+      <Float name="MinFrequencyMultiplier" recordType="MNAM" />
+      <Float name="SidechainTargetMultiplier" recordType="CNAM" />
+    </Fields>
+  </Object>
+</Loqui>

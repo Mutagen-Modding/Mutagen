@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -63,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkAdapterMixIn.ToString(
+            PerkAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -194,30 +197,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PerkAdapter.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PerkAdapter.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkAdapter.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PerkAdapter.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PerkAdapter.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkAdapter.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ScriptFragments?.Overall ?? true)
                     {
-                        ScriptFragments?.ToString(fg);
+                        ScriptFragments?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -281,37 +279,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ScriptFragments?.ToString(fg);
+                base.PrintFillInternal(sb);
+                ScriptFragments?.Print(sb);
             }
             #endregion
 
@@ -371,7 +360,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkAdapter_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkAdapterCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -379,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -389,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkAdapter();
             ((PerkAdapterSetterCommon)((IPerkAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -404,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -414,7 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -469,26 +459,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPerkAdapterGetter item,
             string? name = null,
             PerkAdapter.Mask<bool>? printMask = null)
         {
-            return ((PerkAdapterCommon)((IPerkAdapterGetter)item).CommonInstance()!).ToString(
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPerkAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkAdapter.Mask<bool>? printMask = null)
         {
-            ((PerkAdapterCommon)((IPerkAdapterGetter)item).CommonInstance()!).ToString(
+            ((PerkAdapterCommon)((IPerkAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -569,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkAdapterSetterCommon)((IPerkAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -584,10 +574,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkAdapter_FieldIndex
+    internal enum PerkAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -597,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkAdapter_Registration : ILoquiRegistration
+    internal partial class PerkAdapter_Registration : ILoquiRegistration
     {
         public static readonly PerkAdapter_Registration Instance = new PerkAdapter_Registration();
 
@@ -639,6 +629,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.VMAD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PerkAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -672,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class PerkAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly PerkAdapterSetterCommon Instance = new PerkAdapterSetterCommon();
 
@@ -702,12 +698,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPerkAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -718,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkAdapter)item,
@@ -729,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class PerkAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly PerkAdapterCommon Instance = new PerkAdapterCommon();
 
@@ -753,7 +749,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ScriptFragments = EqualsMaskHelper.EqualsHelper(
                 item.ScriptFragments,
                 rhs.ScriptFragments,
@@ -762,58 +757,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPerkAdapterGetter item,
             string? name = null,
             PerkAdapter.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPerkAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkAdapter.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkAdapter =>");
+                sb.AppendLine($"PerkAdapter =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkAdapter) =>");
+                sb.AppendLine($"{name} (PerkAdapter) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkAdapter.Mask<bool>? printMask = null)
         {
             AVirtualMachineAdapterCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ScriptFragments?.Overall ?? true)
                 && item.ScriptFragments is {} ScriptFragmentsItem)
             {
-                ScriptFragmentsItem?.ToString(fg, "ScriptFragments");
+                ScriptFragmentsItem?.Print(sb, "ScriptFragments");
             }
         }
         
@@ -887,9 +880,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -899,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class PerkAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly PerkAdapterSetterTranslationCommon Instance = new PerkAdapterSetterTranslationCommon();
 
@@ -1021,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAdapter_Registration.Instance;
-        public new static PerkAdapter_Registration StaticRegistration => PerkAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1039,13 +1032,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
+        public new static readonly PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkAdapterGetter item,
@@ -1075,12 +1068,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1092,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkAdapterGetter)item,
@@ -1103,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkAdapterGetter)item,
@@ -1113,9 +1106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class PerkAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static PerkAdapterBinaryCreateTranslation Instance = new PerkAdapterBinaryCreateTranslation();
+        public new static readonly PerkAdapterBinaryCreateTranslation Instance = new PerkAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkAdapter item,
@@ -1147,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkAdapterBinaryOverlay :
+    internal partial class PerkAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IPerkAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAdapter_Registration.Instance;
-        public new static PerkAdapter_Registration StaticRegistration => PerkAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1164,13 +1157,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1179,6 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region ScriptFragments
+        public partial IPerkScriptFragmentsGetter? GetScriptFragmentsCustom(int location);
         public IPerkScriptFragmentsGetter? ScriptFragments => GetScriptFragmentsCustom(location: ScriptsEndingPos);
         protected int ScriptFragmentsEndingPos;
         partial void CustomScriptFragmentsEndPos();
@@ -1190,25 +1184,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PerkAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PerkAdapterBinaryOverlay PerkAdapterFactory(
+        public static IPerkAdapterGetter PerkAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomScriptFragmentsEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1217,25 +1216,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PerkAdapterBinaryOverlay PerkAdapterFactory(
+        public static IPerkAdapterGetter PerkAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkAdapterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkAdapterMixIn.ToString(
+            PerkAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -83,12 +85,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CrimeValuesMixIn.ToString(
+            CrimeValuesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -282,70 +285,65 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CrimeValues.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CrimeValues.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CrimeValues.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CrimeValues.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CrimeValues.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CrimeValues.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Arrest ?? true)
                     {
-                        fg.AppendItem(Arrest, "Arrest");
+                        sb.AppendItem(Arrest, "Arrest");
                     }
                     if (printMask?.AttackOnSight ?? true)
                     {
-                        fg.AppendItem(AttackOnSight, "AttackOnSight");
+                        sb.AppendItem(AttackOnSight, "AttackOnSight");
                     }
                     if (printMask?.Murder ?? true)
                     {
-                        fg.AppendItem(Murder, "Murder");
+                        sb.AppendItem(Murder, "Murder");
                     }
                     if (printMask?.Assault ?? true)
                     {
-                        fg.AppendItem(Assault, "Assault");
+                        sb.AppendItem(Assault, "Assault");
                     }
                     if (printMask?.Trespass ?? true)
                     {
-                        fg.AppendItem(Trespass, "Trespass");
+                        sb.AppendItem(Trespass, "Trespass");
                     }
                     if (printMask?.Pickpocket ?? true)
                     {
-                        fg.AppendItem(Pickpocket, "Pickpocket");
+                        sb.AppendItem(Pickpocket, "Pickpocket");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.StealMult ?? true)
                     {
-                        fg.AppendItem(StealMult, "StealMult");
+                        sb.AppendItem(StealMult, "StealMult");
                     }
                     if (printMask?.Escape ?? true)
                     {
-                        fg.AppendItem(Escape, "Escape");
+                        sb.AppendItem(Escape, "Escape");
                     }
                     if (printMask?.Werewolf ?? true)
                     {
-                        fg.AppendItem(Werewolf, "Werewolf");
+                        sb.AppendItem(Werewolf, "Werewolf");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -520,46 +518,59 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Arrest, "Arrest");
-                fg.AppendItem(AttackOnSight, "AttackOnSight");
-                fg.AppendItem(Murder, "Murder");
-                fg.AppendItem(Assault, "Assault");
-                fg.AppendItem(Trespass, "Trespass");
-                fg.AppendItem(Pickpocket, "Pickpocket");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(StealMult, "StealMult");
-                fg.AppendItem(Escape, "Escape");
-                fg.AppendItem(Werewolf, "Werewolf");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Arrest, "Arrest");
+                }
+                {
+                    sb.AppendItem(AttackOnSight, "AttackOnSight");
+                }
+                {
+                    sb.AppendItem(Murder, "Murder");
+                }
+                {
+                    sb.AppendItem(Assault, "Assault");
+                }
+                {
+                    sb.AppendItem(Trespass, "Trespass");
+                }
+                {
+                    sb.AppendItem(Pickpocket, "Pickpocket");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(StealMult, "StealMult");
+                }
+                {
+                    sb.AppendItem(Escape, "Escape");
+                }
+                {
+                    sb.AppendItem(Werewolf, "Werewolf");
+                }
             }
             #endregion
 
@@ -670,7 +681,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = CrimeValues_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -686,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CrimeValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -696,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CrimeValues CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CrimeValues();
             ((CrimeValuesSetterCommon)((ICrimeValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -711,7 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CrimeValues item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -721,7 +731,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -801,26 +811,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICrimeValuesGetter item,
             string? name = null,
             CrimeValues.Mask<bool>? printMask = null)
         {
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).ToString(
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICrimeValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CrimeValues.Mask<bool>? printMask = null)
         {
-            ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).ToString(
+            ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -926,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICrimeValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CrimeValuesSetterCommon)((ICrimeValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -941,10 +951,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CrimeValues_FieldIndex
+    internal enum CrimeValues_FieldIndex
     {
         Versioning = 0,
         Arrest = 1,
@@ -961,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CrimeValues_Registration : ILoquiRegistration
+    internal partial class CrimeValues_Registration : ILoquiRegistration
     {
         public static readonly CrimeValues_Registration Instance = new CrimeValues_Registration();
 
@@ -1003,6 +1013,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CRVA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CRVA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CrimeValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1036,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CrimeValuesSetterCommon
+    internal partial class CrimeValuesSetterCommon
     {
         public static readonly CrimeValuesSetterCommon Instance = new CrimeValuesSetterCommon();
 
@@ -1069,12 +1085,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ICrimeValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CRVA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1085,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CrimeValuesCommon
+    internal partial class CrimeValuesCommon
     {
         public static readonly CrimeValuesCommon Instance = new CrimeValuesCommon();
 
@@ -1109,7 +1125,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Arrest = item.Arrest == rhs.Arrest;
             ret.AttackOnSight = item.AttackOnSight == rhs.AttackOnSight;
@@ -1123,93 +1138,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Werewolf = item.Werewolf == rhs.Werewolf;
         }
         
-        public string ToString(
+        public string Print(
             ICrimeValuesGetter item,
             string? name = null,
             CrimeValues.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICrimeValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CrimeValues.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CrimeValues =>");
+                sb.AppendLine($"CrimeValues =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CrimeValues) =>");
+                sb.AppendLine($"{name} (CrimeValues) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICrimeValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CrimeValues.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Arrest ?? true)
             {
-                fg.AppendItem(item.Arrest, "Arrest");
+                sb.AppendItem(item.Arrest, "Arrest");
             }
             if (printMask?.AttackOnSight ?? true)
             {
-                fg.AppendItem(item.AttackOnSight, "AttackOnSight");
+                sb.AppendItem(item.AttackOnSight, "AttackOnSight");
             }
             if (printMask?.Murder ?? true)
             {
-                fg.AppendItem(item.Murder, "Murder");
+                sb.AppendItem(item.Murder, "Murder");
             }
             if (printMask?.Assault ?? true)
             {
-                fg.AppendItem(item.Assault, "Assault");
+                sb.AppendItem(item.Assault, "Assault");
             }
             if (printMask?.Trespass ?? true)
             {
-                fg.AppendItem(item.Trespass, "Trespass");
+                sb.AppendItem(item.Trespass, "Trespass");
             }
             if (printMask?.Pickpocket ?? true)
             {
-                fg.AppendItem(item.Pickpocket, "Pickpocket");
+                sb.AppendItem(item.Pickpocket, "Pickpocket");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.StealMult ?? true)
             {
-                fg.AppendItem(item.StealMult, "StealMult");
+                sb.AppendItem(item.StealMult, "StealMult");
             }
             if (printMask?.Escape ?? true)
             {
-                fg.AppendItem(item.Escape, "Escape");
+                sb.AppendItem(item.Escape, "Escape");
             }
             if (printMask?.Werewolf ?? true)
             {
-                fg.AppendItem(item.Werewolf, "Werewolf");
+                sb.AppendItem(item.Werewolf, "Werewolf");
             }
         }
         
@@ -1293,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICrimeValuesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICrimeValuesGetter obj)
         {
             yield break;
         }
@@ -1301,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CrimeValuesSetterTranslationCommon
+    internal partial class CrimeValuesSetterTranslationCommon
     {
         public static readonly CrimeValuesSetterTranslationCommon Instance = new CrimeValuesSetterTranslationCommon();
 
@@ -1421,7 +1434,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1445,11 +1458,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CrimeValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CrimeValuesBinaryWriteTranslation Instance = new CrimeValuesBinaryWriteTranslation();
+        public static readonly CrimeValuesBinaryWriteTranslation Instance = new CrimeValuesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICrimeValuesGetter item,
@@ -1478,12 +1491,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ICrimeValuesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CRVA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1495,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICrimeValuesGetter)item,
@@ -1505,9 +1518,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CrimeValuesBinaryCreateTranslation
+    internal partial class CrimeValuesBinaryCreateTranslation
     {
-        public readonly static CrimeValuesBinaryCreateTranslation Instance = new CrimeValuesBinaryCreateTranslation();
+        public static readonly CrimeValuesBinaryCreateTranslation Instance = new CrimeValuesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICrimeValues item,
@@ -1546,7 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICrimeValuesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CrimeValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1559,16 +1572,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CrimeValuesBinaryOverlay :
+    internal partial class CrimeValuesBinaryOverlay :
         PluginBinaryOverlay,
         ICrimeValuesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CrimeValues_Registration.Instance;
-        public static CrimeValues_Registration StaticRegistration => CrimeValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CrimeValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CrimeValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1582,7 +1595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CrimeValuesBinaryWriteTranslation.Instance;
@@ -1590,7 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CrimeValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1599,16 +1612,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public CrimeValues.VersioningBreaks Versioning { get; private set; }
-        public Boolean Arrest => _data.Slice(0x0, 0x1)[0] == 1;
-        public Boolean AttackOnSight => _data.Slice(0x1, 0x1)[0] == 1;
-        public UInt16 Murder => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public UInt16 Assault => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public UInt16 Trespass => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public UInt16 Pickpocket => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public Single StealMult => _data.Length <= 0xC ? default : _data.Slice(0xC, 0x4).Float();
-        public UInt16 Escape => _data.Length <= 0x10 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
-        public UInt16 Werewolf => _data.Length <= 0x12 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
+        public Boolean Arrest => _structData.Slice(0x0, 0x1)[0] >= 1;
+        public Boolean AttackOnSight => _structData.Slice(0x1, 0x1)[0] >= 1;
+        public UInt16 Murder => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public UInt16 Assault => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
+        public UInt16 Trespass => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public UInt16 Pickpocket => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public Single StealMult => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
+        public UInt16 Escape => _structData.Length <= 0x10 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x10, 0x2));
+        public UInt16 Werewolf => _structData.Length <= 0x12 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x12, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1616,30 +1629,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected CrimeValuesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CrimeValuesBinaryOverlay CrimeValuesFactory(
+        public static ICrimeValuesGetter CrimeValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CrimeValuesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0xC)
+            if (ret._structData.Length <= 0xC)
             {
                 ret.Versioning |= CrimeValues.VersioningBreaks.Break0;
             }
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= CrimeValues.VersioningBreaks.Break1;
             }
@@ -1650,25 +1668,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static CrimeValuesBinaryOverlay CrimeValuesFactory(
+        public static ICrimeValuesGetter CrimeValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CrimeValuesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CrimeValuesMixIn.ToString(
+            CrimeValuesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

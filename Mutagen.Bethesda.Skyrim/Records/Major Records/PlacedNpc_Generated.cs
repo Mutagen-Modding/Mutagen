@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -68,6 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -211,8 +213,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
         #endregion
-        #region IgnoredBySandbox
-        public Boolean IgnoredBySandbox { get; set; } = default;
+        #region IsIgnoredBySandbox
+        public Boolean IsIgnoredBySandbox { get; set; } = default;
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -259,16 +261,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEnableParentGetter? IPlacedNpcGetter.EnableParent => this.EnableParent;
         #endregion
-        #region Ownership
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ownership? _Ownership;
-        public Ownership? Ownership
+        #region Owner
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
         {
-            get => _Ownership;
-            set => _Ownership = value;
+            get => _Owner;
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOwnershipGetter? IPlacedNpcGetter.Ownership => this.Ownership;
+        IFormLinkNullableGetter<IOwnerGetter> IPlacedNpcGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedNpcGetter.FactionRank => this.FactionRank;
         #endregion
         #region Emittance
         private readonly IFormLinkNullable<IEmittanceGetter> _Emittance = new FormLinkNullable<IEmittanceGetter>();
@@ -290,8 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IPlacedNpcGetter.MultiboundReference => this.MultiboundReference;
         #endregion
-        #region IgnoredBySandbox2
-        public Boolean IgnoredBySandbox2 { get; set; } = default;
+        #region IsIgnoredBySandbox2
+        public Boolean IsIgnoredBySandbox2 { get; set; } = default;
         #endregion
         #region Scale
         public Single? Scale { get; set; }
@@ -312,12 +318,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedNpcMixIn.ToString(
+            PlacedNpcMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -349,16 +356,17 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LinkedReferenceColor = new MaskItem<TItem, LinkedReferenceColor.Mask<TItem>?>(initialValue, new LinkedReferenceColor.Mask<TItem>(initialValue));
                 this.PersistentLocation = initialValue;
                 this.LocationReference = initialValue;
-                this.IgnoredBySandbox = initialValue;
+                this.IsIgnoredBySandbox = initialValue;
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.HeadTrackingWeight = initialValue;
                 this.Horse = initialValue;
                 this.FavorCost = initialValue;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
                 this.Emittance = initialValue;
                 this.MultiboundReference = initialValue;
-                this.IgnoredBySandbox2 = initialValue;
+                this.IsIgnoredBySandbox2 = initialValue;
                 this.Scale = initialValue;
                 this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
             }
@@ -386,16 +394,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LinkedReferenceColor,
                 TItem PersistentLocation,
                 TItem LocationReference,
-                TItem IgnoredBySandbox,
+                TItem IsIgnoredBySandbox,
                 TItem LocationRefTypes,
                 TItem HeadTrackingWeight,
                 TItem Horse,
                 TItem FavorCost,
                 TItem EnableParent,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem Emittance,
                 TItem MultiboundReference,
-                TItem IgnoredBySandbox2,
+                TItem IsIgnoredBySandbox2,
                 TItem Scale,
                 TItem Placement)
             : base(
@@ -422,16 +431,17 @@ namespace Mutagen.Bethesda.Skyrim
                 this.LinkedReferenceColor = new MaskItem<TItem, LinkedReferenceColor.Mask<TItem>?>(LinkedReferenceColor, new LinkedReferenceColor.Mask<TItem>(LinkedReferenceColor));
                 this.PersistentLocation = PersistentLocation;
                 this.LocationReference = LocationReference;
-                this.IgnoredBySandbox = IgnoredBySandbox;
+                this.IsIgnoredBySandbox = IsIgnoredBySandbox;
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.Horse = Horse;
                 this.FavorCost = FavorCost;
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
                 this.Emittance = Emittance;
                 this.MultiboundReference = MultiboundReference;
-                this.IgnoredBySandbox2 = IgnoredBySandbox2;
+                this.IsIgnoredBySandbox2 = IsIgnoredBySandbox2;
                 this.Scale = Scale;
                 this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(Placement, new Placement.Mask<TItem>(Placement));
             }
@@ -461,16 +471,17 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, LinkedReferenceColor.Mask<TItem>?>? LinkedReferenceColor { get; set; }
             public TItem PersistentLocation;
             public TItem LocationReference;
-            public TItem IgnoredBySandbox;
+            public TItem IsIgnoredBySandbox;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
             public TItem HeadTrackingWeight;
             public TItem Horse;
             public TItem FavorCost;
             public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
-            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
             public TItem Emittance;
             public TItem MultiboundReference;
-            public TItem IgnoredBySandbox2;
+            public TItem IsIgnoredBySandbox2;
             public TItem Scale;
             public MaskItem<TItem, Placement.Mask<TItem>?>? Placement { get; set; }
             #endregion
@@ -502,16 +513,17 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
                 if (!object.Equals(this.PersistentLocation, rhs.PersistentLocation)) return false;
                 if (!object.Equals(this.LocationReference, rhs.LocationReference)) return false;
-                if (!object.Equals(this.IgnoredBySandbox, rhs.IgnoredBySandbox)) return false;
+                if (!object.Equals(this.IsIgnoredBySandbox, rhs.IsIgnoredBySandbox)) return false;
                 if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
                 if (!object.Equals(this.Horse, rhs.Horse)) return false;
                 if (!object.Equals(this.FavorCost, rhs.FavorCost)) return false;
                 if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
-                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.Emittance, rhs.Emittance)) return false;
                 if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
-                if (!object.Equals(this.IgnoredBySandbox2, rhs.IgnoredBySandbox2)) return false;
+                if (!object.Equals(this.IsIgnoredBySandbox2, rhs.IsIgnoredBySandbox2)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.Placement, rhs.Placement)) return false;
                 return true;
@@ -535,16 +547,17 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.LinkedReferenceColor);
                 hash.Add(this.PersistentLocation);
                 hash.Add(this.LocationReference);
-                hash.Add(this.IgnoredBySandbox);
+                hash.Add(this.IsIgnoredBySandbox);
                 hash.Add(this.LocationRefTypes);
                 hash.Add(this.HeadTrackingWeight);
                 hash.Add(this.Horse);
                 hash.Add(this.FavorCost);
                 hash.Add(this.EnableParent);
-                hash.Add(this.Ownership);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
                 hash.Add(this.Emittance);
                 hash.Add(this.MultiboundReference);
-                hash.Add(this.IgnoredBySandbox2);
+                hash.Add(this.IsIgnoredBySandbox2);
                 hash.Add(this.Scale);
                 hash.Add(this.Placement);
                 hash.Add(base.GetHashCode());
@@ -600,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.PersistentLocation)) return false;
                 if (!eval(this.LocationReference)) return false;
-                if (!eval(this.IgnoredBySandbox)) return false;
+                if (!eval(this.IsIgnoredBySandbox)) return false;
                 if (this.LocationRefTypes != null)
                 {
                     if (!eval(this.LocationRefTypes.Overall)) return false;
@@ -620,14 +633,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.EnableParent.Overall)) return false;
                     if (this.EnableParent.Specific != null && !this.EnableParent.Specific.All(eval)) return false;
                 }
-                if (Ownership != null)
-                {
-                    if (!eval(this.Ownership.Overall)) return false;
-                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
                 if (!eval(this.Emittance)) return false;
                 if (!eval(this.MultiboundReference)) return false;
-                if (!eval(this.IgnoredBySandbox2)) return false;
+                if (!eval(this.IsIgnoredBySandbox2)) return false;
                 if (!eval(this.Scale)) return false;
                 if (Placement != null)
                 {
@@ -685,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.PersistentLocation)) return true;
                 if (eval(this.LocationReference)) return true;
-                if (eval(this.IgnoredBySandbox)) return true;
+                if (eval(this.IsIgnoredBySandbox)) return true;
                 if (this.LocationRefTypes != null)
                 {
                     if (eval(this.LocationRefTypes.Overall)) return true;
@@ -705,14 +715,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.EnableParent.Overall)) return true;
                     if (this.EnableParent.Specific != null && this.EnableParent.Specific.Any(eval)) return true;
                 }
-                if (Ownership != null)
-                {
-                    if (eval(this.Ownership.Overall)) return true;
-                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
                 if (eval(this.Emittance)) return true;
                 if (eval(this.MultiboundReference)) return true;
-                if (eval(this.IgnoredBySandbox2)) return true;
+                if (eval(this.IsIgnoredBySandbox2)) return true;
                 if (eval(this.Scale)) return true;
                 if (Placement != null)
                 {
@@ -752,9 +759,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
                         obj.LinkedReferences.Specific = l;
-                        foreach (var item in LinkedReferences.Specific.WithIndex())
+                        foreach (var item in LinkedReferences.Specific)
                         {
-                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -764,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.LinkedReferenceColor = this.LinkedReferenceColor == null ? null : new MaskItem<R, LinkedReferenceColor.Mask<R>?>(eval(this.LinkedReferenceColor.Overall), this.LinkedReferenceColor.Specific?.Translate(eval));
                 obj.PersistentLocation = eval(this.PersistentLocation);
                 obj.LocationReference = eval(this.LocationReference);
-                obj.IgnoredBySandbox = eval(this.IgnoredBySandbox);
+                obj.IsIgnoredBySandbox = eval(this.IsIgnoredBySandbox);
                 if (LocationRefTypes != null)
                 {
                     obj.LocationRefTypes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypes.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -772,9 +779,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.LocationRefTypes.Specific = l;
-                        foreach (var item in LocationRefTypes.Specific.WithIndex())
+                        foreach (var item in LocationRefTypes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -783,186 +790,180 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Horse = eval(this.Horse);
                 obj.FavorCost = eval(this.FavorCost);
                 obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
-                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
                 obj.Emittance = eval(this.Emittance);
                 obj.MultiboundReference = eval(this.MultiboundReference);
-                obj.IgnoredBySandbox2 = eval(this.IgnoredBySandbox2);
+                obj.IsIgnoredBySandbox2 = eval(this.IsIgnoredBySandbox2);
                 obj.Scale = eval(this.Scale);
                 obj.Placement = this.Placement == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.Placement.Overall), this.Placement.Specific?.Translate(eval));
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PlacedNpc.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PlacedNpc.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedNpc.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PlacedNpc.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedNpc.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendItem(Base, "Base");
+                        sb.AppendItem(Base, "Base");
                     }
                     if (printMask?.EncounterZone ?? true)
                     {
-                        fg.AppendItem(EncounterZone, "EncounterZone");
+                        sb.AppendItem(EncounterZone, "EncounterZone");
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.RagdollBipedData ?? true)
                     {
-                        fg.AppendItem(RagdollBipedData, "RagdollBipedData");
+                        sb.AppendItem(RagdollBipedData, "RagdollBipedData");
                     }
                     if (printMask?.Patrol?.Overall ?? true)
                     {
-                        Patrol?.ToString(fg);
+                        Patrol?.Print(sb);
                     }
                     if (printMask?.LevelModifier ?? true)
                     {
-                        fg.AppendItem(LevelModifier, "LevelModifier");
+                        sb.AppendItem(LevelModifier, "LevelModifier");
                     }
                     if (printMask?.MerchantContainer ?? true)
                     {
-                        fg.AppendItem(MerchantContainer, "MerchantContainer");
+                        sb.AppendItem(MerchantContainer, "MerchantContainer");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendItem(Count, "Count");
+                        sb.AppendItem(Count, "Count");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
                         && LinkedReferences is {} LinkedReferencesItem)
                     {
-                        fg.AppendLine("LinkedReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LinkedReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LinkedReferencesItem.Overall);
+                            sb.AppendItem(LinkedReferencesItem.Overall);
                             if (LinkedReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.ActivateParents?.Overall ?? true)
                     {
-                        ActivateParents?.ToString(fg);
+                        ActivateParents?.Print(sb);
                     }
                     if (printMask?.LinkedReferenceColor?.Overall ?? true)
                     {
-                        LinkedReferenceColor?.ToString(fg);
+                        LinkedReferenceColor?.Print(sb);
                     }
                     if (printMask?.PersistentLocation ?? true)
                     {
-                        fg.AppendItem(PersistentLocation, "PersistentLocation");
+                        sb.AppendItem(PersistentLocation, "PersistentLocation");
                     }
                     if (printMask?.LocationReference ?? true)
                     {
-                        fg.AppendItem(LocationReference, "LocationReference");
+                        sb.AppendItem(LocationReference, "LocationReference");
                     }
-                    if (printMask?.IgnoredBySandbox ?? true)
+                    if (printMask?.IsIgnoredBySandbox ?? true)
                     {
-                        fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                        sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
                         && LocationRefTypes is {} LocationRefTypesItem)
                     {
-                        fg.AppendLine("LocationRefTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationRefTypes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationRefTypesItem.Overall);
+                            sb.AppendItem(LocationRefTypesItem.Overall);
                             if (LocationRefTypesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationRefTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.HeadTrackingWeight ?? true)
                     {
-                        fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                        sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
                     }
                     if (printMask?.Horse ?? true)
                     {
-                        fg.AppendItem(Horse, "Horse");
+                        sb.AppendItem(Horse, "Horse");
                     }
                     if (printMask?.FavorCost ?? true)
                     {
-                        fg.AppendItem(FavorCost, "FavorCost");
+                        sb.AppendItem(FavorCost, "FavorCost");
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.Print(sb);
                     }
-                    if (printMask?.Ownership?.Overall ?? true)
+                    if (printMask?.Owner ?? true)
                     {
-                        Ownership?.ToString(fg);
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.Emittance ?? true)
                     {
-                        fg.AppendItem(Emittance, "Emittance");
+                        sb.AppendItem(Emittance, "Emittance");
                     }
                     if (printMask?.MultiboundReference ?? true)
                     {
-                        fg.AppendItem(MultiboundReference, "MultiboundReference");
+                        sb.AppendItem(MultiboundReference, "MultiboundReference");
                     }
-                    if (printMask?.IgnoredBySandbox2 ?? true)
+                    if (printMask?.IsIgnoredBySandbox2 ?? true)
                     {
-                        fg.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
+                        sb.AppendItem(IsIgnoredBySandbox2, "IsIgnoredBySandbox2");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Placement?.Overall ?? true)
                     {
-                        Placement?.ToString(fg);
+                        Placement?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -989,16 +990,17 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, LinkedReferenceColor.ErrorMask?>? LinkedReferenceColor;
             public Exception? PersistentLocation;
             public Exception? LocationReference;
-            public Exception? IgnoredBySandbox;
+            public Exception? IsIgnoredBySandbox;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
             public Exception? HeadTrackingWeight;
             public Exception? Horse;
             public Exception? FavorCost;
             public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
-            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? Owner;
+            public Exception? FactionRank;
             public Exception? Emittance;
             public Exception? MultiboundReference;
-            public Exception? IgnoredBySandbox2;
+            public Exception? IsIgnoredBySandbox2;
             public Exception? Scale;
             public MaskItem<Exception?, Placement.ErrorMask?>? Placement;
             #endregion
@@ -1041,8 +1043,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return PersistentLocation;
                     case PlacedNpc_FieldIndex.LocationReference:
                         return LocationReference;
-                    case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                        return IgnoredBySandbox;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox:
+                        return IsIgnoredBySandbox;
                     case PlacedNpc_FieldIndex.LocationRefTypes:
                         return LocationRefTypes;
                     case PlacedNpc_FieldIndex.HeadTrackingWeight:
@@ -1053,14 +1055,16 @@ namespace Mutagen.Bethesda.Skyrim
                         return FavorCost;
                     case PlacedNpc_FieldIndex.EnableParent:
                         return EnableParent;
-                    case PlacedNpc_FieldIndex.Ownership:
-                        return Ownership;
+                    case PlacedNpc_FieldIndex.Owner:
+                        return Owner;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        return FactionRank;
                     case PlacedNpc_FieldIndex.Emittance:
                         return Emittance;
                     case PlacedNpc_FieldIndex.MultiboundReference:
                         return MultiboundReference;
-                    case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                        return IgnoredBySandbox2;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
+                        return IsIgnoredBySandbox2;
                     case PlacedNpc_FieldIndex.Scale:
                         return Scale;
                     case PlacedNpc_FieldIndex.Placement:
@@ -1123,8 +1127,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.LocationReference:
                         this.LocationReference = ex;
                         break;
-                    case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                        this.IgnoredBySandbox = ex;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = ex;
                         break;
                     case PlacedNpc_FieldIndex.LocationRefTypes:
                         this.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -1141,8 +1145,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.EnableParent:
                         this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
                         break;
-                    case PlacedNpc_FieldIndex.Ownership:
-                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                    case PlacedNpc_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
                         break;
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = ex;
@@ -1150,8 +1157,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.MultiboundReference:
                         this.MultiboundReference = ex;
                         break;
-                    case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                        this.IgnoredBySandbox2 = ex;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
+                        this.IsIgnoredBySandbox2 = ex;
                         break;
                     case PlacedNpc_FieldIndex.Scale:
                         this.Scale = ex;
@@ -1218,8 +1225,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.LocationReference:
                         this.LocationReference = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.IgnoredBySandbox:
-                        this.IgnoredBySandbox = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox:
+                        this.IsIgnoredBySandbox = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.LocationRefTypes:
                         this.LocationRefTypes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -1236,8 +1243,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.EnableParent:
                         this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.Ownership:
-                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                    case PlacedNpc_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case PlacedNpc_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.Emittance:
                         this.Emittance = (Exception?)obj;
@@ -1245,8 +1255,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.MultiboundReference:
                         this.MultiboundReference = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.IgnoredBySandbox2:
-                        this.IgnoredBySandbox2 = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.IsIgnoredBySandbox2:
+                        this.IsIgnoredBySandbox2 = (Exception?)obj;
                         break;
                     case PlacedNpc_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
@@ -1279,16 +1289,17 @@ namespace Mutagen.Bethesda.Skyrim
                 if (LinkedReferenceColor != null) return true;
                 if (PersistentLocation != null) return true;
                 if (LocationReference != null) return true;
-                if (IgnoredBySandbox != null) return true;
+                if (IsIgnoredBySandbox != null) return true;
                 if (LocationRefTypes != null) return true;
                 if (HeadTrackingWeight != null) return true;
                 if (Horse != null) return true;
                 if (FavorCost != null) return true;
                 if (EnableParent != null) return true;
-                if (Ownership != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
                 if (Emittance != null) return true;
                 if (MultiboundReference != null) return true;
-                if (IgnoredBySandbox2 != null) return true;
+                if (IsIgnoredBySandbox2 != null) return true;
                 if (Scale != null) return true;
                 if (Placement != null) return true;
                 return false;
@@ -1296,106 +1307,134 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Base, "Base");
-                fg.AppendItem(EncounterZone, "EncounterZone");
-                fg.AppendItem(RagdollData, "RagdollData");
-                fg.AppendItem(RagdollBipedData, "RagdollBipedData");
-                Patrol?.ToString(fg);
-                fg.AppendItem(LevelModifier, "LevelModifier");
-                fg.AppendItem(MerchantContainer, "MerchantContainer");
-                fg.AppendItem(Count, "Count");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Health, "Health");
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(RagdollData, "RagdollData");
+                }
+                {
+                    sb.AppendItem(RagdollBipedData, "RagdollBipedData");
+                }
+                Patrol?.Print(sb);
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(MerchantContainer, "MerchantContainer");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
                 if (LinkedReferences is {} LinkedReferencesItem)
                 {
-                    fg.AppendLine("LinkedReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LinkedReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LinkedReferencesItem.Overall);
+                        sb.AppendItem(LinkedReferencesItem.Overall);
                         if (LinkedReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LinkedReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                ActivateParents?.ToString(fg);
-                LinkedReferenceColor?.ToString(fg);
-                fg.AppendItem(PersistentLocation, "PersistentLocation");
-                fg.AppendItem(LocationReference, "LocationReference");
-                fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                ActivateParents?.Print(sb);
+                LinkedReferenceColor?.Print(sb);
+                {
+                    sb.AppendItem(PersistentLocation, "PersistentLocation");
+                }
+                {
+                    sb.AppendItem(LocationReference, "LocationReference");
+                }
+                {
+                    sb.AppendItem(IsIgnoredBySandbox, "IsIgnoredBySandbox");
+                }
                 if (LocationRefTypes is {} LocationRefTypesItem)
                 {
-                    fg.AppendLine("LocationRefTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationRefTypes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationRefTypesItem.Overall);
+                        sb.AppendItem(LocationRefTypesItem.Overall);
                         if (LocationRefTypesItem.Specific != null)
                         {
                             foreach (var subItem in LocationRefTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
-                fg.AppendItem(Horse, "Horse");
-                fg.AppendItem(FavorCost, "FavorCost");
-                EnableParent?.ToString(fg);
-                Ownership?.ToString(fg);
-                fg.AppendItem(Emittance, "Emittance");
-                fg.AppendItem(MultiboundReference, "MultiboundReference");
-                fg.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
-                fg.AppendItem(Scale, "Scale");
-                Placement?.ToString(fg);
+                {
+                    sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                }
+                {
+                    sb.AppendItem(Horse, "Horse");
+                }
+                {
+                    sb.AppendItem(FavorCost, "FavorCost");
+                }
+                EnableParent?.Print(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(Emittance, "Emittance");
+                }
+                {
+                    sb.AppendItem(MultiboundReference, "MultiboundReference");
+                }
+                {
+                    sb.AppendItem(IsIgnoredBySandbox2, "IsIgnoredBySandbox2");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                Placement?.Print(sb);
             }
             #endregion
 
@@ -1420,16 +1459,17 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.LinkedReferenceColor = this.LinkedReferenceColor.Combine(rhs.LinkedReferenceColor, (l, r) => l.Combine(r));
                 ret.PersistentLocation = this.PersistentLocation.Combine(rhs.PersistentLocation);
                 ret.LocationReference = this.LocationReference.Combine(rhs.LocationReference);
-                ret.IgnoredBySandbox = this.IgnoredBySandbox.Combine(rhs.IgnoredBySandbox);
+                ret.IsIgnoredBySandbox = this.IsIgnoredBySandbox.Combine(rhs.IsIgnoredBySandbox);
                 ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.Horse = this.Horse.Combine(rhs.Horse);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
-                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.Emittance = this.Emittance.Combine(rhs.Emittance);
                 ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
-                ret.IgnoredBySandbox2 = this.IgnoredBySandbox2.Combine(rhs.IgnoredBySandbox2);
+                ret.IsIgnoredBySandbox2 = this.IsIgnoredBySandbox2.Combine(rhs.IsIgnoredBySandbox2);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.Placement = this.Placement.Combine(rhs.Placement, (l, r) => l.Combine(r));
                 return ret;
@@ -1470,16 +1510,17 @@ namespace Mutagen.Bethesda.Skyrim
             public LinkedReferenceColor.TranslationMask? LinkedReferenceColor;
             public bool PersistentLocation;
             public bool LocationReference;
-            public bool IgnoredBySandbox;
+            public bool IsIgnoredBySandbox;
             public bool LocationRefTypes;
             public bool HeadTrackingWeight;
             public bool Horse;
             public bool FavorCost;
             public EnableParent.TranslationMask? EnableParent;
-            public Ownership.TranslationMask? Ownership;
+            public bool Owner;
+            public bool FactionRank;
             public bool Emittance;
             public bool MultiboundReference;
-            public bool IgnoredBySandbox2;
+            public bool IsIgnoredBySandbox2;
             public bool Scale;
             public Placement.TranslationMask? Placement;
             #endregion
@@ -1501,14 +1542,16 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Health = defaultOn;
                 this.PersistentLocation = defaultOn;
                 this.LocationReference = defaultOn;
-                this.IgnoredBySandbox = defaultOn;
+                this.IsIgnoredBySandbox = defaultOn;
                 this.LocationRefTypes = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.Horse = defaultOn;
                 this.FavorCost = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
                 this.Emittance = defaultOn;
                 this.MultiboundReference = defaultOn;
-                this.IgnoredBySandbox2 = defaultOn;
+                this.IsIgnoredBySandbox2 = defaultOn;
                 this.Scale = defaultOn;
             }
 
@@ -1533,16 +1576,17 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((LinkedReferenceColor != null ? LinkedReferenceColor.OnOverall : DefaultOn, LinkedReferenceColor?.GetCrystal()));
                 ret.Add((PersistentLocation, null));
                 ret.Add((LocationReference, null));
-                ret.Add((IgnoredBySandbox, null));
+                ret.Add((IsIgnoredBySandbox, null));
                 ret.Add((LocationRefTypes, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((Horse, null));
                 ret.Add((FavorCost, null));
                 ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
-                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
                 ret.Add((Emittance, null));
                 ret.Add((MultiboundReference, null));
-                ret.Add((IgnoredBySandbox2, null));
+                ret.Add((IsIgnoredBySandbox2, null));
                 ret.Add((Scale, null));
                 ret.Add((Placement != null ? Placement.OnOverall : DefaultOn, Placement?.GetCrystal()));
             }
@@ -1557,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedNpcCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedNpcSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedNpc(
             FormKey formKey,
@@ -1640,7 +1684,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1650,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PlacedNpc CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedNpc();
             ((PlacedNpcSetterCommon)((IPlacedNpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1665,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedNpc item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1675,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1723,16 +1767,17 @@ namespace Mutagen.Bethesda.Skyrim
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
         new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
         new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
-        new Boolean IgnoredBySandbox { get; set; }
+        new Boolean IsIgnoredBySandbox { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new IFormLinkNullable<IPlacedNpcGetter> Horse { get; set; }
         new Single? FavorCost { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IEmittanceGetter> Emittance { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; set; }
-        new Boolean IgnoredBySandbox2 { get; set; }
+        new Boolean IsIgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
         new Placement? Placement { get; set; }
         #region Mutagen
@@ -1753,6 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
         ILinkedReferenceGetter,
         ILocationTargetableGetter,
@@ -1766,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScriptedGetter
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
@@ -1785,16 +1831,17 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceColorGetter? LinkedReferenceColor { get; }
         IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
         IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
-        Boolean IgnoredBySandbox { get; }
+        Boolean IsIgnoredBySandbox { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Single? HeadTrackingWeight { get; }
         IFormLinkNullableGetter<IPlacedNpcGetter> Horse { get; }
         Single? FavorCost { get; }
         IEnableParentGetter? EnableParent { get; }
-        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        Int32? FactionRank { get; }
         IFormLinkNullableGetter<IEmittanceGetter> Emittance { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference { get; }
-        Boolean IgnoredBySandbox2 { get; }
+        Boolean IsIgnoredBySandbox2 { get; }
         Single? Scale { get; }
         IPlacementGetter? Placement { get; }
 
@@ -1825,26 +1872,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedNpcGetter item,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).ToString(
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
-            ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).ToString(
+            ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1939,7 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPlacedNpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedNpcSetterCommon)((IPlacedNpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1954,10 +2001,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedNpc_FieldIndex
+    internal enum PlacedNpc_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1981,23 +2028,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         LinkedReferenceColor = 19,
         PersistentLocation = 20,
         LocationReference = 21,
-        IgnoredBySandbox = 22,
+        IsIgnoredBySandbox = 22,
         LocationRefTypes = 23,
         HeadTrackingWeight = 24,
         Horse = 25,
         FavorCost = 26,
         EnableParent = 27,
-        Ownership = 28,
-        Emittance = 29,
-        MultiboundReference = 30,
-        IgnoredBySandbox2 = 31,
-        Scale = 32,
-        Placement = 33,
+        Owner = 28,
+        FactionRank = 29,
+        Emittance = 30,
+        MultiboundReference = 31,
+        IsIgnoredBySandbox2 = 32,
+        Scale = 33,
+        Placement = 34,
     }
     #endregion
 
     #region Registration
-    public partial class PlacedNpc_Registration : ILoquiRegistration
+    internal partial class PlacedNpc_Registration : ILoquiRegistration
     {
         public static readonly PlacedNpc_Registration Instance = new PlacedNpc_Registration();
 
@@ -2010,9 +2058,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b00383a9-1cbf-4c8c-9cdf-f2e886a6909a";
 
-        public const ushort AdditionalFieldCount = 28;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2039,6 +2087,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACHR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.ACHR);
+            var all = RecordCollection.Factory(
+                RecordTypes.ACHR,
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XRGD,
+                RecordTypes.XRGB,
+                RecordTypes.XPRD,
+                RecordTypes.XLCM,
+                RecordTypes.XMRC,
+                RecordTypes.XCNT,
+                RecordTypes.XRDS,
+                RecordTypes.XHLP,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XCLP,
+                RecordTypes.XLCN,
+                RecordTypes.XLRL,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XHTW,
+                RecordTypes.XHOR,
+                RecordTypes.XFVC,
+                RecordTypes.XESP,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIBS,
+                RecordTypes.XSCL,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2072,7 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedNpcSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class PlacedNpcSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly PlacedNpcSetterCommon Instance = new PlacedNpcSetterCommon();
 
@@ -2097,16 +2182,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LinkedReferenceColor = null;
             item.PersistentLocation.Clear();
             item.LocationReference.Clear();
-            item.IgnoredBySandbox = default;
+            item.IsIgnoredBySandbox = default;
             item.LocationRefTypes = null;
             item.HeadTrackingWeight = default;
             item.Horse.Clear();
             item.FavorCost = default;
             item.EnableParent = null;
-            item.Ownership = null;
+            item.Owner.Clear();
+            item.FactionRank = default;
             item.Emittance.Clear();
             item.MultiboundReference.Clear();
-            item.IgnoredBySandbox2 = default;
+            item.IsIgnoredBySandbox2 = default;
             item.Scale = default;
             item.Placement = null;
             base.Clear(item);
@@ -2138,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.LocationRefTypes?.RemapLinks(mapping);
             obj.Horse.Relink(mapping);
             obj.EnableParent?.RemapLinks(mapping);
-            obj.Ownership?.RemapLinks(mapping);
+            obj.Owner.Relink(mapping);
             obj.Emittance.Relink(mapping);
             obj.MultiboundReference.Relink(mapping);
         }
@@ -2149,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPlacedNpcInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedNpcInternal>(
                 record: item,
@@ -2162,7 +2248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedNpc)item,
@@ -2173,7 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedNpc)item,
@@ -2184,7 +2270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedNpcCommon : SkyrimMajorRecordCommon
+    internal partial class PlacedNpcCommon : SkyrimMajorRecordCommon
     {
         public new static readonly PlacedNpcCommon Instance = new PlacedNpcCommon();
 
@@ -2208,7 +2294,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedNpc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -2244,7 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.PersistentLocation = item.PersistentLocation.Equals(rhs.PersistentLocation);
             ret.LocationReference = item.LocationReference.Equals(rhs.LocationReference);
-            ret.IgnoredBySandbox = item.IgnoredBySandbox == rhs.IgnoredBySandbox;
+            ret.IsIgnoredBySandbox = item.IsIgnoredBySandbox == rhs.IsIgnoredBySandbox;
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
                 (l, r) => object.Equals(l, r),
@@ -2257,14 +2342,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.EnableParent,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Ownership = EqualsMaskHelper.EqualsHelper(
-                item.Ownership,
-                rhs.Ownership,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.Emittance = item.Emittance.Equals(rhs.Emittance);
             ret.MultiboundReference = item.MultiboundReference.Equals(rhs.MultiboundReference);
-            ret.IgnoredBySandbox2 = item.IgnoredBySandbox2 == rhs.IgnoredBySandbox2;
+            ret.IsIgnoredBySandbox2 = item.IsIgnoredBySandbox2 == rhs.IsIgnoredBySandbox2;
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
             ret.Placement = EqualsMaskHelper.EqualsHelper(
                 item.Placement,
@@ -2274,210 +2356,204 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedNpcGetter item,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedNpc =>");
+                sb.AppendLine($"PlacedNpc =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedNpc) =>");
+                sb.AppendLine($"{name} (PlacedNpc) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedNpcGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedNpc.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKeyNullable, "Base");
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.RagdollBipedData ?? true)
                 && item.RagdollBipedData is {} RagdollBipedDataItem)
             {
-                fg.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
+                sb.AppendLine($"RagdollBipedData => {SpanExt.ToHexString(RagdollBipedDataItem)}");
             }
             if ((printMask?.Patrol?.Overall ?? true)
                 && item.Patrol is {} PatrolItem)
             {
-                PatrolItem?.ToString(fg, "Patrol");
+                PatrolItem?.Print(sb, "Patrol");
             }
             if ((printMask?.LevelModifier ?? true)
                 && item.LevelModifier is {} LevelModifierItem)
             {
-                fg.AppendItem(LevelModifierItem, "LevelModifier");
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
+                sb.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.Count ?? true)
                 && item.Count is {} CountItem)
             {
-                fg.AppendItem(CountItem, "Count");
+                sb.AppendItem(CountItem, "Count");
             }
             if ((printMask?.Radius ?? true)
                 && item.Radius is {} RadiusItem)
             {
-                fg.AppendItem(RadiusItem, "Radius");
+                sb.AppendItem(RadiusItem, "Radius");
             }
             if ((printMask?.Health ?? true)
                 && item.Health is {} HealthItem)
             {
-                fg.AppendItem(HealthItem, "Health");
+                sb.AppendItem(HealthItem, "Health");
             }
             if (printMask?.LinkedReferences?.Overall ?? true)
             {
-                fg.AppendLine("LinkedReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LinkedReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LinkedReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ActivateParents?.Overall ?? true)
                 && item.ActivateParents is {} ActivateParentsItem)
             {
-                ActivateParentsItem?.ToString(fg, "ActivateParents");
+                ActivateParentsItem?.Print(sb, "ActivateParents");
             }
             if ((printMask?.LinkedReferenceColor?.Overall ?? true)
                 && item.LinkedReferenceColor is {} LinkedReferenceColorItem)
             {
-                LinkedReferenceColorItem?.ToString(fg, "LinkedReferenceColor");
+                LinkedReferenceColorItem?.Print(sb, "LinkedReferenceColor");
             }
             if (printMask?.PersistentLocation ?? true)
             {
-                fg.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
+                sb.AppendItem(item.PersistentLocation.FormKeyNullable, "PersistentLocation");
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
+                sb.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
-            if (printMask?.IgnoredBySandbox ?? true)
+            if (printMask?.IsIgnoredBySandbox ?? true)
             {
-                fg.AppendItem(item.IgnoredBySandbox, "IgnoredBySandbox");
+                sb.AppendItem(item.IsIgnoredBySandbox, "IsIgnoredBySandbox");
             }
             if ((printMask?.LocationRefTypes?.Overall ?? true)
                 && item.LocationRefTypes is {} LocationRefTypesItem)
             {
-                fg.AppendLine("LocationRefTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationRefTypes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationRefTypesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HeadTrackingWeight ?? true)
                 && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
             {
-                fg.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
+                sb.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
             }
             if (printMask?.Horse ?? true)
             {
-                fg.AppendItem(item.Horse.FormKeyNullable, "Horse");
+                sb.AppendItem(item.Horse.FormKeyNullable, "Horse");
             }
             if ((printMask?.FavorCost ?? true)
                 && item.FavorCost is {} FavorCostItem)
             {
-                fg.AppendItem(FavorCostItem, "FavorCost");
+                sb.AppendItem(FavorCostItem, "FavorCost");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.Print(sb, "EnableParent");
             }
-            if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership is {} OwnershipItem)
+            if (printMask?.Owner ?? true)
             {
-                OwnershipItem?.ToString(fg, "Ownership");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.Emittance ?? true)
             {
-                fg.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
+                sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
             if (printMask?.MultiboundReference ?? true)
             {
-                fg.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
+                sb.AppendItem(item.MultiboundReference.FormKeyNullable, "MultiboundReference");
             }
-            if (printMask?.IgnoredBySandbox2 ?? true)
+            if (printMask?.IsIgnoredBySandbox2 ?? true)
             {
-                fg.AppendItem(item.IgnoredBySandbox2, "IgnoredBySandbox2");
+                sb.AppendItem(item.IsIgnoredBySandbox2, "IsIgnoredBySandbox2");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Placement?.Overall ?? true)
                 && item.Placement is {} PlacementItem)
             {
-                PlacementItem?.ToString(fg, "Placement");
+                PlacementItem?.Print(sb, "Placement");
             }
         }
         
@@ -2581,7 +2657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LinkedReferences) ?? true))
             {
-                if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.LinkedReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ActivateParents) ?? true))
             {
@@ -2607,9 +2683,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox) ?? true))
             {
-                if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
+                if (lhs.IsIgnoredBySandbox != rhs.IsIgnoredBySandbox) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationRefTypes) ?? true))
             {
@@ -2635,13 +2711,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 else if (!isEnableParentEqual) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
-                {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership))) return false;
-                }
-                else if (!isOwnershipEqual) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
@@ -2651,9 +2727,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox2) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2) ?? true))
             {
-                if (lhs.IgnoredBySandbox2 != rhs.IgnoredBySandbox2) return false;
+                if (lhs.IsIgnoredBySandbox2 != rhs.IsIgnoredBySandbox2) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
             {
@@ -2741,7 +2817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(item.PersistentLocation);
             hash.Add(item.LocationReference);
-            hash.Add(item.IgnoredBySandbox);
+            hash.Add(item.IsIgnoredBySandbox);
             hash.Add(item.LocationRefTypes);
             if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
@@ -2756,13 +2832,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(EnableParentitem);
             }
-            if (item.Ownership is {} Ownershipitem)
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
             {
-                hash.Add(Ownershipitem);
+                hash.Add(FactionRankitem);
             }
             hash.Add(item.Emittance);
             hash.Add(item.MultiboundReference);
-            hash.Add(item.IgnoredBySandbox2);
+            hash.Add(item.IsIgnoredBySandbox2);
             if (item.Scale is {} Scaleitem)
             {
                 hash.Add(Scaleitem);
@@ -2794,56 +2871,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedNpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedNpcGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.Base.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Base);
+                yield return BaseInfo;
             }
-            if (obj.EncounterZone.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EncounterZone);
+                yield return EncounterZoneInfo;
             }
             if (obj.Patrol is {} PatrolItems)
             {
-                foreach (var item in PatrolItems.ContainedFormLinks)
+                foreach (var item in PatrolItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.MerchantContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MerchantContainer, out var MerchantContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MerchantContainer);
+                yield return MerchantContainerInfo;
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.ActivateParents is {} ActivateParentsItems)
             {
-                foreach (var item in ActivateParentsItems.ContainedFormLinks)
+                foreach (var item in ActivateParentsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.PersistentLocation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PersistentLocation, out var PersistentLocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PersistentLocation);
+                yield return PersistentLocationInfo;
             }
-            if (obj.LocationReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LocationReference, out var LocationReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LocationReference);
+                yield return LocationReferenceInfo;
             }
             if (obj.LocationRefTypes is {} LocationRefTypesItem)
             {
@@ -2852,31 +2929,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Horse.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Horse, out var HorseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Horse);
+                yield return HorseInfo;
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.ContainedFormLinks)
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.Ownership is {} OwnershipItems)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                foreach (var item in OwnershipItems.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return OwnerInfo;
             }
-            if (obj.Emittance.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Emittance);
+                yield return EmittanceInfo;
             }
-            if (obj.MultiboundReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MultiboundReference, out var MultiboundReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MultiboundReference);
+                yield return MultiboundReferenceInfo;
             }
             yield break;
         }
@@ -2919,7 +2993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedNpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class PlacedNpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly PlacedNpcSetterTranslationCommon Instance = new PlacedNpcSetterTranslationCommon();
 
@@ -3138,9 +3212,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.LocationReference.SetTo(rhs.LocationReference.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox) ?? true))
             {
-                item.IgnoredBySandbox = rhs.IgnoredBySandbox;
+                item.IsIgnoredBySandbox = rhs.IsIgnoredBySandbox;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationRefTypes) ?? true))
             {
@@ -3207,31 +3281,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Ownership);
-                try
-                {
-                    if(rhs.Ownership is {} rhsOwnership)
-                    {
-                        item.Ownership = rhsOwnership.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership));
-                    }
-                    else
-                    {
-                        item.Ownership = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
@@ -3241,9 +3297,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.MultiboundReference.SetTo(rhs.MultiboundReference.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2) ?? true))
             {
-                item.IgnoredBySandbox2 = rhs.IgnoredBySandbox2;
+                item.IsIgnoredBySandbox2 = rhs.IsIgnoredBySandbox2;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
             {
@@ -3397,7 +3453,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -3415,18 +3471,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedNpcBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
+        public new static readonly PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPlacedNpcGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -3486,7 +3542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
                 writer: writer,
                 items: item.LinkedReferences,
-                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LinkedReferencesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3518,13 +3574,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.XLRL));
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.IgnoredBySandbox,
+                item: item.IsIgnoredBySandbox,
                 header: translationParams.ConvertToCustom(RecordTypes.XIS2));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LocationRefTypes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XLRT),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3549,13 +3605,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.Ownership is {} OwnershipItem)
-            {
-                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
-                    item: OwnershipItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Emittance,
@@ -3566,7 +3623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.XMBR));
             BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.IgnoredBySandbox2,
+                item: item.IsIgnoredBySandbox2,
                 header: translationParams.ConvertToCustom(RecordTypes.XIBS));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -3584,7 +3641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPlacedNpcGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -3595,12 +3652,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -3612,7 +3672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedNpcGetter)item,
@@ -3623,7 +3683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedNpcGetter)item,
@@ -3634,7 +3694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedNpcGetter)item,
@@ -3644,9 +3704,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class PlacedNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
+        public new static readonly PlacedNpcBinaryCreateTranslation Instance = new PlacedNpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ACHR;
         public static void FillBinaryStructs(
@@ -3665,7 +3725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3703,7 +3763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedNpc_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XLCM:
@@ -3743,7 +3803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LinkedReferences.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XLKR,
+                            triggeringRecord: LinkedReferences_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)PlacedNpc_FieldIndex.LinkedReferences;
@@ -3752,7 +3812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedNpc_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XCLP:
@@ -3774,8 +3834,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XIS2:
                 {
-                    item.IgnoredBySandbox = true;
-                    return (int)PlacedNpc_FieldIndex.IgnoredBySandbox;
+                    item.IsIgnoredBySandbox = true;
+                    return (int)PlacedNpc_FieldIndex.IsIgnoredBySandbox;
                 }
                 case RecordTypeInts.XLRT:
                 {
@@ -3811,12 +3871,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)PlacedNpc_FieldIndex.Ownership;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)PlacedNpc_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XEMI:
                 {
@@ -3832,8 +3896,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XIBS:
                 {
-                    item.IgnoredBySandbox2 = true;
-                    return (int)PlacedNpc_FieldIndex.IgnoredBySandbox2;
+                    item.IsIgnoredBySandbox2 = true;
+                    return (int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2;
                 }
                 case RecordTypeInts.XSCL:
                 {
@@ -3853,7 +3917,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3870,16 +3935,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedNpcBinaryOverlay :
+    internal partial class PlacedNpcBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IPlacedNpcGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedNpc_Registration.Instance;
-        public new static PlacedNpc_Registration StaticRegistration => PlacedNpc_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedNpcCommon.Instance;
         [DebuggerStepThrough]
@@ -3887,14 +3952,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedNpcCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedNpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedNpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedNpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3907,100 +3972,108 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<INpcGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region RagdollBipedData
         private int? _RagdollBipedDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollBipedData => _RagdollBipedDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RagdollBipedDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? RagdollBipedData => _RagdollBipedDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollBipedDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IPatrolGetter? Patrol { get; private set; }
         #region LevelModifier
         private int? _LevelModifierLocation;
-        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
+        public Level? LevelModifier => _LevelModifierLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation!.Value, _package.MetaData.Constants)) : default(Level?);
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Count
         private int? _CountLocation;
-        public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region Radius
         private int? _RadiusLocation;
-        public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Health
         private int? _HealthLocation;
-        public Single? Health => _HealthLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HealthLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Health => _HealthLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HealthLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region LinkedReferenceColor
         private RangeInt32? _LinkedReferenceColorLocation;
-        public ILinkedReferenceColorGetter? LinkedReferenceColor => _LinkedReferenceColorLocation.HasValue ? LinkedReferenceColorBinaryOverlay.LinkedReferenceColorFactory(new OverlayStream(_data.Slice(_LinkedReferenceColorLocation!.Value.Min), _package), _package) : default;
+        public ILinkedReferenceColorGetter? LinkedReferenceColor => _LinkedReferenceColorLocation.HasValue ? LinkedReferenceColorBinaryOverlay.LinkedReferenceColorFactory(_recordData.Slice(_LinkedReferenceColorLocation!.Value.Min), _package) : default;
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
         #endregion
-        #region IgnoredBySandbox
-        private int? _IgnoredBySandboxLocation;
-        public Boolean IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? true : default;
+        #region IsIgnoredBySandbox
+        private int? _IsIgnoredBySandboxLocation;
+        public Boolean IsIgnoredBySandbox => _IsIgnoredBySandboxLocation.HasValue ? true : default;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
-        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Horse
         private int? _HorseLocation;
-        public IFormLinkNullableGetter<IPlacedNpcGetter> Horse => _HorseLocation.HasValue ? new FormLinkNullable<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedNpcGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedNpcGetter> Horse => _HorseLocation.HasValue ? new FormLinkNullable<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HorseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedNpcGetter>.Null;
         #endregion
         #region FavorCost
         private int? _FavorCostLocation;
-        public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
         #endregion
-        public IOwnershipGetter? Ownership { get; private set; }
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
         #endregion
         #region MultiboundReference
         private int? _MultiboundReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => _MultiboundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MultiboundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiboundReference => _MultiboundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MultiboundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
-        #region IgnoredBySandbox2
-        private int? _IgnoredBySandbox2Location;
-        public Boolean IgnoredBySandbox2 => _IgnoredBySandbox2Location.HasValue ? true : default;
+        #region IsIgnoredBySandbox2
+        private int? _IsIgnoredBySandbox2Location;
+        public Boolean IsIgnoredBySandbox2 => _IsIgnoredBySandbox2Location.HasValue ? true : default;
         #endregion
         #region Scale
         private int? _ScaleLocation;
-        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Placement
         private RangeInt32? _PlacementLocation;
-        public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(new OverlayStream(_data.Slice(_PlacementLocation!.Value.Min), _package), _package) : default;
+        public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(_recordData.Slice(_PlacementLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4009,28 +4082,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PlacedNpcBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PlacedNpcBinaryOverlay PlacedNpcFactory(
+        public static IPlacedNpcGetter PlacedNpcFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PlacedNpcBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -4040,20 +4116,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PlacedNpcBinaryOverlay PlacedNpcFactory(
+        public static IPlacedNpcGetter PlacedNpcFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedNpcFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -4063,9 +4139,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -4098,7 +4174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Patrol = PatrolBinaryOverlay.PatrolFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedNpc_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XLCM:
@@ -4128,14 +4204,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<LinkedReferencesBinaryOverlay>(
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LinkedReferences_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)PlacedNpc_FieldIndex.LinkedReferences;
@@ -4145,7 +4222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.ActivateParents = ActivateParentsBinaryOverlay.ActivateParentsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedNpc_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XCLP:
@@ -4165,13 +4242,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XIS2:
                 {
-                    _IgnoredBySandboxLocation = (stream.Position - offset);
-                    return (int)PlacedNpc_FieldIndex.IgnoredBySandbox;
+                    _IsIgnoredBySandboxLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.IsIgnoredBySandbox;
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -4201,13 +4278,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)PlacedNpc_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)PlacedNpc_FieldIndex.Ownership;
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XEMI:
                 {
@@ -4221,8 +4299,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XIBS:
                 {
-                    _IgnoredBySandbox2Location = (stream.Position - offset);
-                    return (int)PlacedNpc_FieldIndex.IgnoredBySandbox2;
+                    _IsIgnoredBySandbox2Location = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.IsIgnoredBySandbox2;
                 }
                 case RecordTypeInts.XSCL:
                 {
@@ -4241,17 +4319,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedNpcMixIn.ToString(
+            PlacedNpcMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,14 +52,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavigationMesh
-        private readonly IFormLink<IANavigationMeshGetter> _NavigationMesh = new FormLink<IANavigationMeshGetter>();
-        public IFormLink<IANavigationMeshGetter> NavigationMesh
+        private readonly IFormLink<INavigationMeshGetter> _NavigationMesh = new FormLink<INavigationMeshGetter>();
+        public IFormLink<INavigationMeshGetter> NavigationMesh
         {
             get => _NavigationMesh;
             set => _NavigationMesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IANavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
+        IFormLinkGetter<INavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -71,29 +72,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
             init => this._MergedTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavigationMapInfoGetter.MergedTo => _MergedTo;
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavigationMapInfoGetter.MergedTo => _MergedTo;
         #endregion
 
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
             init => this._PreferredMerges = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavigationMapInfoGetter.PreferredMerges => _PreferredMerges;
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavigationMapInfoGetter.PreferredMerges => _PreferredMerges;
         #endregion
 
         #endregion
@@ -151,12 +152,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavigationMapInfoMixIn.ToString(
+            NavigationMapInfoMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -424,9 +426,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.MergedTo.Specific = l;
-                        foreach (var item in MergedTo.Specific.WithIndex())
+                        foreach (var item in MergedTo.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -438,9 +440,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.PreferredMerges.Specific = l;
-                        foreach (var item in PreferredMerges.Specific.WithIndex())
+                        foreach (var item in PreferredMerges.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -452,9 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LinkedDoor.Mask<R>?>>();
                         obj.LinkedDoors.Specific = l;
-                        foreach (var item in LinkedDoors.Specific.WithIndex())
+                        foreach (var item in LinkedDoors.Specific)
                         {
-                            MaskItemIndexed<R, LinkedDoor.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LinkedDoor.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LinkedDoor.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LinkedDoor.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -469,131 +471,118 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NavigationMapInfo.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NavigationMapInfo.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavigationMapInfo.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NavigationMapInfo.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NavigationMapInfo.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavigationMapInfo.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.NavigationMesh ?? true)
                     {
-                        fg.AppendItem(NavigationMesh, "NavigationMesh");
+                        sb.AppendItem(NavigationMesh, "NavigationMesh");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                     if (printMask?.PreferredMergesFlag ?? true)
                     {
-                        fg.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                        sb.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
                     }
                     if ((printMask?.MergedTo?.Overall ?? true)
                         && MergedTo is {} MergedToItem)
                     {
-                        fg.AppendLine("MergedTo =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MergedTo =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MergedToItem.Overall);
+                            sb.AppendItem(MergedToItem.Overall);
                             if (MergedToItem.Specific != null)
                             {
                                 foreach (var subItem in MergedToItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.PreferredMerges?.Overall ?? true)
                         && PreferredMerges is {} PreferredMergesItem)
                     {
-                        fg.AppendLine("PreferredMerges =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PreferredMerges =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PreferredMergesItem.Overall);
+                            sb.AppendItem(PreferredMergesItem.Overall);
                             if (PreferredMergesItem.Specific != null)
                             {
                                 foreach (var subItem in PreferredMergesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LinkedDoors?.Overall ?? true)
                         && LinkedDoors is {} LinkedDoorsItem)
                     {
-                        fg.AppendLine("LinkedDoors =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LinkedDoors =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LinkedDoorsItem.Overall);
+                            sb.AppendItem(LinkedDoorsItem.Overall);
                             if (LinkedDoorsItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedDoorsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Island?.Overall ?? true)
                     {
-                        Island?.ToString(fg);
+                        Island?.Print(sb);
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.ParentWorldspace ?? true)
                     {
-                        fg.AppendItem(ParentWorldspace, "ParentWorldspace");
+                        sb.AppendItem(ParentWorldspace, "ParentWorldspace");
                     }
                     if (printMask?.ParentWorldspaceCoord ?? true)
                     {
-                        fg.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
+                        sb.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
                     }
                     if (printMask?.ParentCell ?? true)
                     {
-                        fg.AppendItem(ParentCell, "ParentCell");
+                        sb.AppendItem(ParentCell, "ParentCell");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -778,110 +767,109 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NavigationMesh, "NavigationMesh");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Point, "Point");
-                fg.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                {
+                    sb.AppendItem(NavigationMesh, "NavigationMesh");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(PreferredMergesFlag, "PreferredMergesFlag");
+                }
                 if (MergedTo is {} MergedToItem)
                 {
-                    fg.AppendLine("MergedTo =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MergedTo =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MergedToItem.Overall);
+                        sb.AppendItem(MergedToItem.Overall);
                         if (MergedToItem.Specific != null)
                         {
                             foreach (var subItem in MergedToItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (PreferredMerges is {} PreferredMergesItem)
                 {
-                    fg.AppendLine("PreferredMerges =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PreferredMerges =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PreferredMergesItem.Overall);
+                        sb.AppendItem(PreferredMergesItem.Overall);
                         if (PreferredMergesItem.Specific != null)
                         {
                             foreach (var subItem in PreferredMergesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LinkedDoors is {} LinkedDoorsItem)
                 {
-                    fg.AppendLine("LinkedDoors =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LinkedDoors =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LinkedDoorsItem.Overall);
+                        sb.AppendItem(LinkedDoorsItem.Overall);
                         if (LinkedDoorsItem.Specific != null)
                         {
                             foreach (var subItem in LinkedDoorsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                Island?.ToString(fg);
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(ParentWorldspace, "ParentWorldspace");
-                fg.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
-                fg.AppendItem(ParentCell, "ParentCell");
+                Island?.Print(sb);
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ParentWorldspace, "ParentWorldspace");
+                }
+                {
+                    sb.AppendItem(ParentWorldspaceCoord, "ParentWorldspaceCoord");
+                }
+                {
+                    sb.AppendItem(ParentCell, "ParentCell");
+                }
             }
             #endregion
 
@@ -994,8 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = NavigationMapInfo_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMapInfoCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1006,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMapInfoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1016,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NavigationMapInfo CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationMapInfo();
             ((NavigationMapInfoSetterCommon)((INavigationMapInfoGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1031,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationMapInfo item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1041,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1062,12 +1049,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationMapInfo>,
         INavigationMapInfoGetter
     {
-        new IFormLink<IANavigationMeshGetter> NavigationMesh { get; set; }
+        new IFormLink<INavigationMeshGetter> NavigationMesh { get; set; }
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo { get; }
-        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges { get; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> MergedTo { get; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges { get; }
         new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
@@ -1089,12 +1076,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavigationMapInfo_Registration.Instance;
-        IFormLinkGetter<IANavigationMeshGetter> NavigationMesh { get; }
+        IFormLinkGetter<INavigationMeshGetter> NavigationMesh { get; }
         Int32 Unknown { get; }
         P3Float Point { get; }
         UInt32 PreferredMergesFlag { get; }
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo { get; }
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges { get; }
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo { get; }
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges { get; }
         IReadOnlyList<ILinkedDoorGetter> LinkedDoors { get; }
         IIslandDataGetter? Island { get; }
         Int32 Unknown2 { get; }
@@ -1125,26 +1112,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavigationMapInfoGetter item,
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).ToString(
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavigationMapInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
-            ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).ToString(
+            ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1250,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavigationMapInfo item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationMapInfoSetterCommon)((INavigationMapInfoGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1265,10 +1252,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavigationMapInfo_FieldIndex
+    internal enum NavigationMapInfo_FieldIndex
     {
         NavigationMesh = 0,
         Unknown = 1,
@@ -1286,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NavigationMapInfo_Registration : ILoquiRegistration
+    internal partial class NavigationMapInfo_Registration : ILoquiRegistration
     {
         public static readonly NavigationMapInfo_Registration Instance = new NavigationMapInfo_Registration();
 
@@ -1328,6 +1315,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NVMI;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.NVMI);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NavigationMapInfoBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1361,7 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavigationMapInfoSetterCommon
+    internal partial class NavigationMapInfoSetterCommon
     {
         public static readonly NavigationMapInfoSetterCommon Instance = new NavigationMapInfoSetterCommon();
 
@@ -1401,12 +1394,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INavigationMapInfo item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NVMI),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1417,7 +1410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMapInfoCommon
+    internal partial class NavigationMapInfoCommon
     {
         public static readonly NavigationMapInfoCommon Instance = new NavigationMapInfoCommon();
 
@@ -1441,7 +1434,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NavigationMapInfo.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavigationMesh = item.NavigationMesh.Equals(rhs.NavigationMesh);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Point = item.Point.Equals(rhs.Point);
@@ -1469,140 +1461,126 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ParentCell = item.ParentCell.Equals(rhs.ParentCell);
         }
         
-        public string ToString(
+        public string Print(
             INavigationMapInfoGetter item,
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavigationMapInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavigationMapInfo =>");
+                sb.AppendLine($"NavigationMapInfo =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavigationMapInfo) =>");
+                sb.AppendLine($"{name} (NavigationMapInfo) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavigationMapInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavigationMapInfo.Mask<bool>? printMask = null)
         {
             if (printMask?.NavigationMesh ?? true)
             {
-                fg.AppendItem(item.NavigationMesh.FormKey, "NavigationMesh");
+                sb.AppendItem(item.NavigationMesh.FormKey, "NavigationMesh");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
             if (printMask?.PreferredMergesFlag ?? true)
             {
-                fg.AppendItem(item.PreferredMergesFlag, "PreferredMergesFlag");
+                sb.AppendItem(item.PreferredMergesFlag, "PreferredMergesFlag");
             }
             if (printMask?.MergedTo?.Overall ?? true)
             {
-                fg.AppendLine("MergedTo =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MergedTo =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.MergedTo)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.PreferredMerges?.Overall ?? true)
             {
-                fg.AppendLine("PreferredMerges =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PreferredMerges =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PreferredMerges)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.LinkedDoors?.Overall ?? true)
             {
-                fg.AppendLine("LinkedDoors =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LinkedDoors =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LinkedDoors)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Island?.Overall ?? true)
                 && item.Island is {} IslandItem)
             {
-                IslandItem?.ToString(fg, "Island");
+                IslandItem?.Print(sb, "Island");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.ParentWorldspace ?? true)
             {
-                fg.AppendItem(item.ParentWorldspace.FormKey, "ParentWorldspace");
+                sb.AppendItem(item.ParentWorldspace.FormKey, "ParentWorldspace");
             }
             if (printMask?.ParentWorldspaceCoord ?? true)
             {
-                fg.AppendItem(item.ParentWorldspaceCoord, "ParentWorldspaceCoord");
+                sb.AppendItem(item.ParentWorldspaceCoord, "ParentWorldspaceCoord");
             }
             if (printMask?.ParentCell ?? true)
             {
-                fg.AppendItem(item.ParentCell.FormKey, "ParentCell");
+                sb.AppendItem(item.ParentCell.FormKey, "ParentCell");
             }
         }
         
@@ -1639,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
             {
-                if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
+                if (!lhs.LinkedDoors.SequenceEqual(rhs.LinkedDoors, (l, r) => ((LinkedDoorCommon)((ILinkedDoorGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.LinkedDoors)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
             {
@@ -1698,7 +1676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMapInfoGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMapInfoGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.NavigationMesh);
             foreach (var item in obj.MergedTo)
@@ -1709,7 +1687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LinkedDoors.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LinkedDoors.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1721,7 +1699,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationMapInfoSetterTranslationCommon
+    internal partial class NavigationMapInfoSetterTranslationCommon
     {
         public static readonly NavigationMapInfoSetterTranslationCommon Instance = new NavigationMapInfoSetterTranslationCommon();
 
@@ -1756,7 +1734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MergedTo.SetTo(
                         rhs.MergedTo
-                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1775,7 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.PreferredMerges.SetTo(
                         rhs.PreferredMerges
-                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1915,7 +1893,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMapInfo_Registration.Instance;
-        public static NavigationMapInfo_Registration StaticRegistration => NavigationMapInfo_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavigationMapInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationMapInfoCommon.Instance;
         [DebuggerStepThrough]
@@ -1939,11 +1917,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationMapInfoBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
+        public static readonly NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavigationMapInfoGetter item,
@@ -1957,21 +1935,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Point);
             writer.Write(item.PreferredMergesFlag);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.MergedTo,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PreferredMerges,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1981,7 +1959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LinkedDoors,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, ILinkedDoorGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILinkedDoorGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LinkedDoorBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2030,12 +2008,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INavigationMapInfoGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NVMI),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2047,7 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationMapInfoGetter)item,
@@ -2057,9 +2035,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavigationMapInfoBinaryCreateTranslation
+    internal partial class NavigationMapInfoBinaryCreateTranslation
     {
-        public readonly static NavigationMapInfoBinaryCreateTranslation Instance = new NavigationMapInfoBinaryCreateTranslation();
+        public static readonly NavigationMapInfoBinaryCreateTranslation Instance = new NavigationMapInfoBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavigationMapInfo item,
@@ -2070,12 +2048,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
             item.MergedTo.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2114,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INavigationMapInfoGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMapInfoBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2127,16 +2105,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavigationMapInfoBinaryOverlay :
+    internal partial class NavigationMapInfoBinaryOverlay :
         PluginBinaryOverlay,
         INavigationMapInfoGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationMapInfo_Registration.Instance;
-        public static NavigationMapInfo_Registration StaticRegistration => NavigationMapInfo_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavigationMapInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationMapInfoCommon.Instance;
         [DebuggerStepThrough]
@@ -2150,16 +2128,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMapInfoCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMapInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationMapInfoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2167,31 +2145,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IANavigationMeshGetter> NavigationMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
-        public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
+        public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
+        public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
         #region MergedTo
-        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors
-        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<LinkedDoorBinaryOverlay>(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
+        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<ILinkedDoorGetter>(_structData.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
         protected int LinkedDoorsEndingPos;
         #endregion
         #region Island
+        public partial IIslandDataGetter? GetIslandCustom(int location);
         public IIslandDataGetter? Island => GetIslandCustom(location: LinkedDoorsEndingPos);
         protected int IslandEndingPos;
         partial void CustomIslandEndPos();
         #endregion
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(IslandEndingPos, 0x4));
-        public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(IslandEndingPos, 0x4));
+        public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
-         partial void ParentParseLogicCustomParse(
+        partial void ParentParseLogicCustomParse(
             OverlayStream stream,
             int offset);
         protected int ParentParseLogicEndingPos;
@@ -2203,28 +2182,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NavigationMapInfoBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NavigationMapInfoBinaryOverlay NavigationMapInfoFactory(
+        public static INavigationMapInfoGetter NavigationMapInfoFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavigationMapInfoBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x18)) * 4 + 4;
-            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.MergedToEndingPos)) * 4 + 4;
-            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
+            ret.MergedToEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 4 + 4;
+            ret.PreferredMergesEndingPos = ret.MergedToEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.MergedToEndingPos)) * 4 + 4;
+            ret.LinkedDoorsEndingPos = ret.PreferredMergesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredMergesEndingPos)) * 8 + 4;
             ret.CustomIslandEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2233,25 +2217,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NavigationMapInfoBinaryOverlay NavigationMapInfoFactory(
+        public static INavigationMapInfoGetter NavigationMapInfoFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationMapInfoFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavigationMapInfoMixIn.ToString(
+            NavigationMapInfoMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

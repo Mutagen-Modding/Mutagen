@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,12 +100,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledSpellMixIn.ToString(
+            LeveledSpellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -271,9 +273,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LeveledSpellEntry.Mask<R>?>>();
                         obj.Entries.Specific = l;
-                        foreach (var item in Entries.Specific.WithIndex())
+                        foreach (var item in Entries.Specific)
                         {
-                            MaskItemIndexed<R, LeveledSpellEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledSpellEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LeveledSpellEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LeveledSpellEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -283,61 +285,52 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LeveledSpell.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LeveledSpell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LeveledSpell.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LeveledSpell.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LeveledSpell.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LeveledSpell.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.ChanceNone ?? true)
                     {
-                        fg.AppendItem(ChanceNone, "ChanceNone");
+                        sb.AppendItem(ChanceNone, "ChanceNone");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
                         && Entries is {} EntriesItem)
                     {
-                        fg.AppendLine("Entries =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Entries =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(EntriesItem.Overall);
+                            sb.AppendItem(EntriesItem.Overall);
                             if (EntriesItem.Specific != null)
                             {
                                 foreach (var subItem in EntriesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -431,60 +424,51 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(ChanceNone, "ChanceNone");
-                fg.AppendItem(Flags, "Flags");
+                base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ChanceNone, "ChanceNone");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
                 if (Entries is {} EntriesItem)
                 {
-                    fg.AppendLine("Entries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Entries =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(EntriesItem.Overall);
+                        sb.AppendItem(EntriesItem.Overall);
                         if (EntriesItem.Specific != null)
                         {
                             foreach (var subItem in EntriesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -557,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledSpellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledSpellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledSpellSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledSpell(
             FormKey formKey,
@@ -635,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LeveledSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -645,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static LeveledSpell CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledSpell();
             ((LeveledSpellSetterCommon)((ILeveledSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -660,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledSpell item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -670,7 +654,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -687,16 +671,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILeveledSpell :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILeveledSpellGetter,
         ILoquiObjectSetter<ILeveledSpellInternal>,
         IObjectBounded,
-        IObjectBoundedOptional,
         ISkyrimMajorRecordInternal,
         ISpellRecord
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
@@ -715,17 +699,17 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledSpellGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IMapsToGetter<ILeveledSpellGetter>,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
         ISpellRecordGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -756,26 +740,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILeveledSpellGetter item,
             string? name = null,
             LeveledSpell.Mask<bool>? printMask = null)
         {
-            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).ToString(
+            return ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILeveledSpellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledSpell.Mask<bool>? printMask = null)
         {
-            ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).ToString(
+            ((LeveledSpellCommon)((ILeveledSpellGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -870,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILeveledSpellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LeveledSpellSetterCommon)((ILeveledSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -885,10 +869,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LeveledSpell_FieldIndex
+    internal enum LeveledSpell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -904,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledSpell_Registration : ILoquiRegistration
+    internal partial class LeveledSpell_Registration : ILoquiRegistration
     {
         public static readonly LeveledSpell_Registration Instance = new LeveledSpell_Registration();
 
@@ -946,6 +930,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVSP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.LVSP);
+            var all = RecordCollection.Factory(
+                RecordTypes.LVSP,
+                RecordTypes.OBND,
+                RecordTypes.LVLD,
+                RecordTypes.LVLF,
+                RecordTypes.LVLO,
+                RecordTypes.COED,
+                RecordTypes.LLCT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledSpellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -979,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledSpellSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LeveledSpellSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LeveledSpellSetterCommon Instance = new LeveledSpellSetterCommon();
 
@@ -1018,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILeveledSpellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILeveledSpellInternal>(
                 record: item,
@@ -1031,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LeveledSpell)item,
@@ -1042,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LeveledSpell)item,
@@ -1053,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledSpellCommon : SkyrimMajorRecordCommon
+    internal partial class LeveledSpellCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LeveledSpellCommon Instance = new LeveledSpellCommon();
 
@@ -1077,7 +1075,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledSpell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1088,85 +1085,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILeveledSpellGetter item,
             string? name = null,
             LeveledSpell.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILeveledSpellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledSpell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LeveledSpell =>");
+                sb.AppendLine($"LeveledSpell =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LeveledSpell) =>");
+                sb.AppendLine($"{name} (LeveledSpell) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILeveledSpellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LeveledSpell.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.ChanceNone ?? true)
                 && item.ChanceNone is {} ChanceNoneItem)
             {
-                fg.AppendItem(ChanceNoneItem, "ChanceNone");
+                sb.AppendItem(ChanceNoneItem, "ChanceNone");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Entries?.Overall ?? true)
                 && item.Entries is {} EntriesItem)
             {
-                fg.AppendLine("Entries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Entries =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in EntriesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1234,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LeveledSpell_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledSpellEntryCommon)((ILeveledSpellEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledSpell_FieldIndex.Entries)))) return false;
             }
             return true;
         }
@@ -1294,16 +1285,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILeveledSpellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledSpellGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.WhereCastable<ILeveledSpellEntryGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1349,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledSpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LeveledSpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledSpellSetterTranslationCommon Instance = new LeveledSpellSetterTranslationCommon();
 
@@ -1566,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1584,18 +1575,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledSpellBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
+        public new static readonly LeveledSpellBinaryWriteTranslation Instance = new LeveledSpellBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILeveledSpellGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1620,7 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Entries,
                 counterType: RecordTypes.LLCT,
                 counterLength: 1,
-                transl: (MutagenWriter subWriter, ILeveledSpellEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledSpellEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LeveledSpellEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1633,7 +1624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILeveledSpellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1644,12 +1635,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1661,7 +1655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -1672,7 +1666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -1683,7 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILeveledSpellGetter)item,
@@ -1693,9 +1687,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledSpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LeveledSpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
+        public new static readonly LeveledSpellBinaryCreateTranslation Instance = new LeveledSpellBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVSP;
         public static void FillBinaryStructs(
@@ -1714,7 +1708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1747,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,
-                            triggeringRecord: LeveledSpellEntry_Registration.TriggeringRecordTypes,
+                            triggeringRecord: LeveledSpellEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LeveledSpellEntry.TryCreateFromBinary)
                         .CastExtendedList<LeveledSpellEntry>();
@@ -1760,7 +1754,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1777,16 +1772,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LeveledSpellBinaryOverlay :
+    internal partial class LeveledSpellBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILeveledSpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledSpell_Registration.Instance;
-        public new static LeveledSpell_Registration StaticRegistration => LeveledSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1794,14 +1789,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledSpellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledSpellCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1813,16 +1808,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledSpell.Flag Flags => _FlagsLocation.HasValue ? (LeveledSpell.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledSpell.Flag);
+        public LeveledSpell.Flag Flags => _FlagsLocation.HasValue ? (LeveledSpell.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledSpell.Flag);
         #endregion
         public IReadOnlyList<ILeveledSpellEntryGetter>? Entries { get; private set; }
         partial void CustomFactoryEnd(
@@ -1832,28 +1827,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LeveledSpellBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LeveledSpellBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1863,20 +1861,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LeveledSpellBinaryOverlay LeveledSpellFactory(
+        public static ILeveledSpellGetter LeveledSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LeveledSpellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1886,9 +1884,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -1910,13 +1908,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.COED:
                 case RecordTypeInts.LLCT:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<LeveledSpellEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<ILeveledSpellEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 1,
-                        subrecordType: LeveledSpellEntry_Registration.TriggeringRecordTypes,
+                        trigger: LeveledSpellEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.LLCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LeveledSpellEntryBinaryOverlay.LeveledSpellEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)LeveledSpell_FieldIndex.Entries;
@@ -1928,17 +1926,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledSpellMixIn.ToString(
+            LeveledSpellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

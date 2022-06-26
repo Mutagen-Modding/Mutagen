@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class EnableParent
 {
-    public partial class EnableParent
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            SetEnableStateToOppositeOfParent = 0x01,
-            PopIn = 0x02,
-        }
+        SetEnableStateToOppositeOfParent = 0x01,
+        PopIn = 0x02,
     }
 }

@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -66,12 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SceneScriptFragmentsMixIn.ToString(
+            SceneScriptFragmentsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -107,13 +110,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem Unknown,
+                TItem ExtraBindDataVersion,
                 TItem FileName,
                 TItem OnBegin,
                 TItem OnEnd,
                 TItem PhaseFragments)
             : base(
-                Unknown: Unknown,
+                ExtraBindDataVersion: ExtraBindDataVersion,
                 FileName: FileName,
                 OnBegin: OnBegin,
                 OnEnd: OnEnd)
@@ -215,9 +218,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>>();
                         obj.PhaseFragments.Specific = l;
-                        foreach (var item in PhaseFragments.Specific.WithIndex())
+                        foreach (var item in PhaseFragments.Specific)
                         {
-                            MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ScenePhaseFragment.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -227,49 +230,40 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SceneScriptFragments.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SceneScriptFragments.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SceneScriptFragments.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SceneScriptFragments.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SceneScriptFragments.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SceneScriptFragments.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.PhaseFragments?.Overall ?? true)
                         && PhaseFragments is {} PhaseFragmentsItem)
                     {
-                        fg.AppendLine("PhaseFragments =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PhaseFragments =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PhaseFragmentsItem.Overall);
+                            sb.AppendItem(PhaseFragmentsItem.Overall);
                             if (PhaseFragmentsItem.Specific != null)
                             {
                                 foreach (var subItem in PhaseFragmentsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -333,57 +327,44 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
                 if (PhaseFragments is {} PhaseFragmentsItem)
                 {
-                    fg.AppendLine("PhaseFragments =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PhaseFragments =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PhaseFragmentsItem.Overall);
+                        sb.AppendItem(PhaseFragmentsItem.Overall);
                         if (PhaseFragmentsItem.Specific != null)
                         {
                             foreach (var subItem in PhaseFragmentsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -448,7 +429,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SceneScriptFragmentsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -458,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static SceneScriptFragments CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneScriptFragments();
             ((SceneScriptFragmentsSetterCommon)((ISceneScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -473,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SceneScriptFragments item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -483,7 +464,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -538,26 +519,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISceneScriptFragmentsGetter item,
             string? name = null,
             SceneScriptFragments.Mask<bool>? printMask = null)
         {
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).ToString(
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISceneScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SceneScriptFragments.Mask<bool>? printMask = null)
         {
-            ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).ToString(
+            ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -638,7 +619,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISceneScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SceneScriptFragmentsSetterCommon)((ISceneScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -653,12 +634,12 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SceneScriptFragments_FieldIndex
+    internal enum SceneScriptFragments_FieldIndex
     {
-        Unknown = 0,
+        ExtraBindDataVersion = 0,
         FileName = 1,
         OnBegin = 2,
         OnEnd = 3,
@@ -667,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SceneScriptFragments_Registration : ILoquiRegistration
+    internal partial class SceneScriptFragments_Registration : ILoquiRegistration
     {
         public static readonly SceneScriptFragments_Registration Instance = new SceneScriptFragments_Registration();
 
@@ -741,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SceneScriptFragmentsSetterCommon : ScriptFragmentsSetterCommon
+    internal partial class SceneScriptFragmentsSetterCommon : ScriptFragmentsSetterCommon
     {
         public new static readonly SceneScriptFragmentsSetterCommon Instance = new SceneScriptFragmentsSetterCommon();
 
@@ -770,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISceneScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -782,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IScriptFragments item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SceneScriptFragments)item,
@@ -793,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneScriptFragmentsCommon : ScriptFragmentsCommon
+    internal partial class SceneScriptFragmentsCommon : ScriptFragmentsCommon
     {
         public new static readonly SceneScriptFragmentsCommon Instance = new SceneScriptFragmentsCommon();
 
@@ -817,7 +798,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SceneScriptFragments.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.PhaseFragments = item.PhaseFragments.CollectionEqualsHelper(
                 rhs.PhaseFragments,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -825,71 +805,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISceneScriptFragmentsGetter item,
             string? name = null,
             SceneScriptFragments.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISceneScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SceneScriptFragments.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SceneScriptFragments =>");
+                sb.AppendLine($"SceneScriptFragments =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SceneScriptFragments) =>");
+                sb.AppendLine($"{name} (SceneScriptFragments) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISceneScriptFragmentsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SceneScriptFragments.Mask<bool>? printMask = null)
         {
             ScriptFragmentsCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.PhaseFragments?.Overall ?? true)
             {
-                fg.AppendLine("PhaseFragments =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PhaseFragments =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PhaseFragments)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -897,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (index)
             {
-                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.ExtraBindDataVersion:
                     return (SceneScriptFragments_FieldIndex)((int)index);
                 case ScriptFragments_FieldIndex.FileName:
                     return (SceneScriptFragments_FieldIndex)((int)index);
@@ -920,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((IScriptFragmentsGetter)lhs, (IScriptFragmentsGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SceneScriptFragments_FieldIndex.PhaseFragments) ?? true))
             {
-                if (!lhs.PhaseFragments.SequenceEqualNullable(rhs.PhaseFragments)) return false;
+                if (!lhs.PhaseFragments.SequenceEqual(rhs.PhaseFragments, (l, r) => ((ScenePhaseFragmentCommon)((IScenePhaseFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SceneScriptFragments_FieldIndex.PhaseFragments)))) return false;
             }
             return true;
         }
@@ -958,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISceneScriptFragmentsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISceneScriptFragmentsGetter obj)
         {
             yield break;
         }
@@ -966,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneScriptFragmentsSetterTranslationCommon : ScriptFragmentsSetterTranslationCommon
+    internal partial class SceneScriptFragmentsSetterTranslationCommon : ScriptFragmentsSetterTranslationCommon
     {
         public new static readonly SceneScriptFragmentsSetterTranslationCommon Instance = new SceneScriptFragmentsSetterTranslationCommon();
 
@@ -1086,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneScriptFragments_Registration.Instance;
-        public new static SceneScriptFragments_Registration StaticRegistration => SceneScriptFragments_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,13 +1078,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneScriptFragmentsBinaryWriteTranslation :
         ScriptFragmentsBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SceneScriptFragmentsBinaryWriteTranslation Instance = new SceneScriptFragmentsBinaryWriteTranslation();
+        public new static readonly SceneScriptFragmentsBinaryWriteTranslation Instance = new SceneScriptFragmentsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISceneScriptFragmentsGetter item,
@@ -1123,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.PhaseFragments,
                 countLengthLength: 2,
-                transl: (MutagenWriter subWriter, IScenePhaseFragmentGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IScenePhaseFragmentGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ScenePhaseFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1136,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISceneScriptFragmentsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1146,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISceneScriptFragmentsGetter)item,
@@ -1157,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IScriptFragmentsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISceneScriptFragmentsGetter)item,
@@ -1167,9 +1141,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SceneScriptFragmentsBinaryCreateTranslation : ScriptFragmentsBinaryCreateTranslation
+    internal partial class SceneScriptFragmentsBinaryCreateTranslation : ScriptFragmentsBinaryCreateTranslation
     {
-        public new readonly static SceneScriptFragmentsBinaryCreateTranslation Instance = new SceneScriptFragmentsBinaryCreateTranslation();
+        public new static readonly SceneScriptFragmentsBinaryCreateTranslation Instance = new SceneScriptFragmentsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISceneScriptFragments item,
@@ -1198,16 +1172,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SceneScriptFragmentsBinaryOverlay :
+    internal partial class SceneScriptFragmentsBinaryOverlay :
         ScriptFragmentsBinaryOverlay,
         ISceneScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneScriptFragments_Registration.Instance;
-        public new static SceneScriptFragments_Registration StaticRegistration => SceneScriptFragments_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
@@ -1215,13 +1189,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SceneScriptFragmentsBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1230,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region PhaseFragments
-        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<ScenePhaseFragmentBinaryOverlay>(_data.Slice(FlagsEndingPos), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
+        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<IScenePhaseFragmentGetter>(_structData.Slice(FlagsEndingPos), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
         protected int PhaseFragmentsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1240,24 +1214,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SceneScriptFragmentsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SceneScriptFragmentsBinaryOverlay SceneScriptFragmentsFactory(
+        public static ISceneScriptFragmentsGetter SceneScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SceneScriptFragmentsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += ret.PhaseFragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1266,25 +1246,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static SceneScriptFragmentsBinaryOverlay SceneScriptFragmentsFactory(
+        public static ISceneScriptFragmentsGetter SceneScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SceneScriptFragmentsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SceneScriptFragmentsMixIn.ToString(
+            SceneScriptFragmentsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

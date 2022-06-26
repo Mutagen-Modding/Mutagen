@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -124,12 +125,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ClimateMixIn.ToString(
+            ClimateMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -357,9 +359,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WeatherType.Mask<R>?>>();
                         obj.WeatherTypes.Specific = l;
-                        foreach (var item in WeatherTypes.Specific.WithIndex())
+                        foreach (var item in WeatherTypes.Specific)
                         {
-                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -380,93 +382,84 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Climate.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Climate.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Climate.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Climate.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Climate.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.WeatherTypes?.Overall ?? true)
                         && WeatherTypes is {} WeatherTypesItem)
                     {
-                        fg.AppendLine("WeatherTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("WeatherTypes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(WeatherTypesItem.Overall);
+                            sb.AppendItem(WeatherTypesItem.Overall);
                             if (WeatherTypesItem.Specific != null)
                             {
                                 foreach (var subItem in WeatherTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.SunTexture ?? true)
                     {
-                        fg.AppendItem(SunTexture, "SunTexture");
+                        sb.AppendItem(SunTexture, "SunTexture");
                     }
                     if (printMask?.SunGlareTexture ?? true)
                     {
-                        fg.AppendItem(SunGlareTexture, "SunGlareTexture");
+                        sb.AppendItem(SunGlareTexture, "SunGlareTexture");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.SunriseBeginRaw ?? true)
                     {
-                        fg.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
+                        sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
                     }
                     if (printMask?.SunriseEndRaw ?? true)
                     {
-                        fg.AppendItem(SunriseEndRaw, "SunriseEndRaw");
+                        sb.AppendItem(SunriseEndRaw, "SunriseEndRaw");
                     }
                     if (printMask?.SunsetBeginRaw ?? true)
                     {
-                        fg.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
+                        sb.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
                     }
                     if (printMask?.SunsetEndRaw ?? true)
                     {
-                        fg.AppendItem(SunsetEndRaw, "SunsetEndRaw");
+                        sb.AppendItem(SunsetEndRaw, "SunsetEndRaw");
                     }
                     if (printMask?.Volatility ?? true)
                     {
-                        fg.AppendItem(Volatility, "Volatility");
+                        sb.AppendItem(Volatility, "Volatility");
                     }
                     if (printMask?.Moons ?? true)
                     {
-                        fg.AppendItem(Moons, "Moons");
+                        sb.AppendItem(Moons, "Moons");
                     }
                     if (printMask?.PhaseLength ?? true)
                     {
-                        fg.AppendItem(PhaseLength, "PhaseLength");
+                        sb.AppendItem(PhaseLength, "PhaseLength");
                     }
                     if (printMask?.TNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                        sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -640,69 +633,76 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
                 if (WeatherTypes is {} WeatherTypesItem)
                 {
-                    fg.AppendLine("WeatherTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("WeatherTypes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(WeatherTypesItem.Overall);
+                        sb.AppendItem(WeatherTypesItem.Overall);
                         if (WeatherTypesItem.Specific != null)
                         {
                             foreach (var subItem in WeatherTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(SunTexture, "SunTexture");
-                fg.AppendItem(SunGlareTexture, "SunGlareTexture");
-                Model?.ToString(fg);
-                fg.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
-                fg.AppendItem(SunriseEndRaw, "SunriseEndRaw");
-                fg.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
-                fg.AppendItem(SunsetEndRaw, "SunsetEndRaw");
-                fg.AppendItem(Volatility, "Volatility");
-                fg.AppendItem(Moons, "Moons");
-                fg.AppendItem(PhaseLength, "PhaseLength");
-                fg.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                {
+                    sb.AppendItem(SunTexture, "SunTexture");
+                }
+                {
+                    sb.AppendItem(SunGlareTexture, "SunGlareTexture");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
+                }
+                {
+                    sb.AppendItem(SunriseEndRaw, "SunriseEndRaw");
+                }
+                {
+                    sb.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
+                }
+                {
+                    sb.AppendItem(SunsetEndRaw, "SunsetEndRaw");
+                }
+                {
+                    sb.AppendItem(Volatility, "Volatility");
+                }
+                {
+                    sb.AppendItem(Moons, "Moons");
+                }
+                {
+                    sb.AppendItem(PhaseLength, "PhaseLength");
+                }
+                {
+                    sb.AppendItem(TNAMDataTypeState, "TNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Climate_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ClimateCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ClimateSetterCommon.Instance.RemapLinks(this, mapping);
         public Climate(
             FormKey formKey,
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClimateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Climate CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Climate();
             ((ClimateSetterCommon)((IClimateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -913,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Climate item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1021,26 +1021,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IClimateGetter item,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
-            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
+            return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IClimateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
-            ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).ToString(
+            ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IClimateInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ClimateSetterCommon)((IClimateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1150,10 +1150,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Climate_FieldIndex
+    internal enum Climate_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Climate_Registration : ILoquiRegistration
+    internal partial class Climate_Registration : ILoquiRegistration
     {
         public static readonly Climate_Registration Instance = new Climate_Registration();
 
@@ -1219,6 +1219,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CLMT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CLMT);
+            var all = RecordCollection.Factory(
+                RecordTypes.CLMT,
+                RecordTypes.WLST,
+                RecordTypes.FNAM,
+                RecordTypes.GNAM,
+                RecordTypes.MODL,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ClimateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1252,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ClimateSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ClimateSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ClimateSetterCommon Instance = new ClimateSetterCommon();
 
@@ -1300,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IClimateInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IClimateInternal>(
                 record: item,
@@ -1313,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Climate)item,
@@ -1324,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Climate)item,
@@ -1335,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ClimateCommon : SkyrimMajorRecordCommon
+    internal partial class ClimateCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ClimateCommon Instance = new ClimateCommon();
 
@@ -1359,7 +1372,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Climate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.WeatherTypes = item.WeatherTypes.CollectionEqualsHelper(
                 rhs.WeatherTypes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1382,119 +1394,113 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IClimateGetter item,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IClimateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Climate.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Climate =>");
+                sb.AppendLine($"Climate =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Climate) =>");
+                sb.AppendLine($"{name} (Climate) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClimateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Climate.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.WeatherTypes?.Overall ?? true)
                 && item.WeatherTypes is {} WeatherTypesItem)
             {
-                fg.AppendLine("WeatherTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("WeatherTypes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in WeatherTypesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.SunTexture ?? true)
                 && item.SunTexture is {} SunTextureItem)
             {
-                fg.AppendItem(SunTextureItem, "SunTexture");
+                sb.AppendItem(SunTextureItem, "SunTexture");
             }
             if ((printMask?.SunGlareTexture ?? true)
                 && item.SunGlareTexture is {} SunGlareTextureItem)
             {
-                fg.AppendItem(SunGlareTextureItem, "SunGlareTexture");
+                sb.AppendItem(SunGlareTextureItem, "SunGlareTexture");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.SunriseBeginRaw ?? true)
             {
-                fg.AppendItem(item.SunriseBeginRaw, "SunriseBeginRaw");
+                sb.AppendItem(item.SunriseBeginRaw, "SunriseBeginRaw");
             }
             if (printMask?.SunriseEndRaw ?? true)
             {
-                fg.AppendItem(item.SunriseEndRaw, "SunriseEndRaw");
+                sb.AppendItem(item.SunriseEndRaw, "SunriseEndRaw");
             }
             if (printMask?.SunsetBeginRaw ?? true)
             {
-                fg.AppendItem(item.SunsetBeginRaw, "SunsetBeginRaw");
+                sb.AppendItem(item.SunsetBeginRaw, "SunsetBeginRaw");
             }
             if (printMask?.SunsetEndRaw ?? true)
             {
-                fg.AppendItem(item.SunsetEndRaw, "SunsetEndRaw");
+                sb.AppendItem(item.SunsetEndRaw, "SunsetEndRaw");
             }
             if (printMask?.Volatility ?? true)
             {
-                fg.AppendItem(item.Volatility, "Volatility");
+                sb.AppendItem(item.Volatility, "Volatility");
             }
             if (printMask?.Moons ?? true)
             {
-                fg.AppendItem(item.Moons, "Moons");
+                sb.AppendItem(item.Moons, "Moons");
             }
             if (printMask?.PhaseLength ?? true)
             {
-                fg.AppendItem(item.PhaseLength, "PhaseLength");
+                sb.AppendItem(item.PhaseLength, "PhaseLength");
             }
             if (printMask?.TNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
+                sb.AppendItem(item.TNAMDataTypeState, "TNAMDataTypeState");
             }
         }
         
@@ -1546,7 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.WeatherTypes) ?? true))
             {
-                if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes)) return false;
+                if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes, (l, r) => ((WeatherTypeCommon)((IWeatherTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Climate_FieldIndex.WeatherTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {
@@ -1668,22 +1674,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IClimateGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClimateGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.WeatherTypes is {} WeatherTypesItem)
             {
-                foreach (var item in WeatherTypesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in WeatherTypesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1729,7 +1735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ClimateSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ClimateSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ClimateSetterTranslationCommon Instance = new ClimateSetterTranslationCommon();
 
@@ -1982,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -2000,13 +2006,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ClimateBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
+        public new static readonly ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IClimateGetter item,
@@ -2020,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IClimateGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2030,7 +2036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.WeatherTypes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.WLST),
-                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WeatherTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2084,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IClimateGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2095,12 +2101,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2112,7 +2121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IClimateGetter)item,
@@ -2123,7 +2132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IClimateGetter)item,
@@ -2134,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IClimateGetter)item,
@@ -2144,9 +2153,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ClimateBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ClimateBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
+        public new static readonly ClimateBinaryCreateTranslation Instance = new ClimateBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLMT;
         public static void FillBinaryStructs(
@@ -2165,7 +2174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2200,7 +2209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Climate_FieldIndex.Model;
                 }
                 case RecordTypeInts.TNAM:
@@ -2224,7 +2233,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2245,16 +2255,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ClimateBinaryOverlay :
+    internal partial class ClimateBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IClimateGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Climate_Registration.Instance;
-        public new static Climate_Registration StaticRegistration => Climate_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ClimateCommon.Instance;
         [DebuggerStepThrough]
@@ -2262,14 +2272,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ClimateCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ClimateCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClimateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2282,42 +2292,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        private int? _TNAMLocation;
+        private RangeInt32? _TNAMLocation;
         public Climate.TNAMDataType TNAMDataTypeState { get; private set; }
         #region SunriseBeginRaw
-        private int _SunriseBeginRawLocation => _TNAMLocation!.Value;
+        private int _SunriseBeginRawLocation => _TNAMLocation!.Value.Min;
         private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _data.Span[_SunriseBeginRawLocation] : default;
+        public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _recordData.Span[_SunriseBeginRawLocation] : default;
         #endregion
         #region SunriseEndRaw
-        private int _SunriseEndRawLocation => _TNAMLocation!.Value + 0x1;
+        private int _SunriseEndRawLocation => _TNAMLocation!.Value.Min + 0x1;
         private bool _SunriseEndRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunriseEndRaw => _SunriseEndRaw_IsSet ? _data.Span[_SunriseEndRawLocation] : default;
+        public Byte SunriseEndRaw => _SunriseEndRaw_IsSet ? _recordData.Span[_SunriseEndRawLocation] : default;
         #endregion
         #region SunsetBeginRaw
-        private int _SunsetBeginRawLocation => _TNAMLocation!.Value + 0x2;
+        private int _SunsetBeginRawLocation => _TNAMLocation!.Value.Min + 0x2;
         private bool _SunsetBeginRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunsetBeginRaw => _SunsetBeginRaw_IsSet ? _data.Span[_SunsetBeginRawLocation] : default;
+        public Byte SunsetBeginRaw => _SunsetBeginRaw_IsSet ? _recordData.Span[_SunsetBeginRawLocation] : default;
         #endregion
         #region SunsetEndRaw
-        private int _SunsetEndRawLocation => _TNAMLocation!.Value + 0x3;
+        private int _SunsetEndRawLocation => _TNAMLocation!.Value.Min + 0x3;
         private bool _SunsetEndRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunsetEndRaw => _SunsetEndRaw_IsSet ? _data.Span[_SunsetEndRawLocation] : default;
+        public Byte SunsetEndRaw => _SunsetEndRaw_IsSet ? _recordData.Span[_SunsetEndRawLocation] : default;
         #endregion
         #region Volatility
-        private int _VolatilityLocation => _TNAMLocation!.Value + 0x4;
+        private int _VolatilityLocation => _TNAMLocation!.Value.Min + 0x4;
         private bool _Volatility_IsSet => _TNAMLocation.HasValue;
-        public Byte Volatility => _Volatility_IsSet ? _data.Span[_VolatilityLocation] : default;
+        public Byte Volatility => _Volatility_IsSet ? _recordData.Span[_VolatilityLocation] : default;
         #endregion
         #region MoonAndPhaseLength
-         partial void MoonAndPhaseLengthCustomParse(
+        private int _MoonAndPhaseLengthLocation => _TNAMLocation!.Value.Min + 0x5;
+        private bool _MoonAndPhaseLength_IsSet => _TNAMLocation.HasValue;
+        partial void MoonAndPhaseLengthCustomParse(
             OverlayStream stream,
             int offset);
         protected int MoonAndPhaseLengthEndingPos;
@@ -2331,28 +2343,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ClimateBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ClimateBinaryOverlay ClimateFactory(
+        public static IClimateGetter ClimateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ClimateBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2362,20 +2377,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ClimateBinaryOverlay ClimateFactory(
+        public static IClimateGetter ClimateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ClimateFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2385,16 +2400,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.WLST:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.WeatherTypes = BinaryOverlayList.FactoryByStartIndex<WeatherTypeBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.WeatherTypes = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -2417,12 +2432,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Climate_FieldIndex.Model;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _TNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Climate_FieldIndex.PhaseLength;
                 }
                 default:
@@ -2432,17 +2447,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ClimateMixIn.ToString(
+            ClimateMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

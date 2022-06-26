@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -66,12 +67,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RankMixIn.ToString(
+            RankMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -199,39 +201,34 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Rank.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Rank.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Rank.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Rank.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Rank.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Rank.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Number ?? true)
                     {
-                        fg.AppendItem(Number, "Number");
+                        sb.AppendItem(Number, "Number");
                     }
                     if (Title != null
                         && (printMask?.Title?.Overall ?? true))
                     {
-                        fg.AppendLine($"Title => {Title}");
+                        sb.AppendLine($"Title => {Title}");
                     }
                     if (printMask?.InsigniaUnused ?? true)
                     {
-                        fg.AppendItem(InsigniaUnused, "InsigniaUnused");
+                        sb.AppendItem(InsigniaUnused, "InsigniaUnused");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -326,41 +323,36 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Number, "Number");
+                {
+                    sb.AppendItem(Number, "Number");
+                }
                 if (Title != null)
                 {
-                    fg.AppendLine($"Title => {Title}");
+                    sb.AppendLine($"Title => {Title}");
                 }
-                fg.AppendItem(InsigniaUnused, "InsigniaUnused");
+                {
+                    sb.AppendItem(InsigniaUnused, "InsigniaUnused");
+                }
             }
             #endregion
 
@@ -444,7 +436,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -454,7 +446,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Rank CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Rank();
             ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -469,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Rank item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -479,7 +471,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -543,26 +535,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRankGetter item,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
-            return ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
+            return ((RankCommon)((IRankGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRankGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
-            ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
+            ((RankCommon)((IRankGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -668,7 +660,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IRank item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -683,10 +675,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Rank_FieldIndex
+    internal enum Rank_FieldIndex
     {
         Number = 0,
         Title = 1,
@@ -695,7 +687,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Rank_Registration : ILoquiRegistration
+    internal partial class Rank_Registration : ILoquiRegistration
     {
         public static readonly Rank_Registration Instance = new Rank_Registration();
 
@@ -736,19 +728,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.RNAM,
-                        RecordTypes.MNAM,
-                        RecordTypes.FNAM,
-                        RecordTypes.INAM
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.RNAM,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);
         #region Interface
@@ -783,7 +771,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RankSetterCommon
+    internal partial class RankSetterCommon
     {
         public static readonly RankSetterCommon Instance = new RankSetterCommon();
 
@@ -808,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IRank item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -821,7 +809,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RankCommon
+    internal partial class RankCommon
     {
         public static readonly RankCommon Instance = new RankCommon();
 
@@ -845,7 +833,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Rank.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Number = item.Number == rhs.Number;
             ret.Title = GenderedItem.EqualityMaskHelper(
                 lhs: item.Title,
@@ -855,64 +842,62 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.InsigniaUnused = string.Equals(item.InsigniaUnused, rhs.InsigniaUnused);
         }
         
-        public string ToString(
+        public string Print(
             IRankGetter item,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRankGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Rank =>");
+                sb.AppendLine($"Rank =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Rank) =>");
+                sb.AppendLine($"{name} (Rank) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRankGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Rank.Mask<bool>? printMask = null)
         {
             if ((printMask?.Number ?? true)
                 && item.Number is {} NumberItem)
             {
-                fg.AppendItem(NumberItem, "Number");
+                sb.AppendItem(NumberItem, "Number");
             }
             if ((printMask?.Title?.Overall ?? true)
                 && item.Title is {} TitleItem)
             {
-                TitleItem?.ToString(fg, "Title");
+                TitleItem?.Print(sb, "Title");
             }
             if ((printMask?.InsigniaUnused ?? true)
                 && item.InsigniaUnused is {} InsigniaUnusedItem)
             {
-                fg.AppendItem(InsigniaUnusedItem, "InsigniaUnused");
+                sb.AppendItem(InsigniaUnusedItem, "InsigniaUnused");
             }
         }
         
@@ -965,7 +950,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRankGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRankGetter obj)
         {
             yield break;
         }
@@ -973,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RankSetterTranslationCommon
+    internal partial class RankSetterTranslationCommon
     {
         public static readonly RankSetterTranslationCommon Instance = new RankSetterTranslationCommon();
 
@@ -1065,7 +1050,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]
@@ -1089,16 +1074,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RankBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
+        public static readonly RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRankGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1127,7 +1112,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IRankGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1138,7 +1123,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRankGetter)item,
@@ -1148,9 +1133,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RankBinaryCreateTranslation
+    internal partial class RankBinaryCreateTranslation
     {
-        public readonly static RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
+        public static readonly RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRank item,
@@ -1165,14 +1150,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Number) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Number = frame.ReadUInt32();
                     return (int)Rank_FieldIndex.Number;
@@ -1180,7 +1165,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Title) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Title, translationParams)) return ParseResult.Stop;
                     item.Title = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<TranslatedString>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
@@ -1199,7 +1184,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.InsigniaUnused) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.InsigniaUnused, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InsigniaUnused = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1222,7 +1207,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IRankGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1235,16 +1220,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RankBinaryOverlay :
+    internal partial class RankBinaryOverlay :
         PluginBinaryOverlay,
         IRankGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]
@@ -1258,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
@@ -1266,7 +1251,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1276,7 +1261,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region Number
         private int? _NumberLocation;
-        public UInt32? Number => _NumberLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NumberLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? Number => _NumberLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NumberLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region Title
         private IGenderedItemGetter<ITranslatedStringGetter?>? _TitleOverlay;
@@ -1284,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region InsigniaUnused
         private int? _InsigniaUnusedLocation;
-        public String? InsigniaUnused => _InsigniaUnusedLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaUnusedLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? InsigniaUnused => _InsigniaUnusedLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaUnusedLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1293,42 +1278,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected RankBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RankBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RankFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1338,21 +1329,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Number) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     _NumberLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.Number;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Title) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Title, translationParams)) return ParseResult.Stop;
                     _TitleOverlay = GenderedItemBinaryOverlay.Factory<ITranslatedStringGetter>(
                         package: _package,
                         male: RecordTypes.MNAM,
@@ -1363,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.InsigniaUnused) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.InsigniaUnused, translationParams)) return ParseResult.Stop;
                     _InsigniaUnusedLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.InsigniaUnused;
                 }
@@ -1373,12 +1364,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RankMixIn.ToString(
+            RankMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

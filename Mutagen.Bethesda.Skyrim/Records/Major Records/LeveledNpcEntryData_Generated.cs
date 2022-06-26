@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +75,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledNpcEntryDataMixIn.ToString(
+            LeveledNpcEntryDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -219,46 +221,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LeveledNpcEntryData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LeveledNpcEntryData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LeveledNpcEntryData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LeveledNpcEntryData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LeveledNpcEntryData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LeveledNpcEntryData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Level ?? true)
                     {
-                        fg.AppendItem(Level, "Level");
+                        sb.AppendItem(Level, "Level");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendItem(Reference, "Reference");
+                        sb.AppendItem(Reference, "Reference");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendItem(Count, "Count");
+                        sb.AppendItem(Count, "Count");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -373,40 +370,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Level, "Level");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Reference, "Reference");
-                fg.AppendItem(Count, "Count");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(Level, "Level");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Reference, "Reference");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -493,8 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LeveledNpcEntryData_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledNpcEntryDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcEntryDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcEntryDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -505,7 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledNpcEntryDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -515,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LeveledNpcEntryData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledNpcEntryData();
             ((LeveledNpcEntryDataSetterCommon)((ILeveledNpcEntryDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -530,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledNpcEntryData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -540,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -610,26 +607,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILeveledNpcEntryDataGetter item,
             string? name = null,
             LeveledNpcEntryData.Mask<bool>? printMask = null)
         {
-            return ((LeveledNpcEntryDataCommon)((ILeveledNpcEntryDataGetter)item).CommonInstance()!).ToString(
+            return ((LeveledNpcEntryDataCommon)((ILeveledNpcEntryDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILeveledNpcEntryDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledNpcEntryData.Mask<bool>? printMask = null)
         {
-            ((LeveledNpcEntryDataCommon)((ILeveledNpcEntryDataGetter)item).CommonInstance()!).ToString(
+            ((LeveledNpcEntryDataCommon)((ILeveledNpcEntryDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -735,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILeveledNpcEntryData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LeveledNpcEntryDataSetterCommon)((ILeveledNpcEntryDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -750,10 +747,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LeveledNpcEntryData_FieldIndex
+    internal enum LeveledNpcEntryData_FieldIndex
     {
         Level = 0,
         Unknown = 1,
@@ -764,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledNpcEntryData_Registration : ILoquiRegistration
+    internal partial class LeveledNpcEntryData_Registration : ILoquiRegistration
     {
         public static readonly LeveledNpcEntryData_Registration Instance = new LeveledNpcEntryData_Registration();
 
@@ -806,6 +803,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLO;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.LVLO);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcEntryDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -839,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledNpcEntryDataSetterCommon
+    internal partial class LeveledNpcEntryDataSetterCommon
     {
         public static readonly LeveledNpcEntryDataSetterCommon Instance = new LeveledNpcEntryDataSetterCommon();
 
@@ -867,12 +870,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILeveledNpcEntryData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.LVLO),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -883,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledNpcEntryDataCommon
+    internal partial class LeveledNpcEntryDataCommon
     {
         public static readonly LeveledNpcEntryDataCommon Instance = new LeveledNpcEntryDataCommon();
 
@@ -907,7 +910,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpcEntryData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Level = item.Level == rhs.Level;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Reference = item.Reference.Equals(rhs.Reference);
@@ -915,69 +917,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
-        public string ToString(
+        public string Print(
             ILeveledNpcEntryDataGetter item,
             string? name = null,
             LeveledNpcEntryData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILeveledNpcEntryDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledNpcEntryData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LeveledNpcEntryData =>");
+                sb.AppendLine($"LeveledNpcEntryData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LeveledNpcEntryData) =>");
+                sb.AppendLine($"{name} (LeveledNpcEntryData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILeveledNpcEntryDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LeveledNpcEntryData.Mask<bool>? printMask = null)
         {
             if (printMask?.Level ?? true)
             {
-                fg.AppendItem(item.Level, "Level");
+                sb.AppendItem(item.Level, "Level");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference.FormKey, "Reference");
+                sb.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Count ?? true)
             {
-                fg.AppendItem(item.Count, "Count");
+                sb.AppendItem(item.Count, "Count");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILeveledNpcEntryDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledNpcEntryDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledNpcEntryDataSetterTranslationCommon
+    internal partial class LeveledNpcEntryDataSetterTranslationCommon
     {
         public static readonly LeveledNpcEntryDataSetterTranslationCommon Instance = new LeveledNpcEntryDataSetterTranslationCommon();
 
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledNpcEntryData_Registration.Instance;
-        public static LeveledNpcEntryData_Registration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledNpcEntryDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1158,11 +1158,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LeveledNpcEntryDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LeveledNpcEntryDataBinaryWriteTranslation Instance = new LeveledNpcEntryDataBinaryWriteTranslation();
+        public static readonly LeveledNpcEntryDataBinaryWriteTranslation Instance = new LeveledNpcEntryDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILeveledNpcEntryDataGetter item,
@@ -1180,12 +1180,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILeveledNpcEntryDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.LVLO),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILeveledNpcEntryDataGetter)item,
@@ -1207,9 +1207,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledNpcEntryDataBinaryCreateTranslation
+    internal partial class LeveledNpcEntryDataBinaryCreateTranslation
     {
-        public readonly static LeveledNpcEntryDataBinaryCreateTranslation Instance = new LeveledNpcEntryDataBinaryCreateTranslation();
+        public static readonly LeveledNpcEntryDataBinaryCreateTranslation Instance = new LeveledNpcEntryDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILeveledNpcEntryData item,
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILeveledNpcEntryDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledNpcEntryDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1246,16 +1246,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LeveledNpcEntryDataBinaryOverlay :
+    internal partial class LeveledNpcEntryDataBinaryOverlay :
         PluginBinaryOverlay,
         ILeveledNpcEntryDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledNpcEntryData_Registration.Instance;
-        public static LeveledNpcEntryData_Registration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LeveledNpcEntryData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LeveledNpcEntryDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1269,16 +1269,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledNpcEntryDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledNpcEntryDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LeveledNpcEntryDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledNpcEntryDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1286,11 +1286,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLinkGetter<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
+        public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public IFormLinkGetter<INpcSpawnGetter> Reference => new FormLink<INpcSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1298,25 +1298,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LeveledNpcEntryDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LeveledNpcEntryDataBinaryOverlay LeveledNpcEntryDataFactory(
+        public static ILeveledNpcEntryDataGetter LeveledNpcEntryDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LeveledNpcEntryDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1325,25 +1330,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LeveledNpcEntryDataBinaryOverlay LeveledNpcEntryDataFactory(
+        public static ILeveledNpcEntryDataGetter LeveledNpcEntryDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LeveledNpcEntryDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledNpcEntryDataMixIn.ToString(
+            LeveledNpcEntryDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

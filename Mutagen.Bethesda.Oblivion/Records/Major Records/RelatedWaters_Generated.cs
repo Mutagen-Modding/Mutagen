@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -82,12 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RelatedWatersMixIn.ToString(
+            RelatedWatersMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,38 +211,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(RelatedWaters.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(RelatedWaters.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RelatedWaters.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, RelatedWaters.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(RelatedWaters.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RelatedWaters.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.RelatedWaterDaytime ?? true)
                     {
-                        fg.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
+                        sb.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
                     }
                     if (printMask?.RelatedWaterNighttime ?? true)
                     {
-                        fg.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
+                        sb.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
                     }
                     if (printMask?.RelatedWaterUnderwater ?? true)
                     {
-                        fg.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                        sb.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -335,38 +332,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
-                fg.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
-                fg.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                {
+                    sb.AppendItem(RelatedWaterDaytime, "RelatedWaterDaytime");
+                }
+                {
+                    sb.AppendItem(RelatedWaterNighttime, "RelatedWaterNighttime");
+                }
+                {
+                    sb.AppendItem(RelatedWaterUnderwater, "RelatedWaterUnderwater");
+                }
             }
             #endregion
 
@@ -445,8 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = RelatedWaters_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RelatedWatersCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RelatedWatersCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelatedWatersSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -457,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelatedWatersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -467,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RelatedWaters CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RelatedWaters();
             ((RelatedWatersSetterCommon)((IRelatedWatersGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -482,7 +475,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RelatedWaters item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -492,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -558,26 +551,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRelatedWatersGetter item,
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
-            return ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).ToString(
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRelatedWatersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
-            ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).ToString(
+            ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -683,7 +676,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRelatedWaters item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RelatedWatersSetterCommon)((IRelatedWatersGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -698,10 +691,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RelatedWaters_FieldIndex
+    internal enum RelatedWaters_FieldIndex
     {
         RelatedWaterDaytime = 0,
         RelatedWaterNighttime = 1,
@@ -710,7 +703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RelatedWaters_Registration : ILoquiRegistration
+    internal partial class RelatedWaters_Registration : ILoquiRegistration
     {
         public static readonly RelatedWaters_Registration Instance = new RelatedWaters_Registration();
 
@@ -752,6 +745,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.GNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RelatedWatersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -785,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RelatedWatersSetterCommon
+    internal partial class RelatedWatersSetterCommon
     {
         public static readonly RelatedWatersSetterCommon Instance = new RelatedWatersSetterCommon();
 
@@ -813,12 +812,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRelatedWaters item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.GNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -829,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelatedWatersCommon
+    internal partial class RelatedWatersCommon
     {
         public static readonly RelatedWatersCommon Instance = new RelatedWatersCommon();
 
@@ -853,67 +852,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RelatedWaters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RelatedWaterDaytime = item.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime);
             ret.RelatedWaterNighttime = item.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime);
             ret.RelatedWaterUnderwater = item.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater);
         }
         
-        public string ToString(
+        public string Print(
             IRelatedWatersGetter item,
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRelatedWatersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RelatedWaters.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RelatedWaters =>");
+                sb.AppendLine($"RelatedWaters =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RelatedWaters) =>");
+                sb.AppendLine($"{name} (RelatedWaters) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRelatedWatersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RelatedWaters.Mask<bool>? printMask = null)
         {
             if (printMask?.RelatedWaterDaytime ?? true)
             {
-                fg.AppendItem(item.RelatedWaterDaytime.FormKey, "RelatedWaterDaytime");
+                sb.AppendItem(item.RelatedWaterDaytime.FormKey, "RelatedWaterDaytime");
             }
             if (printMask?.RelatedWaterNighttime ?? true)
             {
-                fg.AppendItem(item.RelatedWaterNighttime.FormKey, "RelatedWaterNighttime");
+                sb.AppendItem(item.RelatedWaterNighttime.FormKey, "RelatedWaterNighttime");
             }
             if (printMask?.RelatedWaterUnderwater ?? true)
             {
-                fg.AppendItem(item.RelatedWaterUnderwater.FormKey, "RelatedWaterUnderwater");
+                sb.AppendItem(item.RelatedWaterUnderwater.FormKey, "RelatedWaterUnderwater");
             }
         }
         
@@ -957,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRelatedWatersGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRelatedWatersGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.RelatedWaterDaytime);
             yield return FormLinkInformation.Factory(obj.RelatedWaterNighttime);
@@ -968,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RelatedWatersSetterTranslationCommon
+    internal partial class RelatedWatersSetterTranslationCommon
     {
         public static readonly RelatedWatersSetterTranslationCommon Instance = new RelatedWatersSetterTranslationCommon();
 
@@ -1054,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration StaticRegistration => RelatedWaters_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RelatedWaters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelatedWatersCommon.Instance;
         [DebuggerStepThrough]
@@ -1078,11 +1074,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RelatedWatersBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
+        public static readonly RelatedWatersBinaryWriteTranslation Instance = new RelatedWatersBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRelatedWatersGetter item,
@@ -1102,12 +1098,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRelatedWatersGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.GNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1119,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRelatedWatersGetter)item,
@@ -1129,9 +1125,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RelatedWatersBinaryCreateTranslation
+    internal partial class RelatedWatersBinaryCreateTranslation
     {
-        public readonly static RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
+        public static readonly RelatedWatersBinaryCreateTranslation Instance = new RelatedWatersBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRelatedWaters item,
@@ -1153,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRelatedWatersGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelatedWatersBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1166,16 +1162,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RelatedWatersBinaryOverlay :
+    internal partial class RelatedWatersBinaryOverlay :
         PluginBinaryOverlay,
         IRelatedWatersGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RelatedWaters_Registration.Instance;
-        public static RelatedWaters_Registration StaticRegistration => RelatedWaters_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RelatedWaters_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RelatedWatersCommon.Instance;
         [DebuggerStepThrough]
@@ -1189,16 +1185,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RelatedWatersCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RelatedWatersCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RelatedWatersBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RelatedWatersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1206,9 +1202,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IWaterGetter> RelatedWaterDaytime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IWaterGetter> RelatedWaterNighttime => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater => new FormLink<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1216,25 +1212,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RelatedWatersBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RelatedWatersBinaryOverlay RelatedWatersFactory(
+        public static IRelatedWatersGetter RelatedWatersFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RelatedWatersBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1243,25 +1244,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static RelatedWatersBinaryOverlay RelatedWatersFactory(
+        public static IRelatedWatersGetter RelatedWatersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RelatedWatersFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RelatedWatersMixIn.ToString(
+            RelatedWatersMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

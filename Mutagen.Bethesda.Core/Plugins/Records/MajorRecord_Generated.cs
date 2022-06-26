@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +72,13 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MajorRecordMixIn.ToString(
+            MajorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -191,42 +193,37 @@ namespace Mutagen.Bethesda.Plugins.Records
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MajorRecord.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MajorRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MajorRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MajorRecord.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MajorRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MajorRecord.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.MajorRecordFlagsRaw ?? true)
                     {
-                        fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                        sb.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
                     }
                     if (printMask?.FormKey ?? true)
                     {
-                        fg.AppendItem(FormKey, "FormKey");
+                        sb.AppendItem(FormKey, "FormKey");
                     }
                     if (printMask?.VersionControl ?? true)
                     {
-                        fg.AppendItem(VersionControl, "VersionControl");
+                        sb.AppendItem(VersionControl, "VersionControl");
                     }
                     if (printMask?.EditorID ?? true)
                     {
-                        fg.AppendItem(EditorID, "EditorID");
+                        sb.AppendItem(EditorID, "EditorID");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -331,39 +328,38 @@ namespace Mutagen.Bethesda.Plugins.Records
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
-                fg.AppendItem(FormKey, "FormKey");
-                fg.AppendItem(VersionControl, "VersionControl");
-                fg.AppendItem(EditorID, "EditorID");
+                {
+                    sb.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                }
+                {
+                    sb.AppendItem(FormKey, "FormKey");
+                }
+                {
+                    sb.AppendItem(VersionControl, "VersionControl");
+                }
+                {
+                    sb.AppendItem(EditorID, "EditorID");
+                }
             }
             #endregion
 
@@ -446,7 +442,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public MajorRecord(FormKey formKey)
         {
@@ -541,7 +537,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -550,7 +546,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -630,26 +626,26 @@ namespace Mutagen.Bethesda.Plugins.Records
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMajorRecordGetter item,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
-            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
+            return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
-            ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).ToString(
+            ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -762,7 +758,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IMajorRecordGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -792,7 +788,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IMajorRecordInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -981,7 +977,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void CopyInFromBinary(
             this IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MajorRecordSetterCommon)((IMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -996,10 +992,10 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 }
 
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
     #region Field Index
-    public enum MajorRecord_FieldIndex
+    internal enum MajorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1009,7 +1005,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     #endregion
 
     #region Registration
-    public partial class MajorRecord_Registration : ILoquiRegistration
+    internal partial class MajorRecord_Registration : ILoquiRegistration
     {
         public static readonly MajorRecord_Registration Instance = new MajorRecord_Registration();
 
@@ -1083,7 +1079,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
     #endregion
 
     #region Common
-    public partial class MajorRecordSetterCommon
+    internal partial class MajorRecordSetterCommon
     {
         public static readonly MajorRecordSetterCommon Instance = new MajorRecordSetterCommon();
 
@@ -1168,14 +1164,14 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public virtual void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         #endregion
         
     }
-    public partial class MajorRecordCommon
+    internal partial class MajorRecordCommon
     {
         public static readonly MajorRecordCommon Instance = new MajorRecordCommon();
 
@@ -1199,73 +1195,70 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             MajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
             ret.FormKey = item.FormKey == rhs.FormKey;
             ret.VersionControl = item.VersionControl == rhs.VersionControl;
             ret.EditorID = string.Equals(item.EditorID, rhs.EditorID);
         }
         
-        public string ToString(
+        public string Print(
             IMajorRecordGetter item,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MajorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MajorRecord =>");
+                sb.AppendLine($"MajorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MajorRecord) =>");
+                sb.AppendLine($"{name} (MajorRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MajorRecord.Mask<bool>? printMask = null)
         {
             if (printMask?.MajorRecordFlagsRaw ?? true)
             {
-                fg.AppendItem(item.MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
+                sb.AppendItem(item.MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
             }
             if (printMask?.FormKey ?? true)
             {
-                fg.AppendItem(item.FormKey, "FormKey");
+                sb.AppendItem(item.FormKey, "FormKey");
             }
             if (printMask?.VersionControl ?? true)
             {
-                fg.AppendItem(item.VersionControl, "VersionControl");
+                sb.AppendItem(item.VersionControl, "VersionControl");
             }
             if ((printMask?.EditorID ?? true)
                 && item.EditorID is {} EditorIDItem)
             {
-                fg.AppendItem(EditorIDItem, "EditorID");
+                sb.AppendItem(EditorIDItem, "EditorID");
             }
         }
         
@@ -1317,7 +1310,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMajorRecordGetter obj)
         {
             yield break;
         }
@@ -1383,7 +1376,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         #endregion
         
     }
-    public partial class MajorRecordSetterTranslationCommon
+    internal partial class MajorRecordSetterTranslationCommon
     {
         public static readonly MajorRecordSetterTranslationCommon Instance = new MajorRecordSetterTranslationCommon();
 
@@ -1488,7 +1481,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration StaticRegistration => MajorRecord_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1512,11 +1505,11 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
     public partial class MajorRecordBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MajorRecordBinaryWriteTranslation Instance = new MajorRecordBinaryWriteTranslation();
+        public static readonly MajorRecordBinaryWriteTranslation Instance = new MajorRecordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMajorRecordGetter item,
@@ -1532,7 +1525,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public static void WriteRecordTypes(
             IMajorRecordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1544,19 +1537,22 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public virtual void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
                 WriteEmbedded(
                     item: item,
                     writer: writer);
-                writer.MetaData.FormVersion = item.FormVersion;
-                WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    translationParams: translationParams);
-                writer.MetaData.FormVersion = null;
+                if (!item.IsDeleted)
+                {
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
+                }
             }
             catch (Exception ex)
             {
@@ -1567,7 +1563,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMajorRecordGetter)item,
@@ -1577,9 +1573,9 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
     }
 
-    public partial class MajorRecordBinaryCreateTranslation
+    internal partial class MajorRecordBinaryCreateTranslation
     {
-        public readonly static MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
+        public static readonly MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
 
         public virtual RecordType RecordType => throw new ArgumentException();
         public static void FillBinaryStructs(
@@ -1598,7 +1594,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1628,7 +1624,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static void WriteToBinary(
             this IMajorRecordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MajorRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1641,16 +1637,16 @@ namespace Mutagen.Bethesda.Plugins.Records
 
 
 }
-namespace Mutagen.Bethesda.Plugins.Records.Internals
+namespace Mutagen.Bethesda.Plugins.Records
 {
-    public abstract partial class MajorRecordBinaryOverlay :
+    internal abstract partial class MajorRecordBinaryOverlay :
         PluginBinaryOverlay,
         IMajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
-        public static MajorRecord_Registration StaticRegistration => MajorRecord_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1664,9 +1660,9 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MajorRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1679,7 +1675,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1687,12 +1683,12 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
                 translationParams: translationParams);
         }
 
-        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
-        public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_structData.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
+        public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;
-        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EditorIDLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1701,10 +1697,10 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
 
         partial void CustomCtor();
         protected MajorRecordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1718,9 +1714,9 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.EDID:
@@ -1734,12 +1730,13 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
         }
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MajorRecordMixIn.ToString(
+            MajorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

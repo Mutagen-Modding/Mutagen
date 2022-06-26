@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,20 +21,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -208,12 +209,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.ToString(
+            RaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -587,9 +589,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Spells.Specific = l;
-                        foreach (var item in Spells.Specific.WithIndex())
+                        foreach (var item in Spells.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -601,9 +603,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, RaceRelation.Mask<R>?>>();
                         obj.Relations.Specific = l;
-                        foreach (var item in Relations.Specific.WithIndex())
+                        foreach (var item in Relations.Specific)
                         {
-                            MaskItemIndexed<R, RaceRelation.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RaceRelation.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RaceRelation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RaceRelation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -630,9 +632,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, FacePart.Mask<R>?>>();
                         obj.FaceData.Specific = l;
-                        foreach (var item in FaceData.Specific.WithIndex())
+                        foreach (var item in FaceData.Specific)
                         {
-                            MaskItemIndexed<R, FacePart.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, FacePart.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, FacePart.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FacePart.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -649,9 +651,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Hairs.Specific = l;
-                        foreach (var item in Hairs.Specific.WithIndex())
+                        foreach (var item in Hairs.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -663,9 +665,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Eyes.Specific = l;
-                        foreach (var item in Eyes.Specific.WithIndex())
+                        foreach (var item in Eyes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -676,193 +678,174 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Race.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Race.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Race.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
                         && Spells is {} SpellsItem)
                     {
-                        fg.AppendLine("Spells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Spells =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(SpellsItem.Overall);
+                            sb.AppendItem(SpellsItem.Overall);
                             if (SpellsItem.Specific != null)
                             {
                                 foreach (var subItem in SpellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Relations?.Overall ?? true)
                         && Relations is {} RelationsItem)
                     {
-                        fg.AppendLine("Relations =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Relations =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RelationsItem.Overall);
+                            sb.AppendItem(RelationsItem.Overall);
                             if (RelationsItem.Specific != null)
                             {
                                 foreach (var subItem in RelationsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                     if (Voices != null
                         && (printMask?.Voices?.Overall ?? true))
                     {
-                        fg.AppendLine($"Voices => {Voices}");
+                        sb.AppendLine($"Voices => {Voices}");
                     }
                     if (DefaultHair != null
                         && (printMask?.DefaultHair?.Overall ?? true))
                     {
-                        fg.AppendLine($"DefaultHair => {DefaultHair}");
+                        sb.AppendLine($"DefaultHair => {DefaultHair}");
                     }
                     if (printMask?.DefaultHairColor ?? true)
                     {
-                        fg.AppendItem(DefaultHairColor, "DefaultHairColor");
+                        sb.AppendItem(DefaultHairColor, "DefaultHairColor");
                     }
                     if (printMask?.FaceGenMainClamp ?? true)
                     {
-                        fg.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
+                        sb.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
                     }
                     if (printMask?.FaceGenFaceClamp ?? true)
                     {
-                        fg.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
+                        sb.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
                     }
                     if (RaceStats != null
                         && (printMask?.RaceStats?.Overall ?? true))
                     {
-                        fg.AppendLine($"RaceStats => {RaceStats}");
+                        sb.AppendLine($"RaceStats => {RaceStats}");
                     }
                     if ((printMask?.FaceData?.Overall ?? true)
                         && FaceData is {} FaceDataItem)
                     {
-                        fg.AppendLine("FaceData =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("FaceData =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FaceDataItem.Overall);
+                            sb.AppendItem(FaceDataItem.Overall);
                             if (FaceDataItem.Specific != null)
                             {
                                 foreach (var subItem in FaceDataItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (BodyData != null
                         && (printMask?.BodyData?.Overall ?? true))
                     {
-                        fg.AppendLine($"BodyData => {BodyData}");
+                        sb.AppendLine($"BodyData => {BodyData}");
                     }
                     if ((printMask?.Hairs?.Overall ?? true)
                         && Hairs is {} HairsItem)
                     {
-                        fg.AppendLine("Hairs =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Hairs =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HairsItem.Overall);
+                            sb.AppendItem(HairsItem.Overall);
                             if (HairsItem.Specific != null)
                             {
                                 foreach (var subItem in HairsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Eyes?.Overall ?? true)
                         && Eyes is {} EyesItem)
                     {
-                        fg.AppendLine("Eyes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Eyes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(EyesItem.Overall);
+                            sb.AppendItem(EyesItem.Overall);
                             if (EyesItem.Specific != null)
                             {
                                 foreach (var subItem in EyesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.FaceGenData?.Overall ?? true)
                     {
-                        FaceGenData?.ToString(fg);
+                        FaceGenData?.Print(sb);
                     }
                     if (printMask?.SNAM ?? true)
                     {
-                        fg.AppendItem(SNAM, "SNAM");
+                        sb.AppendItem(SNAM, "SNAM");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1086,170 +1069,159 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (Spells is {} SpellsItem)
                 {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Spells =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(SpellsItem.Overall);
+                        sb.AppendItem(SpellsItem.Overall);
                         if (SpellsItem.Specific != null)
                         {
                             foreach (var subItem in SpellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Relations is {} RelationsItem)
                 {
-                    fg.AppendLine("Relations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Relations =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RelationsItem.Overall);
+                        sb.AppendItem(RelationsItem.Overall);
                         if (RelationsItem.Specific != null)
                         {
                             foreach (var subItem in RelationsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                Data?.ToString(fg);
+                Data?.Print(sb);
                 if (Voices != null)
                 {
-                    fg.AppendLine($"Voices => {Voices}");
+                    sb.AppendLine($"Voices => {Voices}");
                 }
                 if (DefaultHair != null)
                 {
-                    fg.AppendLine($"DefaultHair => {DefaultHair}");
+                    sb.AppendLine($"DefaultHair => {DefaultHair}");
                 }
-                fg.AppendItem(DefaultHairColor, "DefaultHairColor");
-                fg.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
-                fg.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
+                {
+                    sb.AppendItem(DefaultHairColor, "DefaultHairColor");
+                }
+                {
+                    sb.AppendItem(FaceGenMainClamp, "FaceGenMainClamp");
+                }
+                {
+                    sb.AppendItem(FaceGenFaceClamp, "FaceGenFaceClamp");
+                }
                 if (RaceStats != null)
                 {
-                    fg.AppendLine($"RaceStats => {RaceStats}");
+                    sb.AppendLine($"RaceStats => {RaceStats}");
                 }
                 if (FaceData is {} FaceDataItem)
                 {
-                    fg.AppendLine("FaceData =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("FaceData =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FaceDataItem.Overall);
+                        sb.AppendItem(FaceDataItem.Overall);
                         if (FaceDataItem.Specific != null)
                         {
                             foreach (var subItem in FaceDataItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (BodyData != null)
                 {
-                    fg.AppendLine($"BodyData => {BodyData}");
+                    sb.AppendLine($"BodyData => {BodyData}");
                 }
                 if (Hairs is {} HairsItem)
                 {
-                    fg.AppendLine("Hairs =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Hairs =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HairsItem.Overall);
+                        sb.AppendItem(HairsItem.Overall);
                         if (HairsItem.Specific != null)
                         {
                             foreach (var subItem in HairsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Eyes is {} EyesItem)
                 {
-                    fg.AppendLine("Eyes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Eyes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(EyesItem.Overall);
+                        sb.AppendItem(EyesItem.Overall);
                         if (EyesItem.Specific != null)
                         {
                             foreach (var subItem in EyesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                FaceGenData?.ToString(fg);
-                fg.AppendItem(SNAM, "SNAM");
+                FaceGenData?.Print(sb);
+                {
+                    sb.AppendItem(SNAM, "SNAM");
+                }
             }
             #endregion
 
@@ -1367,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Race(FormKey formKey)
         {
@@ -1428,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1438,7 +1410,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Race CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Race();
             ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1453,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Race item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1463,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1577,26 +1549,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRaceGetter item,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).ToString(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).ToString(
+            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1691,7 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1706,10 +1678,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Race_FieldIndex
+    internal enum Race_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1737,7 +1709,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Race_Registration : ILoquiRegistration
+    internal partial class Race_Registration : ILoquiRegistration
     {
         public static readonly Race_Registration Instance = new Race_Registration();
 
@@ -1779,6 +1751,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(
+                RecordTypes.RACE,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.SPLO,
+                RecordTypes.XNAM,
+                RecordTypes.DATA,
+                RecordTypes.VNAM,
+                RecordTypes.DNAM,
+                RecordTypes.CNAM,
+                RecordTypes.PNAM,
+                RecordTypes.UNAM,
+                RecordTypes.ATTR,
+                RecordTypes.NAM0,
+                RecordTypes.INDX,
+                RecordTypes.MODL,
+                RecordTypes.ICON,
+                RecordTypes.NAM1,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.HNAM,
+                RecordTypes.ENAM,
+                RecordTypes.FGGS,
+                RecordTypes.FGGA,
+                RecordTypes.FGTS,
+                RecordTypes.SNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1812,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RaceSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class RaceSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
 
@@ -1869,7 +1873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
@@ -1882,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Race)item,
@@ -1893,7 +1897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Race)item,
@@ -1904,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceCommon : OblivionMajorRecordCommon
+    internal partial class RaceCommon : OblivionMajorRecordCommon
     {
         public new static readonly RaceCommon Instance = new RaceCommon();
 
@@ -1928,7 +1932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Spells = item.Spells.CollectionEqualsHelper(
@@ -1988,205 +1991,183 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IRaceGetter item,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Race =>");
+                sb.AppendLine($"Race =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Race) =>");
+                sb.AppendLine($"{name} (Race) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Race.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Spells =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Spells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Relations?.Overall ?? true)
             {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Relations =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Relations)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.Voices?.Overall ?? true)
                 && item.Voices is {} VoicesItem)
             {
-                VoicesItem?.ToString(fg, "Voices");
+                VoicesItem?.Print(sb, "Voices");
             }
             if ((printMask?.DefaultHair?.Overall ?? true)
                 && item.DefaultHair is {} DefaultHairItem)
             {
-                DefaultHairItem?.ToString(fg, "DefaultHair");
+                DefaultHairItem?.Print(sb, "DefaultHair");
             }
             if ((printMask?.DefaultHairColor ?? true)
                 && item.DefaultHairColor is {} DefaultHairColorItem)
             {
-                fg.AppendItem(DefaultHairColorItem, "DefaultHairColor");
+                sb.AppendItem(DefaultHairColorItem, "DefaultHairColor");
             }
             if ((printMask?.FaceGenMainClamp ?? true)
                 && item.FaceGenMainClamp is {} FaceGenMainClampItem)
             {
-                fg.AppendItem(FaceGenMainClampItem, "FaceGenMainClamp");
+                sb.AppendItem(FaceGenMainClampItem, "FaceGenMainClamp");
             }
             if ((printMask?.FaceGenFaceClamp ?? true)
                 && item.FaceGenFaceClamp is {} FaceGenFaceClampItem)
             {
-                fg.AppendItem(FaceGenFaceClampItem, "FaceGenFaceClamp");
+                sb.AppendItem(FaceGenFaceClampItem, "FaceGenFaceClamp");
             }
             if ((printMask?.RaceStats?.Overall ?? true)
                 && item.RaceStats is {} RaceStatsItem)
             {
-                RaceStatsItem?.ToString(fg, "RaceStats");
+                RaceStatsItem?.Print(sb, "RaceStats");
             }
             if (printMask?.FaceData?.Overall ?? true)
             {
-                fg.AppendLine("FaceData =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("FaceData =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.FaceData)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.BodyData?.Overall ?? true)
                 && item.BodyData is {} BodyDataItem)
             {
-                BodyDataItem?.ToString(fg, "BodyData");
+                BodyDataItem?.Print(sb, "BodyData");
             }
             if ((printMask?.Hairs?.Overall ?? true)
                 && item.Hairs is {} HairsItem)
             {
-                fg.AppendLine("Hairs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Hairs =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HairsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Eyes?.Overall ?? true)
                 && item.Eyes is {} EyesItem)
             {
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Eyes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in EyesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.FaceGenData?.Overall ?? true)
                 && item.FaceGenData is {} FaceGenDataItem)
             {
-                FaceGenDataItem?.ToString(fg, "FaceGenData");
+                FaceGenDataItem?.Print(sb, "FaceGenData");
             }
             if ((printMask?.SNAM ?? true)
                 && item.SNAM is {} SNAMItem)
             {
-                fg.AppendItem(SNAMItem, "SNAM");
+                sb.AppendItem(SNAMItem, "SNAM");
             }
         }
         
@@ -2248,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Relations) ?? true))
             {
-                if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RaceRelationCommon)((IRaceRelationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Relations)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
@@ -2284,7 +2265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
             {
-                if (!lhs.FaceData.SequenceEqualNullable(rhs.FaceData)) return false;
+                if (!lhs.FaceData.SequenceEqual(rhs.FaceData, (l, r) => ((FacePartCommon)((IFacePartGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceData)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
@@ -2414,9 +2395,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -2424,7 +2405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2497,7 +2478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class RaceSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
 
@@ -2897,7 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -2915,18 +2896,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RaceBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
+        public new static readonly RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2945,7 +2926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2955,7 +2936,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRaceRelationGetter>.Instance.Write(
                 writer: writer,
                 items: item.Relations,
-                transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RaceRelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2974,7 +2955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Voices,
                 recordType: RecordTypes.VNAM,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2984,7 +2965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.DefaultHair,
                 recordType: RecordTypes.DNAM,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3017,7 +2998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFacePartGetter>.Instance.Write(
                 writer: writer,
                 items: item.FaceData,
-                transl: (MutagenWriter subWriter, IFacePartGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFacePartGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((FacePartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3032,7 +3013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -3046,7 +3027,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Hairs,
                 recordType: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3056,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Eyes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ENAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3078,7 +3059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -3089,12 +3070,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -3106,7 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -3117,7 +3101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -3128,7 +3112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -3138,9 +3122,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RaceBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class RaceBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
+        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RACE;
         public static void FillBinaryStructs(
@@ -3159,7 +3143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3194,7 +3178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RaceRelation>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XNAM,
+                            triggeringRecord: RaceRelation_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RaceRelation.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Relations;
@@ -3252,7 +3236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.FaceData.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FacePart>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
+                            triggeringRecord: FacePart_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: FacePart.TryCreateFromBinary));
                     return (int)Race_FieldIndex.FaceData;
@@ -3293,7 +3277,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Race_FieldIndex.FaceGenData;
                 }
                 case RecordTypeInts.SNAM:
@@ -3309,7 +3293,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3326,16 +3311,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RaceBinaryOverlay :
+    internal partial class RaceBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IRaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -3343,14 +3328,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3362,7 +3347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -3370,13 +3355,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellGetter>>();
-        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = ListExt.Empty<RaceRelationBinaryOverlay>();
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
+        public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = Array.Empty<IRaceRelationGetter>();
         #region Data
         private RangeInt32? _DataLocation;
-        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region Voices
         private int? _VoicesLocation;
@@ -3385,7 +3370,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             get
             {
                 if (!_VoicesLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IRaceGetter>>(
                     new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -3399,7 +3384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             get
             {
                 if (!_DefaultHairLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IHairGetter>>(
                     new FormLink<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IHairGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -3408,15 +3393,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region DefaultHairColor
         private int? _DefaultHairColorLocation;
-        public Byte? DefaultHairColor => _DefaultHairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairColorLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? DefaultHairColor => _DefaultHairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairColorLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region FaceGenMainClamp
         private int? _FaceGenMainClampLocation;
-        public Int32? FaceGenMainClamp => _FaceGenMainClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenMainClampLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? FaceGenMainClamp => _FaceGenMainClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FaceGenMainClampLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region FaceGenFaceClamp
         private int? _FaceGenFaceClampLocation;
-        public Int32? FaceGenFaceClamp => _FaceGenFaceClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FaceGenFaceClampLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? FaceGenFaceClamp => _FaceGenFaceClampLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FaceGenFaceClampLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region RaceStats
         private int? _RaceStatsLocation;
@@ -3425,14 +3410,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             get
             {
                 if (!_RaceStatsLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _RaceStatsLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceStatsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IRaceStatsGetter>(
                     RaceStatsBinaryOverlay.RaceStatsFactory(data, _package),
                     RaceStatsBinaryOverlay.RaceStatsFactory(data.Slice(8), _package));
             }
         }
         #endregion
-        public IReadOnlyList<IFacePartGetter> FaceData { get; private set; } = ListExt.Empty<FacePartBinaryOverlay>();
+        public IReadOnlyList<IFacePartGetter> FaceData { get; private set; } = Array.Empty<IFacePartGetter>();
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;
@@ -3442,7 +3427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFaceGenDataGetter? FaceGenData { get; private set; }
         #region SNAM
         private int? _SNAMLocation;
-        public Int16? SNAM => _SNAMLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SNAMLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        public Int16? SNAM => _SNAMLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNAMLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3451,28 +3436,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -3482,20 +3470,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3505,9 +3493,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -3531,19 +3519,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Race_FieldIndex.Spells;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList.FactoryByArray<RaceRelationBinaryOverlay>(
+                    this.Relations = BinaryOverlayList.FactoryByArray<IRaceRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RaceRelationBinaryOverlay.RaceRelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: RaceRelation_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Race_FieldIndex.Relations;
@@ -3586,10 +3575,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NAM0:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                    this.FaceData = this.ParseRepeatedTypelessSubrecord<FacePartBinaryOverlay>(
+                    this.FaceData = this.ParseRepeatedTypelessSubrecord<IFacePartGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: FacePart_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: FacePart_Registration.TriggerSpecs,
                         factory: FacePartBinaryOverlay.FacePartFactory);
                     return (int)Race_FieldIndex.FaceData;
                 }
@@ -3602,13 +3591,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IHairGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -3619,8 +3608,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -3636,7 +3625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.FaceGenData = FaceGenDataBinaryOverlay.FaceGenDataFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Race_FieldIndex.FaceGenData;
                 }
                 case RecordTypeInts.SNAM:
@@ -3651,17 +3640,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.ToString(
+            RaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

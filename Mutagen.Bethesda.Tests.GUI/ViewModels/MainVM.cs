@@ -5,13 +5,9 @@ using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Mutagen.Bethesda.Plugins;
 
@@ -299,7 +295,7 @@ public class MainVM : ViewModel
         return new PassthroughSettings()
         {
             DeleteCachesAfter = false,
-            ParallelProccessingSteps = true,
+            ParallelProccessingSteps = false,
             CacheReuse = new CacheReuse()
             {
                 ReuseAlignment = CacheAlignment,

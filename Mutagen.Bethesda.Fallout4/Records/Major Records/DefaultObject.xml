@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DefaultObject" recordType="DFOB" objType="Record" baseClass="Fallout4MajorRecord" GUID="e4c365ea-9baa-40e3-9984-549f0a3ccebe" ID="624">
+    <Fields>
+      <FormLink name="Object" refName="Fallout4MajorRecord" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

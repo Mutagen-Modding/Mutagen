@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherAmbientColorSetMixIn.ToString(
+            WeatherAmbientColorSetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -239,42 +242,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeatherAmbientColorSet.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeatherAmbientColorSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeatherAmbientColorSet.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeatherAmbientColorSet.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeatherAmbientColorSet.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherAmbientColorSet.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Sunrise?.Overall ?? true)
                     {
-                        Sunrise?.ToString(fg);
+                        Sunrise?.Print(sb);
                     }
                     if (printMask?.Day?.Overall ?? true)
                     {
-                        Day?.ToString(fg);
+                        Day?.Print(sb);
                     }
                     if (printMask?.Sunset?.Overall ?? true)
                     {
-                        Sunset?.ToString(fg);
+                        Sunset?.Print(sb);
                     }
                     if (printMask?.Night?.Overall ?? true)
                     {
-                        Night?.ToString(fg);
+                        Night?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -379,39 +377,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Sunrise?.ToString(fg);
-                Day?.ToString(fg);
-                Sunset?.ToString(fg);
-                Night?.ToString(fg);
+                Sunrise?.Print(sb);
+                Day?.Print(sb);
+                Sunset?.Print(sb);
+                Night?.Print(sb);
             }
             #endregion
 
@@ -489,10 +478,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = WeatherAmbientColorSet_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherAmbientColorSetBinaryWriteTranslation.Instance;
@@ -500,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -510,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherAmbientColorSet CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherAmbientColorSet();
             ((WeatherAmbientColorSetSetterCommon)((IWeatherAmbientColorSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -525,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherAmbientColorSet item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -535,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -601,26 +586,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherAmbientColorSetGetter item,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
-            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).ToString(
+            return ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherAmbientColorSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
-            ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).ToString(
+            ((WeatherAmbientColorSetCommon)((IWeatherAmbientColorSetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -726,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherAmbientColorSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherAmbientColorSetSetterCommon)((IWeatherAmbientColorSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -741,10 +726,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherAmbientColorSet_FieldIndex
+    internal enum WeatherAmbientColorSet_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -754,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherAmbientColorSet_Registration : ILoquiRegistration
+    internal partial class WeatherAmbientColorSet_Registration : ILoquiRegistration
     {
         public static readonly WeatherAmbientColorSet_Registration Instance = new WeatherAmbientColorSet_Registration();
 
@@ -796,6 +781,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DALC;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DALC);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherAmbientColorSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -829,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherAmbientColorSetSetterCommon
+    internal partial class WeatherAmbientColorSetSetterCommon
     {
         public static readonly WeatherAmbientColorSetSetterCommon Instance = new WeatherAmbientColorSetSetterCommon();
 
@@ -855,12 +846,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeatherAmbientColorSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DALC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -871,7 +862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAmbientColorSetCommon
+    internal partial class WeatherAmbientColorSetCommon
     {
         public static readonly WeatherAmbientColorSetCommon Instance = new WeatherAmbientColorSetCommon();
 
@@ -895,72 +886,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAmbientColorSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = MaskItemExt.Factory(item.Sunrise.GetEqualsMask(rhs.Sunrise, include), include);
             ret.Day = MaskItemExt.Factory(item.Day.GetEqualsMask(rhs.Day, include), include);
             ret.Sunset = MaskItemExt.Factory(item.Sunset.GetEqualsMask(rhs.Sunset, include), include);
             ret.Night = MaskItemExt.Factory(item.Night.GetEqualsMask(rhs.Night, include), include);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherAmbientColorSetGetter item,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherAmbientColorSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherAmbientColorSet =>");
+                sb.AppendLine($"WeatherAmbientColorSet =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherAmbientColorSet) =>");
+                sb.AppendLine($"{name} (WeatherAmbientColorSet) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherAmbientColorSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherAmbientColorSet.Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise?.Overall ?? true)
             {
-                item.Sunrise?.ToString(fg, "Sunrise");
+                item.Sunrise?.Print(sb, "Sunrise");
             }
             if (printMask?.Day?.Overall ?? true)
             {
-                item.Day?.ToString(fg, "Day");
+                item.Day?.Print(sb, "Day");
             }
             if (printMask?.Sunset?.Overall ?? true)
             {
-                item.Sunset?.ToString(fg, "Sunset");
+                item.Sunset?.Print(sb, "Sunset");
             }
             if (printMask?.Night?.Overall ?? true)
             {
-                item.Night?.ToString(fg, "Night");
+                item.Night?.Print(sb, "Night");
             }
         }
         
@@ -1025,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherAmbientColorSetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherAmbientColorSetGetter obj)
         {
             yield break;
         }
@@ -1033,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAmbientColorSetSetterTranslationCommon
+    internal partial class WeatherAmbientColorSetSetterTranslationCommon
     {
         public static readonly WeatherAmbientColorSetSetterTranslationCommon Instance = new WeatherAmbientColorSetSetterTranslationCommon();
 
@@ -1195,7 +1183,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColorSet_Registration.Instance;
-        public static WeatherAmbientColorSet_Registration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAmbientColorSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1219,11 +1207,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherAmbientColorSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherAmbientColorSetBinaryWriteTranslation Instance = new WeatherAmbientColorSetBinaryWriteTranslation();
+        public static readonly WeatherAmbientColorSetBinaryWriteTranslation Instance = new WeatherAmbientColorSetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherAmbientColorSetGetter item,
@@ -1234,12 +1222,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherAmbientColorSetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DALC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1251,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherAmbientColorSetGetter)item,
@@ -1261,9 +1249,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherAmbientColorSetBinaryCreateTranslation
+    internal partial class WeatherAmbientColorSetBinaryCreateTranslation
     {
-        public readonly static WeatherAmbientColorSetBinaryCreateTranslation Instance = new WeatherAmbientColorSetBinaryCreateTranslation();
+        public static readonly WeatherAmbientColorSetBinaryCreateTranslation Instance = new WeatherAmbientColorSetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherAmbientColorSet item,
@@ -1282,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherAmbientColorSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1295,16 +1283,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherAmbientColorSetBinaryOverlay :
+    internal partial class WeatherAmbientColorSetBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherAmbientColorSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColorSet_Registration.Instance;
-        public static WeatherAmbientColorSet_Registration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAmbientColorSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAmbientColorSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1318,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherAmbientColorSetBinaryWriteTranslation.Instance;
@@ -1326,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAmbientColorSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1341,25 +1329,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeatherAmbientColorSetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeatherAmbientColorSetBinaryOverlay WeatherAmbientColorSetFactory(
+        public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WeatherAmbientColorSetBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x0 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1368,25 +1361,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeatherAmbientColorSetBinaryOverlay WeatherAmbientColorSetFactory(
+        public static IWeatherAmbientColorSetGetter WeatherAmbientColorSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherAmbientColorSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherAmbientColorSetMixIn.ToString(
+            WeatherAmbientColorSetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,22 +18,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -53,49 +54,49 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region DATA
+        #region Flags
+        public Landscape.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DATA;
-        public MemorySlice<Byte>? DATA
-        {
-            get => this._DATA;
-            set => this._DATA = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.DATA => this.DATA;
+        Landscape.Flag? ILandscapeGetter.Flags => this.Flags;
         #endregion
         #region VertexNormals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _VertexNormals;
-        public MemorySlice<Byte>? VertexNormals
+        private IArray2d<P3UInt8>? _VertexNormals;
+        public IArray2d<P3UInt8>? VertexNormals
         {
             get => this._VertexNormals;
             set => this._VertexNormals = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.VertexNormals => this.VertexNormals;
+        IReadOnlyArray2d<P3UInt8>? ILandscapeGetter.VertexNormals => _VertexNormals;
+        #endregion
+
         #endregion
         #region VertexHeightMap
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _VertexHeightMap;
-        public MemorySlice<Byte>? VertexHeightMap
+        private LandscapeVertexHeightMap? _VertexHeightMap;
+        public LandscapeVertexHeightMap? VertexHeightMap
         {
-            get => this._VertexHeightMap;
-            set => this._VertexHeightMap = value;
+            get => _VertexHeightMap;
+            set => _VertexHeightMap = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
+        ILandscapeVertexHeightMapGetter? ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
         #endregion
         #region VertexColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _VertexColors;
-        public MemorySlice<Byte>? VertexColors
+        private IArray2d<P3UInt8>? _VertexColors;
+        public IArray2d<P3UInt8>? VertexColors
         {
             get => this._VertexColors;
             set => this._VertexColors = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.VertexColors => this.VertexColors;
+        IReadOnlyArray2d<P3UInt8>? ILandscapeGetter.VertexColors => _VertexColors;
+        #endregion
+
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -128,12 +129,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LandscapeMixIn.ToString(
+            LandscapeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -149,10 +151,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DATA = initialValue;
-                this.VertexNormals = initialValue;
-                this.VertexHeightMap = initialValue;
-                this.VertexColors = initialValue;
+                this.Flags = initialValue;
+                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.VertexHeightMap = new MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>(initialValue, new LandscapeVertexHeightMap.Mask<TItem>(initialValue));
+                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
                 this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
                 this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -164,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem DATA,
+                TItem Flags,
                 TItem VertexNormals,
                 TItem VertexHeightMap,
                 TItem VertexColors,
@@ -178,10 +180,10 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.DATA = DATA;
-                this.VertexNormals = VertexNormals;
-                this.VertexHeightMap = VertexHeightMap;
-                this.VertexColors = VertexColors;
+                this.Flags = Flags;
+                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.VertexHeightMap = new MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>(VertexHeightMap, new LandscapeVertexHeightMap.Mask<TItem>(VertexHeightMap));
+                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexColors, Enumerable.Empty<(P2Int Index, TItem Value)>());
                 this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(Layers, Enumerable.Empty<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>());
                 this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -195,10 +197,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem DATA;
-            public TItem VertexNormals;
-            public TItem VertexHeightMap;
-            public TItem VertexColors;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? VertexNormals;
+            public MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>? VertexHeightMap { get; set; }
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? VertexColors;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>? Layers;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Textures;
             #endregion
@@ -214,7 +216,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DATA, rhs.DATA)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.VertexNormals, rhs.VertexNormals)) return false;
                 if (!object.Equals(this.VertexHeightMap, rhs.VertexHeightMap)) return false;
                 if (!object.Equals(this.VertexColors, rhs.VertexColors)) return false;
@@ -225,7 +227,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DATA);
+                hash.Add(this.Flags);
                 hash.Add(this.VertexNormals);
                 hash.Add(this.VertexHeightMap);
                 hash.Add(this.VertexColors);
@@ -241,10 +243,34 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DATA)) return false;
-                if (!eval(this.VertexNormals)) return false;
-                if (!eval(this.VertexHeightMap)) return false;
-                if (!eval(this.VertexColors)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.VertexNormals != null)
+                {
+                    if (!eval(this.VertexNormals.Overall)) return false;
+                    if (this.VertexNormals.Specific != null)
+                    {
+                        foreach (var item in this.VertexNormals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (VertexHeightMap != null)
+                {
+                    if (!eval(this.VertexHeightMap.Overall)) return false;
+                    if (this.VertexHeightMap.Specific != null && !this.VertexHeightMap.Specific.All(eval)) return false;
+                }
+                if (this.VertexColors != null)
+                {
+                    if (!eval(this.VertexColors.Overall)) return false;
+                    if (this.VertexColors.Specific != null)
+                    {
+                        foreach (var item in this.VertexColors.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Layers != null)
                 {
                     if (!eval(this.Layers.Overall)) return false;
@@ -276,10 +302,34 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DATA)) return true;
-                if (eval(this.VertexNormals)) return true;
-                if (eval(this.VertexHeightMap)) return true;
-                if (eval(this.VertexColors)) return true;
+                if (eval(this.Flags)) return true;
+                if (this.VertexNormals != null)
+                {
+                    if (eval(this.VertexNormals.Overall)) return true;
+                    if (this.VertexNormals.Specific != null)
+                    {
+                        foreach (var item in this.VertexNormals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (VertexHeightMap != null)
+                {
+                    if (eval(this.VertexHeightMap.Overall)) return true;
+                    if (this.VertexHeightMap.Specific != null && this.VertexHeightMap.Specific.Any(eval)) return true;
+                }
+                if (this.VertexColors != null)
+                {
+                    if (eval(this.VertexColors.Overall)) return true;
+                    if (this.VertexColors.Specific != null)
+                    {
+                        foreach (var item in this.VertexColors.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Layers != null)
                 {
                     if (eval(this.Layers.Overall)) return true;
@@ -318,10 +368,36 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DATA = eval(this.DATA);
-                obj.VertexNormals = eval(this.VertexNormals);
-                obj.VertexHeightMap = eval(this.VertexHeightMap);
-                obj.VertexColors = eval(this.VertexColors);
+                obj.Flags = eval(this.Flags);
+                if (VertexNormals != null)
+                {
+                    obj.VertexNormals = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexNormals.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (VertexNormals.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.VertexNormals.Specific = l;
+                        foreach (var item in VertexNormals.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.VertexHeightMap = this.VertexHeightMap == null ? null : new MaskItem<R, LandscapeVertexHeightMap.Mask<R>?>(eval(this.VertexHeightMap.Overall), this.VertexHeightMap.Specific?.Translate(eval));
+                if (VertexColors != null)
+                {
+                    obj.VertexColors = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexColors.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (VertexColors.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.VertexColors.Specific = l;
+                        foreach (var item in VertexColors.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 if (Layers != null)
                 {
                     obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>?>(eval(this.Layers.Overall), Enumerable.Empty<MaskItemIndexed<R, BaseLayer.Mask<R>?>>());
@@ -329,9 +405,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, BaseLayer.Mask<R>?>>();
                         obj.Layers.Specific = l;
-                        foreach (var item in Layers.Specific.WithIndex())
+                        foreach (var item in Layers.Specific)
                         {
-                            MaskItemIndexed<R, BaseLayer.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, BaseLayer.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, BaseLayer.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BaseLayer.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -344,9 +420,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Textures.Specific = l;
-                        foreach (var item in Textures.Specific.WithIndex())
+                        foreach (var item in Textures.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -355,88 +431,111 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Landscape.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Landscape.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Landscape.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Landscape.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Landscape.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
-                    if (printMask?.DATA ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(DATA, "DATA");
+                        sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.VertexNormals ?? true)
+                    if ((printMask?.VertexNormals?.Overall ?? true)
+                        && VertexNormals is {} VertexNormalsItem)
                     {
-                        fg.AppendItem(VertexNormals, "VertexNormals");
+                        sb.AppendLine("VertexNormals =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(VertexNormalsItem.Overall);
+                            if (VertexNormalsItem.Specific != null)
+                            {
+                                foreach (var subItem in VertexNormalsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (printMask?.VertexHeightMap ?? true)
+                    if (printMask?.VertexHeightMap?.Overall ?? true)
                     {
-                        fg.AppendItem(VertexHeightMap, "VertexHeightMap");
+                        VertexHeightMap?.Print(sb);
                     }
-                    if (printMask?.VertexColors ?? true)
+                    if ((printMask?.VertexColors?.Overall ?? true)
+                        && VertexColors is {} VertexColorsItem)
                     {
-                        fg.AppendItem(VertexColors, "VertexColors");
+                        sb.AppendLine("VertexColors =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(VertexColorsItem.Overall);
+                            if (VertexColorsItem.Specific != null)
+                            {
+                                foreach (var subItem in VertexColorsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Layers?.Overall ?? true)
                         && Layers is {} LayersItem)
                     {
-                        fg.AppendLine("Layers =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Layers =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LayersItem.Overall);
+                            sb.AppendItem(LayersItem.Overall);
                             if (LayersItem.Specific != null)
                             {
                                 foreach (var subItem in LayersItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Textures?.Overall ?? true)
                         && Textures is {} TexturesItem)
                     {
-                        fg.AppendLine("Textures =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Textures =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TexturesItem.Overall);
+                            sb.AppendItem(TexturesItem.Overall);
                             if (TexturesItem.Specific != null)
                             {
                                 foreach (var subItem in TexturesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -447,10 +546,10 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DATA;
-            public Exception? VertexNormals;
-            public Exception? VertexHeightMap;
-            public Exception? VertexColors;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? VertexNormals;
+            public MaskItem<Exception?, LandscapeVertexHeightMap.ErrorMask?>? VertexHeightMap;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? VertexColors;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>? Layers;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Textures;
             #endregion
@@ -461,8 +560,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
                 switch (enu)
                 {
-                    case Landscape_FieldIndex.DATA:
-                        return DATA;
+                    case Landscape_FieldIndex.Flags:
+                        return Flags;
                     case Landscape_FieldIndex.VertexNormals:
                         return VertexNormals;
                     case Landscape_FieldIndex.VertexHeightMap:
@@ -483,17 +582,17 @@ namespace Mutagen.Bethesda.Skyrim
                 Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
                 switch (enu)
                 {
-                    case Landscape_FieldIndex.DATA:
-                        this.DATA = ex;
+                    case Landscape_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
-                        this.VertexNormals = ex;
+                        this.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
                     case Landscape_FieldIndex.VertexHeightMap:
-                        this.VertexHeightMap = ex;
+                        this.VertexHeightMap = new MaskItem<Exception?, LandscapeVertexHeightMap.ErrorMask?>(ex, null);
                         break;
                     case Landscape_FieldIndex.VertexColors:
-                        this.VertexColors = ex;
+                        this.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
                     case Landscape_FieldIndex.Layers:
                         this.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ex, null);
@@ -512,17 +611,17 @@ namespace Mutagen.Bethesda.Skyrim
                 Landscape_FieldIndex enu = (Landscape_FieldIndex)index;
                 switch (enu)
                 {
-                    case Landscape_FieldIndex.DATA:
-                        this.DATA = (Exception?)obj;
+                    case Landscape_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
-                        this.VertexNormals = (Exception?)obj;
+                        this.VertexNormals = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
                     case Landscape_FieldIndex.VertexHeightMap:
-                        this.VertexHeightMap = (Exception?)obj;
+                        this.VertexHeightMap = (MaskItem<Exception?, LandscapeVertexHeightMap.ErrorMask?>?)obj;
                         break;
                     case Landscape_FieldIndex.VertexColors:
-                        this.VertexColors = (Exception?)obj;
+                        this.VertexColors = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
                     case Landscape_FieldIndex.Layers:
                         this.Layers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>)obj;
@@ -539,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DATA != null) return true;
+                if (Flags != null) return true;
                 if (VertexNormals != null) return true;
                 if (VertexHeightMap != null) return true;
                 if (VertexColors != null) return true;
@@ -550,83 +649,108 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(DATA, "DATA");
-                fg.AppendItem(VertexNormals, "VertexNormals");
-                fg.AppendItem(VertexHeightMap, "VertexHeightMap");
-                fg.AppendItem(VertexColors, "VertexColors");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                if (VertexNormals is {} VertexNormalsItem)
+                {
+                    sb.AppendLine("VertexNormals =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(VertexNormalsItem.Overall);
+                        if (VertexNormalsItem.Specific != null)
+                        {
+                            foreach (var subItem in VertexNormalsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                VertexHeightMap?.Print(sb);
+                if (VertexColors is {} VertexColorsItem)
+                {
+                    sb.AppendLine("VertexColors =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(VertexColorsItem.Overall);
+                        if (VertexColorsItem.Specific != null)
+                        {
+                            foreach (var subItem in VertexColorsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 if (Layers is {} LayersItem)
                 {
-                    fg.AppendLine("Layers =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Layers =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LayersItem.Overall);
+                        sb.AppendItem(LayersItem.Overall);
                         if (LayersItem.Specific != null)
                         {
                             foreach (var subItem in LayersItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Textures is {} TexturesItem)
                 {
-                    fg.AppendLine("Textures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Textures =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TexturesItem.Overall);
+                        sb.AppendItem(TexturesItem.Overall);
                         if (TexturesItem.Specific != null)
                         {
                             foreach (var subItem in TexturesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -636,10 +760,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DATA = this.DATA.Combine(rhs.DATA);
-                ret.VertexNormals = this.VertexNormals.Combine(rhs.VertexNormals);
-                ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap);
-                ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
+                ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap, (l, r) => l.Combine(r));
+                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
                 ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
                 ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 return ret;
@@ -664,9 +788,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool DATA;
+            public bool Flags;
             public bool VertexNormals;
-            public bool VertexHeightMap;
+            public LandscapeVertexHeightMap.TranslationMask? VertexHeightMap;
             public bool VertexColors;
             public BaseLayer.TranslationMask? Layers;
             public bool Textures;
@@ -678,9 +802,8 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.DATA = defaultOn;
+                this.Flags = defaultOn;
                 this.VertexNormals = defaultOn;
-                this.VertexHeightMap = defaultOn;
                 this.VertexColors = defaultOn;
                 this.Textures = defaultOn;
             }
@@ -690,9 +813,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DATA, null));
+                ret.Add((Flags, null));
                 ret.Add((VertexNormals, null));
-                ret.Add((VertexHeightMap, null));
+                ret.Add((VertexHeightMap != null ? VertexHeightMap.OnOverall : DefaultOn, VertexHeightMap?.GetCrystal()));
                 ret.Add((VertexColors, null));
                 ret.Add((Layers == null ? DefaultOn : !Layers.GetCrystal().CopyNothing, Layers?.GetCrystal()));
                 ret.Add((Textures, null));
@@ -708,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LandscapeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeSetterCommon.Instance.RemapLinks(this, mapping);
         public Landscape(
             FormKey formKey,
@@ -786,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -796,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Landscape CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Landscape();
             ((LandscapeSetterCommon)((ILandscapeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -811,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Landscape item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -821,7 +944,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -843,10 +966,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILandscapeInternal>,
         ISkyrimMajorRecordInternal
     {
-        new MemorySlice<Byte>? DATA { get; set; }
-        new MemorySlice<Byte>? VertexNormals { get; set; }
-        new MemorySlice<Byte>? VertexHeightMap { get; set; }
-        new MemorySlice<Byte>? VertexColors { get; set; }
+        new Landscape.Flag? Flags { get; set; }
+        new IArray2d<P3UInt8>? VertexNormals { get; set; }
+        new LandscapeVertexHeightMap? VertexHeightMap { get; set; }
+        new IArray2d<P3UInt8>? VertexColors { get; set; }
         new ExtendedList<BaseLayer> Layers { get; }
         new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; set; }
     }
@@ -867,10 +990,10 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ILandscapeGetter>
     {
         static new ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? DATA { get; }
-        ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
-        ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
-        ReadOnlyMemorySlice<Byte>? VertexColors { get; }
+        Landscape.Flag? Flags { get; }
+        IReadOnlyArray2d<P3UInt8>? VertexNormals { get; }
+        ILandscapeVertexHeightMapGetter? VertexHeightMap { get; }
+        IReadOnlyArray2d<P3UInt8>? VertexColors { get; }
         IReadOnlyList<IBaseLayerGetter> Layers { get; }
         IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; }
 
@@ -897,26 +1020,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILandscapeGetter item,
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).ToString(
+            return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILandscapeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
-            ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).ToString(
+            ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1011,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILandscapeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LandscapeSetterCommon)((ILandscapeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1026,10 +1149,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Landscape_FieldIndex
+    internal enum Landscape_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1037,7 +1160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        DATA = 6,
+        Flags = 6,
         VertexNormals = 7,
         VertexHeightMap = 8,
         VertexColors = 9,
@@ -1047,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Landscape_Registration : ILoquiRegistration
+    internal partial class Landscape_Registration : ILoquiRegistration
     {
         public static readonly Landscape_Registration Instance = new Landscape_Registration();
 
@@ -1089,6 +1212,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LAND;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.LAND);
+            var all = RecordCollection.Factory(
+                RecordTypes.LAND,
+                RecordTypes.DATA,
+                RecordTypes.VNML,
+                RecordTypes.VHGT,
+                RecordTypes.VCLR,
+                RecordTypes.BTXT,
+                RecordTypes.ATXT,
+                RecordTypes.VTEX);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1122,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LandscapeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LandscapeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LandscapeSetterCommon Instance = new LandscapeSetterCommon();
 
@@ -1131,10 +1269,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILandscapeInternal item)
         {
             ClearPartial();
-            item.DATA = default;
-            item.VertexNormals = default;
-            item.VertexHeightMap = default;
-            item.VertexColors = default;
+            item.Flags = default;
+            item.VertexNormals = null;
+            item.VertexHeightMap = null;
+            item.VertexColors = null;
             item.Layers.Clear();
             item.Textures = null;
             base.Clear(item);
@@ -1164,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILandscapeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILandscapeInternal>(
                 record: item,
@@ -1177,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Landscape)item,
@@ -1188,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Landscape)item,
@@ -1199,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeCommon : SkyrimMajorRecordCommon
+    internal partial class LandscapeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LandscapeCommon Instance = new LandscapeCommon();
 
@@ -1223,11 +1361,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Landscape.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
-            ret.DATA = MemorySliceExt.Equal(item.DATA, rhs.DATA);
-            ret.VertexNormals = MemorySliceExt.Equal(item.VertexNormals, rhs.VertexNormals);
-            ret.VertexHeightMap = MemorySliceExt.Equal(item.VertexHeightMap, rhs.VertexHeightMap);
-            ret.VertexColors = MemorySliceExt.Equal(item.VertexColors, rhs.VertexColors);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.VertexNormals = item.VertexNormals.Array2dEqualsHelper(
+                rhs.VertexNormals,
+                (l, r) => l.Equals(r),
+                include);
+            ret.VertexHeightMap = EqualsMaskHelper.EqualsHelper(
+                item.VertexHeightMap,
+                rhs.VertexHeightMap,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.VertexColors = item.VertexColors.Array2dEqualsHelper(
+                rhs.VertexColors,
+                (l, r) => l.Equals(r),
+                include);
             ret.Layers = item.Layers.CollectionEqualsHelper(
                 rhs.Layers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1239,110 +1386,120 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILandscapeGetter item,
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILandscapeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Landscape.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Landscape =>");
+                sb.AppendLine($"Landscape =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Landscape) =>");
+                sb.AppendLine($"{name} (Landscape) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILandscapeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Landscape.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
-            if ((printMask?.DATA ?? true)
-                && item.DATA is {} DATAItem)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                fg.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
+                sb.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.VertexNormals ?? true)
+            if ((printMask?.VertexNormals?.Overall ?? true)
                 && item.VertexNormals is {} VertexNormalsItem)
             {
-                fg.AppendLine($"VertexNormals => {SpanExt.ToHexString(VertexNormalsItem)}");
+                sb.AppendLine("VertexNormals =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in VertexNormalsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
             }
-            if ((printMask?.VertexHeightMap ?? true)
+            if ((printMask?.VertexHeightMap?.Overall ?? true)
                 && item.VertexHeightMap is {} VertexHeightMapItem)
             {
-                fg.AppendLine($"VertexHeightMap => {SpanExt.ToHexString(VertexHeightMapItem)}");
+                VertexHeightMapItem?.Print(sb, "VertexHeightMap");
             }
-            if ((printMask?.VertexColors ?? true)
+            if ((printMask?.VertexColors?.Overall ?? true)
                 && item.VertexColors is {} VertexColorsItem)
             {
-                fg.AppendLine($"VertexColors => {SpanExt.ToHexString(VertexColorsItem)}");
+                sb.AppendLine("VertexColors =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in VertexColorsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
             }
             if (printMask?.Layers?.Overall ?? true)
             {
-                fg.AppendLine("Layers =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Layers =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Layers)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Textures?.Overall ?? true)
                 && item.Textures is {} TexturesItem)
             {
-                fg.AppendLine("Textures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Textures =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in TexturesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1392,25 +1549,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Flags) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
+                if (!lhs.VertexNormals.SequenceEqualNullable(rhs.VertexNormals)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VertexHeightMap, rhs.VertexHeightMap, out var lhsVertexHeightMap, out var rhsVertexHeightMap, out var isVertexHeightMapEqual))
+                {
+                    if (!((LandscapeVertexHeightMapCommon)((ILandscapeVertexHeightMapGetter)lhsVertexHeightMap).CommonInstance()!).Equals(lhsVertexHeightMap, rhsVertexHeightMap, crystal?.GetSubCrystal((int)Landscape_FieldIndex.VertexHeightMap))) return false;
+                }
+                else if (!isVertexHeightMapEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
-                if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
+                if (!lhs.VertexColors.SequenceEqualNullable(rhs.VertexColors)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
-                if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
+                if (!lhs.Layers.SequenceEqual(rhs.Layers, (l, r) => ((BaseLayerCommon)((IBaseLayerGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Landscape_FieldIndex.Layers)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
             {
@@ -1444,22 +1605,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILandscapeGetter item)
         {
             var hash = new HashCode();
-            if (item.DATA is {} DATAItem)
+            if (item.Flags is {} Flagsitem)
             {
-                hash.Add(DATAItem);
+                hash.Add(Flagsitem);
             }
-            if (item.VertexNormals is {} VertexNormalsItem)
+            hash.Add(item.VertexNormals);
+            if (item.VertexHeightMap is {} VertexHeightMapitem)
             {
-                hash.Add(VertexNormalsItem);
+                hash.Add(VertexHeightMapitem);
             }
-            if (item.VertexHeightMap is {} VertexHeightMapItem)
-            {
-                hash.Add(VertexHeightMapItem);
-            }
-            if (item.VertexColors is {} VertexColorsItem)
-            {
-                hash.Add(VertexColorsItem);
-            }
+            hash.Add(item.VertexColors);
             hash.Add(item.Layers);
             hash.Add(item.Textures);
             hash.Add(base.GetHashCode());
@@ -1485,13 +1640,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILandscapeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILandscapeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Layers.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Layers.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1543,7 +1698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LandscapeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LandscapeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LandscapeSetterTranslationCommon Instance = new LandscapeSetterTranslationCommon();
 
@@ -1576,48 +1731,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Flags) ?? true))
             {
-                if(rhs.DATA is {} DATArhs)
-                {
-                    item.DATA = DATArhs.ToArray();
-                }
-                else
-                {
-                    item.DATA = default;
-                }
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
-                if(rhs.VertexNormals is {} VertexNormalsrhs)
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
+                try
                 {
-                    item.VertexNormals = VertexNormalsrhs.ToArray();
+                    if ((rhs.VertexNormals != null))
+                    {
+                        item.VertexNormals = 
+                            rhs.VertexNormals
+                            .ShallowClone();
+                    }
+                    else
+                    {
+                        item.VertexNormals = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.VertexNormals = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
-                if(rhs.VertexHeightMap is {} VertexHeightMaprhs)
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexHeightMap);
+                try
                 {
-                    item.VertexHeightMap = VertexHeightMaprhs.ToArray();
+                    if(rhs.VertexHeightMap is {} rhsVertexHeightMap)
+                    {
+                        item.VertexHeightMap = rhsVertexHeightMap.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Landscape_FieldIndex.VertexHeightMap));
+                    }
+                    else
+                    {
+                        item.VertexHeightMap = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.VertexHeightMap = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
-                if(rhs.VertexColors is {} VertexColorsrhs)
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
+                try
                 {
-                    item.VertexColors = VertexColorsrhs.ToArray();
+                    if ((rhs.VertexColors != null))
+                    {
+                        item.VertexColors = 
+                            rhs.VertexColors
+                            .ShallowClone();
+                    }
+                    else
+                    {
+                        item.VertexColors = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.VertexColors = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
@@ -1793,7 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration StaticRegistration => Landscape_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeCommon.Instance;
         [DebuggerStepThrough]
@@ -1811,43 +2004,49 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LandscapeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LandscapeBinaryWriteTranslation Instance = new LandscapeBinaryWriteTranslation();
+        public new static readonly LandscapeBinaryWriteTranslation Instance = new LandscapeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILandscapeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DATA,
+            EnumBinaryTranslation<Landscape.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Write(
                 writer: writer,
-                item: item.VertexNormals,
-                header: translationParams.ConvertToCustom(RecordTypes.VNML));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                items: item.VertexNormals,
+                recordType: translationParams.ConvertToCustom(RecordTypes.VNML),
+                transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            if (item.VertexHeightMap is {} VertexHeightMapItem)
+            {
+                ((LandscapeVertexHeightMapBinaryWriteTranslation)((IBinaryItem)VertexHeightMapItem).BinaryWriteTranslator).Write(
+                    item: VertexHeightMapItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Write(
                 writer: writer,
-                item: item.VertexHeightMap,
-                header: translationParams.ConvertToCustom(RecordTypes.VHGT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.VertexColors,
-                header: translationParams.ConvertToCustom(RecordTypes.VCLR));
+                items: item.VertexColors,
+                recordType: translationParams.ConvertToCustom(RecordTypes.VCLR),
+                transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.Layers,
-                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((BaseLayerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1859,7 +2058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Textures,
                 recordType: translationParams.ConvertToCustom(RecordTypes.VTEX),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandscapeTextureGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1870,7 +2069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILandscapeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1881,12 +2080,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1898,7 +2100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILandscapeGetter)item,
@@ -1909,7 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILandscapeGetter)item,
@@ -1920,7 +2122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILandscapeGetter)item,
@@ -1930,9 +2132,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LandscapeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LandscapeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
+        public new static readonly LandscapeBinaryCreateTranslation Instance = new LandscapeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LAND;
         public static void FillBinaryStructs(
@@ -1951,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1959,25 +2161,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Landscape_FieldIndex.DATA;
+                    item.Flags = EnumBinaryTranslation<Landscape.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Landscape_FieldIndex.Flags;
                 }
                 case RecordTypeInts.VNML:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexNormals = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.VertexNormals = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
+                            reader: frame,
+                            size: new P2Int(33, 33),
+                            transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        ;
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexHeightMap = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.VertexHeightMap = Mutagen.Bethesda.Skyrim.LandscapeVertexHeightMap.CreateFromBinary(frame: frame);
                     return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexColors = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.VertexColors = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
+                            reader: frame,
+                            size: new P2Int(33, 33),
+                            transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        ;
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
@@ -1986,19 +2199,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Layers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BaseLayer>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
+                            triggeringRecord: BaseLayer_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out BaseLayer listSubItem, TypedParseParams? translationParams) =>
+                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out BaseLayer listSubItem, TypedParseParams translationParams) =>
                             {
                                 switch (header.TypeInt)
                                 {
-                                    case 0x54585442: // BTXT
+                                    case RecordTypeInts.BTXT:
                                     {
                                         var ret = BaseLayer.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
                                         listSubItem = tmplistSubItem;
                                         return ret;
                                     }
-                                    case 0x54585441: // ATXT
+                                    case RecordTypeInts.ATXT:
                                     {
                                         var ret = AlphaLayer.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
                                         listSubItem = tmplistSubItem;
@@ -2027,7 +2240,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2044,16 +2258,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LandscapeBinaryOverlay :
+    internal partial class LandscapeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILandscapeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Landscape_Registration.Instance;
-        public new static Landscape_Registration StaticRegistration => Landscape_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LandscapeCommon.Instance;
         [DebuggerStepThrough]
@@ -2061,14 +2275,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LandscapeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LandscapeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2078,23 +2292,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override Type LinkType => typeof(ILandscape);
 
 
-        #region DATA
-        private int? _DATALocation;
-        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Flags
+        private int? _FlagsLocation;
+        public Landscape.Flag? Flags => _FlagsLocation.HasValue ? (Landscape.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Landscape.Flag?);
         #endregion
-        #region VertexNormals
-        private int? _VertexNormalsLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexNormals => _VertexNormalsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexNormalsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyArray2d<P3UInt8>? VertexNormals { get; private set; }
         #region VertexHeightMap
-        private int? _VertexHeightMapLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexHeightMap => _VertexHeightMapLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexHeightMapLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private RangeInt32? _VertexHeightMapLocation;
+        public ILandscapeVertexHeightMapGetter? VertexHeightMap => _VertexHeightMapLocation.HasValue ? LandscapeVertexHeightMapBinaryOverlay.LandscapeVertexHeightMapFactory(_recordData.Slice(_VertexHeightMapLocation!.Value.Min), _package) : default;
         #endregion
-        #region VertexColors
-        private int? _VertexColorsLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexColorsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = ListExt.Empty<BaseLayerBinaryOverlay>();
+        public IReadOnlyArray2d<P3UInt8>? VertexColors { get; private set; }
+        public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = Array.Empty<IBaseLayerGetter>();
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2103,28 +2311,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LandscapeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LandscapeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2134,20 +2345,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LandscapeBinaryOverlay LandscapeFactory(
+        public static ILandscapeGetter LandscapeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LandscapeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2157,45 +2368,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset);
-                    return (int)Landscape_FieldIndex.DATA;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Landscape_FieldIndex.Flags;
                 }
                 case RecordTypeInts.VNML:
                 {
-                    _VertexNormalsLocation = (stream.Position - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.VertexNormals = BinaryOverlayArray2d.Factory<P3UInt8>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 3,
+                        size: new P2Int(33, 33),
+                        getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
-                    _VertexHeightMapLocation = (stream.Position - offset);
+                    _VertexHeightMapLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
-                    _VertexColorsLocation = (stream.Position - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.VertexColors = BinaryOverlayArray2d.Factory<P3UInt8>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 3,
+                        size: new P2Int(33, 33),
+                        getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
                 {
-                    this.Layers = this.ParseRepeatedTypelessSubrecord<BaseLayerBinaryOverlay>(
+                    this.Layers = this.ParseRepeatedTypelessSubrecord<IBaseLayerGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: BaseLayer_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: BaseLayer_Registration.TriggerSpecs,
                         factory: (s, r, p, recConv) =>
                         {
                             switch (r.TypeInt)
                             {
-                                case 0x54585442: // BTXT
+                                case RecordTypeInts.BTXT:
                                     return BaseLayerBinaryOverlay.BaseLayerFactory(s, p);
-                                case 0x54585441: // ATXT
+                                case RecordTypeInts.ATXT:
                                     return AlphaLayerBinaryOverlay.AlphaLayerFactory(s, p);
                                 default:
                                     throw new NotImplementedException();
@@ -2205,8 +2428,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.VTEX:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILandscapeTextureGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -2222,17 +2445,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LandscapeMixIn.ToString(
+            LandscapeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

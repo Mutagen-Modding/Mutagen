@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -113,12 +115,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CombatStyleAdvancedMixIn.ToString(
+            CombatStyleAdvancedMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -402,110 +405,105 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CombatStyleAdvanced.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CombatStyleAdvanced.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CombatStyleAdvanced.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CombatStyleAdvanced.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CombatStyleAdvanced.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyleAdvanced.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.DodgeFatigueModMult ?? true)
                     {
-                        fg.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
+                        sb.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
                     }
                     if (printMask?.DodgeFatigueModBase ?? true)
                     {
-                        fg.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
+                        sb.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
                     }
                     if (printMask?.EncumbSpeedModBase ?? true)
                     {
-                        fg.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
+                        sb.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
                     }
                     if (printMask?.EncumbSpeedModMult ?? true)
                     {
-                        fg.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
+                        sb.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
                     }
                     if (printMask?.DodgeWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                        sb.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
                     }
                     if (printMask?.DodgeNotUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                        sb.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
                     }
                     if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                        sb.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
                     }
                     if (printMask?.DodgeBackNotUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                        sb.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
                     }
                     if (printMask?.DodgeForwardWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
+                        sb.AppendItem(DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
                     }
                     if (printMask?.DodgeForwardNotUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
+                        sb.AppendItem(DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
                     }
                     if (printMask?.BlockSkillModifierMult ?? true)
                     {
-                        fg.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
+                        sb.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
                     }
                     if (printMask?.BlockSkillModifierBase ?? true)
                     {
-                        fg.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
+                        sb.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
                     }
                     if (printMask?.BlockWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                        sb.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
                     }
                     if (printMask?.BlockNotUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                        sb.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
                     }
                     if (printMask?.AttackSkillModifierMult ?? true)
                     {
-                        fg.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
+                        sb.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
                     }
                     if (printMask?.AttackSkillModifierBase ?? true)
                     {
-                        fg.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
+                        sb.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
                     }
                     if (printMask?.AttackWhileUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                        sb.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
                     }
                     if (printMask?.AttackNotUnderAttackMult ?? true)
                     {
-                        fg.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                        sb.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
                     }
                     if (printMask?.AttackDuringBlockMult ?? true)
                     {
-                        fg.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
+                        sb.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
                     }
                     if (printMask?.PowerAttackFatigueModBase ?? true)
                     {
-                        fg.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                        sb.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
                     }
                     if (printMask?.PowerAttackFatigueModMult ?? true)
                     {
-                        fg.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                        sb.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -780,56 +778,89 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
-                fg.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
-                fg.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
-                fg.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
-                fg.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
-                fg.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
-                fg.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
-                fg.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
-                fg.AppendItem(DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
-                fg.AppendItem(DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
-                fg.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
-                fg.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
-                fg.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
-                fg.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
-                fg.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
-                fg.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
-                fg.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
-                fg.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
-                fg.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
-                fg.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
-                fg.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                {
+                    sb.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
+                }
+                {
+                    sb.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
+                }
+                {
+                    sb.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
+                }
+                {
+                    sb.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
+                }
+                {
+                    sb.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
+                }
+                {
+                    sb.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
+                }
+                {
+                    sb.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
+                }
+                {
+                    sb.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
+                }
+                {
+                    sb.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                }
+                {
+                    sb.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
+                }
+                {
+                    sb.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                }
+                {
+                    sb.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                }
             }
             #endregion
 
@@ -979,10 +1010,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = CombatStyleAdvanced_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleAdvancedBinaryWriteTranslation.Instance;
@@ -990,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleAdvancedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1000,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CombatStyleAdvanced CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleAdvanced();
             ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1015,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyleAdvanced item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1025,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1125,26 +1152,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICombatStyleAdvancedGetter item,
             string? name = null,
             CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).ToString(
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICombatStyleAdvancedGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
-            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).ToString(
+            ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1250,7 +1277,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICombatStyleAdvanced item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleAdvancedSetterCommon)((ICombatStyleAdvancedGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1265,10 +1292,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CombatStyleAdvanced_FieldIndex
+    internal enum CombatStyleAdvanced_FieldIndex
     {
         DodgeFatigueModMult = 0,
         DodgeFatigueModBase = 1,
@@ -1295,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyleAdvanced_Registration : ILoquiRegistration
+    internal partial class CombatStyleAdvanced_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleAdvanced_Registration Instance = new CombatStyleAdvanced_Registration();
 
@@ -1337,6 +1364,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSAD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CSAD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleAdvancedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1370,7 +1403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleAdvancedSetterCommon
+    internal partial class CombatStyleAdvancedSetterCommon
     {
         public static readonly CombatStyleAdvancedSetterCommon Instance = new CombatStyleAdvancedSetterCommon();
 
@@ -1413,12 +1446,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ICombatStyleAdvanced item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CSAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1429,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleAdvancedCommon
+    internal partial class CombatStyleAdvancedCommon
     {
         public static readonly CombatStyleAdvancedCommon Instance = new CombatStyleAdvancedCommon();
 
@@ -1453,7 +1486,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleAdvanced.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DodgeFatigueModMult = item.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult);
             ret.DodgeFatigueModBase = item.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase);
             ret.EncumbSpeedModBase = item.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase);
@@ -1477,133 +1509,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.PowerAttackFatigueModMult = item.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult);
         }
         
-        public string ToString(
+        public string Print(
             ICombatStyleAdvancedGetter item,
             string? name = null,
             CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICombatStyleAdvancedGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyleAdvanced =>");
+                sb.AppendLine($"CombatStyleAdvanced =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyleAdvanced) =>");
+                sb.AppendLine($"{name} (CombatStyleAdvanced) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleAdvancedGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyleAdvanced.Mask<bool>? printMask = null)
         {
             if (printMask?.DodgeFatigueModMult ?? true)
             {
-                fg.AppendItem(item.DodgeFatigueModMult, "DodgeFatigueModMult");
+                sb.AppendItem(item.DodgeFatigueModMult, "DodgeFatigueModMult");
             }
             if (printMask?.DodgeFatigueModBase ?? true)
             {
-                fg.AppendItem(item.DodgeFatigueModBase, "DodgeFatigueModBase");
+                sb.AppendItem(item.DodgeFatigueModBase, "DodgeFatigueModBase");
             }
             if (printMask?.EncumbSpeedModBase ?? true)
             {
-                fg.AppendItem(item.EncumbSpeedModBase, "EncumbSpeedModBase");
+                sb.AppendItem(item.EncumbSpeedModBase, "EncumbSpeedModBase");
             }
             if (printMask?.EncumbSpeedModMult ?? true)
             {
-                fg.AppendItem(item.EncumbSpeedModMult, "EncumbSpeedModMult");
+                sb.AppendItem(item.EncumbSpeedModMult, "EncumbSpeedModMult");
             }
             if (printMask?.DodgeWhileUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                sb.AppendItem(item.DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
             }
             if (printMask?.DodgeNotUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                sb.AppendItem(item.DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
             }
             if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                sb.AppendItem(item.DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
             }
             if (printMask?.DodgeBackNotUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                sb.AppendItem(item.DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
             }
             if (printMask?.DodgeForwardWhileUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
+                sb.AppendItem(item.DodgeForwardWhileUnderAttackMult, "DodgeForwardWhileUnderAttackMult");
             }
             if (printMask?.DodgeForwardNotUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
+                sb.AppendItem(item.DodgeForwardNotUnderAttackMult, "DodgeForwardNotUnderAttackMult");
             }
             if (printMask?.BlockSkillModifierMult ?? true)
             {
-                fg.AppendItem(item.BlockSkillModifierMult, "BlockSkillModifierMult");
+                sb.AppendItem(item.BlockSkillModifierMult, "BlockSkillModifierMult");
             }
             if (printMask?.BlockSkillModifierBase ?? true)
             {
-                fg.AppendItem(item.BlockSkillModifierBase, "BlockSkillModifierBase");
+                sb.AppendItem(item.BlockSkillModifierBase, "BlockSkillModifierBase");
             }
             if (printMask?.BlockWhileUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                sb.AppendItem(item.BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
             }
             if (printMask?.BlockNotUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                sb.AppendItem(item.BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
             }
             if (printMask?.AttackSkillModifierMult ?? true)
             {
-                fg.AppendItem(item.AttackSkillModifierMult, "AttackSkillModifierMult");
+                sb.AppendItem(item.AttackSkillModifierMult, "AttackSkillModifierMult");
             }
             if (printMask?.AttackSkillModifierBase ?? true)
             {
-                fg.AppendItem(item.AttackSkillModifierBase, "AttackSkillModifierBase");
+                sb.AppendItem(item.AttackSkillModifierBase, "AttackSkillModifierBase");
             }
             if (printMask?.AttackWhileUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                sb.AppendItem(item.AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
             }
             if (printMask?.AttackNotUnderAttackMult ?? true)
             {
-                fg.AppendItem(item.AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                sb.AppendItem(item.AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
             }
             if (printMask?.AttackDuringBlockMult ?? true)
             {
-                fg.AppendItem(item.AttackDuringBlockMult, "AttackDuringBlockMult");
+                sb.AppendItem(item.AttackDuringBlockMult, "AttackDuringBlockMult");
             }
             if (printMask?.PowerAttackFatigueModBase ?? true)
             {
-                fg.AppendItem(item.PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                sb.AppendItem(item.PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
             }
             if (printMask?.PowerAttackFatigueModMult ?? true)
             {
-                fg.AppendItem(item.PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                sb.AppendItem(item.PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
             }
         }
         
@@ -1737,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleAdvancedGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleAdvancedGetter obj)
         {
             yield break;
         }
@@ -1745,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CombatStyleAdvancedSetterTranslationCommon
+    internal partial class CombatStyleAdvancedSetterTranslationCommon
     {
         public static readonly CombatStyleAdvancedSetterTranslationCommon Instance = new CombatStyleAdvancedSetterTranslationCommon();
 
@@ -1903,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         [DebuggerStepThrough]
@@ -1927,11 +1957,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CombatStyleAdvancedBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CombatStyleAdvancedBinaryWriteTranslation Instance = new CombatStyleAdvancedBinaryWriteTranslation();
+        public static readonly CombatStyleAdvancedBinaryWriteTranslation Instance = new CombatStyleAdvancedBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleAdvancedGetter item,
@@ -2005,12 +2035,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ICombatStyleAdvancedGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CSAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2022,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleAdvancedGetter)item,
@@ -2032,9 +2062,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CombatStyleAdvancedBinaryCreateTranslation
+    internal partial class CombatStyleAdvancedBinaryCreateTranslation
     {
-        public readonly static CombatStyleAdvancedBinaryCreateTranslation Instance = new CombatStyleAdvancedBinaryCreateTranslation();
+        public static readonly CombatStyleAdvancedBinaryCreateTranslation Instance = new CombatStyleAdvancedBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICombatStyleAdvanced item,
@@ -2074,7 +2104,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICombatStyleAdvancedGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleAdvancedBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2087,16 +2117,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CombatStyleAdvancedBinaryOverlay :
+    internal partial class CombatStyleAdvancedBinaryOverlay :
         PluginBinaryOverlay,
         ICombatStyleAdvancedGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleAdvanced_Registration.Instance;
-        public static CombatStyleAdvanced_Registration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleAdvanced_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleAdvancedCommon.Instance;
         [DebuggerStepThrough]
@@ -2110,7 +2140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleAdvancedBinaryWriteTranslation.Instance;
@@ -2118,7 +2148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleAdvancedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2126,27 +2156,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Single DodgeFatigueModMult => _data.Slice(0x0, 0x4).Float();
-        public Single DodgeFatigueModBase => _data.Slice(0x4, 0x4).Float();
-        public Single EncumbSpeedModBase => _data.Slice(0x8, 0x4).Float();
-        public Single EncumbSpeedModMult => _data.Slice(0xC, 0x4).Float();
-        public Single DodgeWhileUnderAttackMult => _data.Slice(0x10, 0x4).Float();
-        public Single DodgeNotUnderAttackMult => _data.Slice(0x14, 0x4).Float();
-        public Single DodgeBackWhileUnderAttackMult => _data.Slice(0x18, 0x4).Float();
-        public Single DodgeBackNotUnderAttackMult => _data.Slice(0x1C, 0x4).Float();
-        public Single DodgeForwardWhileUnderAttackMult => _data.Slice(0x20, 0x4).Float();
-        public Single DodgeForwardNotUnderAttackMult => _data.Slice(0x24, 0x4).Float();
-        public Single BlockSkillModifierMult => _data.Slice(0x28, 0x4).Float();
-        public Single BlockSkillModifierBase => _data.Slice(0x2C, 0x4).Float();
-        public Single BlockWhileUnderAttackMult => _data.Slice(0x30, 0x4).Float();
-        public Single BlockNotUnderAttackMult => _data.Slice(0x34, 0x4).Float();
-        public Single AttackSkillModifierMult => _data.Slice(0x38, 0x4).Float();
-        public Single AttackSkillModifierBase => _data.Slice(0x3C, 0x4).Float();
-        public Single AttackWhileUnderAttackMult => _data.Slice(0x40, 0x4).Float();
-        public Single AttackNotUnderAttackMult => _data.Slice(0x44, 0x4).Float();
-        public Single AttackDuringBlockMult => _data.Slice(0x48, 0x4).Float();
-        public Single PowerAttackFatigueModBase => _data.Slice(0x4C, 0x4).Float();
-        public Single PowerAttackFatigueModMult => _data.Slice(0x50, 0x4).Float();
+        public Single DodgeFatigueModMult => _structData.Slice(0x0, 0x4).Float();
+        public Single DodgeFatigueModBase => _structData.Slice(0x4, 0x4).Float();
+        public Single EncumbSpeedModBase => _structData.Slice(0x8, 0x4).Float();
+        public Single EncumbSpeedModMult => _structData.Slice(0xC, 0x4).Float();
+        public Single DodgeWhileUnderAttackMult => _structData.Slice(0x10, 0x4).Float();
+        public Single DodgeNotUnderAttackMult => _structData.Slice(0x14, 0x4).Float();
+        public Single DodgeBackWhileUnderAttackMult => _structData.Slice(0x18, 0x4).Float();
+        public Single DodgeBackNotUnderAttackMult => _structData.Slice(0x1C, 0x4).Float();
+        public Single DodgeForwardWhileUnderAttackMult => _structData.Slice(0x20, 0x4).Float();
+        public Single DodgeForwardNotUnderAttackMult => _structData.Slice(0x24, 0x4).Float();
+        public Single BlockSkillModifierMult => _structData.Slice(0x28, 0x4).Float();
+        public Single BlockSkillModifierBase => _structData.Slice(0x2C, 0x4).Float();
+        public Single BlockWhileUnderAttackMult => _structData.Slice(0x30, 0x4).Float();
+        public Single BlockNotUnderAttackMult => _structData.Slice(0x34, 0x4).Float();
+        public Single AttackSkillModifierMult => _structData.Slice(0x38, 0x4).Float();
+        public Single AttackSkillModifierBase => _structData.Slice(0x3C, 0x4).Float();
+        public Single AttackWhileUnderAttackMult => _structData.Slice(0x40, 0x4).Float();
+        public Single AttackNotUnderAttackMult => _structData.Slice(0x44, 0x4).Float();
+        public Single AttackDuringBlockMult => _structData.Slice(0x48, 0x4).Float();
+        public Single PowerAttackFatigueModBase => _structData.Slice(0x4C, 0x4).Float();
+        public Single PowerAttackFatigueModMult => _structData.Slice(0x50, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2154,25 +2184,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected CombatStyleAdvancedBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CombatStyleAdvancedBinaryOverlay CombatStyleAdvancedFactory(
+        public static ICombatStyleAdvancedGetter CombatStyleAdvancedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x54,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CombatStyleAdvancedBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x54 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2181,25 +2216,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static CombatStyleAdvancedBinaryOverlay CombatStyleAdvancedFactory(
+        public static ICombatStyleAdvancedGetter CombatStyleAdvancedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleAdvancedFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CombatStyleAdvancedMixIn.ToString(
+            CombatStyleAdvancedMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

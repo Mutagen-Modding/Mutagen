@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,20 +60,21 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IExternalAliasReferenceGetter.Quest => this.Quest;
         #endregion
-        #region AliasIndex
-        public Int32? AliasIndex { get; set; }
+        #region AliasID
+        public Int32? AliasID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IExternalAliasReferenceGetter.AliasIndex => this.AliasIndex;
+        Int32? IExternalAliasReferenceGetter.AliasID => this.AliasID;
         #endregion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ExternalAliasReferenceMixIn.ToString(
+            ExternalAliasReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -103,15 +105,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Quest = initialValue;
-                this.AliasIndex = initialValue;
+                this.AliasID = initialValue;
             }
 
             public Mask(
                 TItem Quest,
-                TItem AliasIndex)
+                TItem AliasID)
             {
                 this.Quest = Quest;
-                this.AliasIndex = AliasIndex;
+                this.AliasID = AliasID;
             }
 
             #pragma warning disable CS8618
@@ -124,7 +126,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Quest;
-            public TItem AliasIndex;
+            public TItem AliasID;
             #endregion
 
             #region Equals
@@ -138,14 +140,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
-                if (!object.Equals(this.AliasIndex, rhs.AliasIndex)) return false;
+                if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Quest);
-                hash.Add(this.AliasIndex);
+                hash.Add(this.AliasID);
                 return hash.ToHashCode();
             }
 
@@ -155,7 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Quest)) return false;
-                if (!eval(this.AliasIndex)) return false;
+                if (!eval(this.AliasID)) return false;
                 return true;
             }
             #endregion
@@ -164,7 +166,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Quest)) return true;
-                if (eval(this.AliasIndex)) return true;
+                if (eval(this.AliasID)) return true;
                 return false;
             }
             #endregion
@@ -180,39 +182,34 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Quest = eval(this.Quest);
-                obj.AliasIndex = eval(this.AliasIndex);
+                obj.AliasID = eval(this.AliasID);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ExternalAliasReference.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ExternalAliasReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ExternalAliasReference.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ExternalAliasReference.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ExternalAliasReference.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ExternalAliasReference.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        sb.AppendItem(Quest, "Quest");
                     }
-                    if (printMask?.AliasIndex ?? true)
+                    if (printMask?.AliasID ?? true)
                     {
-                        fg.AppendItem(AliasIndex, "AliasIndex");
+                        sb.AppendItem(AliasID, "AliasID");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -237,7 +234,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Quest;
-            public Exception? AliasIndex;
+            public Exception? AliasID;
             #endregion
 
             #region IErrorMask
@@ -248,8 +245,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case ExternalAliasReference_FieldIndex.Quest:
                         return Quest;
-                    case ExternalAliasReference_FieldIndex.AliasIndex:
-                        return AliasIndex;
+                    case ExternalAliasReference_FieldIndex.AliasID:
+                        return AliasID;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -263,8 +260,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ExternalAliasReference_FieldIndex.Quest:
                         this.Quest = ex;
                         break;
-                    case ExternalAliasReference_FieldIndex.AliasIndex:
-                        this.AliasIndex = ex;
+                    case ExternalAliasReference_FieldIndex.AliasID:
+                        this.AliasID = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,8 +276,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ExternalAliasReference_FieldIndex.Quest:
                         this.Quest = (Exception?)obj;
                         break;
-                    case ExternalAliasReference_FieldIndex.AliasIndex:
-                        this.AliasIndex = (Exception?)obj;
+                    case ExternalAliasReference_FieldIndex.AliasID:
+                        this.AliasID = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -291,43 +288,38 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Quest != null) return true;
-                if (AliasIndex != null) return true;
+                if (AliasID != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(AliasIndex, "AliasIndex");
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(AliasID, "AliasID");
+                }
             }
             #endregion
 
@@ -337,7 +329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.AliasIndex = this.AliasIndex.Combine(rhs.AliasIndex);
+                ret.AliasID = this.AliasID.Combine(rhs.AliasID);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -362,7 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Quest;
-            public bool AliasIndex;
+            public bool AliasID;
             #endregion
 
             #region Ctors
@@ -373,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Quest = defaultOn;
-                this.AliasIndex = defaultOn;
+                this.AliasID = defaultOn;
             }
 
             #endregion
@@ -390,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Quest, null));
-                ret.Add((AliasIndex, null));
+                ret.Add((AliasID, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -402,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ExternalAliasReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExternalAliasReferenceCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ExternalAliasReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -413,7 +405,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExternalAliasReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -423,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ExternalAliasReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ExternalAliasReference();
             ((ExternalAliasReferenceSetterCommon)((IExternalAliasReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -438,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ExternalAliasReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -448,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -470,7 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IExternalAliasReference>
     {
         new IFormLinkNullable<IQuestGetter> Quest { get; set; }
-        new Int32? AliasIndex { get; set; }
+        new Int32? AliasID { get; set; }
     }
 
     public partial interface IExternalAliasReferenceGetter :
@@ -487,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ExternalAliasReference_Registration.Instance;
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
-        Int32? AliasIndex { get; }
+        Int32? AliasID { get; }
 
     }
 
@@ -512,26 +504,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IExternalAliasReferenceGetter item,
             string? name = null,
             ExternalAliasReference.Mask<bool>? printMask = null)
         {
-            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)item).CommonInstance()!).ToString(
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IExternalAliasReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ExternalAliasReference.Mask<bool>? printMask = null)
         {
-            ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)item).CommonInstance()!).ToString(
+            ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -637,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IExternalAliasReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ExternalAliasReferenceSetterCommon)((IExternalAliasReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -652,18 +644,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ExternalAliasReference_FieldIndex
+    internal enum ExternalAliasReference_FieldIndex
     {
         Quest = 0,
-        AliasIndex = 1,
+        AliasID = 1,
     }
     #endregion
 
     #region Registration
-    public partial class ExternalAliasReference_Registration : ILoquiRegistration
+    internal partial class ExternalAliasReference_Registration : ILoquiRegistration
     {
         public static readonly ExternalAliasReference_Registration Instance = new ExternalAliasReference_Registration();
 
@@ -704,17 +696,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.ALEQ,
-                        RecordTypes.ALEA
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.ALEQ,
+                RecordTypes.ALEA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ExternalAliasReferenceBinaryWriteTranslation);
         #region Interface
@@ -749,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ExternalAliasReferenceSetterCommon
+    internal partial class ExternalAliasReferenceSetterCommon
     {
         public static readonly ExternalAliasReferenceSetterCommon Instance = new ExternalAliasReferenceSetterCommon();
 
@@ -759,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Quest.Clear();
-            item.AliasIndex = default;
+            item.AliasID = default;
         }
         
         #region Mutagen
@@ -774,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IExternalAliasReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -787,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ExternalAliasReferenceCommon
+    internal partial class ExternalAliasReferenceCommon
     {
         public static readonly ExternalAliasReferenceCommon Instance = new ExternalAliasReferenceCommon();
 
@@ -811,63 +799,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ExternalAliasReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Quest = item.Quest.Equals(rhs.Quest);
-            ret.AliasIndex = item.AliasIndex == rhs.AliasIndex;
+            ret.AliasID = item.AliasID == rhs.AliasID;
         }
         
-        public string ToString(
+        public string Print(
             IExternalAliasReferenceGetter item,
             string? name = null,
             ExternalAliasReference.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IExternalAliasReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ExternalAliasReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ExternalAliasReference =>");
+                sb.AppendLine($"ExternalAliasReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ExternalAliasReference) =>");
+                sb.AppendLine($"{name} (ExternalAliasReference) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IExternalAliasReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ExternalAliasReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
+                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
-            if ((printMask?.AliasIndex ?? true)
-                && item.AliasIndex is {} AliasIndexItem)
+            if ((printMask?.AliasID ?? true)
+                && item.AliasID is {} AliasIDItem)
             {
-                fg.AppendItem(AliasIndexItem, "AliasIndex");
+                sb.AppendItem(AliasIDItem, "AliasID");
             }
         }
         
@@ -882,9 +867,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasID) ?? true))
             {
-                if (lhs.AliasIndex != rhs.AliasIndex) return false;
+                if (lhs.AliasID != rhs.AliasID) return false;
             }
             return true;
         }
@@ -893,9 +878,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Quest);
-            if (item.AliasIndex is {} AliasIndexitem)
+            if (item.AliasID is {} AliasIDitem)
             {
-                hash.Add(AliasIndexitem);
+                hash.Add(AliasIDitem);
             }
             return hash.ToHashCode();
         }
@@ -909,11 +894,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IExternalAliasReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IExternalAliasReferenceGetter obj)
         {
-            if (obj.Quest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Quest);
+                yield return QuestInfo;
             }
             yield break;
         }
@@ -921,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ExternalAliasReferenceSetterTranslationCommon
+    internal partial class ExternalAliasReferenceSetterTranslationCommon
     {
         public static readonly ExternalAliasReferenceSetterTranslationCommon Instance = new ExternalAliasReferenceSetterTranslationCommon();
 
@@ -937,9 +922,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasID) ?? true))
             {
-                item.AliasIndex = rhs.AliasIndex;
+                item.AliasID = rhs.AliasID;
             }
         }
         
@@ -1003,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExternalAliasReference_Registration.Instance;
-        public static ExternalAliasReference_Registration StaticRegistration => ExternalAliasReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ExternalAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExternalAliasReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1027,16 +1012,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ExternalAliasReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ExternalAliasReferenceBinaryWriteTranslation Instance = new ExternalAliasReferenceBinaryWriteTranslation();
+        public static readonly ExternalAliasReferenceBinaryWriteTranslation Instance = new ExternalAliasReferenceBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IExternalAliasReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1044,14 +1029,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.ALEQ));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.AliasIndex,
+                item: item.AliasID,
                 header: translationParams.ConvertToCustom(RecordTypes.ALEA));
         }
 
         public void Write(
             MutagenWriter writer,
             IExternalAliasReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1062,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IExternalAliasReferenceGetter)item,
@@ -1072,9 +1057,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ExternalAliasReferenceBinaryCreateTranslation
+    internal partial class ExternalAliasReferenceBinaryCreateTranslation
     {
-        public readonly static ExternalAliasReferenceBinaryCreateTranslation Instance = new ExternalAliasReferenceBinaryCreateTranslation();
+        public static readonly ExternalAliasReferenceBinaryCreateTranslation Instance = new ExternalAliasReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IExternalAliasReference item,
@@ -1089,24 +1074,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.ALEQ:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIndex = frame.ReadInt32();
-                    return (int)ExternalAliasReference_FieldIndex.AliasIndex;
+                    item.AliasID = frame.ReadInt32();
+                    return (int)ExternalAliasReference_FieldIndex.AliasID;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1124,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IExternalAliasReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExternalAliasReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1137,16 +1122,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ExternalAliasReferenceBinaryOverlay :
+    internal partial class ExternalAliasReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IExternalAliasReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ExternalAliasReference_Registration.Instance;
-        public static ExternalAliasReference_Registration StaticRegistration => ExternalAliasReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ExternalAliasReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ExternalAliasReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1160,16 +1145,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ExternalAliasReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ExternalAliasReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ExternalAliasReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ExternalAliasReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1179,11 +1164,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
-        #region AliasIndex
-        private int? _AliasIndexLocation;
-        public Int32? AliasIndex => _AliasIndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIndexLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region AliasID
+        private int? _AliasIDLocation;
+        public Int32? AliasID => _AliasIDLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1192,42 +1177,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ExternalAliasReferenceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ExternalAliasReferenceBinaryOverlay ExternalAliasReferenceFactory(
+        public static IExternalAliasReferenceGetter ExternalAliasReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ExternalAliasReferenceBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ExternalAliasReferenceBinaryOverlay ExternalAliasReferenceFactory(
+        public static IExternalAliasReferenceGetter ExternalAliasReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ExternalAliasReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1237,22 +1228,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALEQ:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     _QuestLocation = (stream.Position - offset);
                     return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
-                    _AliasIndexLocation = (stream.Position - offset);
-                    return (int)ExternalAliasReference_FieldIndex.AliasIndex;
+                    if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
+                    _AliasIDLocation = (stream.Position - offset);
+                    return (int)ExternalAliasReference_FieldIndex.AliasID;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1260,12 +1251,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ExternalAliasReferenceMixIn.ToString(
+            ExternalAliasReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            Int16MinMaxMixIn.ToString(
+            Int16MinMaxMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,34 +177,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Int16MinMax.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Int16MinMax.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Int16MinMax.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Int16MinMax.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Int16MinMax.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Int16MinMax.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Min ?? true)
                     {
-                        fg.AppendItem(Min, "Min");
+                        sb.AppendItem(Min, "Min");
                     }
                     if (printMask?.Max ?? true)
                     {
-                        fg.AppendItem(Max, "Max");
+                        sb.AppendItem(Max, "Max");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -286,37 +284,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Min, "Min");
-                fg.AppendItem(Max, "Max");
+                {
+                    sb.AppendItem(Min, "Min");
+                }
+                {
+                    sb.AppendItem(Max, "Max");
+                }
             }
             #endregion
 
@@ -397,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Int16MinMaxBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -407,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Int16MinMax CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Int16MinMax();
             ((Int16MinMaxSetterCommon)((IInt16MinMaxGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -422,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Int16MinMax item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -432,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -494,26 +487,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IInt16MinMaxGetter item,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
-            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).ToString(
+            return ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IInt16MinMaxGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
-            ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).ToString(
+            ((Int16MinMaxCommon)((IInt16MinMaxGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -619,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IInt16MinMax item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((Int16MinMaxSetterCommon)((IInt16MinMaxGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -634,10 +627,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Int16MinMax_FieldIndex
+    internal enum Int16MinMax_FieldIndex
     {
         Min = 0,
         Max = 1,
@@ -645,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Int16MinMax_Registration : ILoquiRegistration
+    internal partial class Int16MinMax_Registration : ILoquiRegistration
     {
         public static readonly Int16MinMax_Registration Instance = new Int16MinMax_Registration();
 
@@ -719,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class Int16MinMaxSetterCommon
+    internal partial class Int16MinMaxSetterCommon
     {
         public static readonly Int16MinMaxSetterCommon Instance = new Int16MinMaxSetterCommon();
 
@@ -743,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IInt16MinMax item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -755,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class Int16MinMaxCommon
+    internal partial class Int16MinMaxCommon
     {
         public static readonly Int16MinMaxCommon Instance = new Int16MinMaxCommon();
 
@@ -779,62 +772,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Int16MinMax.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min == rhs.Min;
             ret.Max = item.Max == rhs.Max;
         }
         
-        public string ToString(
+        public string Print(
             IInt16MinMaxGetter item,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IInt16MinMaxGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Int16MinMax.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Int16MinMax =>");
+                sb.AppendLine($"Int16MinMax =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Int16MinMax) =>");
+                sb.AppendLine($"{name} (Int16MinMax) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IInt16MinMaxGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Int16MinMax.Mask<bool>? printMask = null)
         {
             if (printMask?.Min ?? true)
             {
-                fg.AppendItem(item.Min, "Min");
+                sb.AppendItem(item.Min, "Min");
             }
             if (printMask?.Max ?? true)
             {
-                fg.AppendItem(item.Max, "Max");
+                sb.AppendItem(item.Max, "Max");
             }
         }
         
@@ -873,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IInt16MinMaxGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInt16MinMaxGetter obj)
         {
             yield break;
         }
@@ -881,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class Int16MinMaxSetterTranslationCommon
+    internal partial class Int16MinMaxSetterTranslationCommon
     {
         public static readonly Int16MinMaxSetterTranslationCommon Instance = new Int16MinMaxSetterTranslationCommon();
 
@@ -963,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Int16MinMax_Registration.Instance;
-        public static Int16MinMax_Registration StaticRegistration => Int16MinMax_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Int16MinMax_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Int16MinMaxCommon.Instance;
         [DebuggerStepThrough]
@@ -987,11 +977,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Int16MinMaxBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static Int16MinMaxBinaryWriteTranslation Instance = new Int16MinMaxBinaryWriteTranslation();
+        public static readonly Int16MinMaxBinaryWriteTranslation Instance = new Int16MinMaxBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IInt16MinMaxGetter item,
@@ -1004,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IInt16MinMaxGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1014,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IInt16MinMaxGetter)item,
@@ -1024,9 +1014,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class Int16MinMaxBinaryCreateTranslation
+    internal partial class Int16MinMaxBinaryCreateTranslation
     {
-        public readonly static Int16MinMaxBinaryCreateTranslation Instance = new Int16MinMaxBinaryCreateTranslation();
+        public static readonly Int16MinMaxBinaryCreateTranslation Instance = new Int16MinMaxBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IInt16MinMax item,
@@ -1047,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IInt16MinMaxGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Int16MinMaxBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1060,16 +1050,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Int16MinMaxBinaryOverlay :
+    internal partial class Int16MinMaxBinaryOverlay :
         PluginBinaryOverlay,
         IInt16MinMaxGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Int16MinMax_Registration.Instance;
-        public static Int16MinMax_Registration StaticRegistration => Int16MinMax_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Int16MinMax_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Int16MinMaxCommon.Instance;
         [DebuggerStepThrough]
@@ -1083,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Int16MinMaxBinaryWriteTranslation.Instance;
@@ -1091,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Int16MinMaxBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1099,8 +1089,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Int16 Min => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public Int16 Max => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public Int16 Min => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public Int16 Max => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1108,24 +1098,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected Int16MinMaxBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
+        public static IInt16MinMaxGetter Int16MinMaxFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new Int16MinMaxBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1134,25 +1130,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
+        public static IInt16MinMaxGetter Int16MinMaxFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return Int16MinMaxFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            Int16MinMaxMixIn.ToString(
+            Int16MinMaxMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -92,12 +94,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            HDRDataMixIn.ToString(
+            HDRDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -318,82 +321,77 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(HDRData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(HDRData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, HDRData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, HDRData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(HDRData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(HDRData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.EyeAdaptSpeed ?? true)
                     {
-                        fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                        sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
                     }
                     if (printMask?.BlurRadius ?? true)
                     {
-                        fg.AppendItem(BlurRadius, "BlurRadius");
+                        sb.AppendItem(BlurRadius, "BlurRadius");
                     }
                     if (printMask?.BlurPasses ?? true)
                     {
-                        fg.AppendItem(BlurPasses, "BlurPasses");
+                        sb.AppendItem(BlurPasses, "BlurPasses");
                     }
                     if (printMask?.EmissiveMult ?? true)
                     {
-                        fg.AppendItem(EmissiveMult, "EmissiveMult");
+                        sb.AppendItem(EmissiveMult, "EmissiveMult");
                     }
                     if (printMask?.TargetLum ?? true)
                     {
-                        fg.AppendItem(TargetLum, "TargetLum");
+                        sb.AppendItem(TargetLum, "TargetLum");
                     }
                     if (printMask?.UpperLumClamp ?? true)
                     {
-                        fg.AppendItem(UpperLumClamp, "UpperLumClamp");
+                        sb.AppendItem(UpperLumClamp, "UpperLumClamp");
                     }
                     if (printMask?.BrightScale ?? true)
                     {
-                        fg.AppendItem(BrightScale, "BrightScale");
+                        sb.AppendItem(BrightScale, "BrightScale");
                     }
                     if (printMask?.BrightClamp ?? true)
                     {
-                        fg.AppendItem(BrightClamp, "BrightClamp");
+                        sb.AppendItem(BrightClamp, "BrightClamp");
                     }
                     if (printMask?.LumRampNoTex ?? true)
                     {
-                        fg.AppendItem(LumRampNoTex, "LumRampNoTex");
+                        sb.AppendItem(LumRampNoTex, "LumRampNoTex");
                     }
                     if (printMask?.LumRampMin ?? true)
                     {
-                        fg.AppendItem(LumRampMin, "LumRampMin");
+                        sb.AppendItem(LumRampMin, "LumRampMin");
                     }
                     if (printMask?.LumRampMax ?? true)
                     {
-                        fg.AppendItem(LumRampMax, "LumRampMax");
+                        sb.AppendItem(LumRampMax, "LumRampMax");
                     }
                     if (printMask?.SunlightDimmer ?? true)
                     {
-                        fg.AppendItem(SunlightDimmer, "SunlightDimmer");
+                        sb.AppendItem(SunlightDimmer, "SunlightDimmer");
                     }
                     if (printMask?.GrassDimmer ?? true)
                     {
-                        fg.AppendItem(GrassDimmer, "GrassDimmer");
+                        sb.AppendItem(GrassDimmer, "GrassDimmer");
                     }
                     if (printMask?.TreeDimmer ?? true)
                     {
-                        fg.AppendItem(TreeDimmer, "TreeDimmer");
+                        sb.AppendItem(TreeDimmer, "TreeDimmer");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -598,49 +596,68 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
-                fg.AppendItem(BlurRadius, "BlurRadius");
-                fg.AppendItem(BlurPasses, "BlurPasses");
-                fg.AppendItem(EmissiveMult, "EmissiveMult");
-                fg.AppendItem(TargetLum, "TargetLum");
-                fg.AppendItem(UpperLumClamp, "UpperLumClamp");
-                fg.AppendItem(BrightScale, "BrightScale");
-                fg.AppendItem(BrightClamp, "BrightClamp");
-                fg.AppendItem(LumRampNoTex, "LumRampNoTex");
-                fg.AppendItem(LumRampMin, "LumRampMin");
-                fg.AppendItem(LumRampMax, "LumRampMax");
-                fg.AppendItem(SunlightDimmer, "SunlightDimmer");
-                fg.AppendItem(GrassDimmer, "GrassDimmer");
-                fg.AppendItem(TreeDimmer, "TreeDimmer");
+                {
+                    sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                }
+                {
+                    sb.AppendItem(BlurRadius, "BlurRadius");
+                }
+                {
+                    sb.AppendItem(BlurPasses, "BlurPasses");
+                }
+                {
+                    sb.AppendItem(EmissiveMult, "EmissiveMult");
+                }
+                {
+                    sb.AppendItem(TargetLum, "TargetLum");
+                }
+                {
+                    sb.AppendItem(UpperLumClamp, "UpperLumClamp");
+                }
+                {
+                    sb.AppendItem(BrightScale, "BrightScale");
+                }
+                {
+                    sb.AppendItem(BrightClamp, "BrightClamp");
+                }
+                {
+                    sb.AppendItem(LumRampNoTex, "LumRampNoTex");
+                }
+                {
+                    sb.AppendItem(LumRampMin, "LumRampMin");
+                }
+                {
+                    sb.AppendItem(LumRampMax, "LumRampMax");
+                }
+                {
+                    sb.AppendItem(SunlightDimmer, "SunlightDimmer");
+                }
+                {
+                    sb.AppendItem(GrassDimmer, "GrassDimmer");
+                }
+                {
+                    sb.AppendItem(TreeDimmer, "TreeDimmer");
+                }
             }
             #endregion
 
@@ -762,10 +779,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = HDRData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HDRDataBinaryWriteTranslation.Instance;
@@ -773,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HDRDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -783,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static HDRData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HDRData();
             ((HDRDataSetterCommon)((IHDRDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -798,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HDRData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -808,7 +821,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -894,26 +907,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IHDRDataGetter item,
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
-            return ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).ToString(
+            return ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IHDRDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
-            ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).ToString(
+            ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1019,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IHDRData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HDRDataSetterCommon)((IHDRDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1034,10 +1047,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum HDRData_FieldIndex
+    internal enum HDRData_FieldIndex
     {
         EyeAdaptSpeed = 0,
         BlurRadius = 1,
@@ -1057,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class HDRData_Registration : ILoquiRegistration
+    internal partial class HDRData_Registration : ILoquiRegistration
     {
         public static readonly HDRData_Registration Instance = new HDRData_Registration();
 
@@ -1099,6 +1112,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.HNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(HDRDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1132,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class HDRDataSetterCommon
+    internal partial class HDRDataSetterCommon
     {
         public static readonly HDRDataSetterCommon Instance = new HDRDataSetterCommon();
 
@@ -1168,12 +1187,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IHDRData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1184,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HDRDataCommon
+    internal partial class HDRDataCommon
     {
         public static readonly HDRDataCommon Instance = new HDRDataCommon();
 
@@ -1208,7 +1227,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             HDRData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EyeAdaptSpeed = item.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed);
             ret.BlurRadius = item.BlurRadius.EqualsWithin(rhs.BlurRadius);
             ret.BlurPasses = item.BlurPasses.EqualsWithin(rhs.BlurPasses);
@@ -1225,105 +1243,103 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TreeDimmer = item.TreeDimmer.EqualsWithin(rhs.TreeDimmer);
         }
         
-        public string ToString(
+        public string Print(
             IHDRDataGetter item,
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IHDRDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HDRData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"HDRData =>");
+                sb.AppendLine($"HDRData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (HDRData) =>");
+                sb.AppendLine($"{name} (HDRData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IHDRDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             HDRData.Mask<bool>? printMask = null)
         {
             if (printMask?.EyeAdaptSpeed ?? true)
             {
-                fg.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
+                sb.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
             }
             if (printMask?.BlurRadius ?? true)
             {
-                fg.AppendItem(item.BlurRadius, "BlurRadius");
+                sb.AppendItem(item.BlurRadius, "BlurRadius");
             }
             if (printMask?.BlurPasses ?? true)
             {
-                fg.AppendItem(item.BlurPasses, "BlurPasses");
+                sb.AppendItem(item.BlurPasses, "BlurPasses");
             }
             if (printMask?.EmissiveMult ?? true)
             {
-                fg.AppendItem(item.EmissiveMult, "EmissiveMult");
+                sb.AppendItem(item.EmissiveMult, "EmissiveMult");
             }
             if (printMask?.TargetLum ?? true)
             {
-                fg.AppendItem(item.TargetLum, "TargetLum");
+                sb.AppendItem(item.TargetLum, "TargetLum");
             }
             if (printMask?.UpperLumClamp ?? true)
             {
-                fg.AppendItem(item.UpperLumClamp, "UpperLumClamp");
+                sb.AppendItem(item.UpperLumClamp, "UpperLumClamp");
             }
             if (printMask?.BrightScale ?? true)
             {
-                fg.AppendItem(item.BrightScale, "BrightScale");
+                sb.AppendItem(item.BrightScale, "BrightScale");
             }
             if (printMask?.BrightClamp ?? true)
             {
-                fg.AppendItem(item.BrightClamp, "BrightClamp");
+                sb.AppendItem(item.BrightClamp, "BrightClamp");
             }
             if (printMask?.LumRampNoTex ?? true)
             {
-                fg.AppendItem(item.LumRampNoTex, "LumRampNoTex");
+                sb.AppendItem(item.LumRampNoTex, "LumRampNoTex");
             }
             if (printMask?.LumRampMin ?? true)
             {
-                fg.AppendItem(item.LumRampMin, "LumRampMin");
+                sb.AppendItem(item.LumRampMin, "LumRampMin");
             }
             if (printMask?.LumRampMax ?? true)
             {
-                fg.AppendItem(item.LumRampMax, "LumRampMax");
+                sb.AppendItem(item.LumRampMax, "LumRampMax");
             }
             if (printMask?.SunlightDimmer ?? true)
             {
-                fg.AppendItem(item.SunlightDimmer, "SunlightDimmer");
+                sb.AppendItem(item.SunlightDimmer, "SunlightDimmer");
             }
             if (printMask?.GrassDimmer ?? true)
             {
-                fg.AppendItem(item.GrassDimmer, "GrassDimmer");
+                sb.AppendItem(item.GrassDimmer, "GrassDimmer");
             }
             if (printMask?.TreeDimmer ?? true)
             {
-                fg.AppendItem(item.TreeDimmer, "TreeDimmer");
+                sb.AppendItem(item.TreeDimmer, "TreeDimmer");
             }
         }
         
@@ -1422,7 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHDRDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHDRDataGetter obj)
         {
             yield break;
         }
@@ -1430,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class HDRDataSetterTranslationCommon
+    internal partial class HDRDataSetterTranslationCommon
     {
         public static readonly HDRDataSetterTranslationCommon Instance = new HDRDataSetterTranslationCommon();
 
@@ -1560,7 +1576,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1584,11 +1600,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class HDRDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static HDRDataBinaryWriteTranslation Instance = new HDRDataBinaryWriteTranslation();
+        public static readonly HDRDataBinaryWriteTranslation Instance = new HDRDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHDRDataGetter item,
@@ -1641,12 +1657,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IHDRDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1658,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHDRDataGetter)item,
@@ -1668,9 +1684,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class HDRDataBinaryCreateTranslation
+    internal partial class HDRDataBinaryCreateTranslation
     {
-        public readonly static HDRDataBinaryCreateTranslation Instance = new HDRDataBinaryCreateTranslation();
+        public static readonly HDRDataBinaryCreateTranslation Instance = new HDRDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IHDRData item,
@@ -1703,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IHDRDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HDRDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1716,16 +1732,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class HDRDataBinaryOverlay :
+    internal partial class HDRDataBinaryOverlay :
         PluginBinaryOverlay,
         IHDRDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HDRData_Registration.Instance;
-        public static HDRData_Registration StaticRegistration => HDRData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HDRData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HDRDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1739,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HDRDataBinaryWriteTranslation.Instance;
@@ -1747,7 +1763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HDRDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1755,20 +1771,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Single EyeAdaptSpeed => _data.Slice(0x0, 0x4).Float();
-        public Single BlurRadius => _data.Slice(0x4, 0x4).Float();
-        public Single BlurPasses => _data.Slice(0x8, 0x4).Float();
-        public Single EmissiveMult => _data.Slice(0xC, 0x4).Float();
-        public Single TargetLum => _data.Slice(0x10, 0x4).Float();
-        public Single UpperLumClamp => _data.Slice(0x14, 0x4).Float();
-        public Single BrightScale => _data.Slice(0x18, 0x4).Float();
-        public Single BrightClamp => _data.Slice(0x1C, 0x4).Float();
-        public Single LumRampNoTex => _data.Slice(0x20, 0x4).Float();
-        public Single LumRampMin => _data.Slice(0x24, 0x4).Float();
-        public Single LumRampMax => _data.Slice(0x28, 0x4).Float();
-        public Single SunlightDimmer => _data.Slice(0x2C, 0x4).Float();
-        public Single GrassDimmer => _data.Slice(0x30, 0x4).Float();
-        public Single TreeDimmer => _data.Slice(0x34, 0x4).Float();
+        public Single EyeAdaptSpeed => _structData.Slice(0x0, 0x4).Float();
+        public Single BlurRadius => _structData.Slice(0x4, 0x4).Float();
+        public Single BlurPasses => _structData.Slice(0x8, 0x4).Float();
+        public Single EmissiveMult => _structData.Slice(0xC, 0x4).Float();
+        public Single TargetLum => _structData.Slice(0x10, 0x4).Float();
+        public Single UpperLumClamp => _structData.Slice(0x14, 0x4).Float();
+        public Single BrightScale => _structData.Slice(0x18, 0x4).Float();
+        public Single BrightClamp => _structData.Slice(0x1C, 0x4).Float();
+        public Single LumRampNoTex => _structData.Slice(0x20, 0x4).Float();
+        public Single LumRampMin => _structData.Slice(0x24, 0x4).Float();
+        public Single LumRampMax => _structData.Slice(0x28, 0x4).Float();
+        public Single SunlightDimmer => _structData.Slice(0x2C, 0x4).Float();
+        public Single GrassDimmer => _structData.Slice(0x30, 0x4).Float();
+        public Single TreeDimmer => _structData.Slice(0x34, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1776,25 +1792,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected HDRDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static HDRDataBinaryOverlay HDRDataFactory(
+        public static IHDRDataGetter HDRDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x38,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new HDRDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x38 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1803,25 +1824,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static HDRDataBinaryOverlay HDRDataFactory(
+        public static IHDRDataGetter HDRDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return HDRDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            HDRDataMixIn.ToString(
+            HDRDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

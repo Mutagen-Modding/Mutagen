@@ -5,32 +5,34 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +53,30 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Models
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DebrisModel> _Models = new ExtendedList<DebrisModel>();
+        public ExtendedList<DebrisModel> Models
+        {
+            get => this._Models;
+            init => this._Models = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDebrisModelGetter> IDebrisGetter.Models => _Models;
+        #endregion
+
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebrisMixIn.ToString(
+            DebrisMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +92,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -83,7 +101,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Models)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +111,7 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(Models, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -100,6 +120,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>? Models;
             #endregion
 
             #region Equals
@@ -113,11 +137,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Models, rhs.Models)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Models);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +154,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Models != null)
+                {
+                    if (!eval(this.Models.Overall)) return false;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -136,6 +174,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Models != null)
+                {
+                    if (eval(this.Models.Overall)) return true;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -151,30 +201,59 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Models != null)
+                {
+                    obj.Models = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebrisModel.Mask<R>?>>?>(eval(this.Models.Overall), Enumerable.Empty<MaskItemIndexed<R, DebrisModel.Mask<R>?>>());
+                    if (Models.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DebrisModel.Mask<R>?>>();
+                        obj.Models.Specific = l;
+                        foreach (var item in Models.Specific)
+                        {
+                            MaskItemIndexed<R, DebrisModel.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebrisModel.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Debris.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Debris.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Debris.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Debris.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Debris.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Debris.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if ((printMask?.Models?.Overall ?? true)
+                        && Models is {} ModelsItem)
+                    {
+                        sb.AppendLine("Models =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ModelsItem.Overall);
+                            if (ModelsItem.Specific != null)
+                            {
+                                foreach (var subItem in ModelsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +263,18 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>? Models;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        return Models;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +285,9 @@ namespace Mutagen.Bethesda.Fallout4
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        this.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +299,9 @@ namespace Mutagen.Bethesda.Fallout4
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        this.Models = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +311,51 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Models != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                if (Models is {} ModelsItem)
+                {
+                    sb.AppendLine("Models =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ModelsItem.Overall);
+                        if (ModelsItem.Specific != null)
+                        {
+                            foreach (var subItem in ModelsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -263,6 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,6 +386,10 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public DebrisModel.TranslationMask? Models;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -293,6 +399,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Models == null ? DefaultOn : !Models.GetCrystal().CopyNothing, Models?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -373,7 +485,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Debris CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Debris();
             ((DebrisSetterCommon)((IDebrisGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +510,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Debris item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +520,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -429,6 +541,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IDebrisInternal>
     {
+        new ExtendedList<DebrisModel> Models { get; }
     }
 
     public partial interface IDebrisInternal :
@@ -446,6 +559,7 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IDebrisGetter>
     {
         static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
+        IReadOnlyList<IDebrisModelGetter> Models { get; }
 
     }
 
@@ -470,26 +584,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebrisGetter item,
             string? name = null,
             Debris.Mask<bool>? printMask = null)
         {
-            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).ToString(
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebrisGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Debris.Mask<bool>? printMask = null)
         {
-            ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).ToString(
+            ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDebrisInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DebrisSetterCommon)((IDebrisGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +713,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Debris_FieldIndex
+    internal enum Debris_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +724,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Models = 6,
     }
     #endregion
 
     #region Registration
-    public partial class Debris_Registration : ILoquiRegistration
+    internal partial class Debris_Registration : ILoquiRegistration
     {
         public static readonly Debris_Registration Instance = new Debris_Registration();
 
@@ -627,9 +742,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "bfd9ff53-a114-428f-b3c3-9a63a3a7348b";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Debris.Mask<>);
 
@@ -656,6 +771,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DEBR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.DEBR);
+            var all = RecordCollection.Factory(
+                RecordTypes.DEBR,
+                RecordTypes.DATA,
+                RecordTypes.MODT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DebrisBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +814,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class DebrisSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class DebrisSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly DebrisSetterCommon Instance = new DebrisSetterCommon();
 
@@ -698,6 +823,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IDebrisInternal item)
         {
             ClearPartial();
+            item.Models.Clear();
             base.Clear(item);
         }
         
@@ -723,7 +849,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IDebrisInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDebrisInternal>(
                 record: item,
@@ -736,7 +862,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Debris)item,
@@ -747,7 +873,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Debris)item,
@@ -758,7 +884,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DebrisCommon : Fallout4MajorRecordCommon
+    internal partial class DebrisCommon : Fallout4MajorRecordCommon
     {
         public new static readonly DebrisCommon Instance = new DebrisCommon();
 
@@ -782,58 +908,73 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Debris.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Models = item.Models.CollectionEqualsHelper(
+                rhs.Models,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IDebrisGetter item,
             string? name = null,
             Debris.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebrisGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Debris.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Debris =>");
+                sb.AppendLine($"Debris =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Debris) =>");
+                sb.AppendLine($"{name} (Debris) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebrisGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Debris.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if (printMask?.Models?.Overall ?? true)
+            {
+                sb.AppendLine("Models =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Models)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Debris_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1023,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                if (!lhs.Models.SequenceEqual(rhs.Models, (l, r) => ((DebrisModelCommon)((IDebrisModelGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Debris_FieldIndex.Models)))) return false;
+            }
             return true;
         }
         
@@ -910,6 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IDebrisGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Models);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,9 +1079,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDebrisGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDebrisGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -980,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DebrisSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class DebrisSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly DebrisSetterTranslationCommon Instance = new DebrisSetterTranslationCommon();
 
@@ -1013,6 +1159,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                errorMask?.PushIndex((int)Debris_FieldIndex.Models);
+                try
+                {
+                    item.Models.SetTo(
+                        rhs.Models
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +1305,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +1323,40 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DebrisBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
+        public new static readonly DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IDebrisGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDebrisModelGetter>.Instance.Write(
+                writer: writer,
+                items: item.Models,
+                transl: (MutagenWriter subWriter, IDebrisModelGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((DebrisModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
 
         public void Write(
             MutagenWriter writer,
             IDebrisGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1175,10 +1367,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +1387,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDebrisGetter)item,
@@ -1201,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDebrisGetter)item,
@@ -1212,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDebrisGetter)item,
@@ -1222,9 +1419,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class DebrisBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class DebrisBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
+        public new static readonly DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DEBR;
         public static void FillBinaryStructs(
@@ -1234,6 +1431,40 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IDebrisInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    item.Models.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DebrisModel>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: DebrisModel_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: DebrisModel.TryCreateFromBinary));
+                    return (int)Debris_FieldIndex.Models;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
         }
 
     }
@@ -1249,16 +1480,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class DebrisBinaryOverlay :
+    internal partial class DebrisBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IDebrisGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
-        public new static Debris_Registration StaticRegistration => Debris_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +1497,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1282,6 +1513,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IDebris);
 
 
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<IDebrisModelGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +1521,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected DebrisBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DebrisBinaryOverlay DebrisFactory(
+        public static IDebrisGetter DebrisFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DebrisBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +1555,63 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static DebrisBinaryOverlay DebrisFactory(
+        public static IDebrisGetter DebrisFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DebrisFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    this.Models = this.ParseRepeatedTypelessSubrecord<IDebrisModelGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: DebrisModel_Registration.TriggerSpecs,
+                        factory: DebrisModelBinaryOverlay.DebrisModelFactory);
+                    return (int)Debris_FieldIndex.Models;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebrisMixIn.ToString(
+            DebrisMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

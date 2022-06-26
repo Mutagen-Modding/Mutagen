@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -83,12 +85,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SpeedOverridesMixIn.ToString(
+            SpeedOverridesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -282,70 +285,65 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SpeedOverrides.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SpeedOverrides.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SpeedOverrides.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SpeedOverrides.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SpeedOverrides.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SpeedOverrides.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.LeftWalk ?? true)
                     {
-                        fg.AppendItem(LeftWalk, "LeftWalk");
+                        sb.AppendItem(LeftWalk, "LeftWalk");
                     }
                     if (printMask?.LeftRun ?? true)
                     {
-                        fg.AppendItem(LeftRun, "LeftRun");
+                        sb.AppendItem(LeftRun, "LeftRun");
                     }
                     if (printMask?.RightWalk ?? true)
                     {
-                        fg.AppendItem(RightWalk, "RightWalk");
+                        sb.AppendItem(RightWalk, "RightWalk");
                     }
                     if (printMask?.RightRun ?? true)
                     {
-                        fg.AppendItem(RightRun, "RightRun");
+                        sb.AppendItem(RightRun, "RightRun");
                     }
                     if (printMask?.ForwardWalk ?? true)
                     {
-                        fg.AppendItem(ForwardWalk, "ForwardWalk");
+                        sb.AppendItem(ForwardWalk, "ForwardWalk");
                     }
                     if (printMask?.ForwardRun ?? true)
                     {
-                        fg.AppendItem(ForwardRun, "ForwardRun");
+                        sb.AppendItem(ForwardRun, "ForwardRun");
                     }
                     if (printMask?.BackWalk ?? true)
                     {
-                        fg.AppendItem(BackWalk, "BackWalk");
+                        sb.AppendItem(BackWalk, "BackWalk");
                     }
                     if (printMask?.BackRun ?? true)
                     {
-                        fg.AppendItem(BackRun, "BackRun");
+                        sb.AppendItem(BackRun, "BackRun");
                     }
                     if (printMask?.RotateWalk ?? true)
                     {
-                        fg.AppendItem(RotateWalk, "RotateWalk");
+                        sb.AppendItem(RotateWalk, "RotateWalk");
                     }
                     if (printMask?.RotateRun ?? true)
                     {
-                        fg.AppendItem(RotateRun, "RotateRun");
+                        sb.AppendItem(RotateRun, "RotateRun");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -520,46 +518,59 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LeftWalk, "LeftWalk");
-                fg.AppendItem(LeftRun, "LeftRun");
-                fg.AppendItem(RightWalk, "RightWalk");
-                fg.AppendItem(RightRun, "RightRun");
-                fg.AppendItem(ForwardWalk, "ForwardWalk");
-                fg.AppendItem(ForwardRun, "ForwardRun");
-                fg.AppendItem(BackWalk, "BackWalk");
-                fg.AppendItem(BackRun, "BackRun");
-                fg.AppendItem(RotateWalk, "RotateWalk");
-                fg.AppendItem(RotateRun, "RotateRun");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(LeftWalk, "LeftWalk");
+                }
+                {
+                    sb.AppendItem(LeftRun, "LeftRun");
+                }
+                {
+                    sb.AppendItem(RightWalk, "RightWalk");
+                }
+                {
+                    sb.AppendItem(RightRun, "RightRun");
+                }
+                {
+                    sb.AppendItem(ForwardWalk, "ForwardWalk");
+                }
+                {
+                    sb.AppendItem(ForwardRun, "ForwardRun");
+                }
+                {
+                    sb.AppendItem(BackWalk, "BackWalk");
+                }
+                {
+                    sb.AppendItem(BackRun, "BackRun");
+                }
+                {
+                    sb.AppendItem(RotateWalk, "RotateWalk");
+                }
+                {
+                    sb.AppendItem(RotateRun, "RotateRun");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -669,10 +680,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = SpeedOverrides_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SpeedOverridesBinaryWriteTranslation.Instance;
@@ -680,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpeedOverridesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -690,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SpeedOverrides CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpeedOverrides();
             ((SpeedOverridesSetterCommon)((ISpeedOverridesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -705,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SpeedOverrides item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -715,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -795,26 +802,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISpeedOverridesGetter item,
             string? name = null,
             SpeedOverrides.Mask<bool>? printMask = null)
         {
-            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).ToString(
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISpeedOverridesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SpeedOverrides.Mask<bool>? printMask = null)
         {
-            ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).ToString(
+            ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -920,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISpeedOverrides item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SpeedOverridesSetterCommon)((ISpeedOverridesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -935,10 +942,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SpeedOverrides_FieldIndex
+    internal enum SpeedOverrides_FieldIndex
     {
         LeftWalk = 0,
         LeftRun = 1,
@@ -955,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SpeedOverrides_Registration : ILoquiRegistration
+    internal partial class SpeedOverrides_Registration : ILoquiRegistration
     {
         public static readonly SpeedOverrides_Registration Instance = new SpeedOverrides_Registration();
 
@@ -997,6 +1004,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SPED;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.SPED);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SpeedOverridesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1030,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SpeedOverridesSetterCommon
+    internal partial class SpeedOverridesSetterCommon
     {
         public static readonly SpeedOverridesSetterCommon Instance = new SpeedOverridesSetterCommon();
 
@@ -1063,12 +1076,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISpeedOverrides item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SPED),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1079,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpeedOverridesCommon
+    internal partial class SpeedOverridesCommon
     {
         public static readonly SpeedOverridesCommon Instance = new SpeedOverridesCommon();
 
@@ -1103,7 +1116,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SpeedOverrides.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LeftWalk = item.LeftWalk.EqualsWithin(rhs.LeftWalk);
             ret.LeftRun = item.LeftRun.EqualsWithin(rhs.LeftRun);
             ret.RightWalk = item.RightWalk.EqualsWithin(rhs.RightWalk);
@@ -1117,93 +1129,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
         }
         
-        public string ToString(
+        public string Print(
             ISpeedOverridesGetter item,
             string? name = null,
             SpeedOverrides.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISpeedOverridesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SpeedOverrides.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SpeedOverrides =>");
+                sb.AppendLine($"SpeedOverrides =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SpeedOverrides) =>");
+                sb.AppendLine($"{name} (SpeedOverrides) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISpeedOverridesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SpeedOverrides.Mask<bool>? printMask = null)
         {
             if (printMask?.LeftWalk ?? true)
             {
-                fg.AppendItem(item.LeftWalk, "LeftWalk");
+                sb.AppendItem(item.LeftWalk, "LeftWalk");
             }
             if (printMask?.LeftRun ?? true)
             {
-                fg.AppendItem(item.LeftRun, "LeftRun");
+                sb.AppendItem(item.LeftRun, "LeftRun");
             }
             if (printMask?.RightWalk ?? true)
             {
-                fg.AppendItem(item.RightWalk, "RightWalk");
+                sb.AppendItem(item.RightWalk, "RightWalk");
             }
             if (printMask?.RightRun ?? true)
             {
-                fg.AppendItem(item.RightRun, "RightRun");
+                sb.AppendItem(item.RightRun, "RightRun");
             }
             if (printMask?.ForwardWalk ?? true)
             {
-                fg.AppendItem(item.ForwardWalk, "ForwardWalk");
+                sb.AppendItem(item.ForwardWalk, "ForwardWalk");
             }
             if (printMask?.ForwardRun ?? true)
             {
-                fg.AppendItem(item.ForwardRun, "ForwardRun");
+                sb.AppendItem(item.ForwardRun, "ForwardRun");
             }
             if (printMask?.BackWalk ?? true)
             {
-                fg.AppendItem(item.BackWalk, "BackWalk");
+                sb.AppendItem(item.BackWalk, "BackWalk");
             }
             if (printMask?.BackRun ?? true)
             {
-                fg.AppendItem(item.BackRun, "BackRun");
+                sb.AppendItem(item.BackRun, "BackRun");
             }
             if (printMask?.RotateWalk ?? true)
             {
-                fg.AppendItem(item.RotateWalk, "RotateWalk");
+                sb.AppendItem(item.RotateWalk, "RotateWalk");
             }
             if (printMask?.RotateRun ?? true)
             {
-                fg.AppendItem(item.RotateRun, "RotateRun");
+                sb.AppendItem(item.RotateRun, "RotateRun");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1287,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISpeedOverridesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpeedOverridesGetter obj)
         {
             yield break;
         }
@@ -1295,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpeedOverridesSetterTranslationCommon
+    internal partial class SpeedOverridesSetterTranslationCommon
     {
         public static readonly SpeedOverridesSetterTranslationCommon Instance = new SpeedOverridesSetterTranslationCommon();
 
@@ -1413,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpeedOverrides_Registration.Instance;
-        public static SpeedOverrides_Registration StaticRegistration => SpeedOverrides_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SpeedOverrides_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpeedOverridesCommon.Instance;
         [DebuggerStepThrough]
@@ -1437,11 +1447,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SpeedOverridesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SpeedOverridesBinaryWriteTranslation Instance = new SpeedOverridesBinaryWriteTranslation();
+        public static readonly SpeedOverridesBinaryWriteTranslation Instance = new SpeedOverridesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISpeedOverridesGetter item,
@@ -1485,12 +1495,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISpeedOverridesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SPED),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1502,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISpeedOverridesGetter)item,
@@ -1512,9 +1522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SpeedOverridesBinaryCreateTranslation
+    internal partial class SpeedOverridesBinaryCreateTranslation
     {
-        public readonly static SpeedOverridesBinaryCreateTranslation Instance = new SpeedOverridesBinaryCreateTranslation();
+        public static readonly SpeedOverridesBinaryCreateTranslation Instance = new SpeedOverridesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISpeedOverrides item,
@@ -1544,7 +1554,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISpeedOverridesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpeedOverridesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1557,16 +1567,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SpeedOverridesBinaryOverlay :
+    internal partial class SpeedOverridesBinaryOverlay :
         PluginBinaryOverlay,
         ISpeedOverridesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpeedOverrides_Registration.Instance;
-        public static SpeedOverrides_Registration StaticRegistration => SpeedOverrides_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SpeedOverrides_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SpeedOverridesCommon.Instance;
         [DebuggerStepThrough]
@@ -1580,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SpeedOverridesBinaryWriteTranslation.Instance;
@@ -1588,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpeedOverridesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1596,17 +1606,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single LeftWalk => _data.Slice(0x0, 0x4).Float();
-        public Single LeftRun => _data.Slice(0x4, 0x4).Float();
-        public Single RightWalk => _data.Slice(0x8, 0x4).Float();
-        public Single RightRun => _data.Slice(0xC, 0x4).Float();
-        public Single ForwardWalk => _data.Slice(0x10, 0x4).Float();
-        public Single ForwardRun => _data.Slice(0x14, 0x4).Float();
-        public Single BackWalk => _data.Slice(0x18, 0x4).Float();
-        public Single BackRun => _data.Slice(0x1C, 0x4).Float();
-        public Single RotateWalk => _data.Slice(0x20, 0x4).Float();
-        public Single RotateRun => _data.Slice(0x24, 0x4).Float();
-        public Single Unknown => _data.Slice(0x28, 0x4).Float();
+        public Single LeftWalk => _structData.Slice(0x0, 0x4).Float();
+        public Single LeftRun => _structData.Slice(0x4, 0x4).Float();
+        public Single RightWalk => _structData.Slice(0x8, 0x4).Float();
+        public Single RightRun => _structData.Slice(0xC, 0x4).Float();
+        public Single ForwardWalk => _structData.Slice(0x10, 0x4).Float();
+        public Single ForwardRun => _structData.Slice(0x14, 0x4).Float();
+        public Single BackWalk => _structData.Slice(0x18, 0x4).Float();
+        public Single BackRun => _structData.Slice(0x1C, 0x4).Float();
+        public Single RotateWalk => _structData.Slice(0x20, 0x4).Float();
+        public Single RotateRun => _structData.Slice(0x24, 0x4).Float();
+        public Single Unknown => _structData.Slice(0x28, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1614,25 +1624,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SpeedOverridesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SpeedOverridesBinaryOverlay SpeedOverridesFactory(
+        public static ISpeedOverridesGetter SpeedOverridesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x2C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SpeedOverridesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x2C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1641,25 +1656,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static SpeedOverridesBinaryOverlay SpeedOverridesFactory(
+        public static ISpeedOverridesGetter SpeedOverridesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SpeedOverridesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SpeedOverridesMixIn.ToString(
+            SpeedOverridesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

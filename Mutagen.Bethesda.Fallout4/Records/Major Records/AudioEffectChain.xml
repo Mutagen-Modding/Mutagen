@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AudioEffectChain" recordType="AECH" objType="Record" baseClass="Fallout4MajorRecord" GUID="b63b922c-506b-494f-b73d-737e67fc553e" ID="643">
+    <Fields>
+      <RefList name="Effects" refName="AAudioEffect" recordType="KNAM" binary="Custom" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="AAudioEffect" objType="Subrecord" abstract="true" GUID="ee80ad47-3ad7-4098-834b-df74ffcc7d08" ID="666">
+    <Fields>
+      <Bool name="Enabled" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="OverdriveAudioEffect" baseClass="AAudioEffect" objType="Subrecord" GUID="e5598e7d-a6f6-40bc-b85a-79191f77e196" ID="665">
+    <Fields>
+      <Float name="InputGain" />
+      <Float name="OutputGain" />
+      <Float name="UpperThreshold" />
+      <Float name="LowerThreshold" />
+    </Fields>
+  </Object>
+  <Object name="StateVariableFilterAudioEffect" baseClass="AAudioEffect" objType="Subrecord" GUID="2bee3008-ae70-4006-a706-d2d9da37cf2b" ID="667">
+    <Fields>
+      <Float name="CenterFrequency" />
+      <Float name="QValue" />
+      <Enum name="Mode" enumName="StateVariableFilterAudioEffect.FilterMode" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="DelayAudioEffect" baseClass="AAudioEffect" objType="Subrecord" GUID="c0faca2b-1580-4bde-b690-31b748d41f5f" ID="668">
+    <Fields>
+      <Float name="FeedbackPercent" />
+      <Float name="WetMixPercent" />
+      <UInt32 name="Milliseconds" />
+    </Fields>
+  </Object>
+</Loqui>

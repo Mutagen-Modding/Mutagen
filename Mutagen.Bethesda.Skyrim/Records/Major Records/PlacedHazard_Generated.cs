@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -67,12 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedHazardMixIn.ToString(
+            PlacedHazardMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -100,7 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem HeadTrackingWeight,
                 TItem FavorCost,
                 TItem Reflections,
@@ -125,7 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 VirtualMachineAdapter: VirtualMachineAdapter,
                 EncounterZone: EncounterZone,
-                Ownership: Ownership,
+                Owner: Owner,
+                FactionRank: FactionRank,
                 HeadTrackingWeight: HeadTrackingWeight,
                 FavorCost: FavorCost,
                 Reflections: Reflections,
@@ -214,30 +218,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PlacedHazard.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PlacedHazard.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedHazard.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PlacedHazard.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PlacedHazard.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedHazard.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Hazard ?? true)
                     {
-                        fg.AppendItem(Hazard, "Hazard");
+                        sb.AppendItem(Hazard, "Hazard");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -301,37 +300,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Hazard, "Hazard");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Hazard, "Hazard");
+                }
             }
             #endregion
 
@@ -393,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedHazardCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedHazardCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedHazard(
             FormKey formKey,
@@ -471,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PlacedHazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedHazardBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -481,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PlacedHazard CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedHazard();
             ((PlacedHazardSetterCommon)((IPlacedHazardGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -496,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedHazard item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -506,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -544,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPlacedHazardGetter>,
         IMapsToGetter<IPlacedHazardGetter>,
         IScriptedGetter
@@ -574,26 +567,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedHazardGetter item,
             string? name = null,
             PlacedHazard.Mask<bool>? printMask = null)
         {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).ToString(
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedHazardGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedHazard.Mask<bool>? printMask = null)
         {
-            ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).ToString(
+            ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -688,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPlacedHazardInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedHazardSetterCommon)((IPlacedHazardGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -703,10 +696,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedHazard_FieldIndex
+    internal enum PlacedHazard_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -716,27 +709,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         VirtualMachineAdapter = 6,
         EncounterZone = 7,
-        Ownership = 8,
-        HeadTrackingWeight = 9,
-        FavorCost = 10,
-        Reflections = 11,
-        LinkedReferences = 12,
-        ActivateParents = 13,
-        EnableParent = 14,
-        Emittance = 15,
-        MultiBoundReference = 16,
-        IgnoredBySandbox = 17,
-        LocationRefTypes = 18,
-        LocationReference = 19,
-        DistantLodData = 20,
-        Scale = 21,
-        Placement = 22,
-        Hazard = 23,
+        Owner = 8,
+        FactionRank = 9,
+        HeadTrackingWeight = 10,
+        FavorCost = 11,
+        Reflections = 12,
+        LinkedReferences = 13,
+        ActivateParents = 14,
+        EnableParent = 15,
+        Emittance = 16,
+        MultiBoundReference = 17,
+        IgnoredBySandbox = 18,
+        LocationRefTypes = 19,
+        LocationReference = 20,
+        DistantLodData = 21,
+        Scale = 22,
+        Placement = 23,
+        Hazard = 24,
     }
     #endregion
 
     #region Registration
-    public partial class PlacedHazard_Registration : ILoquiRegistration
+    internal partial class PlacedHazard_Registration : ILoquiRegistration
     {
         public static readonly PlacedHazard_Registration Instance = new PlacedHazard_Registration();
 
@@ -751,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(PlacedHazard.Mask<>);
 
@@ -778,6 +772,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PHZD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PHZD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedHazardBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedHazardSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedHazardSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedHazardSetterCommon Instance = new PlacedHazardSetterCommon();
 
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPlacedHazardInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedHazardInternal>(
                 record: item,
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedHazard)item,
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedHazard)item,
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedHazard)item,
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedHazardCommon : APlacedTrapCommon
+    internal partial class PlacedHazardCommon : APlacedTrapCommon
     {
         public new static readonly PlacedHazardCommon Instance = new PlacedHazardCommon();
 
@@ -922,62 +922,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedHazard.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Hazard = item.Hazard.Equals(rhs.Hazard);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedHazardGetter item,
             string? name = null,
             PlacedHazard.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedHazardGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedHazard.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedHazard =>");
+                sb.AppendLine($"PlacedHazard =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedHazard) =>");
+                sb.AppendLine($"{name} (PlacedHazard) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedHazardGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedHazard.Mask<bool>? printMask = null)
         {
             APlacedTrapCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(item.Hazard.FormKey, "Hazard");
+                sb.AppendItem(item.Hazard.FormKey, "Hazard");
             }
         }
         
@@ -1001,7 +998,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedHazard_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.EncounterZone:
                     return (PlacedHazard_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Ownership:
+                case APlacedTrap_FieldIndex.Owner:
+                    return (PlacedHazard_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.FactionRank:
                     return (PlacedHazard_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.HeadTrackingWeight:
                     return (PlacedHazard_FieldIndex)((int)index);
@@ -1154,9 +1153,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedHazardGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedHazardGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedHazardSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedHazardSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedHazardSetterTranslationCommon Instance = new PlacedHazardSetterTranslationCommon();
 
@@ -1402,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]
@@ -1420,13 +1419,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedHazardBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlacedHazardBinaryWriteTranslation Instance = new PlacedHazardBinaryWriteTranslation();
+        public new static readonly PlacedHazardBinaryWriteTranslation Instance = new PlacedHazardBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedHazardGetter item,
@@ -1440,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPlacedHazardGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1451,10 +1450,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1466,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedHazardGetter)item,
@@ -1477,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedHazardGetter)item,
@@ -1488,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedHazardGetter)item,
@@ -1499,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedHazardGetter)item,
@@ -1509,9 +1511,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedHazardBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedHazardBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
-        public new readonly static PlacedHazardBinaryCreateTranslation Instance = new PlacedHazardBinaryCreateTranslation();
+        public new static readonly PlacedHazardBinaryCreateTranslation Instance = new PlacedHazardBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PHZD;
         public static void FillBinaryStructs(
@@ -1536,16 +1538,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedHazardBinaryOverlay :
+    internal partial class PlacedHazardBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedHazardGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedHazard_Registration.Instance;
-        public new static PlacedHazard_Registration StaticRegistration => PlacedHazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedHazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedHazardCommon.Instance;
         [DebuggerStepThrough]
@@ -1553,14 +1555,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedHazardCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedHazardCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedHazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedHazardBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1577,28 +1579,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PlacedHazardBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PlacedHazardBinaryOverlay PlacedHazardFactory(
+        public static IPlacedHazardGetter PlacedHazardFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PlacedHazardBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1608,30 +1613,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PlacedHazardBinaryOverlay PlacedHazardFactory(
+        public static IPlacedHazardGetter PlacedHazardFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedHazardFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedHazardMixIn.ToString(
+            PlacedHazardMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

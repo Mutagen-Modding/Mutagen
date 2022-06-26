@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WaterReflection" objType="Subrecord" recordType="XPWR" GUID="2d5d2c41-6e23-4dc1-ae40-5247989fe800" ID="472">
+    <Fields>
+      <FormLink name="Water" refName="PlacedObject" />
+      <Break />
+      <Enum name="Type" enumName="WaterReflection.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

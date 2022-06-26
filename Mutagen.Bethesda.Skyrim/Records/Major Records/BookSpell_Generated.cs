@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BookSpellMixIn.ToString(
+            BookSpellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,30 +176,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(BookSpell.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(BookSpell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BookSpell.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, BookSpell.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(BookSpell.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BookSpell.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -261,37 +258,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Spell, "Spell");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
             }
             #endregion
 
@@ -352,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => BookSpellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookSpellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookSpellSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -361,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => BookSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -371,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static BookSpell CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookSpell();
             ((BookSpellSetterCommon)((IBookSpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -386,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookSpell item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -396,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -453,26 +443,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBookSpellGetter item,
             string? name = null,
             BookSpell.Mask<bool>? printMask = null)
         {
-            return ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).ToString(
+            return ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBookSpellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BookSpell.Mask<bool>? printMask = null)
         {
-            ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).ToString(
+            ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -553,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBookSpell item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookSpellSetterCommon)((IBookSpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -568,17 +558,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BookSpell_FieldIndex
+    internal enum BookSpell_FieldIndex
     {
         Spell = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookSpell_Registration : ILoquiRegistration
+    internal partial class BookSpell_Registration : ILoquiRegistration
     {
         public static readonly BookSpell_Registration Instance = new BookSpell_Registration();
 
@@ -652,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BookSpellSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookSpellSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookSpellSetterCommon Instance = new BookSpellSetterCommon();
 
@@ -683,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IBookSpell item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -695,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BookSpell)item,
@@ -706,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookSpellCommon : BookTeachTargetCommon
+    internal partial class BookSpellCommon : BookTeachTargetCommon
     {
         public new static readonly BookSpellCommon Instance = new BookSpellCommon();
 
@@ -730,62 +720,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BookSpell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Spell = item.Spell.Equals(rhs.Spell);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IBookSpellGetter item,
             string? name = null,
             BookSpell.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBookSpellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BookSpell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BookSpell =>");
+                sb.AppendLine($"BookSpell =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BookSpell) =>");
+                sb.AppendLine($"{name} (BookSpell) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBookSpellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BookSpell.Mask<bool>? printMask = null)
         {
             BookTeachTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKey, "Spell");
+                sb.AppendItem(item.Spell.FormKey, "Spell");
             }
         }
         
@@ -846,9 +833,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBookSpellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookSpellGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -859,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookSpellSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookSpellSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookSpellSetterTranslationCommon Instance = new BookSpellSetterTranslationCommon();
 
@@ -959,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSpell_Registration.Instance;
-        public new static BookSpell_Registration StaticRegistration => BookSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -977,13 +964,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BookSpellBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BookSpellBinaryWriteTranslation Instance = new BookSpellBinaryWriteTranslation();
+        public new static readonly BookSpellBinaryWriteTranslation Instance = new BookSpellBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookSpellGetter item,
@@ -997,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IBookSpellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1007,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookSpellGetter)item,
@@ -1018,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IBookTeachTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBookSpellGetter)item,
@@ -1028,9 +1015,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BookSpellBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookSpellBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
-        public new readonly static BookSpellBinaryCreateTranslation Instance = new BookSpellBinaryCreateTranslation();
+        public new static readonly BookSpellBinaryCreateTranslation Instance = new BookSpellBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookSpell item,
@@ -1052,16 +1039,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BookSpellBinaryOverlay :
+    internal partial class BookSpellBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookSpellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookSpell_Registration.Instance;
-        public new static BookSpell_Registration StaticRegistration => BookSpell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookSpell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookSpellCommon.Instance;
         [DebuggerStepThrough]
@@ -1069,14 +1056,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => BookSpellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BookSpellCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookSpellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookSpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1084,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1092,24 +1079,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected BookSpellBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BookSpellBinaryOverlay BookSpellFactory(
+        public static IBookSpellGetter BookSpellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BookSpellBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1118,25 +1111,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static BookSpellBinaryOverlay BookSpellFactory(
+        public static IBookSpellGetter BookSpellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookSpellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BookSpellMixIn.ToString(
+            BookSpellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

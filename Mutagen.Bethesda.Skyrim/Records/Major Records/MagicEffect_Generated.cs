@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -69,6 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IMagicEffectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -153,9 +155,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region ResistValue
         public readonly static ActorValue _ResistValue_Default = ActorValue.None;
         public ActorValue ResistValue { get; set; } = _ResistValue_Default;
-        #endregion
-        #region CounterEffectCount
-        public UInt16 CounterEffectCount { get; set; } = default;
         #endregion
         #region Unknown1
         public UInt16 Unknown1 { get; set; } = default;
@@ -302,25 +301,25 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt;
         #endregion
-        #region Unknown2
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _Unknown2 = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> Unknown2
+        #region HitVisuals
+        private readonly IFormLink<IVisualEffectGetter> _HitVisuals = new FormLink<IVisualEffectGetter>();
+        public IFormLink<IVisualEffectGetter> HitVisuals
         {
-            get => _Unknown2;
-            set => _Unknown2.SetTo(value);
+            get => _HitVisuals;
+            set => _HitVisuals.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2;
+        IFormLinkGetter<IVisualEffectGetter> IMagicEffectGetter.HitVisuals => this.HitVisuals;
         #endregion
-        #region Unknown3
-        private readonly IFormLink<ISkyrimMajorRecordGetter> _Unknown3 = new FormLink<ISkyrimMajorRecordGetter>();
-        public IFormLink<ISkyrimMajorRecordGetter> Unknown3
+        #region EnchantVisuals
+        private readonly IFormLink<IVisualEffectGetter> _EnchantVisuals = new FormLink<IVisualEffectGetter>();
+        public IFormLink<IVisualEffectGetter> EnchantVisuals
         {
-            get => _Unknown3;
-            set => _Unknown3.SetTo(value);
+            get => _EnchantVisuals;
+            set => _EnchantVisuals.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3;
+        IFormLinkGetter<IVisualEffectGetter> IMagicEffectGetter.EnchantVisuals => this.EnchantVisuals;
         #endregion
         #region EquipAbility
         private readonly IFormLink<ISpellGetter> _EquipAbility = new FormLink<ISpellGetter>();
@@ -414,12 +413,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MagicEffectMixIn.ToString(
+            MagicEffectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -443,7 +443,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = initialValue;
                 this.MagicSkill = initialValue;
                 this.ResistValue = initialValue;
-                this.CounterEffectCount = initialValue;
                 this.Unknown1 = initialValue;
                 this.CastingLight = initialValue;
                 this.TaperWeight = initialValue;
@@ -468,8 +467,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastArt = initialValue;
                 this.DualCastScale = initialValue;
                 this.EnchantArt = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.HitVisuals = initialValue;
+                this.EnchantVisuals = initialValue;
                 this.EquipAbility = initialValue;
                 this.ImageSpaceModifier = initialValue;
                 this.PerkToApply = initialValue;
@@ -498,7 +497,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BaseCost,
                 TItem MagicSkill,
                 TItem ResistValue,
-                TItem CounterEffectCount,
                 TItem Unknown1,
                 TItem CastingLight,
                 TItem TaperWeight,
@@ -523,8 +521,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem DualCastArt,
                 TItem DualCastScale,
                 TItem EnchantArt,
-                TItem Unknown2,
-                TItem Unknown3,
+                TItem HitVisuals,
+                TItem EnchantVisuals,
                 TItem EquipAbility,
                 TItem ImageSpaceModifier,
                 TItem PerkToApply,
@@ -552,7 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = BaseCost;
                 this.MagicSkill = MagicSkill;
                 this.ResistValue = ResistValue;
-                this.CounterEffectCount = CounterEffectCount;
                 this.Unknown1 = Unknown1;
                 this.CastingLight = CastingLight;
                 this.TaperWeight = TaperWeight;
@@ -577,8 +574,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastArt = DualCastArt;
                 this.DualCastScale = DualCastScale;
                 this.EnchantArt = EnchantArt;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.HitVisuals = HitVisuals;
+                this.EnchantVisuals = EnchantVisuals;
                 this.EquipAbility = EquipAbility;
                 this.ImageSpaceModifier = ImageSpaceModifier;
                 this.PerkToApply = PerkToApply;
@@ -609,7 +606,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BaseCost;
             public TItem MagicSkill;
             public TItem ResistValue;
-            public TItem CounterEffectCount;
             public TItem Unknown1;
             public TItem CastingLight;
             public TItem TaperWeight;
@@ -634,8 +630,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DualCastArt;
             public TItem DualCastScale;
             public TItem EnchantArt;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem HitVisuals;
+            public TItem EnchantVisuals;
             public TItem EquipAbility;
             public TItem ImageSpaceModifier;
             public TItem PerkToApply;
@@ -668,7 +664,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
                 if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
                 if (!object.Equals(this.ResistValue, rhs.ResistValue)) return false;
-                if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.CastingLight, rhs.CastingLight)) return false;
                 if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
@@ -693,8 +688,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DualCastArt, rhs.DualCastArt)) return false;
                 if (!object.Equals(this.DualCastScale, rhs.DualCastScale)) return false;
                 if (!object.Equals(this.EnchantArt, rhs.EnchantArt)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.HitVisuals, rhs.HitVisuals)) return false;
+                if (!object.Equals(this.EnchantVisuals, rhs.EnchantVisuals)) return false;
                 if (!object.Equals(this.EquipAbility, rhs.EquipAbility)) return false;
                 if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
                 if (!object.Equals(this.PerkToApply, rhs.PerkToApply)) return false;
@@ -719,7 +714,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.BaseCost);
                 hash.Add(this.MagicSkill);
                 hash.Add(this.ResistValue);
-                hash.Add(this.CounterEffectCount);
                 hash.Add(this.Unknown1);
                 hash.Add(this.CastingLight);
                 hash.Add(this.TaperWeight);
@@ -744,8 +738,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DualCastArt);
                 hash.Add(this.DualCastScale);
                 hash.Add(this.EnchantArt);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.HitVisuals);
+                hash.Add(this.EnchantVisuals);
                 hash.Add(this.EquipAbility);
                 hash.Add(this.ImageSpaceModifier);
                 hash.Add(this.PerkToApply);
@@ -789,7 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.BaseCost)) return false;
                 if (!eval(this.MagicSkill)) return false;
                 if (!eval(this.ResistValue)) return false;
-                if (!eval(this.CounterEffectCount)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.CastingLight)) return false;
                 if (!eval(this.TaperWeight)) return false;
@@ -818,8 +811,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.DualCastArt)) return false;
                 if (!eval(this.DualCastScale)) return false;
                 if (!eval(this.EnchantArt)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.HitVisuals)) return false;
+                if (!eval(this.EnchantVisuals)) return false;
                 if (!eval(this.EquipAbility)) return false;
                 if (!eval(this.ImageSpaceModifier)) return false;
                 if (!eval(this.PerkToApply)) return false;
@@ -893,7 +886,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.BaseCost)) return true;
                 if (eval(this.MagicSkill)) return true;
                 if (eval(this.ResistValue)) return true;
-                if (eval(this.CounterEffectCount)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.CastingLight)) return true;
                 if (eval(this.TaperWeight)) return true;
@@ -922,8 +914,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.DualCastArt)) return true;
                 if (eval(this.DualCastScale)) return true;
                 if (eval(this.EnchantArt)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.HitVisuals)) return true;
+                if (eval(this.EnchantVisuals)) return true;
                 if (eval(this.EquipAbility)) return true;
                 if (eval(this.ImageSpaceModifier)) return true;
                 if (eval(this.PerkToApply)) return true;
@@ -992,9 +984,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1003,7 +995,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BaseCost = eval(this.BaseCost);
                 obj.MagicSkill = eval(this.MagicSkill);
                 obj.ResistValue = eval(this.ResistValue);
-                obj.CounterEffectCount = eval(this.CounterEffectCount);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.CastingLight = eval(this.CastingLight);
                 obj.TaperWeight = eval(this.TaperWeight);
@@ -1028,8 +1019,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DualCastArt = eval(this.DualCastArt);
                 obj.DualCastScale = eval(this.DualCastScale);
                 obj.EnchantArt = eval(this.EnchantArt);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.HitVisuals = eval(this.HitVisuals);
+                obj.EnchantVisuals = eval(this.EnchantVisuals);
                 obj.EquipAbility = eval(this.EquipAbility);
                 obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
                 obj.PerkToApply = eval(this.PerkToApply);
@@ -1043,9 +1034,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.CounterEffects.Specific = l;
-                        foreach (var item in CounterEffects.Specific.WithIndex())
+                        foreach (var item in CounterEffects.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1057,9 +1048,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, MagicEffectSound.Mask<R>?>>();
                         obj.Sounds.Specific = l;
-                        foreach (var item in Sounds.Specific.WithIndex())
+                        foreach (var item in Sounds.Specific)
                         {
-                            MaskItemIndexed<R, MagicEffectSound.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MagicEffectSound.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MagicEffectSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MagicEffectSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1073,9 +1064,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1086,286 +1077,265 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MagicEffect.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MagicEffect.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MagicEffect.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MagicEffect.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MagicEffect.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MagicEffect.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.MenuDisplayObject ?? true)
                     {
-                        fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                        sb.AppendItem(MenuDisplayObject, "MenuDisplayObject");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.BaseCost ?? true)
                     {
-                        fg.AppendItem(BaseCost, "BaseCost");
+                        sb.AppendItem(BaseCost, "BaseCost");
                     }
                     if (printMask?.MagicSkill ?? true)
                     {
-                        fg.AppendItem(MagicSkill, "MagicSkill");
+                        sb.AppendItem(MagicSkill, "MagicSkill");
                     }
                     if (printMask?.ResistValue ?? true)
                     {
-                        fg.AppendItem(ResistValue, "ResistValue");
-                    }
-                    if (printMask?.CounterEffectCount ?? true)
-                    {
-                        fg.AppendItem(CounterEffectCount, "CounterEffectCount");
+                        sb.AppendItem(ResistValue, "ResistValue");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.CastingLight ?? true)
                     {
-                        fg.AppendItem(CastingLight, "CastingLight");
+                        sb.AppendItem(CastingLight, "CastingLight");
                     }
                     if (printMask?.TaperWeight ?? true)
                     {
-                        fg.AppendItem(TaperWeight, "TaperWeight");
+                        sb.AppendItem(TaperWeight, "TaperWeight");
                     }
                     if (printMask?.HitShader ?? true)
                     {
-                        fg.AppendItem(HitShader, "HitShader");
+                        sb.AppendItem(HitShader, "HitShader");
                     }
                     if (printMask?.EnchantShader ?? true)
                     {
-                        fg.AppendItem(EnchantShader, "EnchantShader");
+                        sb.AppendItem(EnchantShader, "EnchantShader");
                     }
                     if (printMask?.MinimumSkillLevel ?? true)
                     {
-                        fg.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                        sb.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
                     }
                     if (printMask?.SpellmakingArea ?? true)
                     {
-                        fg.AppendItem(SpellmakingArea, "SpellmakingArea");
+                        sb.AppendItem(SpellmakingArea, "SpellmakingArea");
                     }
                     if (printMask?.SpellmakingCastingTime ?? true)
                     {
-                        fg.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
+                        sb.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
                     }
                     if (printMask?.TaperCurve ?? true)
                     {
-                        fg.AppendItem(TaperCurve, "TaperCurve");
+                        sb.AppendItem(TaperCurve, "TaperCurve");
                     }
                     if (printMask?.TaperDuration ?? true)
                     {
-                        fg.AppendItem(TaperDuration, "TaperDuration");
+                        sb.AppendItem(TaperDuration, "TaperDuration");
                     }
                     if (printMask?.SecondActorValueWeight ?? true)
                     {
-                        fg.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                        sb.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
                     }
                     if (printMask?.Archetype?.Overall ?? true)
                     {
-                        Archetype?.ToString(fg);
+                        Archetype?.Print(sb);
                     }
                     if (printMask?.Projectile ?? true)
                     {
-                        fg.AppendItem(Projectile, "Projectile");
+                        sb.AppendItem(Projectile, "Projectile");
                     }
                     if (printMask?.Explosion ?? true)
                     {
-                        fg.AppendItem(Explosion, "Explosion");
+                        sb.AppendItem(Explosion, "Explosion");
                     }
                     if (printMask?.CastType ?? true)
                     {
-                        fg.AppendItem(CastType, "CastType");
+                        sb.AppendItem(CastType, "CastType");
                     }
                     if (printMask?.TargetType ?? true)
                     {
-                        fg.AppendItem(TargetType, "TargetType");
+                        sb.AppendItem(TargetType, "TargetType");
                     }
                     if (printMask?.SecondActorValue ?? true)
                     {
-                        fg.AppendItem(SecondActorValue, "SecondActorValue");
+                        sb.AppendItem(SecondActorValue, "SecondActorValue");
                     }
                     if (printMask?.CastingArt ?? true)
                     {
-                        fg.AppendItem(CastingArt, "CastingArt");
+                        sb.AppendItem(CastingArt, "CastingArt");
                     }
                     if (printMask?.HitEffectArt ?? true)
                     {
-                        fg.AppendItem(HitEffectArt, "HitEffectArt");
+                        sb.AppendItem(HitEffectArt, "HitEffectArt");
                     }
                     if (printMask?.ImpactData ?? true)
                     {
-                        fg.AppendItem(ImpactData, "ImpactData");
+                        sb.AppendItem(ImpactData, "ImpactData");
                     }
                     if (printMask?.SkillUsageMultiplier ?? true)
                     {
-                        fg.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                        sb.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
                     }
                     if (printMask?.DualCastArt ?? true)
                     {
-                        fg.AppendItem(DualCastArt, "DualCastArt");
+                        sb.AppendItem(DualCastArt, "DualCastArt");
                     }
                     if (printMask?.DualCastScale ?? true)
                     {
-                        fg.AppendItem(DualCastScale, "DualCastScale");
+                        sb.AppendItem(DualCastScale, "DualCastScale");
                     }
                     if (printMask?.EnchantArt ?? true)
                     {
-                        fg.AppendItem(EnchantArt, "EnchantArt");
+                        sb.AppendItem(EnchantArt, "EnchantArt");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.HitVisuals ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(HitVisuals, "HitVisuals");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.EnchantVisuals ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(EnchantVisuals, "EnchantVisuals");
                     }
                     if (printMask?.EquipAbility ?? true)
                     {
-                        fg.AppendItem(EquipAbility, "EquipAbility");
+                        sb.AppendItem(EquipAbility, "EquipAbility");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.PerkToApply ?? true)
                     {
-                        fg.AppendItem(PerkToApply, "PerkToApply");
+                        sb.AppendItem(PerkToApply, "PerkToApply");
                     }
                     if (printMask?.CastingSoundLevel ?? true)
                     {
-                        fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
+                        sb.AppendItem(CastingSoundLevel, "CastingSoundLevel");
                     }
                     if (printMask?.ScriptEffectAIScore ?? true)
                     {
-                        fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
+                        sb.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
                     }
                     if (printMask?.ScriptEffectAIDelayTime ?? true)
                     {
-                        fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                        sb.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                     }
                     if ((printMask?.CounterEffects?.Overall ?? true)
                         && CounterEffects is {} CounterEffectsItem)
                     {
-                        fg.AppendLine("CounterEffects =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CounterEffects =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CounterEffectsItem.Overall);
+                            sb.AppendItem(CounterEffectsItem.Overall);
                             if (CounterEffectsItem.Specific != null)
                             {
                                 foreach (var subItem in CounterEffectsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
                     {
-                        fg.AppendLine("Sounds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Sounds =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(SoundsItem.Overall);
+                            sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
                             {
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1384,7 +1354,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BaseCost;
             public Exception? MagicSkill;
             public Exception? ResistValue;
-            public Exception? CounterEffectCount;
             public Exception? Unknown1;
             public Exception? CastingLight;
             public Exception? TaperWeight;
@@ -1409,8 +1378,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DualCastArt;
             public Exception? DualCastScale;
             public Exception? EnchantArt;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? HitVisuals;
+            public Exception? EnchantVisuals;
             public Exception? EquipAbility;
             public Exception? ImageSpaceModifier;
             public Exception? PerkToApply;
@@ -1446,8 +1415,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return MagicSkill;
                     case MagicEffect_FieldIndex.ResistValue:
                         return ResistValue;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        return CounterEffectCount;
                     case MagicEffect_FieldIndex.Unknown1:
                         return Unknown1;
                     case MagicEffect_FieldIndex.CastingLight:
@@ -1496,10 +1463,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return DualCastScale;
                     case MagicEffect_FieldIndex.EnchantArt:
                         return EnchantArt;
-                    case MagicEffect_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case MagicEffect_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case MagicEffect_FieldIndex.HitVisuals:
+                        return HitVisuals;
+                    case MagicEffect_FieldIndex.EnchantVisuals:
+                        return EnchantVisuals;
                     case MagicEffect_FieldIndex.EquipAbility:
                         return EquipAbility;
                     case MagicEffect_FieldIndex.ImageSpaceModifier:
@@ -1555,9 +1522,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = ex;
-                        break;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        this.CounterEffectCount = ex;
                         break;
                     case MagicEffect_FieldIndex.Unknown1:
                         this.Unknown1 = ex;
@@ -1631,11 +1595,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.EnchantArt:
                         this.EnchantArt = ex;
                         break;
-                    case MagicEffect_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case MagicEffect_FieldIndex.HitVisuals:
+                        this.HitVisuals = ex;
                         break;
-                    case MagicEffect_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case MagicEffect_FieldIndex.EnchantVisuals:
+                        this.EnchantVisuals = ex;
                         break;
                     case MagicEffect_FieldIndex.EquipAbility:
                         this.EquipAbility = ex;
@@ -1704,9 +1668,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = (Exception?)obj;
-                        break;
-                    case MagicEffect_FieldIndex.CounterEffectCount:
-                        this.CounterEffectCount = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Unknown1:
                         this.Unknown1 = (Exception?)obj;
@@ -1780,11 +1741,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.EnchantArt:
                         this.EnchantArt = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.HitVisuals:
+                        this.HitVisuals = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.EnchantVisuals:
+                        this.EnchantVisuals = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.EquipAbility:
                         this.EquipAbility = (Exception?)obj;
@@ -1836,7 +1797,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BaseCost != null) return true;
                 if (MagicSkill != null) return true;
                 if (ResistValue != null) return true;
-                if (CounterEffectCount != null) return true;
                 if (Unknown1 != null) return true;
                 if (CastingLight != null) return true;
                 if (TaperWeight != null) return true;
@@ -1861,8 +1821,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DualCastArt != null) return true;
                 if (DualCastScale != null) return true;
                 if (EnchantArt != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (HitVisuals != null) return true;
+                if (EnchantVisuals != null) return true;
                 if (EquipAbility != null) return true;
                 if (ImageSpaceModifier != null) return true;
                 if (PerkToApply != null) return true;
@@ -1879,166 +1839,222 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(BaseCost, "BaseCost");
-                fg.AppendItem(MagicSkill, "MagicSkill");
-                fg.AppendItem(ResistValue, "ResistValue");
-                fg.AppendItem(CounterEffectCount, "CounterEffectCount");
-                fg.AppendItem(Unknown1, "Unknown1");
-                fg.AppendItem(CastingLight, "CastingLight");
-                fg.AppendItem(TaperWeight, "TaperWeight");
-                fg.AppendItem(HitShader, "HitShader");
-                fg.AppendItem(EnchantShader, "EnchantShader");
-                fg.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
-                fg.AppendItem(SpellmakingArea, "SpellmakingArea");
-                fg.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
-                fg.AppendItem(TaperCurve, "TaperCurve");
-                fg.AppendItem(TaperDuration, "TaperDuration");
-                fg.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
-                Archetype?.ToString(fg);
-                fg.AppendItem(Projectile, "Projectile");
-                fg.AppendItem(Explosion, "Explosion");
-                fg.AppendItem(CastType, "CastType");
-                fg.AppendItem(TargetType, "TargetType");
-                fg.AppendItem(SecondActorValue, "SecondActorValue");
-                fg.AppendItem(CastingArt, "CastingArt");
-                fg.AppendItem(HitEffectArt, "HitEffectArt");
-                fg.AppendItem(ImpactData, "ImpactData");
-                fg.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
-                fg.AppendItem(DualCastArt, "DualCastArt");
-                fg.AppendItem(DualCastScale, "DualCastScale");
-                fg.AppendItem(EnchantArt, "EnchantArt");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(EquipAbility, "EquipAbility");
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(PerkToApply, "PerkToApply");
-                fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
-                fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
-                fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(BaseCost, "BaseCost");
+                }
+                {
+                    sb.AppendItem(MagicSkill, "MagicSkill");
+                }
+                {
+                    sb.AppendItem(ResistValue, "ResistValue");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(CastingLight, "CastingLight");
+                }
+                {
+                    sb.AppendItem(TaperWeight, "TaperWeight");
+                }
+                {
+                    sb.AppendItem(HitShader, "HitShader");
+                }
+                {
+                    sb.AppendItem(EnchantShader, "EnchantShader");
+                }
+                {
+                    sb.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                }
+                {
+                    sb.AppendItem(SpellmakingArea, "SpellmakingArea");
+                }
+                {
+                    sb.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
+                }
+                {
+                    sb.AppendItem(TaperCurve, "TaperCurve");
+                }
+                {
+                    sb.AppendItem(TaperDuration, "TaperDuration");
+                }
+                {
+                    sb.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                }
+                Archetype?.Print(sb);
+                {
+                    sb.AppendItem(Projectile, "Projectile");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(CastType, "CastType");
+                }
+                {
+                    sb.AppendItem(TargetType, "TargetType");
+                }
+                {
+                    sb.AppendItem(SecondActorValue, "SecondActorValue");
+                }
+                {
+                    sb.AppendItem(CastingArt, "CastingArt");
+                }
+                {
+                    sb.AppendItem(HitEffectArt, "HitEffectArt");
+                }
+                {
+                    sb.AppendItem(ImpactData, "ImpactData");
+                }
+                {
+                    sb.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                }
+                {
+                    sb.AppendItem(DualCastArt, "DualCastArt");
+                }
+                {
+                    sb.AppendItem(DualCastScale, "DualCastScale");
+                }
+                {
+                    sb.AppendItem(EnchantArt, "EnchantArt");
+                }
+                {
+                    sb.AppendItem(HitVisuals, "HitVisuals");
+                }
+                {
+                    sb.AppendItem(EnchantVisuals, "EnchantVisuals");
+                }
+                {
+                    sb.AppendItem(EquipAbility, "EquipAbility");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(PerkToApply, "PerkToApply");
+                }
+                {
+                    sb.AppendItem(CastingSoundLevel, "CastingSoundLevel");
+                }
+                {
+                    sb.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
+                }
+                {
+                    sb.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                }
                 if (CounterEffects is {} CounterEffectsItem)
                 {
-                    fg.AppendLine("CounterEffects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CounterEffects =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CounterEffectsItem.Overall);
+                        sb.AppendItem(CounterEffectsItem.Overall);
                         if (CounterEffectsItem.Specific != null)
                         {
                             foreach (var subItem in CounterEffectsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Sounds is {} SoundsItem)
                 {
-                    fg.AppendLine("Sounds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Sounds =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(SoundsItem.Overall);
+                        sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
                         {
                             foreach (var subItem in SoundsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Description, "Description");
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -2055,7 +2071,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
                 ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
                 ret.ResistValue = this.ResistValue.Combine(rhs.ResistValue);
-                ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
                 ret.CastingLight = this.CastingLight.Combine(rhs.CastingLight);
                 ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
@@ -2080,8 +2095,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DualCastArt = this.DualCastArt.Combine(rhs.DualCastArt);
                 ret.DualCastScale = this.DualCastScale.Combine(rhs.DualCastScale);
                 ret.EnchantArt = this.EnchantArt.Combine(rhs.EnchantArt);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.HitVisuals = this.HitVisuals.Combine(rhs.HitVisuals);
+                ret.EnchantVisuals = this.EnchantVisuals.Combine(rhs.EnchantVisuals);
                 ret.EquipAbility = this.EquipAbility.Combine(rhs.EquipAbility);
                 ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
                 ret.PerkToApply = this.PerkToApply.Combine(rhs.PerkToApply);
@@ -2123,7 +2138,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BaseCost;
             public bool MagicSkill;
             public bool ResistValue;
-            public bool CounterEffectCount;
             public bool Unknown1;
             public bool CastingLight;
             public bool TaperWeight;
@@ -2148,8 +2162,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DualCastArt;
             public bool DualCastScale;
             public bool EnchantArt;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool HitVisuals;
+            public bool EnchantVisuals;
             public bool EquipAbility;
             public bool ImageSpaceModifier;
             public bool PerkToApply;
@@ -2176,7 +2190,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseCost = defaultOn;
                 this.MagicSkill = defaultOn;
                 this.ResistValue = defaultOn;
-                this.CounterEffectCount = defaultOn;
                 this.Unknown1 = defaultOn;
                 this.CastingLight = defaultOn;
                 this.TaperWeight = defaultOn;
@@ -2200,8 +2213,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastArt = defaultOn;
                 this.DualCastScale = defaultOn;
                 this.EnchantArt = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.HitVisuals = defaultOn;
+                this.EnchantVisuals = defaultOn;
                 this.EquipAbility = defaultOn;
                 this.ImageSpaceModifier = defaultOn;
                 this.PerkToApply = defaultOn;
@@ -2226,7 +2239,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BaseCost, null));
                 ret.Add((MagicSkill, null));
                 ret.Add((ResistValue, null));
-                ret.Add((CounterEffectCount, null));
                 ret.Add((Unknown1, null));
                 ret.Add((CastingLight, null));
                 ret.Add((TaperWeight, null));
@@ -2251,8 +2263,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DualCastArt, null));
                 ret.Add((DualCastScale, null));
                 ret.Add((EnchantArt, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((HitVisuals, null));
+                ret.Add((EnchantVisuals, null));
                 ret.Add((EquipAbility, null));
                 ret.Add((ImageSpaceModifier, null));
                 ret.Add((PerkToApply, null));
@@ -2276,7 +2288,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(
             FormKey formKey,
@@ -2358,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2368,7 +2380,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static MagicEffect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffect();
             ((MagicEffectSetterCommon)((IMagicEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2383,7 +2395,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2393,7 +2405,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -2438,7 +2450,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single BaseCost { get; set; }
         new ActorValue MagicSkill { get; set; }
         new ActorValue ResistValue { get; set; }
-        new UInt16 CounterEffectCount { get; set; }
         new UInt16 Unknown1 { get; set; }
         new IFormLink<ILightGetter> CastingLight { get; set; }
         new Single TaperWeight { get; set; }
@@ -2463,8 +2474,8 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLink<IDualCastDataGetter> DualCastArt { get; set; }
         new Single DualCastScale { get; set; }
         new IFormLink<IArtObjectGetter> EnchantArt { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Unknown2 { get; set; }
-        new IFormLink<ISkyrimMajorRecordGetter> Unknown3 { get; set; }
+        new IFormLink<IVisualEffectGetter> HitVisuals { get; set; }
+        new IFormLink<IVisualEffectGetter> EnchantVisuals { get; set; }
         new IFormLink<ISpellGetter> EquipAbility { get; set; }
         new IFormLink<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new IFormLink<IPerkGetter> PerkToApply { get; set; }
@@ -2490,6 +2501,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMagicEffectGetter>,
         IMapsToGetter<IMagicEffectGetter>,
@@ -2502,7 +2514,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScriptedGetter
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
@@ -2523,7 +2535,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single BaseCost { get; }
         ActorValue MagicSkill { get; }
         ActorValue ResistValue { get; }
-        UInt16 CounterEffectCount { get; }
         UInt16 Unknown1 { get; }
         IFormLinkGetter<ILightGetter> CastingLight { get; }
         Single TaperWeight { get; }
@@ -2548,8 +2559,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IDualCastDataGetter> DualCastArt { get; }
         Single DualCastScale { get; }
         IFormLinkGetter<IArtObjectGetter> EnchantArt { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 { get; }
+        IFormLinkGetter<IVisualEffectGetter> HitVisuals { get; }
+        IFormLinkGetter<IVisualEffectGetter> EnchantVisuals { get; }
         IFormLinkGetter<ISpellGetter> EquipAbility { get; }
         IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         IFormLinkGetter<IPerkGetter> PerkToApply { get; }
@@ -2585,26 +2596,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMagicEffectGetter item,
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
-            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).ToString(
+            return ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMagicEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
-            ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).ToString(
+            ((MagicEffectCommon)((IMagicEffectGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2699,7 +2710,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMagicEffectInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectSetterCommon)((IMagicEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2714,10 +2725,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MagicEffect_FieldIndex
+    internal enum MagicEffect_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -2733,49 +2744,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         BaseCost = 11,
         MagicSkill = 12,
         ResistValue = 13,
-        CounterEffectCount = 14,
-        Unknown1 = 15,
-        CastingLight = 16,
-        TaperWeight = 17,
-        HitShader = 18,
-        EnchantShader = 19,
-        MinimumSkillLevel = 20,
-        SpellmakingArea = 21,
-        SpellmakingCastingTime = 22,
-        TaperCurve = 23,
-        TaperDuration = 24,
-        SecondActorValueWeight = 25,
-        Archetype = 26,
-        Projectile = 27,
-        Explosion = 28,
-        CastType = 29,
-        TargetType = 30,
-        SecondActorValue = 31,
-        CastingArt = 32,
-        HitEffectArt = 33,
-        ImpactData = 34,
-        SkillUsageMultiplier = 35,
-        DualCastArt = 36,
-        DualCastScale = 37,
-        EnchantArt = 38,
-        Unknown2 = 39,
-        Unknown3 = 40,
-        EquipAbility = 41,
-        ImageSpaceModifier = 42,
-        PerkToApply = 43,
-        CastingSoundLevel = 44,
-        ScriptEffectAIScore = 45,
-        ScriptEffectAIDelayTime = 46,
-        CounterEffects = 47,
-        Sounds = 48,
-        Description = 49,
-        Conditions = 50,
-        DATADataTypeState = 51,
+        Unknown1 = 14,
+        CastingLight = 15,
+        TaperWeight = 16,
+        HitShader = 17,
+        EnchantShader = 18,
+        MinimumSkillLevel = 19,
+        SpellmakingArea = 20,
+        SpellmakingCastingTime = 21,
+        TaperCurve = 22,
+        TaperDuration = 23,
+        SecondActorValueWeight = 24,
+        Archetype = 25,
+        Projectile = 26,
+        Explosion = 27,
+        CastType = 28,
+        TargetType = 29,
+        SecondActorValue = 30,
+        CastingArt = 31,
+        HitEffectArt = 32,
+        ImpactData = 33,
+        SkillUsageMultiplier = 34,
+        DualCastArt = 35,
+        DualCastScale = 36,
+        EnchantArt = 37,
+        HitVisuals = 38,
+        EnchantVisuals = 39,
+        EquipAbility = 40,
+        ImageSpaceModifier = 41,
+        PerkToApply = 42,
+        CastingSoundLevel = 43,
+        ScriptEffectAIScore = 44,
+        ScriptEffectAIDelayTime = 45,
+        CounterEffects = 46,
+        Sounds = 47,
+        Description = 48,
+        Conditions = 49,
+        DATADataTypeState = 50,
     }
     #endregion
 
     #region Registration
-    public partial class MagicEffect_Registration : ILoquiRegistration
+    internal partial class MagicEffect_Registration : ILoquiRegistration
     {
         public static readonly MagicEffect_Registration Instance = new MagicEffect_Registration();
 
@@ -2788,9 +2798,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
 
-        public const ushort AdditionalFieldCount = 46;
+        public const ushort AdditionalFieldCount = 45;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2817,6 +2827,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MGEF;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MGEF);
+            var all = RecordCollection.Factory(
+                RecordTypes.MGEF,
+                RecordTypes.VMAD,
+                RecordTypes.FULL,
+                RecordTypes.MDOB,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DATA,
+                RecordTypes.ESCE,
+                RecordTypes.SNDD,
+                RecordTypes.DNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2850,7 +2880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MagicEffectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MagicEffectSetterCommon Instance = new MagicEffectSetterCommon();
 
@@ -2867,7 +2897,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseCost = default;
             item.MagicSkill = MagicEffect._MagicSkill_Default;
             item.ResistValue = MagicEffect._ResistValue_Default;
-            item.CounterEffectCount = default;
             item.Unknown1 = default;
             item.CastingLight.Clear();
             item.TaperWeight = default;
@@ -2892,8 +2921,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DualCastArt.Clear();
             item.DualCastScale = default;
             item.EnchantArt.Clear();
-            item.Unknown2.Clear();
-            item.Unknown3.Clear();
+            item.HitVisuals.Clear();
+            item.EnchantVisuals.Clear();
             item.EquipAbility.Clear();
             item.ImageSpaceModifier.Clear();
             item.PerkToApply.Clear();
@@ -2935,8 +2964,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.ImpactData.Relink(mapping);
             obj.DualCastArt.Relink(mapping);
             obj.EnchantArt.Relink(mapping);
-            obj.Unknown2.Relink(mapping);
-            obj.Unknown3.Relink(mapping);
+            obj.HitVisuals.Relink(mapping);
+            obj.EnchantVisuals.Relink(mapping);
             obj.EquipAbility.Relink(mapping);
             obj.ImageSpaceModifier.Relink(mapping);
             obj.PerkToApply.Relink(mapping);
@@ -2951,7 +2980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IMagicEffectInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMagicEffectInternal>(
                 record: item,
@@ -2964,7 +2993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MagicEffect)item,
@@ -2975,7 +3004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MagicEffect)item,
@@ -2986,7 +3015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectCommon : SkyrimMajorRecordCommon
+    internal partial class MagicEffectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MagicEffectCommon Instance = new MagicEffectCommon();
 
@@ -3010,7 +3039,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MagicEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -3026,7 +3054,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
             ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
             ret.ResistValue = item.ResistValue == rhs.ResistValue;
-            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
             ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
             ret.CastingLight = item.CastingLight.Equals(rhs.CastingLight);
             ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
@@ -3051,8 +3078,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DualCastArt = item.DualCastArt.Equals(rhs.DualCastArt);
             ret.DualCastScale = item.DualCastScale.EqualsWithin(rhs.DualCastScale);
             ret.EnchantArt = item.EnchantArt.Equals(rhs.EnchantArt);
-            ret.Unknown2 = item.Unknown2.Equals(rhs.Unknown2);
-            ret.Unknown3 = item.Unknown3.Equals(rhs.Unknown3);
+            ret.HitVisuals = item.HitVisuals.Equals(rhs.HitVisuals);
+            ret.EnchantVisuals = item.EnchantVisuals.Equals(rhs.EnchantVisuals);
             ret.EquipAbility = item.EquipAbility.Equals(rhs.EquipAbility);
             ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
             ret.PerkToApply = item.PerkToApply.Equals(rhs.PerkToApply);
@@ -3076,298 +3103,276 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IMagicEffectGetter item,
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMagicEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffect =>");
+                sb.AppendLine($"MagicEffect =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffect) =>");
+                sb.AppendLine($"{name} (MagicEffect) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMagicEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MagicEffect.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.MenuDisplayObject ?? true)
             {
-                fg.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
+                sb.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.BaseCost ?? true)
             {
-                fg.AppendItem(item.BaseCost, "BaseCost");
+                sb.AppendItem(item.BaseCost, "BaseCost");
             }
             if (printMask?.MagicSkill ?? true)
             {
-                fg.AppendItem(item.MagicSkill, "MagicSkill");
+                sb.AppendItem(item.MagicSkill, "MagicSkill");
             }
             if (printMask?.ResistValue ?? true)
             {
-                fg.AppendItem(item.ResistValue, "ResistValue");
-            }
-            if (printMask?.CounterEffectCount ?? true)
-            {
-                fg.AppendItem(item.CounterEffectCount, "CounterEffectCount");
+                sb.AppendItem(item.ResistValue, "ResistValue");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.CastingLight ?? true)
             {
-                fg.AppendItem(item.CastingLight.FormKey, "CastingLight");
+                sb.AppendItem(item.CastingLight.FormKey, "CastingLight");
             }
             if (printMask?.TaperWeight ?? true)
             {
-                fg.AppendItem(item.TaperWeight, "TaperWeight");
+                sb.AppendItem(item.TaperWeight, "TaperWeight");
             }
             if (printMask?.HitShader ?? true)
             {
-                fg.AppendItem(item.HitShader.FormKey, "HitShader");
+                sb.AppendItem(item.HitShader.FormKey, "HitShader");
             }
             if (printMask?.EnchantShader ?? true)
             {
-                fg.AppendItem(item.EnchantShader.FormKey, "EnchantShader");
+                sb.AppendItem(item.EnchantShader.FormKey, "EnchantShader");
             }
             if (printMask?.MinimumSkillLevel ?? true)
             {
-                fg.AppendItem(item.MinimumSkillLevel, "MinimumSkillLevel");
+                sb.AppendItem(item.MinimumSkillLevel, "MinimumSkillLevel");
             }
             if (printMask?.SpellmakingArea ?? true)
             {
-                fg.AppendItem(item.SpellmakingArea, "SpellmakingArea");
+                sb.AppendItem(item.SpellmakingArea, "SpellmakingArea");
             }
             if (printMask?.SpellmakingCastingTime ?? true)
             {
-                fg.AppendItem(item.SpellmakingCastingTime, "SpellmakingCastingTime");
+                sb.AppendItem(item.SpellmakingCastingTime, "SpellmakingCastingTime");
             }
             if (printMask?.TaperCurve ?? true)
             {
-                fg.AppendItem(item.TaperCurve, "TaperCurve");
+                sb.AppendItem(item.TaperCurve, "TaperCurve");
             }
             if (printMask?.TaperDuration ?? true)
             {
-                fg.AppendItem(item.TaperDuration, "TaperDuration");
+                sb.AppendItem(item.TaperDuration, "TaperDuration");
             }
             if (printMask?.SecondActorValueWeight ?? true)
             {
-                fg.AppendItem(item.SecondActorValueWeight, "SecondActorValueWeight");
+                sb.AppendItem(item.SecondActorValueWeight, "SecondActorValueWeight");
             }
             if (printMask?.Archetype?.Overall ?? true)
             {
-                item.Archetype?.ToString(fg, "Archetype");
+                item.Archetype?.Print(sb, "Archetype");
             }
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile.FormKey, "Projectile");
+                sb.AppendItem(item.Projectile.FormKey, "Projectile");
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion.FormKey, "Explosion");
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.CastType ?? true)
             {
-                fg.AppendItem(item.CastType, "CastType");
+                sb.AppendItem(item.CastType, "CastType");
             }
             if (printMask?.TargetType ?? true)
             {
-                fg.AppendItem(item.TargetType, "TargetType");
+                sb.AppendItem(item.TargetType, "TargetType");
             }
             if (printMask?.SecondActorValue ?? true)
             {
-                fg.AppendItem(item.SecondActorValue, "SecondActorValue");
+                sb.AppendItem(item.SecondActorValue, "SecondActorValue");
             }
             if (printMask?.CastingArt ?? true)
             {
-                fg.AppendItem(item.CastingArt.FormKey, "CastingArt");
+                sb.AppendItem(item.CastingArt.FormKey, "CastingArt");
             }
             if (printMask?.HitEffectArt ?? true)
             {
-                fg.AppendItem(item.HitEffectArt.FormKey, "HitEffectArt");
+                sb.AppendItem(item.HitEffectArt.FormKey, "HitEffectArt");
             }
             if (printMask?.ImpactData ?? true)
             {
-                fg.AppendItem(item.ImpactData.FormKey, "ImpactData");
+                sb.AppendItem(item.ImpactData.FormKey, "ImpactData");
             }
             if (printMask?.SkillUsageMultiplier ?? true)
             {
-                fg.AppendItem(item.SkillUsageMultiplier, "SkillUsageMultiplier");
+                sb.AppendItem(item.SkillUsageMultiplier, "SkillUsageMultiplier");
             }
             if (printMask?.DualCastArt ?? true)
             {
-                fg.AppendItem(item.DualCastArt.FormKey, "DualCastArt");
+                sb.AppendItem(item.DualCastArt.FormKey, "DualCastArt");
             }
             if (printMask?.DualCastScale ?? true)
             {
-                fg.AppendItem(item.DualCastScale, "DualCastScale");
+                sb.AppendItem(item.DualCastScale, "DualCastScale");
             }
             if (printMask?.EnchantArt ?? true)
             {
-                fg.AppendItem(item.EnchantArt.FormKey, "EnchantArt");
+                sb.AppendItem(item.EnchantArt.FormKey, "EnchantArt");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.HitVisuals ?? true)
             {
-                fg.AppendItem(item.Unknown2.FormKey, "Unknown2");
+                sb.AppendItem(item.HitVisuals.FormKey, "HitVisuals");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.EnchantVisuals ?? true)
             {
-                fg.AppendItem(item.Unknown3.FormKey, "Unknown3");
+                sb.AppendItem(item.EnchantVisuals.FormKey, "EnchantVisuals");
             }
             if (printMask?.EquipAbility ?? true)
             {
-                fg.AppendItem(item.EquipAbility.FormKey, "EquipAbility");
+                sb.AppendItem(item.EquipAbility.FormKey, "EquipAbility");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKey, "ImageSpaceModifier");
             }
             if (printMask?.PerkToApply ?? true)
             {
-                fg.AppendItem(item.PerkToApply.FormKey, "PerkToApply");
+                sb.AppendItem(item.PerkToApply.FormKey, "PerkToApply");
             }
             if (printMask?.CastingSoundLevel ?? true)
             {
-                fg.AppendItem(item.CastingSoundLevel, "CastingSoundLevel");
+                sb.AppendItem(item.CastingSoundLevel, "CastingSoundLevel");
             }
             if (printMask?.ScriptEffectAIScore ?? true)
             {
-                fg.AppendItem(item.ScriptEffectAIScore, "ScriptEffectAIScore");
+                sb.AppendItem(item.ScriptEffectAIScore, "ScriptEffectAIScore");
             }
             if (printMask?.ScriptEffectAIDelayTime ?? true)
             {
-                fg.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
+                sb.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
             }
             if (printMask?.CounterEffects?.Overall ?? true)
             {
-                fg.AppendLine("CounterEffects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CounterEffects =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.CounterEffects)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds is {} SoundsItem)
             {
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Sounds =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in SoundsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -3452,10 +3457,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
             {
                 if (lhs.ResistValue != rhs.ResistValue) return false;
-            }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
@@ -3557,13 +3558,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.EnchantArt.Equals(rhs.EnchantArt)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
             {
-                if (!lhs.Unknown2.Equals(rhs.Unknown2)) return false;
+                if (!lhs.HitVisuals.Equals(rhs.HitVisuals)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
+            if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
             {
-                if (!lhs.Unknown3.Equals(rhs.Unknown3)) return false;
+                if (!lhs.EnchantVisuals.Equals(rhs.EnchantVisuals)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
@@ -3595,7 +3596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Sounds)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Description) ?? true))
             {
@@ -3603,7 +3604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -3651,7 +3652,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.BaseCost);
             hash.Add(item.MagicSkill);
             hash.Add(item.ResistValue);
-            hash.Add(item.CounterEffectCount);
             hash.Add(item.Unknown1);
             hash.Add(item.CastingLight);
             hash.Add(item.TaperWeight);
@@ -3676,8 +3676,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DualCastArt);
             hash.Add(item.DualCastScale);
             hash.Add(item.EnchantArt);
-            hash.Add(item.Unknown2);
-            hash.Add(item.Unknown3);
+            hash.Add(item.HitVisuals);
+            hash.Add(item.EnchantVisuals);
             hash.Add(item.EquipAbility);
             hash.Add(item.ImageSpaceModifier);
             hash.Add(item.PerkToApply);
@@ -3715,22 +3715,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.MenuDisplayObject.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MenuDisplayObject, out var MenuDisplayObjectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MenuDisplayObject);
+                yield return MenuDisplayObjectInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -3749,8 +3749,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield return FormLinkInformation.Factory(obj.ImpactData);
             yield return FormLinkInformation.Factory(obj.DualCastArt);
             yield return FormLinkInformation.Factory(obj.EnchantArt);
-            yield return FormLinkInformation.Factory(obj.Unknown2);
-            yield return FormLinkInformation.Factory(obj.Unknown3);
+            yield return FormLinkInformation.Factory(obj.HitVisuals);
+            yield return FormLinkInformation.Factory(obj.EnchantVisuals);
             yield return FormLinkInformation.Factory(obj.EquipAbility);
             yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
             yield return FormLinkInformation.Factory(obj.PerkToApply);
@@ -3760,13 +3760,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.Sounds is {} SoundsItem)
             {
-                foreach (var item in SoundsItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in SoundsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3811,7 +3811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MagicEffectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MagicEffectSetterTranslationCommon Instance = new MagicEffectSetterTranslationCommon();
 
@@ -3920,10 +3920,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
             {
                 item.ResistValue = rhs.ResistValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
-            {
-                item.CounterEffectCount = rhs.CounterEffectCount;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
             {
@@ -4039,13 +4035,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.EnchantArt.SetTo(rhs.EnchantArt.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitVisuals) ?? true))
             {
-                item.Unknown2.SetTo(rhs.Unknown2.FormKey);
+                item.HitVisuals.SetTo(rhs.HitVisuals.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantVisuals) ?? true))
             {
-                item.Unknown3.SetTo(rhs.Unknown3.FormKey);
+                item.EnchantVisuals.SetTo(rhs.EnchantVisuals.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
             {
@@ -4276,7 +4272,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -4294,13 +4290,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
+        public new static readonly MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMagicEffectGetter item,
@@ -4314,7 +4310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IMagicEffectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -4343,7 +4339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4369,7 +4365,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.ResistValue,
                     length: 4);
-                writer.Write(item.CounterEffectCount);
+                MagicEffectBinaryWriteTranslation.WriteBinaryCounterEffectLogic(
+                    writer: writer,
+                    item: item);
                 writer.Write(item.Unknown1);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -4441,10 +4439,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.EnchantArt);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Unknown2);
+                    item: item.HitVisuals);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Unknown3);
+                    item: item.EnchantVisuals);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EquipAbility);
@@ -4468,7 +4466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IMagicEffectGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMagicEffectGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4479,7 +4477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Sounds,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SNDD),
-                transl: (MutagenWriter subWriter, IMagicEffectSoundGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IMagicEffectSoundGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((MagicEffectSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4507,6 +4505,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectGetter item)
         {
             WriteBinaryAssociatedItemCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounterEffectLogicCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryCounterEffectLogic(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryCounterEffectLogicCustom(
                 writer: writer,
                 item: item);
         }
@@ -4540,7 +4551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IMagicEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -4551,12 +4562,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -4568,7 +4582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectGetter)item,
@@ -4579,7 +4593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMagicEffectGetter)item,
@@ -4590,7 +4604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMagicEffectGetter)item,
@@ -4600,9 +4614,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MagicEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
+        public new static readonly MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MGEF;
         public static void FillBinaryStructs(
@@ -4621,7 +4635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -4646,8 +4660,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuDisplayObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -4676,7 +4690,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ResistValue = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.CounterEffectCount = dataFrame.ReadUInt16();
+                    MagicEffectBinaryCreateTranslation.FillBinaryCounterEffectLogicCustom(
+                        frame: dataFrame,
+                        item: item);
                     item.Unknown1 = dataFrame.ReadUInt16();
                     item.CastingLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.TaperWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
@@ -4709,8 +4725,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DualCastArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.DualCastScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.EnchantArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.HitVisuals.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EnchantVisuals.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.EquipAbility.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.PerkToApply.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -4763,11 +4779,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
         public static partial void FillBinaryAssociatedItemCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
+
+        public static partial void FillBinaryCounterEffectLogicCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 
@@ -4792,16 +4813,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectBinaryOverlay :
+    internal partial class MagicEffectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMagicEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
-        public new static MagicEffect_Registration StaticRegistration => MagicEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MagicEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MagicEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -4809,14 +4830,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MagicEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4828,11 +4849,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -4844,208 +4866,213 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public MagicEffect.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value;
+        private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region BaseCost
-        private int _BaseCostLocation => _DATALocation!.Value + 0x4;
+        private int _BaseCostLocation => _DATALocation!.Value.Min + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
-        public Single BaseCost => _BaseCost_IsSet ? _data.Slice(_BaseCostLocation, 4).Float() : default;
+        public Single BaseCost => _BaseCost_IsSet ? _recordData.Slice(_BaseCostLocation, 4).Float() : default;
         #endregion
         #region AssociatedItem
-         partial void AssociatedItemCustomParse(
+        private int _AssociatedItemLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _AssociatedItem_IsSet => _DATALocation.HasValue;
+        partial void AssociatedItemCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region MagicSkill
-        private int _MagicSkillLocation => _DATALocation!.Value + 0xC;
+        private int _MagicSkillLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MagicSkill_IsSet => _DATALocation.HasValue;
-        public ActorValue MagicSkill => _MagicSkill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSkillLocation, 0x4)) : default;
+        public ActorValue MagicSkill => _MagicSkill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MagicSkillLocation, 0x4)) : default;
         #endregion
         #region ResistValue
-        private int _ResistValueLocation => _DATALocation!.Value + 0x10;
+        private int _ResistValueLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
-        public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
+        public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ResistValueLocation, 0x4)) : default;
         #endregion
-        #region CounterEffectCount
-        private int _CounterEffectCountLocation => _DATALocation!.Value + 0x14;
-        private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
-        public UInt16 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CounterEffectCountLocation, 2)) : default;
+        #region CounterEffectLogic
+        private int _CounterEffectLogicLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _CounterEffectLogic_IsSet => _DATALocation.HasValue;
+        partial void CounterEffectLogicCustomParse(
+            OverlayStream stream,
+            int offset);
         #endregion
         #region Unknown1
-        private int _Unknown1Location => _DATALocation!.Value + 0x16;
+        private int _Unknown1Location => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown1_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown1Location, 2)) : default;
+        public UInt16 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Unknown1Location, 2)) : default;
         #endregion
         #region CastingLight
-        private int _CastingLightLocation => _DATALocation!.Value + 0x18;
+        private int _CastingLightLocation => _DATALocation!.Value.Min + 0x18;
         private bool _CastingLight_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region TaperWeight
-        private int _TaperWeightLocation => _DATALocation!.Value + 0x1C;
+        private int _TaperWeightLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _TaperWeight_IsSet => _DATALocation.HasValue;
-        public Single TaperWeight => _TaperWeight_IsSet ? _data.Slice(_TaperWeightLocation, 4).Float() : default;
+        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default;
         #endregion
         #region HitShader
-        private int _HitShaderLocation => _DATALocation!.Value + 0x20;
+        private int _HitShaderLocation => _DATALocation!.Value.Min + 0x20;
         private bool _HitShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region EnchantShader
-        private int _EnchantShaderLocation => _DATALocation!.Value + 0x24;
+        private int _EnchantShaderLocation => _DATALocation!.Value.Min + 0x24;
         private bool _EnchantShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region MinimumSkillLevel
-        private int _MinimumSkillLevelLocation => _DATALocation!.Value + 0x28;
+        private int _MinimumSkillLevelLocation => _DATALocation!.Value.Min + 0x28;
         private bool _MinimumSkillLevel_IsSet => _DATALocation.HasValue;
-        public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_MinimumSkillLevelLocation, 4)) : default;
+        public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_MinimumSkillLevelLocation, 4)) : default;
         #endregion
         #region SpellmakingArea
-        private int _SpellmakingAreaLocation => _DATALocation!.Value + 0x2C;
+        private int _SpellmakingAreaLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _SpellmakingArea_IsSet => _DATALocation.HasValue;
-        public UInt32 SpellmakingArea => _SpellmakingArea_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_SpellmakingAreaLocation, 4)) : default;
+        public UInt32 SpellmakingArea => _SpellmakingArea_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_SpellmakingAreaLocation, 4)) : default;
         #endregion
         #region SpellmakingCastingTime
-        private int _SpellmakingCastingTimeLocation => _DATALocation!.Value + 0x30;
+        private int _SpellmakingCastingTimeLocation => _DATALocation!.Value.Min + 0x30;
         private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
-        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _data.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default;
+        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _recordData.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default;
         #endregion
         #region TaperCurve
-        private int _TaperCurveLocation => _DATALocation!.Value + 0x34;
+        private int _TaperCurveLocation => _DATALocation!.Value.Min + 0x34;
         private bool _TaperCurve_IsSet => _DATALocation.HasValue;
-        public Single TaperCurve => _TaperCurve_IsSet ? _data.Slice(_TaperCurveLocation, 4).Float() : default;
+        public Single TaperCurve => _TaperCurve_IsSet ? _recordData.Slice(_TaperCurveLocation, 4).Float() : default;
         #endregion
         #region TaperDuration
-        private int _TaperDurationLocation => _DATALocation!.Value + 0x38;
+        private int _TaperDurationLocation => _DATALocation!.Value.Min + 0x38;
         private bool _TaperDuration_IsSet => _DATALocation.HasValue;
-        public Single TaperDuration => _TaperDuration_IsSet ? _data.Slice(_TaperDurationLocation, 4).Float() : default;
+        public Single TaperDuration => _TaperDuration_IsSet ? _recordData.Slice(_TaperDurationLocation, 4).Float() : default;
         #endregion
         #region SecondActorValueWeight
-        private int _SecondActorValueWeightLocation => _DATALocation!.Value + 0x3C;
+        private int _SecondActorValueWeightLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
-        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _data.Slice(_SecondActorValueWeightLocation, 4).Float() : default;
+        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _recordData.Slice(_SecondActorValueWeightLocation, 4).Float() : default;
         #endregion
         #region Archetype
-        private int _ArchetypeLocation => _DATALocation!.Value + 0x40;
+        private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x40;
+        public partial IMagicEffectArchetypeGetter GetArchetypeCustom();
         public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
         #region Projectile
-        private int _ProjectileLocation => _DATALocation!.Value + 0x48;
+        private int _ProjectileLocation => _DATALocation!.Value.Min + 0x48;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Explosion
-        private int _ExplosionLocation => _DATALocation!.Value + 0x4C;
+        private int _ExplosionLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region CastType
-        private int _CastTypeLocation => _DATALocation!.Value + 0x50;
+        private int _CastTypeLocation => _DATALocation!.Value.Min + 0x50;
         private bool _CastType_IsSet => _DATALocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default;
         #endregion
         #region TargetType
-        private int _TargetTypeLocation => _DATALocation!.Value + 0x54;
+        private int _TargetTypeLocation => _DATALocation!.Value.Min + 0x54;
         private bool _TargetType_IsSet => _DATALocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default;
         #endregion
         #region SecondActorValue
-        private int _SecondActorValueLocation => _DATALocation!.Value + 0x58;
+        private int _SecondActorValueLocation => _DATALocation!.Value.Min + 0x58;
         private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
-        public ActorValue SecondActorValue => _SecondActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
+        public ActorValue SecondActorValue => _SecondActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
         #endregion
         #region CastingArt
-        private int _CastingArtLocation => _DATALocation!.Value + 0x5C;
+        private int _CastingArtLocation => _DATALocation!.Value.Min + 0x5C;
         private bool _CastingArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region HitEffectArt
-        private int _HitEffectArtLocation => _DATALocation!.Value + 0x60;
+        private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0x60;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImpactData
-        private int _ImpactDataLocation => _DATALocation!.Value + 0x64;
+        private int _ImpactDataLocation => _DATALocation!.Value.Min + 0x64;
         private bool _ImpactData_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SkillUsageMultiplier
-        private int _SkillUsageMultiplierLocation => _DATALocation!.Value + 0x68;
+        private int _SkillUsageMultiplierLocation => _DATALocation!.Value.Min + 0x68;
         private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
-        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _data.Slice(_SkillUsageMultiplierLocation, 4).Float() : default;
+        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _recordData.Slice(_SkillUsageMultiplierLocation, 4).Float() : default;
         #endregion
         #region DualCastArt
-        private int _DualCastArtLocation => _DATALocation!.Value + 0x6C;
+        private int _DualCastArtLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _DualCastArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
+        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
         #endregion
         #region DualCastScale
-        private int _DualCastScaleLocation => _DATALocation!.Value + 0x70;
+        private int _DualCastScaleLocation => _DATALocation!.Value.Min + 0x70;
         private bool _DualCastScale_IsSet => _DATALocation.HasValue;
-        public Single DualCastScale => _DualCastScale_IsSet ? _data.Slice(_DualCastScaleLocation, 4).Float() : default;
+        public Single DualCastScale => _DualCastScale_IsSet ? _recordData.Slice(_DualCastScaleLocation, 4).Float() : default;
         #endregion
         #region EnchantArt
-        private int _EnchantArtLocation => _DATALocation!.Value + 0x74;
+        private int _EnchantArtLocation => _DATALocation!.Value.Min + 0x74;
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
-        #region Unknown2
-        private int _Unknown2Location => _DATALocation!.Value + 0x78;
-        private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 => _Unknown2_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown2Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        #region HitVisuals
+        private int _HitVisualsLocation => _DATALocation!.Value.Min + 0x78;
+        private bool _HitVisuals_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IVisualEffectGetter> HitVisuals => _HitVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
-        #region Unknown3
-        private int _Unknown3Location => _DATALocation!.Value + 0x7C;
-        private bool _Unknown3_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 => _Unknown3_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown3Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        #region EnchantVisuals
+        private int _EnchantVisualsLocation => _DATALocation!.Value.Min + 0x7C;
+        private bool _EnchantVisuals_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IVisualEffectGetter> EnchantVisuals => _EnchantVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region EquipAbility
-        private int _EquipAbilityLocation => _DATALocation!.Value + 0x80;
+        private int _EquipAbilityLocation => _DATALocation!.Value.Min + 0x80;
         private bool _EquipAbility_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
         #endregion
         #region ImageSpaceModifier
-        private int _ImageSpaceModifierLocation => _DATALocation!.Value + 0x84;
+        private int _ImageSpaceModifierLocation => _DATALocation!.Value.Min + 0x84;
         private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region PerkToApply
-        private int _PerkToApplyLocation => _DATALocation!.Value + 0x88;
+        private int _PerkToApplyLocation => _DATALocation!.Value.Min + 0x88;
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region CastingSoundLevel
-        private int _CastingSoundLevelLocation => _DATALocation!.Value + 0x8C;
+        private int _CastingSoundLevelLocation => _DATALocation!.Value.Min + 0x8C;
         private bool _CastingSoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
+        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
         #endregion
         #region ScriptEffectAIScore
-        private int _ScriptEffectAIScoreLocation => _DATALocation!.Value + 0x90;
+        private int _ScriptEffectAIScoreLocation => _DATALocation!.Value.Min + 0x90;
         private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _data.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default;
+        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _recordData.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default;
         #endregion
         #region ScriptEffectAIDelayTime
-        private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value + 0x94;
+        private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value.Min + 0x94;
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
+        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _recordData.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLinkGetter<IMagicEffectGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = Array.Empty<IFormLinkGetter<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(
@@ -5062,28 +5089,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected MagicEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MagicEffectBinaryOverlay MagicEffectFactory(
+        public static IMagicEffectGetter MagicEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MagicEffectBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -5093,20 +5123,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MagicEffectBinaryOverlay MagicEffectFactory(
+        public static IMagicEffectGetter MagicEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -5116,9 +5146,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -5136,8 +5166,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _MenuDisplayObjectLocation = (stream.Position - offset);
                     return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
@@ -5145,13 +5175,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:
@@ -5165,14 +5195,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.SNDD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<MagicEffectSoundBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IMagicEffectSoundGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -5202,17 +5232,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MagicEffectMixIn.ToString(
+            MagicEffectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

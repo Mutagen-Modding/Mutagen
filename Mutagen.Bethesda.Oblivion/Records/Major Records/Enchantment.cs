@@ -1,26 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Oblivion;
 
-namespace Mutagen.Bethesda.Oblivion
+public partial class Enchantment
 {
-    public partial class Enchantment
+    public enum EnchantmentType
     {
-        public enum EnchantmentType
-        {
-            Scroll = 0,
-            Staff = 1,
-            Weapon = 2,
-            Apparel = 3
-        }
+        Scroll = 0,
+        Staff = 1,
+        Weapon = 2,
+        Apparel = 3
+    }
 
-        [Flags]
-        public enum Flag
-        {
-            ManualEnchantCost = 1
-        }
+    [Flags]
+    public enum Flag
+    {
+        ManualEnchantCost = 1
     }
 }

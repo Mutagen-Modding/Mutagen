@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,21 +21,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -109,17 +110,31 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
         #endregion
         #region BreakableFX
-        public String BreakableFX { get; set; } = string.Empty;
+        public String? BreakableFX { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialTypeGetter.BreakableFX => this.BreakableFX;
+        #endregion
+        #region ModelData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _ModelData;
+        public MemorySlice<Byte>? ModelData
+        {
+            get => this._ModelData;
+            set => this._ModelData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMaterialTypeGetter.ModelData => this.ModelData;
         #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MaterialTypeMixIn.ToString(
+            MaterialTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -142,6 +157,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Flags = initialValue;
                 this.HavokImpactDataSet = initialValue;
                 this.BreakableFX = initialValue;
+                this.ModelData = initialValue;
             }
 
             public Mask(
@@ -157,7 +173,8 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Buoyancy,
                 TItem Flags,
                 TItem HavokImpactDataSet,
-                TItem BreakableFX)
+                TItem BreakableFX,
+                TItem ModelData)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -173,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Flags = Flags;
                 this.HavokImpactDataSet = HavokImpactDataSet;
                 this.BreakableFX = BreakableFX;
+                this.ModelData = ModelData;
             }
 
             #pragma warning disable CS8618
@@ -191,6 +209,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Flags;
             public TItem HavokImpactDataSet;
             public TItem BreakableFX;
+            public TItem ModelData;
             #endregion
 
             #region Equals
@@ -211,6 +230,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.HavokImpactDataSet, rhs.HavokImpactDataSet)) return false;
                 if (!object.Equals(this.BreakableFX, rhs.BreakableFX)) return false;
+                if (!object.Equals(this.ModelData, rhs.ModelData)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -223,6 +243,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Flags);
                 hash.Add(this.HavokImpactDataSet);
                 hash.Add(this.BreakableFX);
+                hash.Add(this.ModelData);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -240,6 +261,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.HavokImpactDataSet)) return false;
                 if (!eval(this.BreakableFX)) return false;
+                if (!eval(this.ModelData)) return false;
                 return true;
             }
             #endregion
@@ -255,6 +277,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Flags)) return true;
                 if (eval(this.HavokImpactDataSet)) return true;
                 if (eval(this.BreakableFX)) return true;
+                if (eval(this.ModelData)) return true;
                 return false;
             }
             #endregion
@@ -277,58 +300,58 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Flags = eval(this.Flags);
                 obj.HavokImpactDataSet = eval(this.HavokImpactDataSet);
                 obj.BreakableFX = eval(this.BreakableFX);
+                obj.ModelData = eval(this.ModelData);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MaterialType.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MaterialType.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MaterialType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MaterialType.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MaterialType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MaterialType.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Parent, "Parent");
+                        sb.AppendItem(Parent, "Parent");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.HavokDisplayColor ?? true)
                     {
-                        fg.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                        sb.AppendItem(HavokDisplayColor, "HavokDisplayColor");
                     }
                     if (printMask?.Buoyancy ?? true)
                     {
-                        fg.AppendItem(Buoyancy, "Buoyancy");
+                        sb.AppendItem(Buoyancy, "Buoyancy");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.HavokImpactDataSet ?? true)
                     {
-                        fg.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                        sb.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
                     }
                     if (printMask?.BreakableFX ?? true)
                     {
-                        fg.AppendItem(BreakableFX, "BreakableFX");
+                        sb.AppendItem(BreakableFX, "BreakableFX");
+                    }
+                    if (printMask?.ModelData ?? true)
+                    {
+                        sb.AppendItem(ModelData, "ModelData");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -346,6 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Flags;
             public Exception? HavokImpactDataSet;
             public Exception? BreakableFX;
+            public Exception? ModelData;
             #endregion
 
             #region IErrorMask
@@ -368,6 +392,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return HavokImpactDataSet;
                     case MaterialType_FieldIndex.BreakableFX:
                         return BreakableFX;
+                    case MaterialType_FieldIndex.ModelData:
+                        return ModelData;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -398,6 +424,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case MaterialType_FieldIndex.BreakableFX:
                         this.BreakableFX = ex;
+                        break;
+                    case MaterialType_FieldIndex.ModelData:
+                        this.ModelData = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -431,6 +460,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case MaterialType_FieldIndex.BreakableFX:
                         this.BreakableFX = (Exception?)obj;
                         break;
+                    case MaterialType_FieldIndex.ModelData:
+                        this.ModelData = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -447,48 +479,57 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Flags != null) return true;
                 if (HavokImpactDataSet != null) return true;
                 if (BreakableFX != null) return true;
+                if (ModelData != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Parent, "Parent");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(HavokDisplayColor, "HavokDisplayColor");
-                fg.AppendItem(Buoyancy, "Buoyancy");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
-                fg.AppendItem(BreakableFX, "BreakableFX");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(HavokDisplayColor, "HavokDisplayColor");
+                }
+                {
+                    sb.AppendItem(Buoyancy, "Buoyancy");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(HavokImpactDataSet, "HavokImpactDataSet");
+                }
+                {
+                    sb.AppendItem(BreakableFX, "BreakableFX");
+                }
+                {
+                    sb.AppendItem(ModelData, "ModelData");
+                }
             }
             #endregion
 
@@ -504,6 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.HavokImpactDataSet = this.HavokImpactDataSet.Combine(rhs.HavokImpactDataSet);
                 ret.BreakableFX = this.BreakableFX.Combine(rhs.BreakableFX);
+                ret.ModelData = this.ModelData.Combine(rhs.ModelData);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -533,6 +575,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Flags;
             public bool HavokImpactDataSet;
             public bool BreakableFX;
+            public bool ModelData;
             #endregion
 
             #region Ctors
@@ -548,6 +591,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Flags = defaultOn;
                 this.HavokImpactDataSet = defaultOn;
                 this.BreakableFX = defaultOn;
+                this.ModelData = defaultOn;
             }
 
             #endregion
@@ -562,6 +606,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Flags, null));
                 ret.Add((HavokImpactDataSet, null));
                 ret.Add((BreakableFX, null));
+                ret.Add((ModelData, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -574,7 +619,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialTypeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialTypeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public MaterialType(FormKey formKey)
         {
@@ -645,7 +690,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MaterialTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -655,7 +700,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static MaterialType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MaterialType();
             ((MaterialTypeSetterCommon)((IMaterialTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -670,7 +715,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MaterialType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -680,7 +725,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -713,7 +758,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Single? Buoyancy { get; set; }
         new MaterialType.Flag? Flags { get; set; }
         new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; set; }
-        new String BreakableFX { get; set; }
+        new String? BreakableFX { get; set; }
+        new MemorySlice<Byte>? ModelData { get; set; }
     }
 
     public partial interface IMaterialTypeInternal :
@@ -745,7 +791,8 @@ namespace Mutagen.Bethesda.Fallout4
         Single? Buoyancy { get; }
         MaterialType.Flag? Flags { get; }
         IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet { get; }
-        String BreakableFX { get; }
+        String? BreakableFX { get; }
+        ReadOnlyMemorySlice<Byte>? ModelData { get; }
 
     }
 
@@ -770,26 +817,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMaterialTypeGetter item,
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
-            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).ToString(
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMaterialTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
-            ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).ToString(
+            ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -884,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMaterialTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MaterialTypeSetterCommon)((IMaterialTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -899,10 +946,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MaterialType_FieldIndex
+    internal enum MaterialType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -917,11 +964,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Flags = 10,
         HavokImpactDataSet = 11,
         BreakableFX = 12,
+        ModelData = 13,
     }
     #endregion
 
     #region Registration
-    public partial class MaterialType_Registration : ILoquiRegistration
+    internal partial class MaterialType_Registration : ILoquiRegistration
     {
         public static readonly MaterialType_Registration Instance = new MaterialType_Registration();
 
@@ -934,9 +982,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "a8fc111f-6b50-4aff-9447-74a33cf38e3e";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(MaterialType.Mask<>);
 
@@ -963,6 +1011,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MATT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MATT);
+            var all = RecordCollection.Factory(
+                RecordTypes.MATT,
+                RecordTypes.PNAM,
+                RecordTypes.MNAM,
+                RecordTypes.CNAM,
+                RecordTypes.BNAM,
+                RecordTypes.FNAM,
+                RecordTypes.HNAM,
+                RecordTypes.ANAM,
+                RecordTypes.MODT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -996,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MaterialTypeSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class MaterialTypeSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly MaterialTypeSetterCommon Instance = new MaterialTypeSetterCommon();
 
@@ -1011,7 +1075,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Buoyancy = default;
             item.Flags = default;
             item.HavokImpactDataSet.Clear();
-            item.BreakableFX = string.Empty;
+            item.BreakableFX = default;
+            item.ModelData = default;
             base.Clear(item);
         }
         
@@ -1039,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IMaterialTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMaterialTypeInternal>(
                 record: item,
@@ -1052,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MaterialType)item,
@@ -1063,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MaterialType)item,
@@ -1074,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MaterialTypeCommon : Fallout4MajorRecordCommon
+    internal partial class MaterialTypeCommon : Fallout4MajorRecordCommon
     {
         public new static readonly MaterialTypeCommon Instance = new MaterialTypeCommon();
 
@@ -1098,7 +1163,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MaterialType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.HavokDisplayColor = item.HavokDisplayColor.ColorOnlyEquals(rhs.HavokDisplayColor);
@@ -1106,88 +1170,93 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
             ret.BreakableFX = string.Equals(item.BreakableFX, rhs.BreakableFX);
+            ret.ModelData = MemorySliceExt.Equal(item.ModelData, rhs.ModelData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IMaterialTypeGetter item,
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMaterialTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MaterialType =>");
+                sb.AppendLine($"MaterialType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MaterialType) =>");
+                sb.AppendLine($"{name} (MaterialType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMaterialTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MaterialType.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.HavokDisplayColor ?? true)
                 && item.HavokDisplayColor is {} HavokDisplayColorItem)
             {
-                fg.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
+                sb.AppendItem(HavokDisplayColorItem, "HavokDisplayColor");
             }
             if ((printMask?.Buoyancy ?? true)
                 && item.Buoyancy is {} BuoyancyItem)
             {
-                fg.AppendItem(BuoyancyItem, "Buoyancy");
+                sb.AppendItem(BuoyancyItem, "Buoyancy");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.HavokImpactDataSet ?? true)
             {
-                fg.AppendItem(item.HavokImpactDataSet.FormKeyNullable, "HavokImpactDataSet");
+                sb.AppendItem(item.HavokImpactDataSet.FormKeyNullable, "HavokImpactDataSet");
             }
-            if (printMask?.BreakableFX ?? true)
+            if ((printMask?.BreakableFX ?? true)
+                && item.BreakableFX is {} BreakableFXItem)
             {
-                fg.AppendItem(item.BreakableFX, "BreakableFX");
+                sb.AppendItem(BreakableFXItem, "BreakableFX");
+            }
+            if ((printMask?.ModelData ?? true)
+                && item.ModelData is {} ModelDataItem)
+            {
+                sb.AppendLine($"ModelData => {SpanExt.ToHexString(ModelDataItem)}");
             }
         }
         
@@ -1265,6 +1334,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!string.Equals(lhs.BreakableFX, rhs.BreakableFX)) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ModelData, rhs.ModelData)) return false;
+            }
             return true;
         }
         
@@ -1311,7 +1384,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 hash.Add(Flagsitem);
             }
             hash.Add(item.HavokImpactDataSet);
-            hash.Add(item.BreakableFX);
+            if (item.BreakableFX is {} BreakableFXitem)
+            {
+                hash.Add(BreakableFXitem);
+            }
+            if (item.ModelData is {} ModelDataItem)
+            {
+                hash.Add(ModelDataItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1335,19 +1415,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMaterialTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMaterialTypeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Parent);
+                yield return ParentInfo;
             }
-            if (obj.HavokImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HavokImpactDataSet, out var HavokImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HavokImpactDataSet);
+                yield return HavokImpactDataSetInfo;
             }
             yield break;
         }
@@ -1390,7 +1470,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MaterialTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class MaterialTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly MaterialTypeSetterTranslationCommon Instance = new MaterialTypeSetterTranslationCommon();
 
@@ -1450,6 +1530,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
             {
                 item.BreakableFX = rhs.BreakableFX;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
+            {
+                if(rhs.ModelData is {} ModelDatarhs)
+                {
+                    item.ModelData = ModelDatarhs.ToArray();
+                }
+                else
+                {
+                    item.ModelData = default;
+                }
             }
         }
         
@@ -1573,7 +1664,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialType_Registration.Instance;
-        public new static MaterialType_Registration StaticRegistration => MaterialType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1591,18 +1682,18 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MaterialTypeBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MaterialTypeBinaryWriteTranslation Instance = new MaterialTypeBinaryWriteTranslation();
+        public new static readonly MaterialTypeBinaryWriteTranslation Instance = new MaterialTypeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMaterialTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1635,17 +1726,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.HavokImpactDataSet,
                 header: translationParams.ConvertToCustom(RecordTypes.HNAM));
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BreakableFX,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ModelData,
+                header: translationParams.ConvertToCustom(RecordTypes.MODT));
         }
 
         public void Write(
             MutagenWriter writer,
             IMaterialTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1656,12 +1751,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1673,7 +1771,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMaterialTypeGetter)item,
@@ -1684,7 +1782,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMaterialTypeGetter)item,
@@ -1695,7 +1793,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMaterialTypeGetter)item,
@@ -1705,9 +1803,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MaterialTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class MaterialTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static MaterialTypeBinaryCreateTranslation Instance = new MaterialTypeBinaryCreateTranslation();
+        public new static readonly MaterialTypeBinaryCreateTranslation Instance = new MaterialTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MATT;
         public static void FillBinaryStructs(
@@ -1726,7 +1824,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1779,6 +1877,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MaterialType_FieldIndex.BreakableFX;
                 }
+                case RecordTypeInts.MODT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ModelData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MaterialType_FieldIndex.ModelData;
+                }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1786,7 +1890,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1803,16 +1908,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MaterialTypeBinaryOverlay :
+    internal partial class MaterialTypeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IMaterialTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialType_Registration.Instance;
-        public new static MaterialType_Registration StaticRegistration => MaterialType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1820,14 +1925,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialTypeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MaterialTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1839,11 +1944,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -1851,23 +1956,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region HavokDisplayColor
         private int? _HavokDisplayColorLocation;
-        public Color? HavokDisplayColor => _HavokDisplayColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HavokDisplayColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color?);
+        public Color? HavokDisplayColor => _HavokDisplayColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HavokDisplayColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.NoAlphaFloat) : default(Color?);
         #endregion
         #region Buoyancy
         private int? _BuoyancyLocation;
-        public Single? Buoyancy => _BuoyancyLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BuoyancyLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Buoyancy => _BuoyancyLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BuoyancyLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public MaterialType.Flag? Flags => _FlagsLocation.HasValue ? (MaterialType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MaterialType.Flag?);
+        public MaterialType.Flag? Flags => _FlagsLocation.HasValue ? (MaterialType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(MaterialType.Flag?);
         #endregion
         #region HavokImpactDataSet
         private int? _HavokImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet => _HavokImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HavokImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region BreakableFX
         private int? _BreakableFXLocation;
-        public String BreakableFX => _BreakableFXLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BreakableFXLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String? BreakableFX => _BreakableFXLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BreakableFXLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ModelData
+        private int? _ModelDataLocation;
+        public ReadOnlyMemorySlice<Byte>? ModelData => _ModelDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1876,28 +1985,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected MaterialTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MaterialTypeBinaryOverlay MaterialTypeFactory(
+        public static IMaterialTypeGetter MaterialTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MaterialTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1907,20 +2019,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MaterialTypeBinaryOverlay MaterialTypeFactory(
+        public static IMaterialTypeGetter MaterialTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MaterialTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1930,9 +2042,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.PNAM:
@@ -1970,6 +2082,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     _BreakableFXLocation = (stream.Position - offset);
                     return (int)MaterialType_FieldIndex.BreakableFX;
                 }
+                case RecordTypeInts.MODT:
+                {
+                    _ModelDataLocation = (stream.Position - offset);
+                    return (int)MaterialType_FieldIndex.ModelData;
+                }
                 default:
                     return base.FillRecordType(
                         stream: stream,
@@ -1977,17 +2094,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MaterialTypeMixIn.ToString(
+            MaterialTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -79,12 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            OblivionListGroupMixIn.ToString(
+            OblivionListGroupMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -108,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionListGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionListGroupCommon<T>.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OblivionListGroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -153,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionListGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -163,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static OblivionListGroup<T> CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new OblivionListGroup<T>();
             ((OblivionListGroupSetterCommon<T>)((IOblivionListGroupGetter<T>)ret).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -178,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out OblivionListGroup<T> item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -188,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -260,28 +262,28 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString<T>(
+        public static string Print<T>(
             this IOblivionListGroupGetter<T> item,
             string? name = null,
             OblivionListGroup.Mask<bool>? printMask = null)
             where T : class, ICellBlockGetter, IBinaryItem
         {
-            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString<T>(
+        public static void Print<T>(
             this IOblivionListGroupGetter<T> item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OblivionListGroup.Mask<bool>? printMask = null)
             where T : class, ICellBlockGetter, IBinaryItem
         {
-            ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)item).CommonInstance(typeof(T))!).ToString(
+            ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)item).CommonInstance(typeof(T))!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -313,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void DeepCopyIn<T, TGetter>(
             this IOblivionListGroup<T> lhs,
             IOblivionListGroupGetter<TGetter> rhs)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ((OblivionListGroupSetterTranslationCommon)((IOblivionListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -328,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroup<T> lhs,
             IOblivionListGroupGetter<TGetter> rhs,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -345,7 +347,7 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionListGroupGetter<TGetter> rhs,
             out OblivionListGroup.ErrorMask<T_ErrMask> errorMask,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
@@ -365,7 +367,7 @@ namespace Mutagen.Bethesda.Oblivion
             IOblivionListGroupGetter<TGetter> rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             ((OblivionListGroupSetterTranslationCommon)((IOblivionListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
@@ -379,7 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             this IOblivionListGroupGetter<TGetter> item,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -392,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroupGetter<TGetter> item,
             out OblivionListGroup.ErrorMask<T_ErrMask> errorMask,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
@@ -407,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             return ((OblivionListGroupSetterTranslationCommon)((IOblivionListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
@@ -429,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionListGroupGetter<T> obj,
             bool throwIfUnknown = true)
             where T : class, ICellBlockGetter, IBinaryItem
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((OblivionListGroupCommon<T>)((IOblivionListGroupGetter<T>)obj).CommonInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -462,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<T, TMajor>(this IOblivionListGroup<T> obj)
             where T : class, ICellBlock, IBinaryItem
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((OblivionListGroupSetterCommon<T>)((IOblivionListGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
                 obj: obj,
@@ -652,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary<T>(
             this IOblivionListGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
             where T : class, ICellBlock, IBinaryItem
         {
             ((OblivionListGroupSetterCommon<T>)((IOblivionListGroupGetter<T>)item).CommonSetterInstance(typeof(T))!).CopyInFromBinary(
@@ -668,10 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum OblivionListGroup_FieldIndex
+    internal enum OblivionListGroup_FieldIndex
     {
         Type = 0,
         LastModified = 1,
@@ -680,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class OblivionListGroup_Registration : ILoquiRegistration
+    internal partial class OblivionListGroup_Registration : ILoquiRegistration
     {
         public static readonly OblivionListGroup_Registration Instance = new OblivionListGroup_Registration();
 
@@ -753,32 +755,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class OblivionListGroup_Registration<T> : OblivionListGroup_Registration
+    internal class OblivionListGroup_Registration<T> : OblivionListGroup_Registration
         where T : CellBlock, IBinaryItem
     {
         public static readonly OblivionListGroup_Registration<T> GenericInstance = new OblivionListGroup_Registration<T>();
-
-        public new static Type GetNthType(ushort index)
-        {
-            OblivionListGroup_FieldIndex enu = (OblivionListGroup_FieldIndex)index;
-            switch (enu)
-            {
-                case OblivionListGroup_FieldIndex.Type:
-                    return typeof(GroupTypeEnum);
-                case OblivionListGroup_FieldIndex.LastModified:
-                    return typeof(Int32);
-                case OblivionListGroup_FieldIndex.Records:
-                    return typeof(ExtendedList<T>);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index}");
-            }
-        }
 
     }
     #endregion
 
     #region Common
-    public partial class OblivionListGroupSetterCommon<T>
+    internal partial class OblivionListGroupSetterCommon<T>
         where T : class, ICellBlock, IBinaryItem
     {
         public static readonly OblivionListGroupSetterCommon<T> Instance = new OblivionListGroupSetterCommon<T>();
@@ -868,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IOblivionListGroup<T> item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -881,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionListGroupCommon<T>
+    internal partial class OblivionListGroupCommon<T>
         where T : class, ICellBlockGetter, IBinaryItem
     {
         public static readonly OblivionListGroupCommon<T> Instance = new OblivionListGroupCommon<T>();
@@ -906,7 +892,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionListGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
             ret.Records = item.Records.CollectionEqualsHelper(
@@ -915,75 +900,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IOblivionListGroupGetter<T> item,
             string? name = null,
             OblivionListGroup.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IOblivionListGroupGetter<T> item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OblivionListGroup.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"OblivionListGroup<{typeof(T).Name}> =>");
+                sb.AppendLine($"OblivionListGroup<{typeof(T).Name}> =>");
             }
             else
             {
-                fg.AppendLine($"{name} (OblivionListGroup<{typeof(T).Name}>) =>");
+                sb.AppendLine($"{name} (OblivionListGroup<{typeof(T).Name}>) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IOblivionListGroupGetter<T> item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             OblivionListGroup.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendItem(item.LastModified, "LastModified");
+                sb.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.Records?.Overall ?? true)
             {
-                fg.AppendLine("Records =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Records =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Records)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1004,7 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Records) ?? true))
             {
-                if (!lhs.Records.SequenceEqualNullable(rhs.Records)) return false;
+                if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)OblivionListGroup_FieldIndex.Records)))) return false;
             }
             return true;
         }
@@ -1028,9 +1007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOblivionListGroupGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOblivionListGroupGetter<T> obj)
         {
-            foreach (var item in obj.Records.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Records.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1082,6 +1061,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     foreach (var item in obj.Records)
                     {
                         foreach (var subItem in item.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
@@ -1096,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionListGroupSetterTranslationCommon
+    internal partial class OblivionListGroupSetterTranslationCommon
     {
         public static readonly OblivionListGroupSetterTranslationCommon Instance = new OblivionListGroupSetterTranslationCommon();
 
@@ -1107,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             if ((copyMask?.GetShouldTranslate((int)OblivionListGroup_FieldIndex.Type) ?? true))
@@ -1147,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public OblivionListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
             IOblivionListGroupGetter<TGetter> item,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
@@ -1165,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionListGroupGetter<TGetter> item,
             out OblivionListGroup.ErrorMask<T_ErrMask> errorMask,
             OblivionListGroup.TranslationMask<T_TranslMask>? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
             where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
@@ -1186,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
-            where T : class, ICellBlock, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where T : class, ICellBlock, IBinaryItem
             where TGetter : class, ICellBlockGetter, IBinaryItem
         {
             OblivionListGroup<T> ret = (OblivionListGroup<T>)((OblivionListGroupCommon<TGetter>)((IOblivionListGroupGetter<TGetter>)item).CommonInstance(typeof(T))!).GetNew<T>();
@@ -1211,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionListGroup_Registration.Instance;
-        public static OblivionListGroup_Registration StaticRegistration => OblivionListGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionListGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionListGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1235,11 +1222,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionListGroupBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static OblivionListGroupBinaryWriteTranslation Instance = new OblivionListGroupBinaryWriteTranslation();
+        public static readonly OblivionListGroupBinaryWriteTranslation Instance = new OblivionListGroupBinaryWriteTranslation();
 
         public static void WriteEmbedded<T>(
             IOblivionListGroupGetter<T> item,
@@ -1259,13 +1246,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes<T>(
             IOblivionListGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
             where T : class, ICellBlockGetter, IBinaryItem
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.Records,
-                transl: (MutagenWriter subWriter, T subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, T subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((CellBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1293,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write<T>(
             MutagenWriter writer,
             IOblivionListGroupGetter<T> item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
             where T : class, ICellBlockGetter, IBinaryItem
         {
             using (HeaderExport.Group(
@@ -1313,17 +1300,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             throw new NotImplementedException();
         }
 
     }
 
-    public partial class OblivionListGroupBinaryCreateTranslation<T>
+    internal partial class OblivionListGroupBinaryCreateTranslation<T>
         where T : class, ICellBlock, IBinaryItem
     {
-        public readonly static OblivionListGroupBinaryCreateTranslation<T> Instance = new OblivionListGroupBinaryCreateTranslation<T>();
+        public static readonly OblivionListGroupBinaryCreateTranslation<T> Instance = new OblivionListGroupBinaryCreateTranslation<T>();
 
         public static void FillBinaryStructs(
             IOblivionListGroup<T> item,
@@ -1344,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1381,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary<T, T_ErrMask>(
             this IOblivionListGroupGetter<T> item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
             where T : class, ICellBlockGetter, IBinaryItem
             where T_ErrMask : CellBlock.ErrorMask, IErrorMask<T_ErrMask>
         {
@@ -1396,15 +1383,15 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionListGroupBinaryOverlay<T> : IOblivionListGroupGetter<T>
+    internal partial class OblivionListGroupBinaryOverlay<T> : IOblivionListGroupGetter<T>
         where T : class, ICellBlockGetter, IBinaryItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionListGroup_Registration.Instance;
-        public static OblivionListGroup_Registration StaticRegistration => OblivionListGroup_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionListGroup_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance(Type type0) => GenericCommonInstanceGetter.Get(OblivionListGroupCommon<T>.Instance, typeof(T), type0);
         [DebuggerStepThrough]
@@ -1418,9 +1405,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => OblivionListGroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OblivionListGroupCommon<T>.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1433,7 +1420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionListGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1442,12 +1429,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #region ContainedRecordType
-         partial void ContainedRecordTypeCustomParse(
+        partial void ContainedRecordTypeCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public GroupTypeEnum Type => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public GroupTypeEnum Type => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1455,26 +1442,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected OblivionListGroupBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static OblivionListGroupBinaryOverlay<T> OblivionListGroupFactory(
+        public static IOblivionListGroupGetter<T> OblivionListGroupFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractGroupMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new OblivionListGroupBinaryOverlay<T>(
-                bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1483,20 +1473,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static OblivionListGroupBinaryOverlay<T> OblivionListGroupFactory(
+        public static IOblivionListGroupGetter<T> OblivionListGroupFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return OblivionListGroupFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1506,9 +1496,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 default:
@@ -1517,12 +1507,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            OblivionListGroupMixIn.ToString(
+            OblivionListGroupMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1678,9 +1669,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, CellBlock.Mask<R>?>>();
                         obj.Records.Specific = l;
-                        foreach (var item in Records.Specific.WithIndex())
+                        foreach (var item in Records.Specific)
                         {
-                            MaskItemIndexed<R, CellBlock.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CellBlock.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, CellBlock.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, CellBlock.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1690,57 +1681,48 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
         
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+        
+            public string Print(OblivionListGroup.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
         
-            public string ToString(OblivionListGroup.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OblivionListGroup.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-        
-            public void ToString(FileGeneration fg, OblivionListGroup.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(OblivionListGroup.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(OblivionListGroup.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendItem(LastModified, "LastModified");
+                        sb.AppendItem(LastModified, "LastModified");
                     }
                     if ((printMask?.Records?.Overall ?? true)
                         && Records is {} RecordsItem)
                     {
-                        fg.AppendLine("Records =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Records =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RecordsItem.Overall);
+                            sb.AppendItem(RecordsItem.Overall);
                             if (RecordsItem.Specific != null)
                             {
                                 foreach (var subItem in RecordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
         
@@ -1836,58 +1818,49 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
         
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
         
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(LastModified, "LastModified");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(LastModified, "LastModified");
+                }
                 if (Records is {} RecordsItem)
                 {
-                    fg.AppendLine("Records =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Records =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RecordsItem.Overall);
+                        sb.AppendItem(RecordsItem.Overall);
                         if (RecordsItem.Specific != null)
                         {
                             foreach (var subItem in RecordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion

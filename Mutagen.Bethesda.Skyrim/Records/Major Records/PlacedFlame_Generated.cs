@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -67,12 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedFlameMixIn.ToString(
+            PlacedFlameMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -100,7 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem HeadTrackingWeight,
                 TItem FavorCost,
                 TItem Reflections,
@@ -125,7 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 VirtualMachineAdapter: VirtualMachineAdapter,
                 EncounterZone: EncounterZone,
-                Ownership: Ownership,
+                Owner: Owner,
+                FactionRank: FactionRank,
                 HeadTrackingWeight: HeadTrackingWeight,
                 FavorCost: FavorCost,
                 Reflections: Reflections,
@@ -214,30 +218,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PlacedFlame.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PlacedFlame.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedFlame.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PlacedFlame.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PlacedFlame.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedFlame.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Projectile ?? true)
                     {
-                        fg.AppendItem(Projectile, "Projectile");
+                        sb.AppendItem(Projectile, "Projectile");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -301,37 +300,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Projectile, "Projectile");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Projectile, "Projectile");
+                }
             }
             #endregion
 
@@ -393,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedFlame_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedFlameCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedFlameCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedFlameSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedFlame(
             FormKey formKey,
@@ -471,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PlacedFlameBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedFlameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -481,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PlacedFlame CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedFlame();
             ((PlacedFlameSetterCommon)((IPlacedFlameGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -496,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedFlame item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -506,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -544,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPlacedFlameGetter>,
         IMapsToGetter<IPlacedFlameGetter>,
         IScriptedGetter
@@ -574,26 +567,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedFlameGetter item,
             string? name = null,
             PlacedFlame.Mask<bool>? printMask = null)
         {
-            return ((PlacedFlameCommon)((IPlacedFlameGetter)item).CommonInstance()!).ToString(
+            return ((PlacedFlameCommon)((IPlacedFlameGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedFlameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedFlame.Mask<bool>? printMask = null)
         {
-            ((PlacedFlameCommon)((IPlacedFlameGetter)item).CommonInstance()!).ToString(
+            ((PlacedFlameCommon)((IPlacedFlameGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -688,7 +681,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPlacedFlameInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedFlameSetterCommon)((IPlacedFlameGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -703,10 +696,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedFlame_FieldIndex
+    internal enum PlacedFlame_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -716,27 +709,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         VirtualMachineAdapter = 6,
         EncounterZone = 7,
-        Ownership = 8,
-        HeadTrackingWeight = 9,
-        FavorCost = 10,
-        Reflections = 11,
-        LinkedReferences = 12,
-        ActivateParents = 13,
-        EnableParent = 14,
-        Emittance = 15,
-        MultiBoundReference = 16,
-        IgnoredBySandbox = 17,
-        LocationRefTypes = 18,
-        LocationReference = 19,
-        DistantLodData = 20,
-        Scale = 21,
-        Placement = 22,
-        Projectile = 23,
+        Owner = 8,
+        FactionRank = 9,
+        HeadTrackingWeight = 10,
+        FavorCost = 11,
+        Reflections = 12,
+        LinkedReferences = 13,
+        ActivateParents = 14,
+        EnableParent = 15,
+        Emittance = 16,
+        MultiBoundReference = 17,
+        IgnoredBySandbox = 18,
+        LocationRefTypes = 19,
+        LocationReference = 20,
+        DistantLodData = 21,
+        Scale = 22,
+        Placement = 23,
+        Projectile = 24,
     }
     #endregion
 
     #region Registration
-    public partial class PlacedFlame_Registration : ILoquiRegistration
+    internal partial class PlacedFlame_Registration : ILoquiRegistration
     {
         public static readonly PlacedFlame_Registration Instance = new PlacedFlame_Registration();
 
@@ -751,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(PlacedFlame.Mask<>);
 
@@ -778,6 +772,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PFLA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PFLA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedFlameBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedFlameSetterCommon : APlacedTrapSetterCommon
+    internal partial class PlacedFlameSetterCommon : APlacedTrapSetterCommon
     {
         public new static readonly PlacedFlameSetterCommon Instance = new PlacedFlameSetterCommon();
 
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPlacedFlameInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedFlameInternal>(
                 record: item,
@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedFlame)item,
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedFlame)item,
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedFlame)item,
@@ -898,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedFlameCommon : APlacedTrapCommon
+    internal partial class PlacedFlameCommon : APlacedTrapCommon
     {
         public new static readonly PlacedFlameCommon Instance = new PlacedFlameCommon();
 
@@ -922,62 +922,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedFlame.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedFlameGetter item,
             string? name = null,
             PlacedFlame.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedFlameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedFlame.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedFlame =>");
+                sb.AppendLine($"PlacedFlame =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedFlame) =>");
+                sb.AppendLine($"{name} (PlacedFlame) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedFlameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedFlame.Mask<bool>? printMask = null)
         {
             APlacedTrapCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Projectile ?? true)
             {
-                fg.AppendItem(item.Projectile.FormKey, "Projectile");
+                sb.AppendItem(item.Projectile.FormKey, "Projectile");
             }
         }
         
@@ -1001,7 +998,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedFlame_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.EncounterZone:
                     return (PlacedFlame_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Ownership:
+                case APlacedTrap_FieldIndex.Owner:
+                    return (PlacedFlame_FieldIndex)((int)index);
+                case APlacedTrap_FieldIndex.FactionRank:
                     return (PlacedFlame_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.HeadTrackingWeight:
                     return (PlacedFlame_FieldIndex)((int)index);
@@ -1154,9 +1153,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedFlameGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedFlameGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1213,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedFlameSetterTranslationCommon : APlacedTrapSetterTranslationCommon
+    internal partial class PlacedFlameSetterTranslationCommon : APlacedTrapSetterTranslationCommon
     {
         public new static readonly PlacedFlameSetterTranslationCommon Instance = new PlacedFlameSetterTranslationCommon();
 
@@ -1402,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedFlame_Registration.Instance;
-        public new static PlacedFlame_Registration StaticRegistration => PlacedFlame_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedFlame_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedFlameCommon.Instance;
         [DebuggerStepThrough]
@@ -1420,13 +1419,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedFlameBinaryWriteTranslation :
         APlacedTrapBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlacedFlameBinaryWriteTranslation Instance = new PlacedFlameBinaryWriteTranslation();
+        public new static readonly PlacedFlameBinaryWriteTranslation Instance = new PlacedFlameBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedFlameGetter item,
@@ -1440,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPlacedFlameGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1451,10 +1450,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        APlacedTrapBinaryWriteTranslation.WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1466,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedFlameGetter)item,
@@ -1477,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedFlameGetter)item,
@@ -1488,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedFlameGetter)item,
@@ -1499,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedFlameGetter)item,
@@ -1509,9 +1511,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedFlameBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
+    internal partial class PlacedFlameBinaryCreateTranslation : APlacedTrapBinaryCreateTranslation
     {
-        public new readonly static PlacedFlameBinaryCreateTranslation Instance = new PlacedFlameBinaryCreateTranslation();
+        public new static readonly PlacedFlameBinaryCreateTranslation Instance = new PlacedFlameBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PFLA;
         public static void FillBinaryStructs(
@@ -1536,16 +1538,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedFlameBinaryOverlay :
+    internal partial class PlacedFlameBinaryOverlay :
         APlacedTrapBinaryOverlay,
         IPlacedFlameGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedFlame_Registration.Instance;
-        public new static PlacedFlame_Registration StaticRegistration => PlacedFlame_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedFlame_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedFlameCommon.Instance;
         [DebuggerStepThrough]
@@ -1553,14 +1555,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedFlameCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedFlameCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedFlameBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedFlameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1577,28 +1579,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PlacedFlameBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PlacedFlameBinaryOverlay PlacedFlameFactory(
+        public static IPlacedFlameGetter PlacedFlameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PlacedFlameBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1608,30 +1613,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PlacedFlameBinaryOverlay PlacedFlameFactory(
+        public static IPlacedFlameGetter PlacedFlameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedFlameFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedFlameMixIn.ToString(
+            PlacedFlameMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

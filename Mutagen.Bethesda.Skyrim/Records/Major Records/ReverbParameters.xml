@@ -13,8 +13,8 @@
           <Float name="DecayHfRatio" integerType="Byte" divisor="100" />
           <UInt8 name="ReflectDelayMS" />
           <UInt8 name="ReverbDelayMS" />
-          <UInt8 name="DiffusionPercent" />
-          <UInt8 name="DensityPercent" />
+          <Percent name="DiffusionPercent" integerType="Byte" />
+          <Percent name="DensityPercent" integerType="Byte" />
           <UInt8 name="Unknown" />
         </Fields>
       </Data>

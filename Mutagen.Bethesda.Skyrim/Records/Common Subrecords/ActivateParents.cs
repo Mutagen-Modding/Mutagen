@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class ActivateParents
 {
-    public partial class ActivateParents
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            ParentActivateOnly = 0x01
-        }
+        ParentActivateOnly = 0x01
     }
 }

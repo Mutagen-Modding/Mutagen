@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EntryPointsMixIn.ToString(
+            EntryPointsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,34 +177,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(EntryPoints.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(EntryPoints.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EntryPoints.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, EntryPoints.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(EntryPoints.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EntryPoints.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Points ?? true)
                     {
-                        fg.AppendItem(Points, "Points");
+                        sb.AppendItem(Points, "Points");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -286,37 +284,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Points, "Points");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Points, "Points");
+                }
             }
             #endregion
 
@@ -397,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -407,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static EntryPoints CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EntryPoints();
             ((EntryPointsSetterCommon)((IEntryPointsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -422,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EntryPoints item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -432,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -494,26 +487,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IEntryPointsGetter item,
             string? name = null,
             EntryPoints.Mask<bool>? printMask = null)
         {
-            return ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).ToString(
+            return ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IEntryPointsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EntryPoints.Mask<bool>? printMask = null)
         {
-            ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).ToString(
+            ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -619,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEntryPoints item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EntryPointsSetterCommon)((IEntryPointsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -634,10 +627,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum EntryPoints_FieldIndex
+    internal enum EntryPoints_FieldIndex
     {
         Type = 0,
         Points = 1,
@@ -645,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class EntryPoints_Registration : ILoquiRegistration
+    internal partial class EntryPoints_Registration : ILoquiRegistration
     {
         public static readonly EntryPoints_Registration Instance = new EntryPoints_Registration();
 
@@ -719,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EntryPointsSetterCommon
+    internal partial class EntryPointsSetterCommon
     {
         public static readonly EntryPointsSetterCommon Instance = new EntryPointsSetterCommon();
 
@@ -743,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IEntryPoints item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -755,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EntryPointsCommon
+    internal partial class EntryPointsCommon
     {
         public static readonly EntryPointsCommon Instance = new EntryPointsCommon();
 
@@ -779,62 +772,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EntryPoints.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Points = item.Points == rhs.Points;
         }
         
-        public string ToString(
+        public string Print(
             IEntryPointsGetter item,
             string? name = null,
             EntryPoints.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IEntryPointsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EntryPoints.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EntryPoints =>");
+                sb.AppendLine($"EntryPoints =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EntryPoints) =>");
+                sb.AppendLine($"{name} (EntryPoints) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEntryPointsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EntryPoints.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Points ?? true)
             {
-                fg.AppendItem(item.Points, "Points");
+                sb.AppendItem(item.Points, "Points");
             }
         }
         
@@ -873,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEntryPointsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEntryPointsGetter obj)
         {
             yield break;
         }
@@ -881,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EntryPointsSetterTranslationCommon
+    internal partial class EntryPointsSetterTranslationCommon
     {
         public static readonly EntryPointsSetterTranslationCommon Instance = new EntryPointsSetterTranslationCommon();
 
@@ -963,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]
@@ -987,11 +977,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EntryPointsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EntryPointsBinaryWriteTranslation Instance = new EntryPointsBinaryWriteTranslation();
+        public static readonly EntryPointsBinaryWriteTranslation Instance = new EntryPointsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEntryPointsGetter item,
@@ -1010,7 +1000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IEntryPointsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1020,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEntryPointsGetter)item,
@@ -1030,9 +1020,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EntryPointsBinaryCreateTranslation
+    internal partial class EntryPointsBinaryCreateTranslation
     {
-        public readonly static EntryPointsBinaryCreateTranslation Instance = new EntryPointsBinaryCreateTranslation();
+        public static readonly EntryPointsBinaryCreateTranslation Instance = new EntryPointsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEntryPoints item,
@@ -1057,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IEntryPointsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EntryPointsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1070,16 +1060,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EntryPointsBinaryOverlay :
+    internal partial class EntryPointsBinaryOverlay :
         PluginBinaryOverlay,
         IEntryPointsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EntryPoints_Registration.Instance;
-        public static EntryPoints_Registration StaticRegistration => EntryPoints_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EntryPoints_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EntryPointsCommon.Instance;
         [DebuggerStepThrough]
@@ -1093,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EntryPointsBinaryWriteTranslation.Instance;
@@ -1101,7 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EntryPointsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1109,8 +1099,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Furniture.AnimationType Type => (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
-        public Furniture.Entry Points => (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x2, 0x2));
+        public Furniture.AnimationType Type => (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
+        public Furniture.Entry Points => (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1118,24 +1108,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected EntryPointsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static EntryPointsBinaryOverlay EntryPointsFactory(
+        public static IEntryPointsGetter EntryPointsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EntryPointsBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1144,25 +1140,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static EntryPointsBinaryOverlay EntryPointsFactory(
+        public static IEntryPointsGetter EntryPointsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return EntryPointsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EntryPointsMixIn.ToString(
+            EntryPointsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

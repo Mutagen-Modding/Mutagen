@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -77,12 +79,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceHdrMixIn.ToString(
+            ImageSpaceHdrMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -258,62 +261,57 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ImageSpaceHdr.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ImageSpaceHdr.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ImageSpaceHdr.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ImageSpaceHdr.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ImageSpaceHdr.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpaceHdr.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.EyeAdaptSpeed ?? true)
                     {
-                        fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                        sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
                     }
                     if (printMask?.BloomBlurRadius ?? true)
                     {
-                        fg.AppendItem(BloomBlurRadius, "BloomBlurRadius");
+                        sb.AppendItem(BloomBlurRadius, "BloomBlurRadius");
                     }
                     if (printMask?.BloomThreshold ?? true)
                     {
-                        fg.AppendItem(BloomThreshold, "BloomThreshold");
+                        sb.AppendItem(BloomThreshold, "BloomThreshold");
                     }
                     if (printMask?.BloomScale ?? true)
                     {
-                        fg.AppendItem(BloomScale, "BloomScale");
+                        sb.AppendItem(BloomScale, "BloomScale");
                     }
                     if (printMask?.ReceiveBloomThreshold ?? true)
                     {
-                        fg.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
+                        sb.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
                     }
                     if (printMask?.White ?? true)
                     {
-                        fg.AppendItem(White, "White");
+                        sb.AppendItem(White, "White");
                     }
                     if (printMask?.SunlightScale ?? true)
                     {
-                        fg.AppendItem(SunlightScale, "SunlightScale");
+                        sb.AppendItem(SunlightScale, "SunlightScale");
                     }
                     if (printMask?.SkyScale ?? true)
                     {
-                        fg.AppendItem(SkyScale, "SkyScale");
+                        sb.AppendItem(SkyScale, "SkyScale");
                     }
                     if (printMask?.EyeAdaptStrength ?? true)
                     {
-                        fg.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
+                        sb.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -468,44 +466,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
-                fg.AppendItem(BloomBlurRadius, "BloomBlurRadius");
-                fg.AppendItem(BloomThreshold, "BloomThreshold");
-                fg.AppendItem(BloomScale, "BloomScale");
-                fg.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
-                fg.AppendItem(White, "White");
-                fg.AppendItem(SunlightScale, "SunlightScale");
-                fg.AppendItem(SkyScale, "SkyScale");
-                fg.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
+                {
+                    sb.AppendItem(EyeAdaptSpeed, "EyeAdaptSpeed");
+                }
+                {
+                    sb.AppendItem(BloomBlurRadius, "BloomBlurRadius");
+                }
+                {
+                    sb.AppendItem(BloomThreshold, "BloomThreshold");
+                }
+                {
+                    sb.AppendItem(BloomScale, "BloomScale");
+                }
+                {
+                    sb.AppendItem(ReceiveBloomThreshold, "ReceiveBloomThreshold");
+                }
+                {
+                    sb.AppendItem(White, "White");
+                }
+                {
+                    sb.AppendItem(SunlightScale, "SunlightScale");
+                }
+                {
+                    sb.AppendItem(SkyScale, "SkyScale");
+                }
+                {
+                    sb.AppendItem(EyeAdaptStrength, "EyeAdaptStrength");
+                }
             }
             #endregion
 
@@ -607,10 +614,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = ImageSpaceHdr_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceHdrBinaryWriteTranslation.Instance;
@@ -618,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -628,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImageSpaceHdr CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceHdr();
             ((ImageSpaceHdrSetterCommon)((IImageSpaceHdrGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -643,7 +646,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceHdr item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -653,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -729,26 +732,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IImageSpaceHdrGetter item,
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
-            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).ToString(
+            return ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IImageSpaceHdrGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
-            ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).ToString(
+            ((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -854,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceHdr item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceHdrSetterCommon)((IImageSpaceHdrGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -869,10 +872,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceHdr_FieldIndex
+    internal enum ImageSpaceHdr_FieldIndex
     {
         EyeAdaptSpeed = 0,
         BloomBlurRadius = 1,
@@ -887,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceHdr_Registration : ILoquiRegistration
+    internal partial class ImageSpaceHdr_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceHdr_Registration Instance = new ImageSpaceHdr_Registration();
 
@@ -929,6 +932,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.HNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceHdrBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -962,7 +971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceHdrSetterCommon
+    internal partial class ImageSpaceHdrSetterCommon
     {
         public static readonly ImageSpaceHdrSetterCommon Instance = new ImageSpaceHdrSetterCommon();
 
@@ -993,12 +1002,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IImageSpaceHdr item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1009,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceHdrCommon
+    internal partial class ImageSpaceHdrCommon
     {
         public static readonly ImageSpaceHdrCommon Instance = new ImageSpaceHdrCommon();
 
@@ -1033,7 +1042,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceHdr.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EyeAdaptSpeed = item.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed);
             ret.BloomBlurRadius = item.BloomBlurRadius.EqualsWithin(rhs.BloomBlurRadius);
             ret.BloomThreshold = item.BloomThreshold.EqualsWithin(rhs.BloomThreshold);
@@ -1045,85 +1053,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.EyeAdaptStrength = item.EyeAdaptStrength.EqualsWithin(rhs.EyeAdaptStrength);
         }
         
-        public string ToString(
+        public string Print(
             IImageSpaceHdrGetter item,
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IImageSpaceHdrGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpaceHdr =>");
+                sb.AppendLine($"ImageSpaceHdr =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpaceHdr) =>");
+                sb.AppendLine($"{name} (ImageSpaceHdr) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceHdrGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpaceHdr.Mask<bool>? printMask = null)
         {
             if (printMask?.EyeAdaptSpeed ?? true)
             {
-                fg.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
+                sb.AppendItem(item.EyeAdaptSpeed, "EyeAdaptSpeed");
             }
             if (printMask?.BloomBlurRadius ?? true)
             {
-                fg.AppendItem(item.BloomBlurRadius, "BloomBlurRadius");
+                sb.AppendItem(item.BloomBlurRadius, "BloomBlurRadius");
             }
             if (printMask?.BloomThreshold ?? true)
             {
-                fg.AppendItem(item.BloomThreshold, "BloomThreshold");
+                sb.AppendItem(item.BloomThreshold, "BloomThreshold");
             }
             if (printMask?.BloomScale ?? true)
             {
-                fg.AppendItem(item.BloomScale, "BloomScale");
+                sb.AppendItem(item.BloomScale, "BloomScale");
             }
             if (printMask?.ReceiveBloomThreshold ?? true)
             {
-                fg.AppendItem(item.ReceiveBloomThreshold, "ReceiveBloomThreshold");
+                sb.AppendItem(item.ReceiveBloomThreshold, "ReceiveBloomThreshold");
             }
             if (printMask?.White ?? true)
             {
-                fg.AppendItem(item.White, "White");
+                sb.AppendItem(item.White, "White");
             }
             if (printMask?.SunlightScale ?? true)
             {
-                fg.AppendItem(item.SunlightScale, "SunlightScale");
+                sb.AppendItem(item.SunlightScale, "SunlightScale");
             }
             if (printMask?.SkyScale ?? true)
             {
-                fg.AppendItem(item.SkyScale, "SkyScale");
+                sb.AppendItem(item.SkyScale, "SkyScale");
             }
             if (printMask?.EyeAdaptStrength ?? true)
             {
-                fg.AppendItem(item.EyeAdaptStrength, "EyeAdaptStrength");
+                sb.AppendItem(item.EyeAdaptStrength, "EyeAdaptStrength");
             }
         }
         
@@ -1197,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceHdrGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceHdrGetter obj)
         {
             yield break;
         }
@@ -1205,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceHdrSetterTranslationCommon
+    internal partial class ImageSpaceHdrSetterTranslationCommon
     {
         public static readonly ImageSpaceHdrSetterTranslationCommon Instance = new ImageSpaceHdrSetterTranslationCommon();
 
@@ -1315,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceHdr_Registration.Instance;
-        public static ImageSpaceHdr_Registration StaticRegistration => ImageSpaceHdr_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceHdr_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceHdrCommon.Instance;
         [DebuggerStepThrough]
@@ -1339,11 +1345,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceHdrBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImageSpaceHdrBinaryWriteTranslation Instance = new ImageSpaceHdrBinaryWriteTranslation();
+        public static readonly ImageSpaceHdrBinaryWriteTranslation Instance = new ImageSpaceHdrBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceHdrGetter item,
@@ -1381,12 +1387,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IImageSpaceHdrGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1398,7 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceHdrGetter)item,
@@ -1408,9 +1414,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceHdrBinaryCreateTranslation
+    internal partial class ImageSpaceHdrBinaryCreateTranslation
     {
-        public readonly static ImageSpaceHdrBinaryCreateTranslation Instance = new ImageSpaceHdrBinaryCreateTranslation();
+        public static readonly ImageSpaceHdrBinaryCreateTranslation Instance = new ImageSpaceHdrBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImageSpaceHdr item,
@@ -1438,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImageSpaceHdrGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1451,16 +1457,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceHdrBinaryOverlay :
+    internal partial class ImageSpaceHdrBinaryOverlay :
         PluginBinaryOverlay,
         IImageSpaceHdrGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceHdr_Registration.Instance;
-        public static ImageSpaceHdr_Registration StaticRegistration => ImageSpaceHdr_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceHdr_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceHdrCommon.Instance;
         [DebuggerStepThrough]
@@ -1474,7 +1480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceHdrBinaryWriteTranslation.Instance;
@@ -1482,7 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceHdrBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1490,15 +1496,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single EyeAdaptSpeed => _data.Slice(0x0, 0x4).Float();
-        public Single BloomBlurRadius => _data.Slice(0x4, 0x4).Float();
-        public Single BloomThreshold => _data.Slice(0x8, 0x4).Float();
-        public Single BloomScale => _data.Slice(0xC, 0x4).Float();
-        public Single ReceiveBloomThreshold => _data.Slice(0x10, 0x4).Float();
-        public Single White => _data.Slice(0x14, 0x4).Float();
-        public Single SunlightScale => _data.Slice(0x18, 0x4).Float();
-        public Single SkyScale => _data.Slice(0x1C, 0x4).Float();
-        public Single EyeAdaptStrength => _data.Slice(0x20, 0x4).Float();
+        public Single EyeAdaptSpeed => _structData.Slice(0x0, 0x4).Float();
+        public Single BloomBlurRadius => _structData.Slice(0x4, 0x4).Float();
+        public Single BloomThreshold => _structData.Slice(0x8, 0x4).Float();
+        public Single BloomScale => _structData.Slice(0xC, 0x4).Float();
+        public Single ReceiveBloomThreshold => _structData.Slice(0x10, 0x4).Float();
+        public Single White => _structData.Slice(0x14, 0x4).Float();
+        public Single SunlightScale => _structData.Slice(0x18, 0x4).Float();
+        public Single SkyScale => _structData.Slice(0x1C, 0x4).Float();
+        public Single EyeAdaptStrength => _structData.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1506,25 +1512,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ImageSpaceHdrBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ImageSpaceHdrBinaryOverlay ImageSpaceHdrFactory(
+        public static IImageSpaceHdrGetter ImageSpaceHdrFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ImageSpaceHdrBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1533,25 +1544,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ImageSpaceHdrBinaryOverlay ImageSpaceHdrFactory(
+        public static IImageSpaceHdrGetter ImageSpaceHdrFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceHdrFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceHdrMixIn.ToString(
+            ImageSpaceHdrMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

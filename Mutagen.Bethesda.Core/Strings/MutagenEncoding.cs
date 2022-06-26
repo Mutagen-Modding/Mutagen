@@ -1,87 +1,85 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
-namespace Mutagen.Bethesda.Strings
+namespace Mutagen.Bethesda.Strings;
+
+public interface IMutagenEncoding
 {
-    public interface IMutagenEncoding
+    string GetString(ReadOnlySpan<byte> bytes);
+    int GetByteCount(ReadOnlySpan<char> str);
+    int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes);
+}
+
+public class MutagenEncodingWrapper : IMutagenEncoding
+{
+    private readonly Encoding _encoding;
+
+    public MutagenEncodingWrapper(Encoding encoding)
     {
-        string GetString(ReadOnlySpan<byte> bytes);
-        int GetByteCount(ReadOnlySpan<char> str);
-        int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes);
+        _encoding = encoding;
     }
 
-    public class MutagenEncodingWrapper : IMutagenEncoding
+    public string GetString(ReadOnlySpan<byte> bytes)
     {
-        private readonly Encoding _encoding;
+        return _encoding.GetString(bytes);
+    }
 
-        public MutagenEncodingWrapper(Encoding encoding)
+    public int GetByteCount(ReadOnlySpan<char> str)
+    {
+        return _encoding.GetByteCount(str);
+    }
+
+    public int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
+    {
+        return _encoding.GetBytes(chars, bytes);
+    }
+}
+
+public class MutagenEncodingFallbackWrapper : IMutagenEncoding
+{
+    private readonly IMutagenEncoding _primaryEncoding;
+    private readonly IMutagenEncoding _secondaryEncoding;
+
+    public MutagenEncodingFallbackWrapper(
+        IMutagenEncoding primaryEncoding,
+        IMutagenEncoding secondaryEncoding)
+    {
+        _primaryEncoding = primaryEncoding;
+        _secondaryEncoding = secondaryEncoding;
+    }
+
+    public string GetString(ReadOnlySpan<byte> bytes)
+    {
+        try
         {
-            _encoding = encoding;
+            return _primaryEncoding.GetString(bytes);
         }
-
-        public string GetString(ReadOnlySpan<byte> bytes)
+        catch (Exception)
         {
-            return _encoding.GetString(bytes);
-        }
-
-        public int GetByteCount(ReadOnlySpan<char> str)
-        {
-            return _encoding.GetByteCount(str);
-        }
-
-        public int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
-        {
-            return _encoding.GetBytes(chars, bytes);
+            return _secondaryEncoding.GetString(bytes);
         }
     }
 
-    public class MutagenEncodingFallbackWrapper : IMutagenEncoding
+    public int GetByteCount(ReadOnlySpan<char> str)
     {
-        private readonly IMutagenEncoding _primaryEncoding;
-        private readonly IMutagenEncoding _secondaryEncoding;
-
-        public MutagenEncodingFallbackWrapper(
-            IMutagenEncoding primaryEncoding,
-            IMutagenEncoding secondaryEncoding)
+        try
         {
-            _primaryEncoding = primaryEncoding;
-            _secondaryEncoding = secondaryEncoding;
+            return _primaryEncoding.GetByteCount(str);
         }
-
-        public string GetString(ReadOnlySpan<byte> bytes)
+        catch (Exception)
         {
-            try
-            {
-                return _primaryEncoding.GetString(bytes);
-            }
-            catch (Exception)
-            {
-                return _secondaryEncoding.GetString(bytes);
-            }
+            return _secondaryEncoding.GetByteCount(str);
         }
+    }
 
-        public int GetByteCount(ReadOnlySpan<char> str)
+    public int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
+    {
+        try
         {
-            try
-            {
-                return _primaryEncoding.GetByteCount(str);
-            }
-            catch (Exception)
-            {
-                return _secondaryEncoding.GetByteCount(str);
-            }
+            return _primaryEncoding.GetBytes(chars, bytes);
         }
-
-        public int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
+        catch (Exception)
         {
-            try
-            {
-                return _primaryEncoding.GetBytes(chars, bytes);
-            }
-            catch (Exception)
-            {
-                return _secondaryEncoding.GetBytes(chars, bytes);
-            }
+            return _secondaryEncoding.GetBytes(chars, bytes);
         }
     }
 }

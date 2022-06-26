@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,23 +18,23 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -664,12 +665,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EffectShaderMixIn.ToString(
+            EffectShaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1722,450 +1724,445 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(EffectShader.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(EffectShader.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EffectShader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, EffectShader.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(EffectShader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EffectShader.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FillTexture ?? true)
                     {
-                        fg.AppendItem(FillTexture, "FillTexture");
+                        sb.AppendItem(FillTexture, "FillTexture");
                     }
                     if (printMask?.ParticleShaderTexture ?? true)
                     {
-                        fg.AppendItem(ParticleShaderTexture, "ParticleShaderTexture");
+                        sb.AppendItem(ParticleShaderTexture, "ParticleShaderTexture");
                     }
                     if (printMask?.HolesTexture ?? true)
                     {
-                        fg.AppendItem(HolesTexture, "HolesTexture");
+                        sb.AppendItem(HolesTexture, "HolesTexture");
                     }
                     if (printMask?.MembranePaletteTexture ?? true)
                     {
-                        fg.AppendItem(MembranePaletteTexture, "MembranePaletteTexture");
+                        sb.AppendItem(MembranePaletteTexture, "MembranePaletteTexture");
                     }
                     if (printMask?.ParticlePaletteTexture ?? true)
                     {
-                        fg.AppendItem(ParticlePaletteTexture, "ParticlePaletteTexture");
+                        sb.AppendItem(ParticlePaletteTexture, "ParticlePaletteTexture");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.MembraneSourceBlendMode ?? true)
                     {
-                        fg.AppendItem(MembraneSourceBlendMode, "MembraneSourceBlendMode");
+                        sb.AppendItem(MembraneSourceBlendMode, "MembraneSourceBlendMode");
                     }
                     if (printMask?.MembraneBlendOperation ?? true)
                     {
-                        fg.AppendItem(MembraneBlendOperation, "MembraneBlendOperation");
+                        sb.AppendItem(MembraneBlendOperation, "MembraneBlendOperation");
                     }
                     if (printMask?.MembraneZTest ?? true)
                     {
-                        fg.AppendItem(MembraneZTest, "MembraneZTest");
+                        sb.AppendItem(MembraneZTest, "MembraneZTest");
                     }
                     if (printMask?.FillColorKey1 ?? true)
                     {
-                        fg.AppendItem(FillColorKey1, "FillColorKey1");
+                        sb.AppendItem(FillColorKey1, "FillColorKey1");
                     }
                     if (printMask?.FillAlphaFadeInTime ?? true)
                     {
-                        fg.AppendItem(FillAlphaFadeInTime, "FillAlphaFadeInTime");
+                        sb.AppendItem(FillAlphaFadeInTime, "FillAlphaFadeInTime");
                     }
                     if (printMask?.FillFullAlphaTime ?? true)
                     {
-                        fg.AppendItem(FillFullAlphaTime, "FillFullAlphaTime");
+                        sb.AppendItem(FillFullAlphaTime, "FillFullAlphaTime");
                     }
                     if (printMask?.FillFadeOutTime ?? true)
                     {
-                        fg.AppendItem(FillFadeOutTime, "FillFadeOutTime");
+                        sb.AppendItem(FillFadeOutTime, "FillFadeOutTime");
                     }
                     if (printMask?.FillPersistentAlphaRatio ?? true)
                     {
-                        fg.AppendItem(FillPersistentAlphaRatio, "FillPersistentAlphaRatio");
+                        sb.AppendItem(FillPersistentAlphaRatio, "FillPersistentAlphaRatio");
                     }
                     if (printMask?.FillAlphaPulseAmplitude ?? true)
                     {
-                        fg.AppendItem(FillAlphaPulseAmplitude, "FillAlphaPulseAmplitude");
+                        sb.AppendItem(FillAlphaPulseAmplitude, "FillAlphaPulseAmplitude");
                     }
                     if (printMask?.FillAlphaPulseFrequency ?? true)
                     {
-                        fg.AppendItem(FillAlphaPulseFrequency, "FillAlphaPulseFrequency");
+                        sb.AppendItem(FillAlphaPulseFrequency, "FillAlphaPulseFrequency");
                     }
                     if (printMask?.FillTextureAnimationSpeedU ?? true)
                     {
-                        fg.AppendItem(FillTextureAnimationSpeedU, "FillTextureAnimationSpeedU");
+                        sb.AppendItem(FillTextureAnimationSpeedU, "FillTextureAnimationSpeedU");
                     }
                     if (printMask?.FillTextureAnimationSpeedV ?? true)
                     {
-                        fg.AppendItem(FillTextureAnimationSpeedV, "FillTextureAnimationSpeedV");
+                        sb.AppendItem(FillTextureAnimationSpeedV, "FillTextureAnimationSpeedV");
                     }
                     if (printMask?.EdgeEffectFallOff ?? true)
                     {
-                        fg.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
+                        sb.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
                     }
                     if (printMask?.EdgeEffectColor ?? true)
                     {
-                        fg.AppendItem(EdgeEffectColor, "EdgeEffectColor");
+                        sb.AppendItem(EdgeEffectColor, "EdgeEffectColor");
                     }
                     if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
+                        sb.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
                     }
                     if (printMask?.EdgeEffectFullAlphaTime ?? true)
                     {
-                        fg.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
+                        sb.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
                     }
                     if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
+                        sb.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
                     }
                     if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
                     {
-                        fg.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
+                        sb.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
                     }
                     if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
+                        sb.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
                     }
                     if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
                     {
-                        fg.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
+                        sb.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
                     }
                     if (printMask?.FillFullAlphaRatio ?? true)
                     {
-                        fg.AppendItem(FillFullAlphaRatio, "FillFullAlphaRatio");
+                        sb.AppendItem(FillFullAlphaRatio, "FillFullAlphaRatio");
                     }
                     if (printMask?.EdgeEffectFullAlphaRatio ?? true)
                     {
-                        fg.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
+                        sb.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
                     }
                     if (printMask?.MembraneDestBlendMode ?? true)
                     {
-                        fg.AppendItem(MembraneDestBlendMode, "MembraneDestBlendMode");
+                        sb.AppendItem(MembraneDestBlendMode, "MembraneDestBlendMode");
                     }
                     if (printMask?.ParticleSourceBlendMode ?? true)
                     {
-                        fg.AppendItem(ParticleSourceBlendMode, "ParticleSourceBlendMode");
+                        sb.AppendItem(ParticleSourceBlendMode, "ParticleSourceBlendMode");
                     }
                     if (printMask?.ParticleBlendOperation ?? true)
                     {
-                        fg.AppendItem(ParticleBlendOperation, "ParticleBlendOperation");
+                        sb.AppendItem(ParticleBlendOperation, "ParticleBlendOperation");
                     }
                     if (printMask?.ParticleZTest ?? true)
                     {
-                        fg.AppendItem(ParticleZTest, "ParticleZTest");
+                        sb.AppendItem(ParticleZTest, "ParticleZTest");
                     }
                     if (printMask?.ParticleDestBlendMode ?? true)
                     {
-                        fg.AppendItem(ParticleDestBlendMode, "ParticleDestBlendMode");
+                        sb.AppendItem(ParticleDestBlendMode, "ParticleDestBlendMode");
                     }
                     if (printMask?.ParticleBirthRampUpTime ?? true)
                     {
-                        fg.AppendItem(ParticleBirthRampUpTime, "ParticleBirthRampUpTime");
+                        sb.AppendItem(ParticleBirthRampUpTime, "ParticleBirthRampUpTime");
                     }
                     if (printMask?.ParticleFullBirthTime ?? true)
                     {
-                        fg.AppendItem(ParticleFullBirthTime, "ParticleFullBirthTime");
+                        sb.AppendItem(ParticleFullBirthTime, "ParticleFullBirthTime");
                     }
                     if (printMask?.ParticleBirthRampDownTime ?? true)
                     {
-                        fg.AppendItem(ParticleBirthRampDownTime, "ParticleBirthRampDownTime");
+                        sb.AppendItem(ParticleBirthRampDownTime, "ParticleBirthRampDownTime");
                     }
                     if (printMask?.ParticleFullBirthRatio ?? true)
                     {
-                        fg.AppendItem(ParticleFullBirthRatio, "ParticleFullBirthRatio");
+                        sb.AppendItem(ParticleFullBirthRatio, "ParticleFullBirthRatio");
                     }
                     if (printMask?.ParticlePeristentCount ?? true)
                     {
-                        fg.AppendItem(ParticlePeristentCount, "ParticlePeristentCount");
+                        sb.AppendItem(ParticlePeristentCount, "ParticlePeristentCount");
                     }
                     if (printMask?.ParticleLifetime ?? true)
                     {
-                        fg.AppendItem(ParticleLifetime, "ParticleLifetime");
+                        sb.AppendItem(ParticleLifetime, "ParticleLifetime");
                     }
                     if (printMask?.ParticleLifetimePlusMinus ?? true)
                     {
-                        fg.AppendItem(ParticleLifetimePlusMinus, "ParticleLifetimePlusMinus");
+                        sb.AppendItem(ParticleLifetimePlusMinus, "ParticleLifetimePlusMinus");
                     }
                     if (printMask?.ParticleInitialSpeedAlongNormal ?? true)
                     {
-                        fg.AppendItem(ParticleInitialSpeedAlongNormal, "ParticleInitialSpeedAlongNormal");
+                        sb.AppendItem(ParticleInitialSpeedAlongNormal, "ParticleInitialSpeedAlongNormal");
                     }
                     if (printMask?.ParticleAccelerationAlongNormal ?? true)
                     {
-                        fg.AppendItem(ParticleAccelerationAlongNormal, "ParticleAccelerationAlongNormal");
+                        sb.AppendItem(ParticleAccelerationAlongNormal, "ParticleAccelerationAlongNormal");
                     }
                     if (printMask?.ParticleInitialVelocity1 ?? true)
                     {
-                        fg.AppendItem(ParticleInitialVelocity1, "ParticleInitialVelocity1");
+                        sb.AppendItem(ParticleInitialVelocity1, "ParticleInitialVelocity1");
                     }
                     if (printMask?.ParticleInitialVelocity2 ?? true)
                     {
-                        fg.AppendItem(ParticleInitialVelocity2, "ParticleInitialVelocity2");
+                        sb.AppendItem(ParticleInitialVelocity2, "ParticleInitialVelocity2");
                     }
                     if (printMask?.ParticleInitialVelocity3 ?? true)
                     {
-                        fg.AppendItem(ParticleInitialVelocity3, "ParticleInitialVelocity3");
+                        sb.AppendItem(ParticleInitialVelocity3, "ParticleInitialVelocity3");
                     }
                     if (printMask?.ParticleAcceleration1 ?? true)
                     {
-                        fg.AppendItem(ParticleAcceleration1, "ParticleAcceleration1");
+                        sb.AppendItem(ParticleAcceleration1, "ParticleAcceleration1");
                     }
                     if (printMask?.ParticleAcceleration2 ?? true)
                     {
-                        fg.AppendItem(ParticleAcceleration2, "ParticleAcceleration2");
+                        sb.AppendItem(ParticleAcceleration2, "ParticleAcceleration2");
                     }
                     if (printMask?.ParticleAcceleration3 ?? true)
                     {
-                        fg.AppendItem(ParticleAcceleration3, "ParticleAcceleration3");
+                        sb.AppendItem(ParticleAcceleration3, "ParticleAcceleration3");
                     }
                     if (printMask?.ParticleScaleKey1 ?? true)
                     {
-                        fg.AppendItem(ParticleScaleKey1, "ParticleScaleKey1");
+                        sb.AppendItem(ParticleScaleKey1, "ParticleScaleKey1");
                     }
                     if (printMask?.ParticleScaleKey2 ?? true)
                     {
-                        fg.AppendItem(ParticleScaleKey2, "ParticleScaleKey2");
+                        sb.AppendItem(ParticleScaleKey2, "ParticleScaleKey2");
                     }
                     if (printMask?.ParticleScaleKey1Time ?? true)
                     {
-                        fg.AppendItem(ParticleScaleKey1Time, "ParticleScaleKey1Time");
+                        sb.AppendItem(ParticleScaleKey1Time, "ParticleScaleKey1Time");
                     }
                     if (printMask?.ParticleScaleKey2Time ?? true)
                     {
-                        fg.AppendItem(ParticleScaleKey2Time, "ParticleScaleKey2Time");
+                        sb.AppendItem(ParticleScaleKey2Time, "ParticleScaleKey2Time");
                     }
                     if (printMask?.ColorKey1 ?? true)
                     {
-                        fg.AppendItem(ColorKey1, "ColorKey1");
+                        sb.AppendItem(ColorKey1, "ColorKey1");
                     }
                     if (printMask?.ColorKey2 ?? true)
                     {
-                        fg.AppendItem(ColorKey2, "ColorKey2");
+                        sb.AppendItem(ColorKey2, "ColorKey2");
                     }
                     if (printMask?.ColorKey3 ?? true)
                     {
-                        fg.AppendItem(ColorKey3, "ColorKey3");
+                        sb.AppendItem(ColorKey3, "ColorKey3");
                     }
                     if (printMask?.ColorKey1Alpha ?? true)
                     {
-                        fg.AppendItem(ColorKey1Alpha, "ColorKey1Alpha");
+                        sb.AppendItem(ColorKey1Alpha, "ColorKey1Alpha");
                     }
                     if (printMask?.ColorKey2Alpha ?? true)
                     {
-                        fg.AppendItem(ColorKey2Alpha, "ColorKey2Alpha");
+                        sb.AppendItem(ColorKey2Alpha, "ColorKey2Alpha");
                     }
                     if (printMask?.ColorKey3Alpha ?? true)
                     {
-                        fg.AppendItem(ColorKey3Alpha, "ColorKey3Alpha");
+                        sb.AppendItem(ColorKey3Alpha, "ColorKey3Alpha");
                     }
                     if (printMask?.ColorKey1Time ?? true)
                     {
-                        fg.AppendItem(ColorKey1Time, "ColorKey1Time");
+                        sb.AppendItem(ColorKey1Time, "ColorKey1Time");
                     }
                     if (printMask?.ColorKey2Time ?? true)
                     {
-                        fg.AppendItem(ColorKey2Time, "ColorKey2Time");
+                        sb.AppendItem(ColorKey2Time, "ColorKey2Time");
                     }
                     if (printMask?.ColorKey3Time ?? true)
                     {
-                        fg.AppendItem(ColorKey3Time, "ColorKey3Time");
+                        sb.AppendItem(ColorKey3Time, "ColorKey3Time");
                     }
                     if (printMask?.ParticleInitialSpeedAlongNormalPlusMinus ?? true)
                     {
-                        fg.AppendItem(ParticleInitialSpeedAlongNormalPlusMinus, "ParticleInitialSpeedAlongNormalPlusMinus");
+                        sb.AppendItem(ParticleInitialSpeedAlongNormalPlusMinus, "ParticleInitialSpeedAlongNormalPlusMinus");
                     }
                     if (printMask?.ParticleInitialRotationDegree ?? true)
                     {
-                        fg.AppendItem(ParticleInitialRotationDegree, "ParticleInitialRotationDegree");
+                        sb.AppendItem(ParticleInitialRotationDegree, "ParticleInitialRotationDegree");
                     }
                     if (printMask?.ParticleInitialRotationDegreePlusMinus ?? true)
                     {
-                        fg.AppendItem(ParticleInitialRotationDegreePlusMinus, "ParticleInitialRotationDegreePlusMinus");
+                        sb.AppendItem(ParticleInitialRotationDegreePlusMinus, "ParticleInitialRotationDegreePlusMinus");
                     }
                     if (printMask?.ParticleRotationSpeedDegreePerSec ?? true)
                     {
-                        fg.AppendItem(ParticleRotationSpeedDegreePerSec, "ParticleRotationSpeedDegreePerSec");
+                        sb.AppendItem(ParticleRotationSpeedDegreePerSec, "ParticleRotationSpeedDegreePerSec");
                     }
                     if (printMask?.ParticleRotationSpeedDegreePerSecPlusMinus ?? true)
                     {
-                        fg.AppendItem(ParticleRotationSpeedDegreePerSecPlusMinus, "ParticleRotationSpeedDegreePerSecPlusMinus");
+                        sb.AppendItem(ParticleRotationSpeedDegreePerSecPlusMinus, "ParticleRotationSpeedDegreePerSecPlusMinus");
                     }
                     if (printMask?.AddonModels ?? true)
                     {
-                        fg.AppendItem(AddonModels, "AddonModels");
+                        sb.AppendItem(AddonModels, "AddonModels");
                     }
                     if (printMask?.HolesStartTime ?? true)
                     {
-                        fg.AppendItem(HolesStartTime, "HolesStartTime");
+                        sb.AppendItem(HolesStartTime, "HolesStartTime");
                     }
                     if (printMask?.HolesEndTime ?? true)
                     {
-                        fg.AppendItem(HolesEndTime, "HolesEndTime");
+                        sb.AppendItem(HolesEndTime, "HolesEndTime");
                     }
                     if (printMask?.HolesStartValue ?? true)
                     {
-                        fg.AppendItem(HolesStartValue, "HolesStartValue");
+                        sb.AppendItem(HolesStartValue, "HolesStartValue");
                     }
                     if (printMask?.HolesEndValue ?? true)
                     {
-                        fg.AppendItem(HolesEndValue, "HolesEndValue");
+                        sb.AppendItem(HolesEndValue, "HolesEndValue");
                     }
                     if (printMask?.EdgeWidth ?? true)
                     {
-                        fg.AppendItem(EdgeWidth, "EdgeWidth");
+                        sb.AppendItem(EdgeWidth, "EdgeWidth");
                     }
                     if (printMask?.EdgeColor ?? true)
                     {
-                        fg.AppendItem(EdgeColor, "EdgeColor");
+                        sb.AppendItem(EdgeColor, "EdgeColor");
                     }
                     if (printMask?.ExplosionWindSpeed ?? true)
                     {
-                        fg.AppendItem(ExplosionWindSpeed, "ExplosionWindSpeed");
+                        sb.AppendItem(ExplosionWindSpeed, "ExplosionWindSpeed");
                     }
                     if (printMask?.TextureCountU ?? true)
                     {
-                        fg.AppendItem(TextureCountU, "TextureCountU");
+                        sb.AppendItem(TextureCountU, "TextureCountU");
                     }
                     if (printMask?.TextureCountV ?? true)
                     {
-                        fg.AppendItem(TextureCountV, "TextureCountV");
+                        sb.AppendItem(TextureCountV, "TextureCountV");
                     }
                     if (printMask?.AddonModelsFadeInTime ?? true)
                     {
-                        fg.AppendItem(AddonModelsFadeInTime, "AddonModelsFadeInTime");
+                        sb.AppendItem(AddonModelsFadeInTime, "AddonModelsFadeInTime");
                     }
                     if (printMask?.AddonModelsFadeOutTime ?? true)
                     {
-                        fg.AppendItem(AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
+                        sb.AppendItem(AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
                     }
                     if (printMask?.AddonModelsScaleStart ?? true)
                     {
-                        fg.AppendItem(AddonModelsScaleStart, "AddonModelsScaleStart");
+                        sb.AppendItem(AddonModelsScaleStart, "AddonModelsScaleStart");
                     }
                     if (printMask?.AddonModelsScaleEnd ?? true)
                     {
-                        fg.AppendItem(AddonModelsScaleEnd, "AddonModelsScaleEnd");
+                        sb.AppendItem(AddonModelsScaleEnd, "AddonModelsScaleEnd");
                     }
                     if (printMask?.AddonModelsScaleInTime ?? true)
                     {
-                        fg.AppendItem(AddonModelsScaleInTime, "AddonModelsScaleInTime");
+                        sb.AppendItem(AddonModelsScaleInTime, "AddonModelsScaleInTime");
                     }
                     if (printMask?.AddonModelsScaleOutTime ?? true)
                     {
-                        fg.AppendItem(AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
+                        sb.AppendItem(AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
                     }
                     if (printMask?.AmbientSound ?? true)
                     {
-                        fg.AppendItem(AmbientSound, "AmbientSound");
+                        sb.AppendItem(AmbientSound, "AmbientSound");
                     }
                     if (printMask?.FillColorKey2 ?? true)
                     {
-                        fg.AppendItem(FillColorKey2, "FillColorKey2");
+                        sb.AppendItem(FillColorKey2, "FillColorKey2");
                     }
                     if (printMask?.FillColorKey3 ?? true)
                     {
-                        fg.AppendItem(FillColorKey3, "FillColorKey3");
+                        sb.AppendItem(FillColorKey3, "FillColorKey3");
                     }
                     if (printMask?.FillColorKey1Scale ?? true)
                     {
-                        fg.AppendItem(FillColorKey1Scale, "FillColorKey1Scale");
+                        sb.AppendItem(FillColorKey1Scale, "FillColorKey1Scale");
                     }
                     if (printMask?.FillColorKey2Scale ?? true)
                     {
-                        fg.AppendItem(FillColorKey2Scale, "FillColorKey2Scale");
+                        sb.AppendItem(FillColorKey2Scale, "FillColorKey2Scale");
                     }
                     if (printMask?.FillColorKey3Scale ?? true)
                     {
-                        fg.AppendItem(FillColorKey3Scale, "FillColorKey3Scale");
+                        sb.AppendItem(FillColorKey3Scale, "FillColorKey3Scale");
                     }
                     if (printMask?.FillColorKey1Time ?? true)
                     {
-                        fg.AppendItem(FillColorKey1Time, "FillColorKey1Time");
+                        sb.AppendItem(FillColorKey1Time, "FillColorKey1Time");
                     }
                     if (printMask?.FillColorKey2Time ?? true)
                     {
-                        fg.AppendItem(FillColorKey2Time, "FillColorKey2Time");
+                        sb.AppendItem(FillColorKey2Time, "FillColorKey2Time");
                     }
                     if (printMask?.FillColorKey3Time ?? true)
                     {
-                        fg.AppendItem(FillColorKey3Time, "FillColorKey3Time");
+                        sb.AppendItem(FillColorKey3Time, "FillColorKey3Time");
                     }
                     if (printMask?.ColorScale ?? true)
                     {
-                        fg.AppendItem(ColorScale, "ColorScale");
+                        sb.AppendItem(ColorScale, "ColorScale");
                     }
                     if (printMask?.BirthPositionOffset ?? true)
                     {
-                        fg.AppendItem(BirthPositionOffset, "BirthPositionOffset");
+                        sb.AppendItem(BirthPositionOffset, "BirthPositionOffset");
                     }
                     if (printMask?.BirthPositionOffsetRangePlusMinus ?? true)
                     {
-                        fg.AppendItem(BirthPositionOffsetRangePlusMinus, "BirthPositionOffsetRangePlusMinus");
+                        sb.AppendItem(BirthPositionOffsetRangePlusMinus, "BirthPositionOffsetRangePlusMinus");
                     }
                     if (printMask?.ParticleAnimatedStartFrame ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedStartFrame, "ParticleAnimatedStartFrame");
+                        sb.AppendItem(ParticleAnimatedStartFrame, "ParticleAnimatedStartFrame");
                     }
                     if (printMask?.ParticleAnimatedStartFrameVariation ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedStartFrameVariation, "ParticleAnimatedStartFrameVariation");
+                        sb.AppendItem(ParticleAnimatedStartFrameVariation, "ParticleAnimatedStartFrameVariation");
                     }
                     if (printMask?.ParticleAnimatedEndFrame ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedEndFrame, "ParticleAnimatedEndFrame");
+                        sb.AppendItem(ParticleAnimatedEndFrame, "ParticleAnimatedEndFrame");
                     }
                     if (printMask?.ParticleAnimatedLoopStartFrame ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedLoopStartFrame, "ParticleAnimatedLoopStartFrame");
+                        sb.AppendItem(ParticleAnimatedLoopStartFrame, "ParticleAnimatedLoopStartFrame");
                     }
                     if (printMask?.ParticleAnimatedLoopStartVariation ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedLoopStartVariation, "ParticleAnimatedLoopStartVariation");
+                        sb.AppendItem(ParticleAnimatedLoopStartVariation, "ParticleAnimatedLoopStartVariation");
                     }
                     if (printMask?.ParticleAnimatedFrameCount ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedFrameCount, "ParticleAnimatedFrameCount");
+                        sb.AppendItem(ParticleAnimatedFrameCount, "ParticleAnimatedFrameCount");
                     }
                     if (printMask?.ParticleAnimatedFrameCountVariation ?? true)
                     {
-                        fg.AppendItem(ParticleAnimatedFrameCountVariation, "ParticleAnimatedFrameCountVariation");
+                        sb.AppendItem(ParticleAnimatedFrameCountVariation, "ParticleAnimatedFrameCountVariation");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FillTextureScaleU ?? true)
                     {
-                        fg.AppendItem(FillTextureScaleU, "FillTextureScaleU");
+                        sb.AppendItem(FillTextureScaleU, "FillTextureScaleU");
                     }
                     if (printMask?.FillTextureScaleV ?? true)
                     {
-                        fg.AppendItem(FillTextureScaleV, "FillTextureScaleV");
+                        sb.AppendItem(FillTextureScaleV, "FillTextureScaleV");
                     }
                     if (printMask?.SceneGraphEmitDepthLimit ?? true)
                     {
-                        fg.AppendItem(SceneGraphEmitDepthLimit, "SceneGraphEmitDepthLimit");
+                        sb.AppendItem(SceneGraphEmitDepthLimit, "SceneGraphEmitDepthLimit");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -3279,142 +3276,345 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(FillTexture, "FillTexture");
-                fg.AppendItem(ParticleShaderTexture, "ParticleShaderTexture");
-                fg.AppendItem(HolesTexture, "HolesTexture");
-                fg.AppendItem(MembranePaletteTexture, "MembranePaletteTexture");
-                fg.AppendItem(ParticlePaletteTexture, "ParticlePaletteTexture");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(MembraneSourceBlendMode, "MembraneSourceBlendMode");
-                fg.AppendItem(MembraneBlendOperation, "MembraneBlendOperation");
-                fg.AppendItem(MembraneZTest, "MembraneZTest");
-                fg.AppendItem(FillColorKey1, "FillColorKey1");
-                fg.AppendItem(FillAlphaFadeInTime, "FillAlphaFadeInTime");
-                fg.AppendItem(FillFullAlphaTime, "FillFullAlphaTime");
-                fg.AppendItem(FillFadeOutTime, "FillFadeOutTime");
-                fg.AppendItem(FillPersistentAlphaRatio, "FillPersistentAlphaRatio");
-                fg.AppendItem(FillAlphaPulseAmplitude, "FillAlphaPulseAmplitude");
-                fg.AppendItem(FillAlphaPulseFrequency, "FillAlphaPulseFrequency");
-                fg.AppendItem(FillTextureAnimationSpeedU, "FillTextureAnimationSpeedU");
-                fg.AppendItem(FillTextureAnimationSpeedV, "FillTextureAnimationSpeedV");
-                fg.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
-                fg.AppendItem(EdgeEffectColor, "EdgeEffectColor");
-                fg.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
-                fg.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
-                fg.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
-                fg.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
-                fg.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
-                fg.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
-                fg.AppendItem(FillFullAlphaRatio, "FillFullAlphaRatio");
-                fg.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
-                fg.AppendItem(MembraneDestBlendMode, "MembraneDestBlendMode");
-                fg.AppendItem(ParticleSourceBlendMode, "ParticleSourceBlendMode");
-                fg.AppendItem(ParticleBlendOperation, "ParticleBlendOperation");
-                fg.AppendItem(ParticleZTest, "ParticleZTest");
-                fg.AppendItem(ParticleDestBlendMode, "ParticleDestBlendMode");
-                fg.AppendItem(ParticleBirthRampUpTime, "ParticleBirthRampUpTime");
-                fg.AppendItem(ParticleFullBirthTime, "ParticleFullBirthTime");
-                fg.AppendItem(ParticleBirthRampDownTime, "ParticleBirthRampDownTime");
-                fg.AppendItem(ParticleFullBirthRatio, "ParticleFullBirthRatio");
-                fg.AppendItem(ParticlePeristentCount, "ParticlePeristentCount");
-                fg.AppendItem(ParticleLifetime, "ParticleLifetime");
-                fg.AppendItem(ParticleLifetimePlusMinus, "ParticleLifetimePlusMinus");
-                fg.AppendItem(ParticleInitialSpeedAlongNormal, "ParticleInitialSpeedAlongNormal");
-                fg.AppendItem(ParticleAccelerationAlongNormal, "ParticleAccelerationAlongNormal");
-                fg.AppendItem(ParticleInitialVelocity1, "ParticleInitialVelocity1");
-                fg.AppendItem(ParticleInitialVelocity2, "ParticleInitialVelocity2");
-                fg.AppendItem(ParticleInitialVelocity3, "ParticleInitialVelocity3");
-                fg.AppendItem(ParticleAcceleration1, "ParticleAcceleration1");
-                fg.AppendItem(ParticleAcceleration2, "ParticleAcceleration2");
-                fg.AppendItem(ParticleAcceleration3, "ParticleAcceleration3");
-                fg.AppendItem(ParticleScaleKey1, "ParticleScaleKey1");
-                fg.AppendItem(ParticleScaleKey2, "ParticleScaleKey2");
-                fg.AppendItem(ParticleScaleKey1Time, "ParticleScaleKey1Time");
-                fg.AppendItem(ParticleScaleKey2Time, "ParticleScaleKey2Time");
-                fg.AppendItem(ColorKey1, "ColorKey1");
-                fg.AppendItem(ColorKey2, "ColorKey2");
-                fg.AppendItem(ColorKey3, "ColorKey3");
-                fg.AppendItem(ColorKey1Alpha, "ColorKey1Alpha");
-                fg.AppendItem(ColorKey2Alpha, "ColorKey2Alpha");
-                fg.AppendItem(ColorKey3Alpha, "ColorKey3Alpha");
-                fg.AppendItem(ColorKey1Time, "ColorKey1Time");
-                fg.AppendItem(ColorKey2Time, "ColorKey2Time");
-                fg.AppendItem(ColorKey3Time, "ColorKey3Time");
-                fg.AppendItem(ParticleInitialSpeedAlongNormalPlusMinus, "ParticleInitialSpeedAlongNormalPlusMinus");
-                fg.AppendItem(ParticleInitialRotationDegree, "ParticleInitialRotationDegree");
-                fg.AppendItem(ParticleInitialRotationDegreePlusMinus, "ParticleInitialRotationDegreePlusMinus");
-                fg.AppendItem(ParticleRotationSpeedDegreePerSec, "ParticleRotationSpeedDegreePerSec");
-                fg.AppendItem(ParticleRotationSpeedDegreePerSecPlusMinus, "ParticleRotationSpeedDegreePerSecPlusMinus");
-                fg.AppendItem(AddonModels, "AddonModels");
-                fg.AppendItem(HolesStartTime, "HolesStartTime");
-                fg.AppendItem(HolesEndTime, "HolesEndTime");
-                fg.AppendItem(HolesStartValue, "HolesStartValue");
-                fg.AppendItem(HolesEndValue, "HolesEndValue");
-                fg.AppendItem(EdgeWidth, "EdgeWidth");
-                fg.AppendItem(EdgeColor, "EdgeColor");
-                fg.AppendItem(ExplosionWindSpeed, "ExplosionWindSpeed");
-                fg.AppendItem(TextureCountU, "TextureCountU");
-                fg.AppendItem(TextureCountV, "TextureCountV");
-                fg.AppendItem(AddonModelsFadeInTime, "AddonModelsFadeInTime");
-                fg.AppendItem(AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
-                fg.AppendItem(AddonModelsScaleStart, "AddonModelsScaleStart");
-                fg.AppendItem(AddonModelsScaleEnd, "AddonModelsScaleEnd");
-                fg.AppendItem(AddonModelsScaleInTime, "AddonModelsScaleInTime");
-                fg.AppendItem(AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
-                fg.AppendItem(AmbientSound, "AmbientSound");
-                fg.AppendItem(FillColorKey2, "FillColorKey2");
-                fg.AppendItem(FillColorKey3, "FillColorKey3");
-                fg.AppendItem(FillColorKey1Scale, "FillColorKey1Scale");
-                fg.AppendItem(FillColorKey2Scale, "FillColorKey2Scale");
-                fg.AppendItem(FillColorKey3Scale, "FillColorKey3Scale");
-                fg.AppendItem(FillColorKey1Time, "FillColorKey1Time");
-                fg.AppendItem(FillColorKey2Time, "FillColorKey2Time");
-                fg.AppendItem(FillColorKey3Time, "FillColorKey3Time");
-                fg.AppendItem(ColorScale, "ColorScale");
-                fg.AppendItem(BirthPositionOffset, "BirthPositionOffset");
-                fg.AppendItem(BirthPositionOffsetRangePlusMinus, "BirthPositionOffsetRangePlusMinus");
-                fg.AppendItem(ParticleAnimatedStartFrame, "ParticleAnimatedStartFrame");
-                fg.AppendItem(ParticleAnimatedStartFrameVariation, "ParticleAnimatedStartFrameVariation");
-                fg.AppendItem(ParticleAnimatedEndFrame, "ParticleAnimatedEndFrame");
-                fg.AppendItem(ParticleAnimatedLoopStartFrame, "ParticleAnimatedLoopStartFrame");
-                fg.AppendItem(ParticleAnimatedLoopStartVariation, "ParticleAnimatedLoopStartVariation");
-                fg.AppendItem(ParticleAnimatedFrameCount, "ParticleAnimatedFrameCount");
-                fg.AppendItem(ParticleAnimatedFrameCountVariation, "ParticleAnimatedFrameCountVariation");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FillTextureScaleU, "FillTextureScaleU");
-                fg.AppendItem(FillTextureScaleV, "FillTextureScaleV");
-                fg.AppendItem(SceneGraphEmitDepthLimit, "SceneGraphEmitDepthLimit");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(FillTexture, "FillTexture");
+                }
+                {
+                    sb.AppendItem(ParticleShaderTexture, "ParticleShaderTexture");
+                }
+                {
+                    sb.AppendItem(HolesTexture, "HolesTexture");
+                }
+                {
+                    sb.AppendItem(MembranePaletteTexture, "MembranePaletteTexture");
+                }
+                {
+                    sb.AppendItem(ParticlePaletteTexture, "ParticlePaletteTexture");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(MembraneSourceBlendMode, "MembraneSourceBlendMode");
+                }
+                {
+                    sb.AppendItem(MembraneBlendOperation, "MembraneBlendOperation");
+                }
+                {
+                    sb.AppendItem(MembraneZTest, "MembraneZTest");
+                }
+                {
+                    sb.AppendItem(FillColorKey1, "FillColorKey1");
+                }
+                {
+                    sb.AppendItem(FillAlphaFadeInTime, "FillAlphaFadeInTime");
+                }
+                {
+                    sb.AppendItem(FillFullAlphaTime, "FillFullAlphaTime");
+                }
+                {
+                    sb.AppendItem(FillFadeOutTime, "FillFadeOutTime");
+                }
+                {
+                    sb.AppendItem(FillPersistentAlphaRatio, "FillPersistentAlphaRatio");
+                }
+                {
+                    sb.AppendItem(FillAlphaPulseAmplitude, "FillAlphaPulseAmplitude");
+                }
+                {
+                    sb.AppendItem(FillAlphaPulseFrequency, "FillAlphaPulseFrequency");
+                }
+                {
+                    sb.AppendItem(FillTextureAnimationSpeedU, "FillTextureAnimationSpeedU");
+                }
+                {
+                    sb.AppendItem(FillTextureAnimationSpeedV, "FillTextureAnimationSpeedV");
+                }
+                {
+                    sb.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
+                }
+                {
+                    sb.AppendItem(EdgeEffectColor, "EdgeEffectColor");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
+                }
+                {
+                    sb.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
+                }
+                {
+                    sb.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
+                }
+                {
+                    sb.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
+                }
+                {
+                    sb.AppendItem(FillFullAlphaRatio, "FillFullAlphaRatio");
+                }
+                {
+                    sb.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
+                }
+                {
+                    sb.AppendItem(MembraneDestBlendMode, "MembraneDestBlendMode");
+                }
+                {
+                    sb.AppendItem(ParticleSourceBlendMode, "ParticleSourceBlendMode");
+                }
+                {
+                    sb.AppendItem(ParticleBlendOperation, "ParticleBlendOperation");
+                }
+                {
+                    sb.AppendItem(ParticleZTest, "ParticleZTest");
+                }
+                {
+                    sb.AppendItem(ParticleDestBlendMode, "ParticleDestBlendMode");
+                }
+                {
+                    sb.AppendItem(ParticleBirthRampUpTime, "ParticleBirthRampUpTime");
+                }
+                {
+                    sb.AppendItem(ParticleFullBirthTime, "ParticleFullBirthTime");
+                }
+                {
+                    sb.AppendItem(ParticleBirthRampDownTime, "ParticleBirthRampDownTime");
+                }
+                {
+                    sb.AppendItem(ParticleFullBirthRatio, "ParticleFullBirthRatio");
+                }
+                {
+                    sb.AppendItem(ParticlePeristentCount, "ParticlePeristentCount");
+                }
+                {
+                    sb.AppendItem(ParticleLifetime, "ParticleLifetime");
+                }
+                {
+                    sb.AppendItem(ParticleLifetimePlusMinus, "ParticleLifetimePlusMinus");
+                }
+                {
+                    sb.AppendItem(ParticleInitialSpeedAlongNormal, "ParticleInitialSpeedAlongNormal");
+                }
+                {
+                    sb.AppendItem(ParticleAccelerationAlongNormal, "ParticleAccelerationAlongNormal");
+                }
+                {
+                    sb.AppendItem(ParticleInitialVelocity1, "ParticleInitialVelocity1");
+                }
+                {
+                    sb.AppendItem(ParticleInitialVelocity2, "ParticleInitialVelocity2");
+                }
+                {
+                    sb.AppendItem(ParticleInitialVelocity3, "ParticleInitialVelocity3");
+                }
+                {
+                    sb.AppendItem(ParticleAcceleration1, "ParticleAcceleration1");
+                }
+                {
+                    sb.AppendItem(ParticleAcceleration2, "ParticleAcceleration2");
+                }
+                {
+                    sb.AppendItem(ParticleAcceleration3, "ParticleAcceleration3");
+                }
+                {
+                    sb.AppendItem(ParticleScaleKey1, "ParticleScaleKey1");
+                }
+                {
+                    sb.AppendItem(ParticleScaleKey2, "ParticleScaleKey2");
+                }
+                {
+                    sb.AppendItem(ParticleScaleKey1Time, "ParticleScaleKey1Time");
+                }
+                {
+                    sb.AppendItem(ParticleScaleKey2Time, "ParticleScaleKey2Time");
+                }
+                {
+                    sb.AppendItem(ColorKey1, "ColorKey1");
+                }
+                {
+                    sb.AppendItem(ColorKey2, "ColorKey2");
+                }
+                {
+                    sb.AppendItem(ColorKey3, "ColorKey3");
+                }
+                {
+                    sb.AppendItem(ColorKey1Alpha, "ColorKey1Alpha");
+                }
+                {
+                    sb.AppendItem(ColorKey2Alpha, "ColorKey2Alpha");
+                }
+                {
+                    sb.AppendItem(ColorKey3Alpha, "ColorKey3Alpha");
+                }
+                {
+                    sb.AppendItem(ColorKey1Time, "ColorKey1Time");
+                }
+                {
+                    sb.AppendItem(ColorKey2Time, "ColorKey2Time");
+                }
+                {
+                    sb.AppendItem(ColorKey3Time, "ColorKey3Time");
+                }
+                {
+                    sb.AppendItem(ParticleInitialSpeedAlongNormalPlusMinus, "ParticleInitialSpeedAlongNormalPlusMinus");
+                }
+                {
+                    sb.AppendItem(ParticleInitialRotationDegree, "ParticleInitialRotationDegree");
+                }
+                {
+                    sb.AppendItem(ParticleInitialRotationDegreePlusMinus, "ParticleInitialRotationDegreePlusMinus");
+                }
+                {
+                    sb.AppendItem(ParticleRotationSpeedDegreePerSec, "ParticleRotationSpeedDegreePerSec");
+                }
+                {
+                    sb.AppendItem(ParticleRotationSpeedDegreePerSecPlusMinus, "ParticleRotationSpeedDegreePerSecPlusMinus");
+                }
+                {
+                    sb.AppendItem(AddonModels, "AddonModels");
+                }
+                {
+                    sb.AppendItem(HolesStartTime, "HolesStartTime");
+                }
+                {
+                    sb.AppendItem(HolesEndTime, "HolesEndTime");
+                }
+                {
+                    sb.AppendItem(HolesStartValue, "HolesStartValue");
+                }
+                {
+                    sb.AppendItem(HolesEndValue, "HolesEndValue");
+                }
+                {
+                    sb.AppendItem(EdgeWidth, "EdgeWidth");
+                }
+                {
+                    sb.AppendItem(EdgeColor, "EdgeColor");
+                }
+                {
+                    sb.AppendItem(ExplosionWindSpeed, "ExplosionWindSpeed");
+                }
+                {
+                    sb.AppendItem(TextureCountU, "TextureCountU");
+                }
+                {
+                    sb.AppendItem(TextureCountV, "TextureCountV");
+                }
+                {
+                    sb.AppendItem(AddonModelsFadeInTime, "AddonModelsFadeInTime");
+                }
+                {
+                    sb.AppendItem(AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleStart, "AddonModelsScaleStart");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleEnd, "AddonModelsScaleEnd");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleInTime, "AddonModelsScaleInTime");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
+                }
+                {
+                    sb.AppendItem(AmbientSound, "AmbientSound");
+                }
+                {
+                    sb.AppendItem(FillColorKey2, "FillColorKey2");
+                }
+                {
+                    sb.AppendItem(FillColorKey3, "FillColorKey3");
+                }
+                {
+                    sb.AppendItem(FillColorKey1Scale, "FillColorKey1Scale");
+                }
+                {
+                    sb.AppendItem(FillColorKey2Scale, "FillColorKey2Scale");
+                }
+                {
+                    sb.AppendItem(FillColorKey3Scale, "FillColorKey3Scale");
+                }
+                {
+                    sb.AppendItem(FillColorKey1Time, "FillColorKey1Time");
+                }
+                {
+                    sb.AppendItem(FillColorKey2Time, "FillColorKey2Time");
+                }
+                {
+                    sb.AppendItem(FillColorKey3Time, "FillColorKey3Time");
+                }
+                {
+                    sb.AppendItem(ColorScale, "ColorScale");
+                }
+                {
+                    sb.AppendItem(BirthPositionOffset, "BirthPositionOffset");
+                }
+                {
+                    sb.AppendItem(BirthPositionOffsetRangePlusMinus, "BirthPositionOffsetRangePlusMinus");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedStartFrame, "ParticleAnimatedStartFrame");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedStartFrameVariation, "ParticleAnimatedStartFrameVariation");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedEndFrame, "ParticleAnimatedEndFrame");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedLoopStartFrame, "ParticleAnimatedLoopStartFrame");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedLoopStartVariation, "ParticleAnimatedLoopStartVariation");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedFrameCount, "ParticleAnimatedFrameCount");
+                }
+                {
+                    sb.AppendItem(ParticleAnimatedFrameCountVariation, "ParticleAnimatedFrameCountVariation");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FillTextureScaleU, "FillTextureScaleU");
+                }
+                {
+                    sb.AppendItem(FillTextureScaleV, "FillTextureScaleV");
+                }
+                {
+                    sb.AppendItem(SceneGraphEmitDepthLimit, "SceneGraphEmitDepthLimit");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -3896,7 +4096,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => EffectShaderCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EffectShaderCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderSetterCommon.Instance.RemapLinks(this, mapping);
         public EffectShader(
             FormKey formKey,
@@ -3982,7 +4182,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectShaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3992,7 +4192,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static EffectShader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EffectShader();
             ((EffectShaderSetterCommon)((IEffectShaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -4007,7 +4207,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EffectShader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -4017,7 +4217,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -4293,26 +4493,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IEffectShaderGetter item,
             string? name = null,
             EffectShader.Mask<bool>? printMask = null)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).ToString(
+            return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IEffectShaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectShader.Mask<bool>? printMask = null)
         {
-            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).ToString(
+            ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -4407,7 +4607,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEffectShaderInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EffectShaderSetterCommon)((IEffectShaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -4422,10 +4622,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum EffectShader_FieldIndex
+    internal enum EffectShader_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -4543,7 +4743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class EffectShader_Registration : ILoquiRegistration
+    internal partial class EffectShader_Registration : ILoquiRegistration
     {
         public static readonly EffectShader_Registration Instance = new EffectShader_Registration();
 
@@ -4585,6 +4785,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.EFSH;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.EFSH);
+            var all = RecordCollection.Factory(
+                RecordTypes.EFSH,
+                RecordTypes.ICON,
+                RecordTypes.ICO2,
+                RecordTypes.NAM7,
+                RecordTypes.NAM8,
+                RecordTypes.NAM9,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4618,7 +4832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EffectShaderSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class EffectShaderSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly EffectShaderSetterCommon Instance = new EffectShaderSetterCommon();
 
@@ -4760,7 +4974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IEffectShaderInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IEffectShaderInternal>(
                 record: item,
@@ -4773,7 +4987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (EffectShader)item,
@@ -4784,7 +4998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (EffectShader)item,
@@ -4795,7 +5009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EffectShaderCommon : SkyrimMajorRecordCommon
+    internal partial class EffectShaderCommon : SkyrimMajorRecordCommon
     {
         public new static readonly EffectShaderCommon Instance = new EffectShaderCommon();
 
@@ -4819,7 +5033,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EffectShader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FillTexture = string.Equals(item.FillTexture, rhs.FillTexture);
             ret.ParticleShaderTexture = string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
             ret.HolesTexture = string.Equals(item.HolesTexture, rhs.HolesTexture);
@@ -4929,482 +5142,480 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IEffectShaderGetter item,
             string? name = null,
             EffectShader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IEffectShaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectShader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EffectShader =>");
+                sb.AppendLine($"EffectShader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EffectShader) =>");
+                sb.AppendLine($"{name} (EffectShader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEffectShaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EffectShader.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.FillTexture ?? true)
                 && item.FillTexture is {} FillTextureItem)
             {
-                fg.AppendItem(FillTextureItem, "FillTexture");
+                sb.AppendItem(FillTextureItem, "FillTexture");
             }
             if ((printMask?.ParticleShaderTexture ?? true)
                 && item.ParticleShaderTexture is {} ParticleShaderTextureItem)
             {
-                fg.AppendItem(ParticleShaderTextureItem, "ParticleShaderTexture");
+                sb.AppendItem(ParticleShaderTextureItem, "ParticleShaderTexture");
             }
             if ((printMask?.HolesTexture ?? true)
                 && item.HolesTexture is {} HolesTextureItem)
             {
-                fg.AppendItem(HolesTextureItem, "HolesTexture");
+                sb.AppendItem(HolesTextureItem, "HolesTexture");
             }
             if ((printMask?.MembranePaletteTexture ?? true)
                 && item.MembranePaletteTexture is {} MembranePaletteTextureItem)
             {
-                fg.AppendItem(MembranePaletteTextureItem, "MembranePaletteTexture");
+                sb.AppendItem(MembranePaletteTextureItem, "MembranePaletteTexture");
             }
             if ((printMask?.ParticlePaletteTexture ?? true)
                 && item.ParticlePaletteTexture is {} ParticlePaletteTextureItem)
             {
-                fg.AppendItem(ParticlePaletteTextureItem, "ParticlePaletteTexture");
+                sb.AppendItem(ParticlePaletteTextureItem, "ParticlePaletteTexture");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.MembraneSourceBlendMode ?? true)
             {
-                fg.AppendItem(item.MembraneSourceBlendMode, "MembraneSourceBlendMode");
+                sb.AppendItem(item.MembraneSourceBlendMode, "MembraneSourceBlendMode");
             }
             if (printMask?.MembraneBlendOperation ?? true)
             {
-                fg.AppendItem(item.MembraneBlendOperation, "MembraneBlendOperation");
+                sb.AppendItem(item.MembraneBlendOperation, "MembraneBlendOperation");
             }
             if (printMask?.MembraneZTest ?? true)
             {
-                fg.AppendItem(item.MembraneZTest, "MembraneZTest");
+                sb.AppendItem(item.MembraneZTest, "MembraneZTest");
             }
             if (printMask?.FillColorKey1 ?? true)
             {
-                fg.AppendItem(item.FillColorKey1, "FillColorKey1");
+                sb.AppendItem(item.FillColorKey1, "FillColorKey1");
             }
             if (printMask?.FillAlphaFadeInTime ?? true)
             {
-                fg.AppendItem(item.FillAlphaFadeInTime, "FillAlphaFadeInTime");
+                sb.AppendItem(item.FillAlphaFadeInTime, "FillAlphaFadeInTime");
             }
             if (printMask?.FillFullAlphaTime ?? true)
             {
-                fg.AppendItem(item.FillFullAlphaTime, "FillFullAlphaTime");
+                sb.AppendItem(item.FillFullAlphaTime, "FillFullAlphaTime");
             }
             if (printMask?.FillFadeOutTime ?? true)
             {
-                fg.AppendItem(item.FillFadeOutTime, "FillFadeOutTime");
+                sb.AppendItem(item.FillFadeOutTime, "FillFadeOutTime");
             }
             if (printMask?.FillPersistentAlphaRatio ?? true)
             {
-                fg.AppendItem(item.FillPersistentAlphaRatio, "FillPersistentAlphaRatio");
+                sb.AppendItem(item.FillPersistentAlphaRatio, "FillPersistentAlphaRatio");
             }
             if (printMask?.FillAlphaPulseAmplitude ?? true)
             {
-                fg.AppendItem(item.FillAlphaPulseAmplitude, "FillAlphaPulseAmplitude");
+                sb.AppendItem(item.FillAlphaPulseAmplitude, "FillAlphaPulseAmplitude");
             }
             if (printMask?.FillAlphaPulseFrequency ?? true)
             {
-                fg.AppendItem(item.FillAlphaPulseFrequency, "FillAlphaPulseFrequency");
+                sb.AppendItem(item.FillAlphaPulseFrequency, "FillAlphaPulseFrequency");
             }
             if (printMask?.FillTextureAnimationSpeedU ?? true)
             {
-                fg.AppendItem(item.FillTextureAnimationSpeedU, "FillTextureAnimationSpeedU");
+                sb.AppendItem(item.FillTextureAnimationSpeedU, "FillTextureAnimationSpeedU");
             }
             if (printMask?.FillTextureAnimationSpeedV ?? true)
             {
-                fg.AppendItem(item.FillTextureAnimationSpeedV, "FillTextureAnimationSpeedV");
+                sb.AppendItem(item.FillTextureAnimationSpeedV, "FillTextureAnimationSpeedV");
             }
             if (printMask?.EdgeEffectFallOff ?? true)
             {
-                fg.AppendItem(item.EdgeEffectFallOff, "EdgeEffectFallOff");
+                sb.AppendItem(item.EdgeEffectFallOff, "EdgeEffectFallOff");
             }
             if (printMask?.EdgeEffectColor ?? true)
             {
-                fg.AppendItem(item.EdgeEffectColor, "EdgeEffectColor");
+                sb.AppendItem(item.EdgeEffectColor, "EdgeEffectColor");
             }
             if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
+                sb.AppendItem(item.EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
             }
             if (printMask?.EdgeEffectFullAlphaTime ?? true)
             {
-                fg.AppendItem(item.EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
+                sb.AppendItem(item.EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
             }
             if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
+                sb.AppendItem(item.EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
             }
             if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
             {
-                fg.AppendItem(item.EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
+                sb.AppendItem(item.EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
             }
             if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
+                sb.AppendItem(item.EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
             }
             if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
             {
-                fg.AppendItem(item.EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
+                sb.AppendItem(item.EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
             }
             if (printMask?.FillFullAlphaRatio ?? true)
             {
-                fg.AppendItem(item.FillFullAlphaRatio, "FillFullAlphaRatio");
+                sb.AppendItem(item.FillFullAlphaRatio, "FillFullAlphaRatio");
             }
             if (printMask?.EdgeEffectFullAlphaRatio ?? true)
             {
-                fg.AppendItem(item.EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
+                sb.AppendItem(item.EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
             }
             if (printMask?.MembraneDestBlendMode ?? true)
             {
-                fg.AppendItem(item.MembraneDestBlendMode, "MembraneDestBlendMode");
+                sb.AppendItem(item.MembraneDestBlendMode, "MembraneDestBlendMode");
             }
             if (printMask?.ParticleSourceBlendMode ?? true)
             {
-                fg.AppendItem(item.ParticleSourceBlendMode, "ParticleSourceBlendMode");
+                sb.AppendItem(item.ParticleSourceBlendMode, "ParticleSourceBlendMode");
             }
             if (printMask?.ParticleBlendOperation ?? true)
             {
-                fg.AppendItem(item.ParticleBlendOperation, "ParticleBlendOperation");
+                sb.AppendItem(item.ParticleBlendOperation, "ParticleBlendOperation");
             }
             if (printMask?.ParticleZTest ?? true)
             {
-                fg.AppendItem(item.ParticleZTest, "ParticleZTest");
+                sb.AppendItem(item.ParticleZTest, "ParticleZTest");
             }
             if (printMask?.ParticleDestBlendMode ?? true)
             {
-                fg.AppendItem(item.ParticleDestBlendMode, "ParticleDestBlendMode");
+                sb.AppendItem(item.ParticleDestBlendMode, "ParticleDestBlendMode");
             }
             if (printMask?.ParticleBirthRampUpTime ?? true)
             {
-                fg.AppendItem(item.ParticleBirthRampUpTime, "ParticleBirthRampUpTime");
+                sb.AppendItem(item.ParticleBirthRampUpTime, "ParticleBirthRampUpTime");
             }
             if (printMask?.ParticleFullBirthTime ?? true)
             {
-                fg.AppendItem(item.ParticleFullBirthTime, "ParticleFullBirthTime");
+                sb.AppendItem(item.ParticleFullBirthTime, "ParticleFullBirthTime");
             }
             if (printMask?.ParticleBirthRampDownTime ?? true)
             {
-                fg.AppendItem(item.ParticleBirthRampDownTime, "ParticleBirthRampDownTime");
+                sb.AppendItem(item.ParticleBirthRampDownTime, "ParticleBirthRampDownTime");
             }
             if (printMask?.ParticleFullBirthRatio ?? true)
             {
-                fg.AppendItem(item.ParticleFullBirthRatio, "ParticleFullBirthRatio");
+                sb.AppendItem(item.ParticleFullBirthRatio, "ParticleFullBirthRatio");
             }
             if (printMask?.ParticlePeristentCount ?? true)
             {
-                fg.AppendItem(item.ParticlePeristentCount, "ParticlePeristentCount");
+                sb.AppendItem(item.ParticlePeristentCount, "ParticlePeristentCount");
             }
             if (printMask?.ParticleLifetime ?? true)
             {
-                fg.AppendItem(item.ParticleLifetime, "ParticleLifetime");
+                sb.AppendItem(item.ParticleLifetime, "ParticleLifetime");
             }
             if (printMask?.ParticleLifetimePlusMinus ?? true)
             {
-                fg.AppendItem(item.ParticleLifetimePlusMinus, "ParticleLifetimePlusMinus");
+                sb.AppendItem(item.ParticleLifetimePlusMinus, "ParticleLifetimePlusMinus");
             }
             if (printMask?.ParticleInitialSpeedAlongNormal ?? true)
             {
-                fg.AppendItem(item.ParticleInitialSpeedAlongNormal, "ParticleInitialSpeedAlongNormal");
+                sb.AppendItem(item.ParticleInitialSpeedAlongNormal, "ParticleInitialSpeedAlongNormal");
             }
             if (printMask?.ParticleAccelerationAlongNormal ?? true)
             {
-                fg.AppendItem(item.ParticleAccelerationAlongNormal, "ParticleAccelerationAlongNormal");
+                sb.AppendItem(item.ParticleAccelerationAlongNormal, "ParticleAccelerationAlongNormal");
             }
             if (printMask?.ParticleInitialVelocity1 ?? true)
             {
-                fg.AppendItem(item.ParticleInitialVelocity1, "ParticleInitialVelocity1");
+                sb.AppendItem(item.ParticleInitialVelocity1, "ParticleInitialVelocity1");
             }
             if (printMask?.ParticleInitialVelocity2 ?? true)
             {
-                fg.AppendItem(item.ParticleInitialVelocity2, "ParticleInitialVelocity2");
+                sb.AppendItem(item.ParticleInitialVelocity2, "ParticleInitialVelocity2");
             }
             if (printMask?.ParticleInitialVelocity3 ?? true)
             {
-                fg.AppendItem(item.ParticleInitialVelocity3, "ParticleInitialVelocity3");
+                sb.AppendItem(item.ParticleInitialVelocity3, "ParticleInitialVelocity3");
             }
             if (printMask?.ParticleAcceleration1 ?? true)
             {
-                fg.AppendItem(item.ParticleAcceleration1, "ParticleAcceleration1");
+                sb.AppendItem(item.ParticleAcceleration1, "ParticleAcceleration1");
             }
             if (printMask?.ParticleAcceleration2 ?? true)
             {
-                fg.AppendItem(item.ParticleAcceleration2, "ParticleAcceleration2");
+                sb.AppendItem(item.ParticleAcceleration2, "ParticleAcceleration2");
             }
             if (printMask?.ParticleAcceleration3 ?? true)
             {
-                fg.AppendItem(item.ParticleAcceleration3, "ParticleAcceleration3");
+                sb.AppendItem(item.ParticleAcceleration3, "ParticleAcceleration3");
             }
             if (printMask?.ParticleScaleKey1 ?? true)
             {
-                fg.AppendItem(item.ParticleScaleKey1, "ParticleScaleKey1");
+                sb.AppendItem(item.ParticleScaleKey1, "ParticleScaleKey1");
             }
             if (printMask?.ParticleScaleKey2 ?? true)
             {
-                fg.AppendItem(item.ParticleScaleKey2, "ParticleScaleKey2");
+                sb.AppendItem(item.ParticleScaleKey2, "ParticleScaleKey2");
             }
             if (printMask?.ParticleScaleKey1Time ?? true)
             {
-                fg.AppendItem(item.ParticleScaleKey1Time, "ParticleScaleKey1Time");
+                sb.AppendItem(item.ParticleScaleKey1Time, "ParticleScaleKey1Time");
             }
             if (printMask?.ParticleScaleKey2Time ?? true)
             {
-                fg.AppendItem(item.ParticleScaleKey2Time, "ParticleScaleKey2Time");
+                sb.AppendItem(item.ParticleScaleKey2Time, "ParticleScaleKey2Time");
             }
             if (printMask?.ColorKey1 ?? true)
             {
-                fg.AppendItem(item.ColorKey1, "ColorKey1");
+                sb.AppendItem(item.ColorKey1, "ColorKey1");
             }
             if (printMask?.ColorKey2 ?? true)
             {
-                fg.AppendItem(item.ColorKey2, "ColorKey2");
+                sb.AppendItem(item.ColorKey2, "ColorKey2");
             }
             if (printMask?.ColorKey3 ?? true)
             {
-                fg.AppendItem(item.ColorKey3, "ColorKey3");
+                sb.AppendItem(item.ColorKey3, "ColorKey3");
             }
             if (printMask?.ColorKey1Alpha ?? true)
             {
-                fg.AppendItem(item.ColorKey1Alpha, "ColorKey1Alpha");
+                sb.AppendItem(item.ColorKey1Alpha, "ColorKey1Alpha");
             }
             if (printMask?.ColorKey2Alpha ?? true)
             {
-                fg.AppendItem(item.ColorKey2Alpha, "ColorKey2Alpha");
+                sb.AppendItem(item.ColorKey2Alpha, "ColorKey2Alpha");
             }
             if (printMask?.ColorKey3Alpha ?? true)
             {
-                fg.AppendItem(item.ColorKey3Alpha, "ColorKey3Alpha");
+                sb.AppendItem(item.ColorKey3Alpha, "ColorKey3Alpha");
             }
             if (printMask?.ColorKey1Time ?? true)
             {
-                fg.AppendItem(item.ColorKey1Time, "ColorKey1Time");
+                sb.AppendItem(item.ColorKey1Time, "ColorKey1Time");
             }
             if (printMask?.ColorKey2Time ?? true)
             {
-                fg.AppendItem(item.ColorKey2Time, "ColorKey2Time");
+                sb.AppendItem(item.ColorKey2Time, "ColorKey2Time");
             }
             if (printMask?.ColorKey3Time ?? true)
             {
-                fg.AppendItem(item.ColorKey3Time, "ColorKey3Time");
+                sb.AppendItem(item.ColorKey3Time, "ColorKey3Time");
             }
             if (printMask?.ParticleInitialSpeedAlongNormalPlusMinus ?? true)
             {
-                fg.AppendItem(item.ParticleInitialSpeedAlongNormalPlusMinus, "ParticleInitialSpeedAlongNormalPlusMinus");
+                sb.AppendItem(item.ParticleInitialSpeedAlongNormalPlusMinus, "ParticleInitialSpeedAlongNormalPlusMinus");
             }
             if (printMask?.ParticleInitialRotationDegree ?? true)
             {
-                fg.AppendItem(item.ParticleInitialRotationDegree, "ParticleInitialRotationDegree");
+                sb.AppendItem(item.ParticleInitialRotationDegree, "ParticleInitialRotationDegree");
             }
             if (printMask?.ParticleInitialRotationDegreePlusMinus ?? true)
             {
-                fg.AppendItem(item.ParticleInitialRotationDegreePlusMinus, "ParticleInitialRotationDegreePlusMinus");
+                sb.AppendItem(item.ParticleInitialRotationDegreePlusMinus, "ParticleInitialRotationDegreePlusMinus");
             }
             if (printMask?.ParticleRotationSpeedDegreePerSec ?? true)
             {
-                fg.AppendItem(item.ParticleRotationSpeedDegreePerSec, "ParticleRotationSpeedDegreePerSec");
+                sb.AppendItem(item.ParticleRotationSpeedDegreePerSec, "ParticleRotationSpeedDegreePerSec");
             }
             if (printMask?.ParticleRotationSpeedDegreePerSecPlusMinus ?? true)
             {
-                fg.AppendItem(item.ParticleRotationSpeedDegreePerSecPlusMinus, "ParticleRotationSpeedDegreePerSecPlusMinus");
+                sb.AppendItem(item.ParticleRotationSpeedDegreePerSecPlusMinus, "ParticleRotationSpeedDegreePerSecPlusMinus");
             }
             if (printMask?.AddonModels ?? true)
             {
-                fg.AppendItem(item.AddonModels.FormKey, "AddonModels");
+                sb.AppendItem(item.AddonModels.FormKey, "AddonModels");
             }
             if (printMask?.HolesStartTime ?? true)
             {
-                fg.AppendItem(item.HolesStartTime, "HolesStartTime");
+                sb.AppendItem(item.HolesStartTime, "HolesStartTime");
             }
             if (printMask?.HolesEndTime ?? true)
             {
-                fg.AppendItem(item.HolesEndTime, "HolesEndTime");
+                sb.AppendItem(item.HolesEndTime, "HolesEndTime");
             }
             if (printMask?.HolesStartValue ?? true)
             {
-                fg.AppendItem(item.HolesStartValue, "HolesStartValue");
+                sb.AppendItem(item.HolesStartValue, "HolesStartValue");
             }
             if (printMask?.HolesEndValue ?? true)
             {
-                fg.AppendItem(item.HolesEndValue, "HolesEndValue");
+                sb.AppendItem(item.HolesEndValue, "HolesEndValue");
             }
             if (printMask?.EdgeWidth ?? true)
             {
-                fg.AppendItem(item.EdgeWidth, "EdgeWidth");
+                sb.AppendItem(item.EdgeWidth, "EdgeWidth");
             }
             if (printMask?.EdgeColor ?? true)
             {
-                fg.AppendItem(item.EdgeColor, "EdgeColor");
+                sb.AppendItem(item.EdgeColor, "EdgeColor");
             }
             if (printMask?.ExplosionWindSpeed ?? true)
             {
-                fg.AppendItem(item.ExplosionWindSpeed, "ExplosionWindSpeed");
+                sb.AppendItem(item.ExplosionWindSpeed, "ExplosionWindSpeed");
             }
             if (printMask?.TextureCountU ?? true)
             {
-                fg.AppendItem(item.TextureCountU, "TextureCountU");
+                sb.AppendItem(item.TextureCountU, "TextureCountU");
             }
             if (printMask?.TextureCountV ?? true)
             {
-                fg.AppendItem(item.TextureCountV, "TextureCountV");
+                sb.AppendItem(item.TextureCountV, "TextureCountV");
             }
             if (printMask?.AddonModelsFadeInTime ?? true)
             {
-                fg.AppendItem(item.AddonModelsFadeInTime, "AddonModelsFadeInTime");
+                sb.AppendItem(item.AddonModelsFadeInTime, "AddonModelsFadeInTime");
             }
             if (printMask?.AddonModelsFadeOutTime ?? true)
             {
-                fg.AppendItem(item.AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
+                sb.AppendItem(item.AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
             }
             if (printMask?.AddonModelsScaleStart ?? true)
             {
-                fg.AppendItem(item.AddonModelsScaleStart, "AddonModelsScaleStart");
+                sb.AppendItem(item.AddonModelsScaleStart, "AddonModelsScaleStart");
             }
             if (printMask?.AddonModelsScaleEnd ?? true)
             {
-                fg.AppendItem(item.AddonModelsScaleEnd, "AddonModelsScaleEnd");
+                sb.AppendItem(item.AddonModelsScaleEnd, "AddonModelsScaleEnd");
             }
             if (printMask?.AddonModelsScaleInTime ?? true)
             {
-                fg.AppendItem(item.AddonModelsScaleInTime, "AddonModelsScaleInTime");
+                sb.AppendItem(item.AddonModelsScaleInTime, "AddonModelsScaleInTime");
             }
             if (printMask?.AddonModelsScaleOutTime ?? true)
             {
-                fg.AppendItem(item.AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
+                sb.AppendItem(item.AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
             }
             if (printMask?.AmbientSound ?? true)
             {
-                fg.AppendItem(item.AmbientSound.FormKey, "AmbientSound");
+                sb.AppendItem(item.AmbientSound.FormKey, "AmbientSound");
             }
             if (printMask?.FillColorKey2 ?? true)
             {
-                fg.AppendItem(item.FillColorKey2, "FillColorKey2");
+                sb.AppendItem(item.FillColorKey2, "FillColorKey2");
             }
             if (printMask?.FillColorKey3 ?? true)
             {
-                fg.AppendItem(item.FillColorKey3, "FillColorKey3");
+                sb.AppendItem(item.FillColorKey3, "FillColorKey3");
             }
             if (printMask?.FillColorKey1Scale ?? true)
             {
-                fg.AppendItem(item.FillColorKey1Scale, "FillColorKey1Scale");
+                sb.AppendItem(item.FillColorKey1Scale, "FillColorKey1Scale");
             }
             if (printMask?.FillColorKey2Scale ?? true)
             {
-                fg.AppendItem(item.FillColorKey2Scale, "FillColorKey2Scale");
+                sb.AppendItem(item.FillColorKey2Scale, "FillColorKey2Scale");
             }
             if (printMask?.FillColorKey3Scale ?? true)
             {
-                fg.AppendItem(item.FillColorKey3Scale, "FillColorKey3Scale");
+                sb.AppendItem(item.FillColorKey3Scale, "FillColorKey3Scale");
             }
             if (printMask?.FillColorKey1Time ?? true)
             {
-                fg.AppendItem(item.FillColorKey1Time, "FillColorKey1Time");
+                sb.AppendItem(item.FillColorKey1Time, "FillColorKey1Time");
             }
             if (printMask?.FillColorKey2Time ?? true)
             {
-                fg.AppendItem(item.FillColorKey2Time, "FillColorKey2Time");
+                sb.AppendItem(item.FillColorKey2Time, "FillColorKey2Time");
             }
             if (printMask?.FillColorKey3Time ?? true)
             {
-                fg.AppendItem(item.FillColorKey3Time, "FillColorKey3Time");
+                sb.AppendItem(item.FillColorKey3Time, "FillColorKey3Time");
             }
             if (printMask?.ColorScale ?? true)
             {
-                fg.AppendItem(item.ColorScale, "ColorScale");
+                sb.AppendItem(item.ColorScale, "ColorScale");
             }
             if (printMask?.BirthPositionOffset ?? true)
             {
-                fg.AppendItem(item.BirthPositionOffset, "BirthPositionOffset");
+                sb.AppendItem(item.BirthPositionOffset, "BirthPositionOffset");
             }
             if (printMask?.BirthPositionOffsetRangePlusMinus ?? true)
             {
-                fg.AppendItem(item.BirthPositionOffsetRangePlusMinus, "BirthPositionOffsetRangePlusMinus");
+                sb.AppendItem(item.BirthPositionOffsetRangePlusMinus, "BirthPositionOffsetRangePlusMinus");
             }
             if (printMask?.ParticleAnimatedStartFrame ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedStartFrame, "ParticleAnimatedStartFrame");
+                sb.AppendItem(item.ParticleAnimatedStartFrame, "ParticleAnimatedStartFrame");
             }
             if (printMask?.ParticleAnimatedStartFrameVariation ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedStartFrameVariation, "ParticleAnimatedStartFrameVariation");
+                sb.AppendItem(item.ParticleAnimatedStartFrameVariation, "ParticleAnimatedStartFrameVariation");
             }
             if (printMask?.ParticleAnimatedEndFrame ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedEndFrame, "ParticleAnimatedEndFrame");
+                sb.AppendItem(item.ParticleAnimatedEndFrame, "ParticleAnimatedEndFrame");
             }
             if (printMask?.ParticleAnimatedLoopStartFrame ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedLoopStartFrame, "ParticleAnimatedLoopStartFrame");
+                sb.AppendItem(item.ParticleAnimatedLoopStartFrame, "ParticleAnimatedLoopStartFrame");
             }
             if (printMask?.ParticleAnimatedLoopStartVariation ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedLoopStartVariation, "ParticleAnimatedLoopStartVariation");
+                sb.AppendItem(item.ParticleAnimatedLoopStartVariation, "ParticleAnimatedLoopStartVariation");
             }
             if (printMask?.ParticleAnimatedFrameCount ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedFrameCount, "ParticleAnimatedFrameCount");
+                sb.AppendItem(item.ParticleAnimatedFrameCount, "ParticleAnimatedFrameCount");
             }
             if (printMask?.ParticleAnimatedFrameCountVariation ?? true)
             {
-                fg.AppendItem(item.ParticleAnimatedFrameCountVariation, "ParticleAnimatedFrameCountVariation");
+                sb.AppendItem(item.ParticleAnimatedFrameCountVariation, "ParticleAnimatedFrameCountVariation");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FillTextureScaleU ?? true)
             {
-                fg.AppendItem(item.FillTextureScaleU, "FillTextureScaleU");
+                sb.AppendItem(item.FillTextureScaleU, "FillTextureScaleU");
             }
             if (printMask?.FillTextureScaleV ?? true)
             {
-                fg.AppendItem(item.FillTextureScaleV, "FillTextureScaleV");
+                sb.AppendItem(item.FillTextureScaleV, "FillTextureScaleV");
             }
             if (printMask?.SceneGraphEmitDepthLimit ?? true)
             {
-                fg.AppendItem(item.SceneGraphEmitDepthLimit, "SceneGraphEmitDepthLimit");
+                sb.AppendItem(item.SceneGraphEmitDepthLimit, "SceneGraphEmitDepthLimit");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -6050,9 +6261,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEffectShaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectShaderGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -6099,7 +6310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EffectShaderSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class EffectShaderSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly EffectShaderSetterTranslationCommon Instance = new EffectShaderSetterTranslationCommon();
 
@@ -6678,7 +6889,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -6696,13 +6907,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EffectShaderBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
+        public new static readonly EffectShaderBinaryWriteTranslation Instance = new EffectShaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEffectShaderGetter item,
@@ -6716,7 +6927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IEffectShaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -7054,7 +7265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IEffectShaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -7065,12 +7276,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -7082,7 +7296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -7093,7 +7307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -7104,7 +7318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IEffectShaderGetter)item,
@@ -7114,9 +7328,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EffectShaderBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class EffectShaderBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
+        public new static readonly EffectShaderBinaryCreateTranslation Instance = new EffectShaderBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.EFSH;
         public static void FillBinaryStructs(
@@ -7135,7 +7349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -7331,7 +7545,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -7348,16 +7563,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EffectShaderBinaryOverlay :
+    internal partial class EffectShaderBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IEffectShaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
-        public new static EffectShader_Registration StaticRegistration => EffectShader_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => EffectShaderCommon.Instance;
         [DebuggerStepThrough]
@@ -7365,14 +7580,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => EffectShaderCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EffectShaderCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectShaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -7384,525 +7599,525 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region FillTexture
         private int? _FillTextureLocation;
-        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ParticleShaderTexture
         private int? _ParticleShaderTextureLocation;
-        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region HolesTexture
         private int? _HolesTextureLocation;
-        public String? HolesTexture => _HolesTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? HolesTexture => _HolesTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region MembranePaletteTexture
         private int? _MembranePaletteTextureLocation;
-        public String? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ParticlePaletteTexture
         private int? _ParticlePaletteTextureLocation;
-        public String? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public EffectShader.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value;
+        private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region MembraneSourceBlendMode
-        private int _MembraneSourceBlendModeLocation => _DATALocation!.Value + 0x4;
+        private int _MembraneSourceBlendModeLocation => _DATALocation!.Value.Min + 0x4;
         private bool _MembraneSourceBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode MembraneSourceBlendMode => _MembraneSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneSourceBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode MembraneSourceBlendMode => _MembraneSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneSourceBlendModeLocation, 0x4)) : default;
         #endregion
         #region MembraneBlendOperation
-        private int _MembraneBlendOperationLocation => _DATALocation!.Value + 0x8;
+        private int _MembraneBlendOperationLocation => _DATALocation!.Value.Min + 0x8;
         private bool _MembraneBlendOperation_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendOperation MembraneBlendOperation => _MembraneBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneBlendOperationLocation, 0x4)) : default;
+        public EffectShader.BlendOperation MembraneBlendOperation => _MembraneBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneBlendOperationLocation, 0x4)) : default;
         #endregion
         #region MembraneZTest
-        private int _MembraneZTestLocation => _DATALocation!.Value + 0xC;
+        private int _MembraneZTestLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MembraneZTest_IsSet => _DATALocation.HasValue;
-        public EffectShader.ZTest MembraneZTest => _MembraneZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneZTestLocation, 0x4)) : default;
+        public EffectShader.ZTest MembraneZTest => _MembraneZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneZTestLocation, 0x4)) : default;
         #endregion
         #region FillColorKey1
-        private int _FillColorKey1Location => _DATALocation!.Value + 0x10;
+        private int _FillColorKey1Location => _DATALocation!.Value.Min + 0x10;
         private bool _FillColorKey1_IsSet => _DATALocation.HasValue;
-        public Color FillColorKey1 => _FillColorKey1_IsSet ? _data.Slice(_FillColorKey1Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FillColorKey1 => _FillColorKey1_IsSet ? _recordData.Slice(_FillColorKey1Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FillAlphaFadeInTime
-        private int _FillAlphaFadeInTimeLocation => _DATALocation!.Value + 0x14;
+        private int _FillAlphaFadeInTimeLocation => _DATALocation!.Value.Min + 0x14;
         private bool _FillAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaFadeInTime => _FillAlphaFadeInTime_IsSet ? _data.Slice(_FillAlphaFadeInTimeLocation, 4).Float() : default;
+        public Single FillAlphaFadeInTime => _FillAlphaFadeInTime_IsSet ? _recordData.Slice(_FillAlphaFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region FillFullAlphaTime
-        private int _FillFullAlphaTimeLocation => _DATALocation!.Value + 0x18;
+        private int _FillFullAlphaTimeLocation => _DATALocation!.Value.Min + 0x18;
         private bool _FillFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single FillFullAlphaTime => _FillFullAlphaTime_IsSet ? _data.Slice(_FillFullAlphaTimeLocation, 4).Float() : default;
+        public Single FillFullAlphaTime => _FillFullAlphaTime_IsSet ? _recordData.Slice(_FillFullAlphaTimeLocation, 4).Float() : default;
         #endregion
         #region FillFadeOutTime
-        private int _FillFadeOutTimeLocation => _DATALocation!.Value + 0x1C;
+        private int _FillFadeOutTimeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _FillFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single FillFadeOutTime => _FillFadeOutTime_IsSet ? _data.Slice(_FillFadeOutTimeLocation, 4).Float() : default;
+        public Single FillFadeOutTime => _FillFadeOutTime_IsSet ? _recordData.Slice(_FillFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region FillPersistentAlphaRatio
-        private int _FillPersistentAlphaRatioLocation => _DATALocation!.Value + 0x20;
+        private int _FillPersistentAlphaRatioLocation => _DATALocation!.Value.Min + 0x20;
         private bool _FillPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillPersistentAlphaRatio => _FillPersistentAlphaRatio_IsSet ? _data.Slice(_FillPersistentAlphaRatioLocation, 4).Float() : default;
+        public Single FillPersistentAlphaRatio => _FillPersistentAlphaRatio_IsSet ? _recordData.Slice(_FillPersistentAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region FillAlphaPulseAmplitude
-        private int _FillAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x24;
+        private int _FillAlphaPulseAmplitudeLocation => _DATALocation!.Value.Min + 0x24;
         private bool _FillAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaPulseAmplitude => _FillAlphaPulseAmplitude_IsSet ? _data.Slice(_FillAlphaPulseAmplitudeLocation, 4).Float() : default;
+        public Single FillAlphaPulseAmplitude => _FillAlphaPulseAmplitude_IsSet ? _recordData.Slice(_FillAlphaPulseAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FillAlphaPulseFrequency
-        private int _FillAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x28;
+        private int _FillAlphaPulseFrequencyLocation => _DATALocation!.Value.Min + 0x28;
         private bool _FillAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaPulseFrequency => _FillAlphaPulseFrequency_IsSet ? _data.Slice(_FillAlphaPulseFrequencyLocation, 4).Float() : default;
+        public Single FillAlphaPulseFrequency => _FillAlphaPulseFrequency_IsSet ? _recordData.Slice(_FillAlphaPulseFrequencyLocation, 4).Float() : default;
         #endregion
         #region FillTextureAnimationSpeedU
-        private int _FillTextureAnimationSpeedULocation => _DATALocation!.Value + 0x2C;
+        private int _FillTextureAnimationSpeedULocation => _DATALocation!.Value.Min + 0x2C;
         private bool _FillTextureAnimationSpeedU_IsSet => _DATALocation.HasValue;
-        public Single FillTextureAnimationSpeedU => _FillTextureAnimationSpeedU_IsSet ? _data.Slice(_FillTextureAnimationSpeedULocation, 4).Float() : default;
+        public Single FillTextureAnimationSpeedU => _FillTextureAnimationSpeedU_IsSet ? _recordData.Slice(_FillTextureAnimationSpeedULocation, 4).Float() : default;
         #endregion
         #region FillTextureAnimationSpeedV
-        private int _FillTextureAnimationSpeedVLocation => _DATALocation!.Value + 0x30;
+        private int _FillTextureAnimationSpeedVLocation => _DATALocation!.Value.Min + 0x30;
         private bool _FillTextureAnimationSpeedV_IsSet => _DATALocation.HasValue;
-        public Single FillTextureAnimationSpeedV => _FillTextureAnimationSpeedV_IsSet ? _data.Slice(_FillTextureAnimationSpeedVLocation, 4).Float() : default;
+        public Single FillTextureAnimationSpeedV => _FillTextureAnimationSpeedV_IsSet ? _recordData.Slice(_FillTextureAnimationSpeedVLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFallOff
-        private int _EdgeEffectFallOffLocation => _DATALocation!.Value + 0x34;
+        private int _EdgeEffectFallOffLocation => _DATALocation!.Value.Min + 0x34;
         private bool _EdgeEffectFallOff_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? _data.Slice(_EdgeEffectFallOffLocation, 4).Float() : default;
+        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? _recordData.Slice(_EdgeEffectFallOffLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectColor
-        private int _EdgeEffectColorLocation => _DATALocation!.Value + 0x38;
+        private int _EdgeEffectColorLocation => _DATALocation!.Value.Min + 0x38;
         private bool _EdgeEffectColor_IsSet => _DATALocation.HasValue;
-        public Color EdgeEffectColor => _EdgeEffectColor_IsSet ? _data.Slice(_EdgeEffectColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color EdgeEffectColor => _EdgeEffectColor_IsSet ? _recordData.Slice(_EdgeEffectColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region EdgeEffectAlphaFadeInTime
-        private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x3C;
+        private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _EdgeEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? _data.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4).Float() : default;
+        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? _recordData.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFullAlphaTime
-        private int _EdgeEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x40;
+        private int _EdgeEffectFullAlphaTimeLocation => _DATALocation!.Value.Min + 0x40;
         private bool _EdgeEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? _data.Slice(_EdgeEffectFullAlphaTimeLocation, 4).Float() : default;
+        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? _recordData.Slice(_EdgeEffectFullAlphaTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaFadeOutTime
-        private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x44;
+        private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation!.Value.Min + 0x44;
         private bool _EdgeEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? _data.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4).Float() : default;
+        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? _recordData.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectPersistentAlphaRatio
-        private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x48;
+        private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation!.Value.Min + 0x48;
         private bool _EdgeEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? _data.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4).Float() : default;
+        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? _recordData.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
-        private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x4C;
+        private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _EdgeEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? _data.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4).Float() : default;
+        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? _recordData.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaPulseFrequency
-        private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x50;
+        private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation!.Value.Min + 0x50;
         private bool _EdgeEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? _data.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4).Float() : default;
+        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? _recordData.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4).Float() : default;
         #endregion
         #region FillFullAlphaRatio
-        private int _FillFullAlphaRatioLocation => _DATALocation!.Value + 0x54;
+        private int _FillFullAlphaRatioLocation => _DATALocation!.Value.Min + 0x54;
         private bool _FillFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillFullAlphaRatio => _FillFullAlphaRatio_IsSet ? _data.Slice(_FillFullAlphaRatioLocation, 4).Float() : default;
+        public Single FillFullAlphaRatio => _FillFullAlphaRatio_IsSet ? _recordData.Slice(_FillFullAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFullAlphaRatio
-        private int _EdgeEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x58;
+        private int _EdgeEffectFullAlphaRatioLocation => _DATALocation!.Value.Min + 0x58;
         private bool _EdgeEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? _data.Slice(_EdgeEffectFullAlphaRatioLocation, 4).Float() : default;
+        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? _recordData.Slice(_EdgeEffectFullAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region MembraneDestBlendMode
-        private int _MembraneDestBlendModeLocation => _DATALocation!.Value + 0x5C;
+        private int _MembraneDestBlendModeLocation => _DATALocation!.Value.Min + 0x5C;
         private bool _MembraneDestBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode MembraneDestBlendMode => _MembraneDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MembraneDestBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode MembraneDestBlendMode => _MembraneDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneDestBlendModeLocation, 0x4)) : default;
         #endregion
         #region ParticleSourceBlendMode
-        private int _ParticleSourceBlendModeLocation => _DATALocation!.Value + 0x60;
+        private int _ParticleSourceBlendModeLocation => _DATALocation!.Value.Min + 0x60;
         private bool _ParticleSourceBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode ParticleSourceBlendMode => _ParticleSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleSourceBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode ParticleSourceBlendMode => _ParticleSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleSourceBlendModeLocation, 0x4)) : default;
         #endregion
         #region ParticleBlendOperation
-        private int _ParticleBlendOperationLocation => _DATALocation!.Value + 0x64;
+        private int _ParticleBlendOperationLocation => _DATALocation!.Value.Min + 0x64;
         private bool _ParticleBlendOperation_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendOperation ParticleBlendOperation => _ParticleBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleBlendOperationLocation, 0x4)) : default;
+        public EffectShader.BlendOperation ParticleBlendOperation => _ParticleBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleBlendOperationLocation, 0x4)) : default;
         #endregion
         #region ParticleZTest
-        private int _ParticleZTestLocation => _DATALocation!.Value + 0x68;
+        private int _ParticleZTestLocation => _DATALocation!.Value.Min + 0x68;
         private bool _ParticleZTest_IsSet => _DATALocation.HasValue;
-        public EffectShader.ZTest ParticleZTest => _ParticleZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleZTestLocation, 0x4)) : default;
+        public EffectShader.ZTest ParticleZTest => _ParticleZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleZTestLocation, 0x4)) : default;
         #endregion
         #region ParticleDestBlendMode
-        private int _ParticleDestBlendModeLocation => _DATALocation!.Value + 0x6C;
+        private int _ParticleDestBlendModeLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _ParticleDestBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode ParticleDestBlendMode => _ParticleDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ParticleDestBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode ParticleDestBlendMode => _ParticleDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleDestBlendModeLocation, 0x4)) : default;
         #endregion
         #region ParticleBirthRampUpTime
-        private int _ParticleBirthRampUpTimeLocation => _DATALocation!.Value + 0x70;
+        private int _ParticleBirthRampUpTimeLocation => _DATALocation!.Value.Min + 0x70;
         private bool _ParticleBirthRampUpTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleBirthRampUpTime => _ParticleBirthRampUpTime_IsSet ? _data.Slice(_ParticleBirthRampUpTimeLocation, 4).Float() : default;
+        public Single ParticleBirthRampUpTime => _ParticleBirthRampUpTime_IsSet ? _recordData.Slice(_ParticleBirthRampUpTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleFullBirthTime
-        private int _ParticleFullBirthTimeLocation => _DATALocation!.Value + 0x74;
+        private int _ParticleFullBirthTimeLocation => _DATALocation!.Value.Min + 0x74;
         private bool _ParticleFullBirthTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleFullBirthTime => _ParticleFullBirthTime_IsSet ? _data.Slice(_ParticleFullBirthTimeLocation, 4).Float() : default;
+        public Single ParticleFullBirthTime => _ParticleFullBirthTime_IsSet ? _recordData.Slice(_ParticleFullBirthTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleBirthRampDownTime
-        private int _ParticleBirthRampDownTimeLocation => _DATALocation!.Value + 0x78;
+        private int _ParticleBirthRampDownTimeLocation => _DATALocation!.Value.Min + 0x78;
         private bool _ParticleBirthRampDownTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleBirthRampDownTime => _ParticleBirthRampDownTime_IsSet ? _data.Slice(_ParticleBirthRampDownTimeLocation, 4).Float() : default;
+        public Single ParticleBirthRampDownTime => _ParticleBirthRampDownTime_IsSet ? _recordData.Slice(_ParticleBirthRampDownTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleFullBirthRatio
-        private int _ParticleFullBirthRatioLocation => _DATALocation!.Value + 0x7C;
+        private int _ParticleFullBirthRatioLocation => _DATALocation!.Value.Min + 0x7C;
         private bool _ParticleFullBirthRatio_IsSet => _DATALocation.HasValue;
-        public Single ParticleFullBirthRatio => _ParticleFullBirthRatio_IsSet ? _data.Slice(_ParticleFullBirthRatioLocation, 4).Float() : default;
+        public Single ParticleFullBirthRatio => _ParticleFullBirthRatio_IsSet ? _recordData.Slice(_ParticleFullBirthRatioLocation, 4).Float() : default;
         #endregion
         #region ParticlePeristentCount
-        private int _ParticlePeristentCountLocation => _DATALocation!.Value + 0x80;
+        private int _ParticlePeristentCountLocation => _DATALocation!.Value.Min + 0x80;
         private bool _ParticlePeristentCount_IsSet => _DATALocation.HasValue;
-        public Single ParticlePeristentCount => _ParticlePeristentCount_IsSet ? _data.Slice(_ParticlePeristentCountLocation, 4).Float() : default;
+        public Single ParticlePeristentCount => _ParticlePeristentCount_IsSet ? _recordData.Slice(_ParticlePeristentCountLocation, 4).Float() : default;
         #endregion
         #region ParticleLifetime
-        private int _ParticleLifetimeLocation => _DATALocation!.Value + 0x84;
+        private int _ParticleLifetimeLocation => _DATALocation!.Value.Min + 0x84;
         private bool _ParticleLifetime_IsSet => _DATALocation.HasValue;
-        public Single ParticleLifetime => _ParticleLifetime_IsSet ? _data.Slice(_ParticleLifetimeLocation, 4).Float() : default;
+        public Single ParticleLifetime => _ParticleLifetime_IsSet ? _recordData.Slice(_ParticleLifetimeLocation, 4).Float() : default;
         #endregion
         #region ParticleLifetimePlusMinus
-        private int _ParticleLifetimePlusMinusLocation => _DATALocation!.Value + 0x88;
+        private int _ParticleLifetimePlusMinusLocation => _DATALocation!.Value.Min + 0x88;
         private bool _ParticleLifetimePlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleLifetimePlusMinus => _ParticleLifetimePlusMinus_IsSet ? _data.Slice(_ParticleLifetimePlusMinusLocation, 4).Float() : default;
+        public Single ParticleLifetimePlusMinus => _ParticleLifetimePlusMinus_IsSet ? _recordData.Slice(_ParticleLifetimePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialSpeedAlongNormal
-        private int _ParticleInitialSpeedAlongNormalLocation => _DATALocation!.Value + 0x8C;
+        private int _ParticleInitialSpeedAlongNormalLocation => _DATALocation!.Value.Min + 0x8C;
         private bool _ParticleInitialSpeedAlongNormal_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialSpeedAlongNormal => _ParticleInitialSpeedAlongNormal_IsSet ? _data.Slice(_ParticleInitialSpeedAlongNormalLocation, 4).Float() : default;
+        public Single ParticleInitialSpeedAlongNormal => _ParticleInitialSpeedAlongNormal_IsSet ? _recordData.Slice(_ParticleInitialSpeedAlongNormalLocation, 4).Float() : default;
         #endregion
         #region ParticleAccelerationAlongNormal
-        private int _ParticleAccelerationAlongNormalLocation => _DATALocation!.Value + 0x90;
+        private int _ParticleAccelerationAlongNormalLocation => _DATALocation!.Value.Min + 0x90;
         private bool _ParticleAccelerationAlongNormal_IsSet => _DATALocation.HasValue;
-        public Single ParticleAccelerationAlongNormal => _ParticleAccelerationAlongNormal_IsSet ? _data.Slice(_ParticleAccelerationAlongNormalLocation, 4).Float() : default;
+        public Single ParticleAccelerationAlongNormal => _ParticleAccelerationAlongNormal_IsSet ? _recordData.Slice(_ParticleAccelerationAlongNormalLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity1
-        private int _ParticleInitialVelocity1Location => _DATALocation!.Value + 0x94;
+        private int _ParticleInitialVelocity1Location => _DATALocation!.Value.Min + 0x94;
         private bool _ParticleInitialVelocity1_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity1 => _ParticleInitialVelocity1_IsSet ? _data.Slice(_ParticleInitialVelocity1Location, 4).Float() : default;
+        public Single ParticleInitialVelocity1 => _ParticleInitialVelocity1_IsSet ? _recordData.Slice(_ParticleInitialVelocity1Location, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity2
-        private int _ParticleInitialVelocity2Location => _DATALocation!.Value + 0x98;
+        private int _ParticleInitialVelocity2Location => _DATALocation!.Value.Min + 0x98;
         private bool _ParticleInitialVelocity2_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity2 => _ParticleInitialVelocity2_IsSet ? _data.Slice(_ParticleInitialVelocity2Location, 4).Float() : default;
+        public Single ParticleInitialVelocity2 => _ParticleInitialVelocity2_IsSet ? _recordData.Slice(_ParticleInitialVelocity2Location, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity3
-        private int _ParticleInitialVelocity3Location => _DATALocation!.Value + 0x9C;
+        private int _ParticleInitialVelocity3Location => _DATALocation!.Value.Min + 0x9C;
         private bool _ParticleInitialVelocity3_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity3 => _ParticleInitialVelocity3_IsSet ? _data.Slice(_ParticleInitialVelocity3Location, 4).Float() : default;
+        public Single ParticleInitialVelocity3 => _ParticleInitialVelocity3_IsSet ? _recordData.Slice(_ParticleInitialVelocity3Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration1
-        private int _ParticleAcceleration1Location => _DATALocation!.Value + 0xA0;
+        private int _ParticleAcceleration1Location => _DATALocation!.Value.Min + 0xA0;
         private bool _ParticleAcceleration1_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration1 => _ParticleAcceleration1_IsSet ? _data.Slice(_ParticleAcceleration1Location, 4).Float() : default;
+        public Single ParticleAcceleration1 => _ParticleAcceleration1_IsSet ? _recordData.Slice(_ParticleAcceleration1Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration2
-        private int _ParticleAcceleration2Location => _DATALocation!.Value + 0xA4;
+        private int _ParticleAcceleration2Location => _DATALocation!.Value.Min + 0xA4;
         private bool _ParticleAcceleration2_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration2 => _ParticleAcceleration2_IsSet ? _data.Slice(_ParticleAcceleration2Location, 4).Float() : default;
+        public Single ParticleAcceleration2 => _ParticleAcceleration2_IsSet ? _recordData.Slice(_ParticleAcceleration2Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration3
-        private int _ParticleAcceleration3Location => _DATALocation!.Value + 0xA8;
+        private int _ParticleAcceleration3Location => _DATALocation!.Value.Min + 0xA8;
         private bool _ParticleAcceleration3_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration3 => _ParticleAcceleration3_IsSet ? _data.Slice(_ParticleAcceleration3Location, 4).Float() : default;
+        public Single ParticleAcceleration3 => _ParticleAcceleration3_IsSet ? _recordData.Slice(_ParticleAcceleration3Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey1
-        private int _ParticleScaleKey1Location => _DATALocation!.Value + 0xAC;
+        private int _ParticleScaleKey1Location => _DATALocation!.Value.Min + 0xAC;
         private bool _ParticleScaleKey1_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey1 => _ParticleScaleKey1_IsSet ? _data.Slice(_ParticleScaleKey1Location, 4).Float() : default;
+        public Single ParticleScaleKey1 => _ParticleScaleKey1_IsSet ? _recordData.Slice(_ParticleScaleKey1Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey2
-        private int _ParticleScaleKey2Location => _DATALocation!.Value + 0xB0;
+        private int _ParticleScaleKey2Location => _DATALocation!.Value.Min + 0xB0;
         private bool _ParticleScaleKey2_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey2 => _ParticleScaleKey2_IsSet ? _data.Slice(_ParticleScaleKey2Location, 4).Float() : default;
+        public Single ParticleScaleKey2 => _ParticleScaleKey2_IsSet ? _recordData.Slice(_ParticleScaleKey2Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey1Time
-        private int _ParticleScaleKey1TimeLocation => _DATALocation!.Value + 0xB4;
+        private int _ParticleScaleKey1TimeLocation => _DATALocation!.Value.Min + 0xB4;
         private bool _ParticleScaleKey1Time_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey1Time => _ParticleScaleKey1Time_IsSet ? _data.Slice(_ParticleScaleKey1TimeLocation, 4).Float() : default;
+        public Single ParticleScaleKey1Time => _ParticleScaleKey1Time_IsSet ? _recordData.Slice(_ParticleScaleKey1TimeLocation, 4).Float() : default;
         #endregion
         #region ParticleScaleKey2Time
-        private int _ParticleScaleKey2TimeLocation => _DATALocation!.Value + 0xB8;
+        private int _ParticleScaleKey2TimeLocation => _DATALocation!.Value.Min + 0xB8;
         private bool _ParticleScaleKey2Time_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey2Time => _ParticleScaleKey2Time_IsSet ? _data.Slice(_ParticleScaleKey2TimeLocation, 4).Float() : default;
+        public Single ParticleScaleKey2Time => _ParticleScaleKey2Time_IsSet ? _recordData.Slice(_ParticleScaleKey2TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey1
-        private int _ColorKey1Location => _DATALocation!.Value + 0xBC;
+        private int _ColorKey1Location => _DATALocation!.Value.Min + 0xBC;
         private bool _ColorKey1_IsSet => _DATALocation.HasValue;
-        public Color ColorKey1 => _ColorKey1_IsSet ? _data.Slice(_ColorKey1Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color ColorKey1 => _ColorKey1_IsSet ? _recordData.Slice(_ColorKey1Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region ColorKey2
-        private int _ColorKey2Location => _DATALocation!.Value + 0xC0;
+        private int _ColorKey2Location => _DATALocation!.Value.Min + 0xC0;
         private bool _ColorKey2_IsSet => _DATALocation.HasValue;
-        public Color ColorKey2 => _ColorKey2_IsSet ? _data.Slice(_ColorKey2Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color ColorKey2 => _ColorKey2_IsSet ? _recordData.Slice(_ColorKey2Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region ColorKey3
-        private int _ColorKey3Location => _DATALocation!.Value + 0xC4;
+        private int _ColorKey3Location => _DATALocation!.Value.Min + 0xC4;
         private bool _ColorKey3_IsSet => _DATALocation.HasValue;
-        public Color ColorKey3 => _ColorKey3_IsSet ? _data.Slice(_ColorKey3Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color ColorKey3 => _ColorKey3_IsSet ? _recordData.Slice(_ColorKey3Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region ColorKey1Alpha
-        private int _ColorKey1AlphaLocation => _DATALocation!.Value + 0xC8;
+        private int _ColorKey1AlphaLocation => _DATALocation!.Value.Min + 0xC8;
         private bool _ColorKey1Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey1Alpha => _ColorKey1Alpha_IsSet ? _data.Slice(_ColorKey1AlphaLocation, 4).Float() : default;
+        public Single ColorKey1Alpha => _ColorKey1Alpha_IsSet ? _recordData.Slice(_ColorKey1AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey2Alpha
-        private int _ColorKey2AlphaLocation => _DATALocation!.Value + 0xCC;
+        private int _ColorKey2AlphaLocation => _DATALocation!.Value.Min + 0xCC;
         private bool _ColorKey2Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey2Alpha => _ColorKey2Alpha_IsSet ? _data.Slice(_ColorKey2AlphaLocation, 4).Float() : default;
+        public Single ColorKey2Alpha => _ColorKey2Alpha_IsSet ? _recordData.Slice(_ColorKey2AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey3Alpha
-        private int _ColorKey3AlphaLocation => _DATALocation!.Value + 0xD0;
+        private int _ColorKey3AlphaLocation => _DATALocation!.Value.Min + 0xD0;
         private bool _ColorKey3Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey3Alpha => _ColorKey3Alpha_IsSet ? _data.Slice(_ColorKey3AlphaLocation, 4).Float() : default;
+        public Single ColorKey3Alpha => _ColorKey3Alpha_IsSet ? _recordData.Slice(_ColorKey3AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey1Time
-        private int _ColorKey1TimeLocation => _DATALocation!.Value + 0xD4;
+        private int _ColorKey1TimeLocation => _DATALocation!.Value.Min + 0xD4;
         private bool _ColorKey1Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey1Time => _ColorKey1Time_IsSet ? _data.Slice(_ColorKey1TimeLocation, 4).Float() : default;
+        public Single ColorKey1Time => _ColorKey1Time_IsSet ? _recordData.Slice(_ColorKey1TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey2Time
-        private int _ColorKey2TimeLocation => _DATALocation!.Value + 0xD8;
+        private int _ColorKey2TimeLocation => _DATALocation!.Value.Min + 0xD8;
         private bool _ColorKey2Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey2Time => _ColorKey2Time_IsSet ? _data.Slice(_ColorKey2TimeLocation, 4).Float() : default;
+        public Single ColorKey2Time => _ColorKey2Time_IsSet ? _recordData.Slice(_ColorKey2TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey3Time
-        private int _ColorKey3TimeLocation => _DATALocation!.Value + 0xDC;
+        private int _ColorKey3TimeLocation => _DATALocation!.Value.Min + 0xDC;
         private bool _ColorKey3Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey3Time => _ColorKey3Time_IsSet ? _data.Slice(_ColorKey3TimeLocation, 4).Float() : default;
+        public Single ColorKey3Time => _ColorKey3Time_IsSet ? _recordData.Slice(_ColorKey3TimeLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialSpeedAlongNormalPlusMinus
-        private int _ParticleInitialSpeedAlongNormalPlusMinusLocation => _DATALocation!.Value + 0xE0;
+        private int _ParticleInitialSpeedAlongNormalPlusMinusLocation => _DATALocation!.Value.Min + 0xE0;
         private bool _ParticleInitialSpeedAlongNormalPlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialSpeedAlongNormalPlusMinus => _ParticleInitialSpeedAlongNormalPlusMinus_IsSet ? _data.Slice(_ParticleInitialSpeedAlongNormalPlusMinusLocation, 4).Float() : default;
+        public Single ParticleInitialSpeedAlongNormalPlusMinus => _ParticleInitialSpeedAlongNormalPlusMinus_IsSet ? _recordData.Slice(_ParticleInitialSpeedAlongNormalPlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialRotationDegree
-        private int _ParticleInitialRotationDegreeLocation => _DATALocation!.Value + 0xE4;
+        private int _ParticleInitialRotationDegreeLocation => _DATALocation!.Value.Min + 0xE4;
         private bool _ParticleInitialRotationDegree_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialRotationDegree => _ParticleInitialRotationDegree_IsSet ? _data.Slice(_ParticleInitialRotationDegreeLocation, 4).Float() : default;
+        public Single ParticleInitialRotationDegree => _ParticleInitialRotationDegree_IsSet ? _recordData.Slice(_ParticleInitialRotationDegreeLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialRotationDegreePlusMinus
-        private int _ParticleInitialRotationDegreePlusMinusLocation => _DATALocation!.Value + 0xE8;
+        private int _ParticleInitialRotationDegreePlusMinusLocation => _DATALocation!.Value.Min + 0xE8;
         private bool _ParticleInitialRotationDegreePlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialRotationDegreePlusMinus => _ParticleInitialRotationDegreePlusMinus_IsSet ? _data.Slice(_ParticleInitialRotationDegreePlusMinusLocation, 4).Float() : default;
+        public Single ParticleInitialRotationDegreePlusMinus => _ParticleInitialRotationDegreePlusMinus_IsSet ? _recordData.Slice(_ParticleInitialRotationDegreePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleRotationSpeedDegreePerSec
-        private int _ParticleRotationSpeedDegreePerSecLocation => _DATALocation!.Value + 0xEC;
+        private int _ParticleRotationSpeedDegreePerSecLocation => _DATALocation!.Value.Min + 0xEC;
         private bool _ParticleRotationSpeedDegreePerSec_IsSet => _DATALocation.HasValue;
-        public Single ParticleRotationSpeedDegreePerSec => _ParticleRotationSpeedDegreePerSec_IsSet ? _data.Slice(_ParticleRotationSpeedDegreePerSecLocation, 4).Float() : default;
+        public Single ParticleRotationSpeedDegreePerSec => _ParticleRotationSpeedDegreePerSec_IsSet ? _recordData.Slice(_ParticleRotationSpeedDegreePerSecLocation, 4).Float() : default;
         #endregion
         #region ParticleRotationSpeedDegreePerSecPlusMinus
-        private int _ParticleRotationSpeedDegreePerSecPlusMinusLocation => _DATALocation!.Value + 0xF0;
+        private int _ParticleRotationSpeedDegreePerSecPlusMinusLocation => _DATALocation!.Value.Min + 0xF0;
         private bool _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleRotationSpeedDegreePerSecPlusMinus => _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet ? _data.Slice(_ParticleRotationSpeedDegreePerSecPlusMinusLocation, 4).Float() : default;
+        public Single ParticleRotationSpeedDegreePerSecPlusMinus => _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet ? _recordData.Slice(_ParticleRotationSpeedDegreePerSecPlusMinusLocation, 4).Float() : default;
         #endregion
         #region AddonModels
-        private int _AddonModelsLocation => _DATALocation!.Value + 0xF4;
+        private int _AddonModelsLocation => _DATALocation!.Value.Min + 0xF4;
         private bool _AddonModels_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region HolesStartTime
-        private int _HolesStartTimeLocation => _DATALocation!.Value + 0xF8;
+        private int _HolesStartTimeLocation => _DATALocation!.Value.Min + 0xF8;
         private bool _HolesStartTime_IsSet => _DATALocation.HasValue;
-        public Single HolesStartTime => _HolesStartTime_IsSet ? _data.Slice(_HolesStartTimeLocation, 4).Float() : default;
+        public Single HolesStartTime => _HolesStartTime_IsSet ? _recordData.Slice(_HolesStartTimeLocation, 4).Float() : default;
         #endregion
         #region HolesEndTime
-        private int _HolesEndTimeLocation => _DATALocation!.Value + 0xFC;
+        private int _HolesEndTimeLocation => _DATALocation!.Value.Min + 0xFC;
         private bool _HolesEndTime_IsSet => _DATALocation.HasValue;
-        public Single HolesEndTime => _HolesEndTime_IsSet ? _data.Slice(_HolesEndTimeLocation, 4).Float() : default;
+        public Single HolesEndTime => _HolesEndTime_IsSet ? _recordData.Slice(_HolesEndTimeLocation, 4).Float() : default;
         #endregion
         #region HolesStartValue
-        private int _HolesStartValueLocation => _DATALocation!.Value + 0x100;
+        private int _HolesStartValueLocation => _DATALocation!.Value.Min + 0x100;
         private bool _HolesStartValue_IsSet => _DATALocation.HasValue;
-        public Single HolesStartValue => _HolesStartValue_IsSet ? _data.Slice(_HolesStartValueLocation, 4).Float() : default;
+        public Single HolesStartValue => _HolesStartValue_IsSet ? _recordData.Slice(_HolesStartValueLocation, 4).Float() : default;
         #endregion
         #region HolesEndValue
-        private int _HolesEndValueLocation => _DATALocation!.Value + 0x104;
+        private int _HolesEndValueLocation => _DATALocation!.Value.Min + 0x104;
         private bool _HolesEndValue_IsSet => _DATALocation.HasValue;
-        public Single HolesEndValue => _HolesEndValue_IsSet ? _data.Slice(_HolesEndValueLocation, 4).Float() : default;
+        public Single HolesEndValue => _HolesEndValue_IsSet ? _recordData.Slice(_HolesEndValueLocation, 4).Float() : default;
         #endregion
         #region EdgeWidth
-        private int _EdgeWidthLocation => _DATALocation!.Value + 0x108;
+        private int _EdgeWidthLocation => _DATALocation!.Value.Min + 0x108;
         private bool _EdgeWidth_IsSet => _DATALocation.HasValue;
-        public Single EdgeWidth => _EdgeWidth_IsSet ? _data.Slice(_EdgeWidthLocation, 4).Float() : default;
+        public Single EdgeWidth => _EdgeWidth_IsSet ? _recordData.Slice(_EdgeWidthLocation, 4).Float() : default;
         #endregion
         #region EdgeColor
-        private int _EdgeColorLocation => _DATALocation!.Value + 0x10C;
+        private int _EdgeColorLocation => _DATALocation!.Value.Min + 0x10C;
         private bool _EdgeColor_IsSet => _DATALocation.HasValue;
-        public Color EdgeColor => _EdgeColor_IsSet ? _data.Slice(_EdgeColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color EdgeColor => _EdgeColor_IsSet ? _recordData.Slice(_EdgeColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region ExplosionWindSpeed
-        private int _ExplosionWindSpeedLocation => _DATALocation!.Value + 0x110;
+        private int _ExplosionWindSpeedLocation => _DATALocation!.Value.Min + 0x110;
         private bool _ExplosionWindSpeed_IsSet => _DATALocation.HasValue;
-        public Single ExplosionWindSpeed => _ExplosionWindSpeed_IsSet ? _data.Slice(_ExplosionWindSpeedLocation, 4).Float() : default;
+        public Single ExplosionWindSpeed => _ExplosionWindSpeed_IsSet ? _recordData.Slice(_ExplosionWindSpeedLocation, 4).Float() : default;
         #endregion
         #region TextureCountU
-        private int _TextureCountULocation => _DATALocation!.Value + 0x114;
+        private int _TextureCountULocation => _DATALocation!.Value.Min + 0x114;
         private bool _TextureCountU_IsSet => _DATALocation.HasValue;
-        public UInt32 TextureCountU => _TextureCountU_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TextureCountULocation, 4)) : default;
+        public UInt32 TextureCountU => _TextureCountU_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextureCountULocation, 4)) : default;
         #endregion
         #region TextureCountV
-        private int _TextureCountVLocation => _DATALocation!.Value + 0x118;
+        private int _TextureCountVLocation => _DATALocation!.Value.Min + 0x118;
         private bool _TextureCountV_IsSet => _DATALocation.HasValue;
-        public UInt32 TextureCountV => _TextureCountV_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_TextureCountVLocation, 4)) : default;
+        public UInt32 TextureCountV => _TextureCountV_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextureCountVLocation, 4)) : default;
         #endregion
         #region AddonModelsFadeInTime
-        private int _AddonModelsFadeInTimeLocation => _DATALocation!.Value + 0x11C;
+        private int _AddonModelsFadeInTimeLocation => _DATALocation!.Value.Min + 0x11C;
         private bool _AddonModelsFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsFadeInTime => _AddonModelsFadeInTime_IsSet ? _data.Slice(_AddonModelsFadeInTimeLocation, 4).Float() : default;
+        public Single AddonModelsFadeInTime => _AddonModelsFadeInTime_IsSet ? _recordData.Slice(_AddonModelsFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsFadeOutTime
-        private int _AddonModelsFadeOutTimeLocation => _DATALocation!.Value + 0x120;
+        private int _AddonModelsFadeOutTimeLocation => _DATALocation!.Value.Min + 0x120;
         private bool _AddonModelsFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsFadeOutTime => _AddonModelsFadeOutTime_IsSet ? _data.Slice(_AddonModelsFadeOutTimeLocation, 4).Float() : default;
+        public Single AddonModelsFadeOutTime => _AddonModelsFadeOutTime_IsSet ? _recordData.Slice(_AddonModelsFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleStart
-        private int _AddonModelsScaleStartLocation => _DATALocation!.Value + 0x124;
+        private int _AddonModelsScaleStartLocation => _DATALocation!.Value.Min + 0x124;
         private bool _AddonModelsScaleStart_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleStart => _AddonModelsScaleStart_IsSet ? _data.Slice(_AddonModelsScaleStartLocation, 4).Float() : default;
+        public Single AddonModelsScaleStart => _AddonModelsScaleStart_IsSet ? _recordData.Slice(_AddonModelsScaleStartLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleEnd
-        private int _AddonModelsScaleEndLocation => _DATALocation!.Value + 0x128;
+        private int _AddonModelsScaleEndLocation => _DATALocation!.Value.Min + 0x128;
         private bool _AddonModelsScaleEnd_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleEnd => _AddonModelsScaleEnd_IsSet ? _data.Slice(_AddonModelsScaleEndLocation, 4).Float() : default;
+        public Single AddonModelsScaleEnd => _AddonModelsScaleEnd_IsSet ? _recordData.Slice(_AddonModelsScaleEndLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleInTime
-        private int _AddonModelsScaleInTimeLocation => _DATALocation!.Value + 0x12C;
+        private int _AddonModelsScaleInTimeLocation => _DATALocation!.Value.Min + 0x12C;
         private bool _AddonModelsScaleInTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleInTime => _AddonModelsScaleInTime_IsSet ? _data.Slice(_AddonModelsScaleInTimeLocation, 4).Float() : default;
+        public Single AddonModelsScaleInTime => _AddonModelsScaleInTime_IsSet ? _recordData.Slice(_AddonModelsScaleInTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleOutTime
-        private int _AddonModelsScaleOutTimeLocation => _DATALocation!.Value + 0x130;
+        private int _AddonModelsScaleOutTimeLocation => _DATALocation!.Value.Min + 0x130;
         private bool _AddonModelsScaleOutTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleOutTime => _AddonModelsScaleOutTime_IsSet ? _data.Slice(_AddonModelsScaleOutTimeLocation, 4).Float() : default;
+        public Single AddonModelsScaleOutTime => _AddonModelsScaleOutTime_IsSet ? _recordData.Slice(_AddonModelsScaleOutTimeLocation, 4).Float() : default;
         #endregion
         #region AmbientSound
-        private int _AmbientSoundLocation => _DATALocation!.Value + 0x134;
+        private int _AmbientSoundLocation => _DATALocation!.Value.Min + 0x134;
         private bool _AmbientSound_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
+        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
-        private int _FillColorKey2Location => _DATALocation!.Value + 0x138;
+        private int _FillColorKey2Location => _DATALocation!.Value.Min + 0x138;
         private bool _FillColorKey2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Color FillColorKey2 => _FillColorKey2_IsSet ? _data.Slice(_FillColorKey2Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FillColorKey2 => _FillColorKey2_IsSet ? _recordData.Slice(_FillColorKey2Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FillColorKey3
-        private int _FillColorKey3Location => _DATALocation!.Value + 0x13C;
+        private int _FillColorKey3Location => _DATALocation!.Value.Min + 0x13C;
         private bool _FillColorKey3_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Color FillColorKey3 => _FillColorKey3_IsSet ? _data.Slice(_FillColorKey3Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color FillColorKey3 => _FillColorKey3_IsSet ? _recordData.Slice(_FillColorKey3Location, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region FillColorKey1Scale
-        private int _FillColorKey1ScaleLocation => _DATALocation!.Value + 0x140;
+        private int _FillColorKey1ScaleLocation => _DATALocation!.Value.Min + 0x140;
         private bool _FillColorKey1Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey1Scale => _FillColorKey1Scale_IsSet ? _data.Slice(_FillColorKey1ScaleLocation, 4).Float() : default;
+        public Single FillColorKey1Scale => _FillColorKey1Scale_IsSet ? _recordData.Slice(_FillColorKey1ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey2Scale
-        private int _FillColorKey2ScaleLocation => _DATALocation!.Value + 0x144;
+        private int _FillColorKey2ScaleLocation => _DATALocation!.Value.Min + 0x144;
         private bool _FillColorKey2Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey2Scale => _FillColorKey2Scale_IsSet ? _data.Slice(_FillColorKey2ScaleLocation, 4).Float() : default;
+        public Single FillColorKey2Scale => _FillColorKey2Scale_IsSet ? _recordData.Slice(_FillColorKey2ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey3Scale
-        private int _FillColorKey3ScaleLocation => _DATALocation!.Value + 0x148;
+        private int _FillColorKey3ScaleLocation => _DATALocation!.Value.Min + 0x148;
         private bool _FillColorKey3Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey3Scale => _FillColorKey3Scale_IsSet ? _data.Slice(_FillColorKey3ScaleLocation, 4).Float() : default;
+        public Single FillColorKey3Scale => _FillColorKey3Scale_IsSet ? _recordData.Slice(_FillColorKey3ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey1Time
-        private int _FillColorKey1TimeLocation => _DATALocation!.Value + 0x14C;
+        private int _FillColorKey1TimeLocation => _DATALocation!.Value.Min + 0x14C;
         private bool _FillColorKey1Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey1Time => _FillColorKey1Time_IsSet ? _data.Slice(_FillColorKey1TimeLocation, 4).Float() : default;
+        public Single FillColorKey1Time => _FillColorKey1Time_IsSet ? _recordData.Slice(_FillColorKey1TimeLocation, 4).Float() : default;
         #endregion
         #region FillColorKey2Time
-        private int _FillColorKey2TimeLocation => _DATALocation!.Value + 0x150;
+        private int _FillColorKey2TimeLocation => _DATALocation!.Value.Min + 0x150;
         private bool _FillColorKey2Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey2Time => _FillColorKey2Time_IsSet ? _data.Slice(_FillColorKey2TimeLocation, 4).Float() : default;
+        public Single FillColorKey2Time => _FillColorKey2Time_IsSet ? _recordData.Slice(_FillColorKey2TimeLocation, 4).Float() : default;
         #endregion
         #region FillColorKey3Time
-        private int _FillColorKey3TimeLocation => _DATALocation!.Value + 0x154;
+        private int _FillColorKey3TimeLocation => _DATALocation!.Value.Min + 0x154;
         private bool _FillColorKey3Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey3Time => _FillColorKey3Time_IsSet ? _data.Slice(_FillColorKey3TimeLocation, 4).Float() : default;
+        public Single FillColorKey3Time => _FillColorKey3Time_IsSet ? _recordData.Slice(_FillColorKey3TimeLocation, 4).Float() : default;
         #endregion
         #region ColorScale
-        private int _ColorScaleLocation => _DATALocation!.Value + 0x158;
+        private int _ColorScaleLocation => _DATALocation!.Value.Min + 0x158;
         private bool _ColorScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single ColorScale => _ColorScale_IsSet ? _data.Slice(_ColorScaleLocation, 4).Float() : default;
+        public Single ColorScale => _ColorScale_IsSet ? _recordData.Slice(_ColorScaleLocation, 4).Float() : default;
         #endregion
         #region BirthPositionOffset
-        private int _BirthPositionOffsetLocation => _DATALocation!.Value + 0x15C;
+        private int _BirthPositionOffsetLocation => _DATALocation!.Value.Min + 0x15C;
         private bool _BirthPositionOffset_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single BirthPositionOffset => _BirthPositionOffset_IsSet ? _data.Slice(_BirthPositionOffsetLocation, 4).Float() : default;
+        public Single BirthPositionOffset => _BirthPositionOffset_IsSet ? _recordData.Slice(_BirthPositionOffsetLocation, 4).Float() : default;
         #endregion
         #region BirthPositionOffsetRangePlusMinus
-        private int _BirthPositionOffsetRangePlusMinusLocation => _DATALocation!.Value + 0x160;
+        private int _BirthPositionOffsetRangePlusMinusLocation => _DATALocation!.Value.Min + 0x160;
         private bool _BirthPositionOffsetRangePlusMinus_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single BirthPositionOffsetRangePlusMinus => _BirthPositionOffsetRangePlusMinus_IsSet ? _data.Slice(_BirthPositionOffsetRangePlusMinusLocation, 4).Float() : default;
+        public Single BirthPositionOffsetRangePlusMinus => _BirthPositionOffsetRangePlusMinus_IsSet ? _recordData.Slice(_BirthPositionOffsetRangePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleAnimatedStartFrame
-        private int _ParticleAnimatedStartFrameLocation => _DATALocation!.Value + 0x164;
+        private int _ParticleAnimatedStartFrameLocation => _DATALocation!.Value.Min + 0x164;
         private bool _ParticleAnimatedStartFrame_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedStartFrame => _ParticleAnimatedStartFrame_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedStartFrameLocation, 4)) : default;
+        public UInt32 ParticleAnimatedStartFrame => _ParticleAnimatedStartFrame_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedStartFrameLocation, 4)) : default;
         #endregion
         #region ParticleAnimatedStartFrameVariation
-        private int _ParticleAnimatedStartFrameVariationLocation => _DATALocation!.Value + 0x168;
+        private int _ParticleAnimatedStartFrameVariationLocation => _DATALocation!.Value.Min + 0x168;
         private bool _ParticleAnimatedStartFrameVariation_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedStartFrameVariation => _ParticleAnimatedStartFrameVariation_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedStartFrameVariationLocation, 4)) : default;
+        public UInt32 ParticleAnimatedStartFrameVariation => _ParticleAnimatedStartFrameVariation_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedStartFrameVariationLocation, 4)) : default;
         #endregion
         #region ParticleAnimatedEndFrame
-        private int _ParticleAnimatedEndFrameLocation => _DATALocation!.Value + 0x16C;
+        private int _ParticleAnimatedEndFrameLocation => _DATALocation!.Value.Min + 0x16C;
         private bool _ParticleAnimatedEndFrame_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedEndFrame => _ParticleAnimatedEndFrame_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedEndFrameLocation, 4)) : default;
+        public UInt32 ParticleAnimatedEndFrame => _ParticleAnimatedEndFrame_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedEndFrameLocation, 4)) : default;
         #endregion
         #region ParticleAnimatedLoopStartFrame
-        private int _ParticleAnimatedLoopStartFrameLocation => _DATALocation!.Value + 0x170;
+        private int _ParticleAnimatedLoopStartFrameLocation => _DATALocation!.Value.Min + 0x170;
         private bool _ParticleAnimatedLoopStartFrame_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedLoopStartFrame => _ParticleAnimatedLoopStartFrame_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedLoopStartFrameLocation, 4)) : default;
+        public UInt32 ParticleAnimatedLoopStartFrame => _ParticleAnimatedLoopStartFrame_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedLoopStartFrameLocation, 4)) : default;
         #endregion
         #region ParticleAnimatedLoopStartVariation
-        private int _ParticleAnimatedLoopStartVariationLocation => _DATALocation!.Value + 0x174;
+        private int _ParticleAnimatedLoopStartVariationLocation => _DATALocation!.Value.Min + 0x174;
         private bool _ParticleAnimatedLoopStartVariation_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedLoopStartVariation => _ParticleAnimatedLoopStartVariation_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedLoopStartVariationLocation, 4)) : default;
+        public UInt32 ParticleAnimatedLoopStartVariation => _ParticleAnimatedLoopStartVariation_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedLoopStartVariationLocation, 4)) : default;
         #endregion
         #region ParticleAnimatedFrameCount
-        private int _ParticleAnimatedFrameCountLocation => _DATALocation!.Value + 0x178;
+        private int _ParticleAnimatedFrameCountLocation => _DATALocation!.Value.Min + 0x178;
         private bool _ParticleAnimatedFrameCount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedFrameCount => _ParticleAnimatedFrameCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedFrameCountLocation, 4)) : default;
+        public UInt32 ParticleAnimatedFrameCount => _ParticleAnimatedFrameCount_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedFrameCountLocation, 4)) : default;
         #endregion
         #region ParticleAnimatedFrameCountVariation
-        private int _ParticleAnimatedFrameCountVariationLocation => _DATALocation!.Value + 0x17C;
+        private int _ParticleAnimatedFrameCountVariationLocation => _DATALocation!.Value.Min + 0x17C;
         private bool _ParticleAnimatedFrameCountVariation_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public UInt32 ParticleAnimatedFrameCountVariation => _ParticleAnimatedFrameCountVariation_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ParticleAnimatedFrameCountVariationLocation, 4)) : default;
+        public UInt32 ParticleAnimatedFrameCountVariation => _ParticleAnimatedFrameCountVariation_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ParticleAnimatedFrameCountVariationLocation, 4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x180;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x180;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region FillTextureScaleU
-        private int _FillTextureScaleULocation => _DATALocation!.Value + 0x184;
+        private int _FillTextureScaleULocation => _DATALocation!.Value.Min + 0x184;
         private bool _FillTextureScaleU_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single FillTextureScaleU => _FillTextureScaleU_IsSet ? _data.Slice(_FillTextureScaleULocation, 4).Float() : default;
+        public Single FillTextureScaleU => _FillTextureScaleU_IsSet ? _recordData.Slice(_FillTextureScaleULocation, 4).Float() : default;
         #endregion
         #region FillTextureScaleV
-        private int _FillTextureScaleVLocation => _DATALocation!.Value + 0x188;
+        private int _FillTextureScaleVLocation => _DATALocation!.Value.Min + 0x188;
         private bool _FillTextureScaleV_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single FillTextureScaleV => _FillTextureScaleV_IsSet ? _data.Slice(_FillTextureScaleVLocation, 4).Float() : default;
+        public Single FillTextureScaleV => _FillTextureScaleV_IsSet ? _recordData.Slice(_FillTextureScaleVLocation, 4).Float() : default;
         #endregion
         #region SceneGraphEmitDepthLimit
-        private int _SceneGraphEmitDepthLimitLocation => _DATALocation!.Value + 0x18C;
+        private int _SceneGraphEmitDepthLimitLocation => _DATALocation!.Value.Min + 0x18C;
         private bool _SceneGraphEmitDepthLimit_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break3);
-        public UInt32 SceneGraphEmitDepthLimit => _SceneGraphEmitDepthLimit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_SceneGraphEmitDepthLimitLocation, 4)) : default;
+        public UInt32 SceneGraphEmitDepthLimit => _SceneGraphEmitDepthLimit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_SceneGraphEmitDepthLimitLocation, 4)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -7911,28 +8126,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected EffectShaderBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static EffectShaderBinaryOverlay EffectShaderFactory(
+        public static IEffectShaderGetter EffectShaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new EffectShaderBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -7942,20 +8160,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static EffectShaderBinaryOverlay EffectShaderFactory(
+        public static IEffectShaderGetter EffectShaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return EffectShaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -7965,9 +8183,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ICON:
@@ -7997,8 +8215,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x134)
                     {
                         this.DATADataTypeState |= EffectShader.DATADataType.Break0;
@@ -8024,17 +8242,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EffectShaderMixIn.ToString(
+            EffectShaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

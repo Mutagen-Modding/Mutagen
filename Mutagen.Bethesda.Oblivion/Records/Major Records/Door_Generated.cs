@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,20 +21,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -152,12 +153,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DoorMixIn.ToString(
+            DoorMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -356,9 +358,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.RandomTeleportDestinations.Specific = l;
-                        foreach (var item in RandomTeleportDestinations.Specific.WithIndex())
+                        foreach (var item in RandomTeleportDestinations.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -367,77 +369,70 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Door.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Door.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Door.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Door.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Door.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Door.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.OpenSound ?? true)
                     {
-                        fg.AppendItem(OpenSound, "OpenSound");
+                        sb.AppendItem(OpenSound, "OpenSound");
                     }
                     if (printMask?.CloseSound ?? true)
                     {
-                        fg.AppendItem(CloseSound, "CloseSound");
+                        sb.AppendItem(CloseSound, "CloseSound");
                     }
                     if (printMask?.LoopSound ?? true)
                     {
-                        fg.AppendItem(LoopSound, "LoopSound");
+                        sb.AppendItem(LoopSound, "LoopSound");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.RandomTeleportDestinations?.Overall ?? true)
                         && RandomTeleportDestinations is {} RandomTeleportDestinationsItem)
                     {
-                        fg.AppendLine("RandomTeleportDestinations =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RandomTeleportDestinations =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RandomTeleportDestinationsItem.Overall);
+                            sb.AppendItem(RandomTeleportDestinationsItem.Overall);
                             if (RandomTeleportDestinationsItem.Specific != null)
                             {
                                 foreach (var subItem in RandomTeleportDestinationsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -571,64 +566,65 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(Script, "Script");
-                fg.AppendItem(OpenSound, "OpenSound");
-                fg.AppendItem(CloseSound, "CloseSound");
-                fg.AppendItem(LoopSound, "LoopSound");
-                fg.AppendItem(Flags, "Flags");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                {
+                    sb.AppendItem(OpenSound, "OpenSound");
+                }
+                {
+                    sb.AppendItem(CloseSound, "CloseSound");
+                }
+                {
+                    sb.AppendItem(LoopSound, "LoopSound");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
                 if (RandomTeleportDestinations is {} RandomTeleportDestinationsItem)
                 {
-                    fg.AppendLine("RandomTeleportDestinations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RandomTeleportDestinations =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RandomTeleportDestinationsItem.Overall);
+                        sb.AppendItem(RandomTeleportDestinationsItem.Overall);
                         if (RandomTeleportDestinationsItem.Specific != null)
                         {
                             foreach (var subItem in RandomTeleportDestinationsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -718,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DoorCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorSetterCommon.Instance.RemapLinks(this, mapping);
         public Door(FormKey formKey)
         {
@@ -779,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -789,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Door CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Door();
             ((DoorSetterCommon)((IDoorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -804,7 +800,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Door item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -814,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -916,26 +912,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDoorGetter item,
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
-            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
+            return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDoorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
-            ((DoorCommon)((IDoorGetter)item).CommonInstance()!).ToString(
+            ((DoorCommon)((IDoorGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1030,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDoorInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DoorSetterCommon)((IDoorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1045,10 +1041,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Door_FieldIndex
+    internal enum Door_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1067,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Door_Registration : ILoquiRegistration
+    internal partial class Door_Registration : ILoquiRegistration
     {
         public static readonly Door_Registration Instance = new Door_Registration();
 
@@ -1109,6 +1105,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DOOR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.DOOR);
+            var all = RecordCollection.Factory(
+                RecordTypes.DOOR,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.SCRI,
+                RecordTypes.SNAM,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.FNAM,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DoorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1142,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DoorSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class DoorSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly DoorSetterCommon Instance = new DoorSetterCommon();
 
@@ -1189,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IDoorInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IDoorInternal>(
                 record: item,
@@ -1202,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Door)item,
@@ -1213,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Door)item,
@@ -1224,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DoorCommon : OblivionMajorRecordCommon
+    internal partial class DoorCommon : OblivionMajorRecordCommon
     {
         public new static readonly DoorCommon Instance = new DoorCommon();
 
@@ -1248,7 +1260,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Door.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
@@ -1267,102 +1278,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IDoorGetter item,
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDoorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Door.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Door =>");
+                sb.AppendLine($"Door =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Door) =>");
+                sb.AppendLine($"{name} (Door) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDoorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Door.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+                sb.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.CloseSound ?? true)
             {
-                fg.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
+                sb.AppendItem(item.CloseSound.FormKeyNullable, "CloseSound");
             }
             if (printMask?.LoopSound ?? true)
             {
-                fg.AppendItem(item.LoopSound.FormKeyNullable, "LoopSound");
+                sb.AppendItem(item.LoopSound.FormKeyNullable, "LoopSound");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.RandomTeleportDestinations?.Overall ?? true)
             {
-                fg.AppendLine("RandomTeleportDestinations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RandomTeleportDestinations =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.RandomTeleportDestinations)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1514,27 +1519,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDoorGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDoorGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
-            if (obj.OpenSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenSound);
+                yield return OpenSoundInfo;
             }
-            if (obj.CloseSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CloseSound, out var CloseSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CloseSound);
+                yield return CloseSoundInfo;
             }
-            if (obj.LoopSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LoopSound, out var LoopSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LoopSound);
+                yield return LoopSoundInfo;
             }
             foreach (var item in obj.RandomTeleportDestinations)
             {
@@ -1581,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DoorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class DoorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly DoorSetterTranslationCommon Instance = new DoorSetterTranslationCommon();
 
@@ -1805,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -1823,18 +1828,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DoorBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DoorBinaryWriteTranslation Instance = new DoorBinaryWriteTranslation();
+        public new static readonly DoorBinaryWriteTranslation Instance = new DoorBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDoorGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1876,7 +1881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RandomTeleportDestinations,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlaceGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlaceGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1888,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IDoorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1899,12 +1904,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1916,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDoorGetter)item,
@@ -1927,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDoorGetter)item,
@@ -1938,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IDoorGetter)item,
@@ -1948,9 +1956,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DoorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class DoorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static DoorBinaryCreateTranslation Instance = new DoorBinaryCreateTranslation();
+        public new static readonly DoorBinaryCreateTranslation Instance = new DoorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DOOR;
         public static void FillBinaryStructs(
@@ -1969,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1986,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Door_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
@@ -2037,7 +2045,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2054,16 +2063,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DoorBinaryOverlay :
+    internal partial class DoorBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IDoorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
-        public new static Door_Registration StaticRegistration => Door_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => DoorCommon.Instance;
         [DebuggerStepThrough]
@@ -2071,14 +2080,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DoorCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DoorCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DoorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DoorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2090,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -2099,25 +2108,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CloseSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region LoopSound
         private int? _LoopSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> LoopSound => _LoopSoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoopSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Door.DoorFlag? Flags => _FlagsLocation.HasValue ? (Door.DoorFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.DoorFlag?);
+        public Door.DoorFlag? Flags => _FlagsLocation.HasValue ? (Door.DoorFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.DoorFlag?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = ListExt.Empty<IFormLinkGetter<IPlaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations { get; private set; } = Array.Empty<IFormLinkGetter<IPlaceGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2125,28 +2134,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected DoorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DoorBinaryOverlay DoorFactory(
+        public static IDoorGetter DoorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DoorBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2156,20 +2168,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static DoorBinaryOverlay DoorFactory(
+        public static IDoorGetter DoorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DoorFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2179,9 +2191,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2194,7 +2206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Door_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
@@ -2233,7 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Door_FieldIndex.RandomTeleportDestinations;
                 }
                 default:
@@ -2243,17 +2255,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DoorMixIn.ToString(
+            DoorMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

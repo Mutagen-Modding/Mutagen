@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -57,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -298,12 +299,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ProjectileMixIn.ToString(
+            ProjectileMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -714,154 +716,149 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Projectile.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Projectile.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Projectile.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Projectile.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Projectile.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Projectile.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Destructible?.Overall ?? true)
                     {
-                        Destructible?.ToString(fg);
+                        Destructible?.Print(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Gravity ?? true)
                     {
-                        fg.AppendItem(Gravity, "Gravity");
+                        sb.AppendItem(Gravity, "Gravity");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Range ?? true)
                     {
-                        fg.AppendItem(Range, "Range");
+                        sb.AppendItem(Range, "Range");
                     }
                     if (printMask?.Light ?? true)
                     {
-                        fg.AppendItem(Light, "Light");
+                        sb.AppendItem(Light, "Light");
                     }
                     if (printMask?.MuzzleFlash ?? true)
                     {
-                        fg.AppendItem(MuzzleFlash, "MuzzleFlash");
+                        sb.AppendItem(MuzzleFlash, "MuzzleFlash");
                     }
                     if (printMask?.TracerChance ?? true)
                     {
-                        fg.AppendItem(TracerChance, "TracerChance");
+                        sb.AppendItem(TracerChance, "TracerChance");
                     }
                     if (printMask?.ExplosionAltTriggerProximity ?? true)
                     {
-                        fg.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                        sb.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
                     }
                     if (printMask?.ExplosionAltTriggerTimer ?? true)
                     {
-                        fg.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                        sb.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
                     }
                     if (printMask?.Explosion ?? true)
                     {
-                        fg.AppendItem(Explosion, "Explosion");
+                        sb.AppendItem(Explosion, "Explosion");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendItem(Sound, "Sound");
+                        sb.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.MuzzleFlashDuration ?? true)
                     {
-                        fg.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
+                        sb.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
                     }
                     if (printMask?.FadeDuration ?? true)
                     {
-                        fg.AppendItem(FadeDuration, "FadeDuration");
+                        sb.AppendItem(FadeDuration, "FadeDuration");
                     }
                     if (printMask?.ImpactForce ?? true)
                     {
-                        fg.AppendItem(ImpactForce, "ImpactForce");
+                        sb.AppendItem(ImpactForce, "ImpactForce");
                     }
                     if (printMask?.CountdownSound ?? true)
                     {
-                        fg.AppendItem(CountdownSound, "CountdownSound");
+                        sb.AppendItem(CountdownSound, "CountdownSound");
                     }
                     if (printMask?.DisaleSound ?? true)
                     {
-                        fg.AppendItem(DisaleSound, "DisaleSound");
+                        sb.AppendItem(DisaleSound, "DisaleSound");
                     }
                     if (printMask?.DefaultWeaponSource ?? true)
                     {
-                        fg.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
+                        sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
                     }
                     if (printMask?.ConeSpread ?? true)
                     {
-                        fg.AppendItem(ConeSpread, "ConeSpread");
+                        sb.AppendItem(ConeSpread, "ConeSpread");
                     }
                     if (printMask?.CollisionRadius ?? true)
                     {
-                        fg.AppendItem(CollisionRadius, "CollisionRadius");
+                        sb.AppendItem(CollisionRadius, "CollisionRadius");
                     }
                     if (printMask?.Lifetime ?? true)
                     {
-                        fg.AppendItem(Lifetime, "Lifetime");
+                        sb.AppendItem(Lifetime, "Lifetime");
                     }
                     if (printMask?.RelaunchInterval ?? true)
                     {
-                        fg.AppendItem(RelaunchInterval, "RelaunchInterval");
+                        sb.AppendItem(RelaunchInterval, "RelaunchInterval");
                     }
                     if (printMask?.DecalData ?? true)
                     {
-                        fg.AppendItem(DecalData, "DecalData");
+                        sb.AppendItem(DecalData, "DecalData");
                     }
                     if (printMask?.CollisionLayer ?? true)
                     {
-                        fg.AppendItem(CollisionLayer, "CollisionLayer");
+                        sb.AppendItem(CollisionLayer, "CollisionLayer");
                     }
                     if (printMask?.MuzzleFlashModel ?? true)
                     {
-                        fg.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
+                        sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
                     }
                     if (printMask?.TextureFilesHashes ?? true)
                     {
-                        fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                        sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1235,68 +1232,117 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                Destructible?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Gravity, "Gravity");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Range, "Range");
-                fg.AppendItem(Light, "Light");
-                fg.AppendItem(MuzzleFlash, "MuzzleFlash");
-                fg.AppendItem(TracerChance, "TracerChance");
-                fg.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
-                fg.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
-                fg.AppendItem(Explosion, "Explosion");
-                fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
-                fg.AppendItem(FadeDuration, "FadeDuration");
-                fg.AppendItem(ImpactForce, "ImpactForce");
-                fg.AppendItem(CountdownSound, "CountdownSound");
-                fg.AppendItem(DisaleSound, "DisaleSound");
-                fg.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
-                fg.AppendItem(ConeSpread, "ConeSpread");
-                fg.AppendItem(CollisionRadius, "CollisionRadius");
-                fg.AppendItem(Lifetime, "Lifetime");
-                fg.AppendItem(RelaunchInterval, "RelaunchInterval");
-                fg.AppendItem(DecalData, "DecalData");
-                fg.AppendItem(CollisionLayer, "CollisionLayer");
-                fg.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
-                fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                Destructible?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Gravity, "Gravity");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Range, "Range");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(MuzzleFlash, "MuzzleFlash");
+                }
+                {
+                    sb.AppendItem(TracerChance, "TracerChance");
+                }
+                {
+                    sb.AppendItem(ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                }
+                {
+                    sb.AppendItem(ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                }
+                {
+                    sb.AppendItem(Explosion, "Explosion");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashDuration, "MuzzleFlashDuration");
+                }
+                {
+                    sb.AppendItem(FadeDuration, "FadeDuration");
+                }
+                {
+                    sb.AppendItem(ImpactForce, "ImpactForce");
+                }
+                {
+                    sb.AppendItem(CountdownSound, "CountdownSound");
+                }
+                {
+                    sb.AppendItem(DisaleSound, "DisaleSound");
+                }
+                {
+                    sb.AppendItem(DefaultWeaponSource, "DefaultWeaponSource");
+                }
+                {
+                    sb.AppendItem(ConeSpread, "ConeSpread");
+                }
+                {
+                    sb.AppendItem(CollisionRadius, "CollisionRadius");
+                }
+                {
+                    sb.AppendItem(Lifetime, "Lifetime");
+                }
+                {
+                    sb.AppendItem(RelaunchInterval, "RelaunchInterval");
+                }
+                {
+                    sb.AppendItem(DecalData, "DecalData");
+                }
+                {
+                    sb.AppendItem(CollisionLayer, "CollisionLayer");
+                }
+                {
+                    sb.AppendItem(MuzzleFlashModel, "MuzzleFlashModel");
+                }
+                {
+                    sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -1479,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Projectile_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProjectileSetterCommon.Instance.RemapLinks(this, mapping);
         public Projectile(
             FormKey formKey,
@@ -1563,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ProjectileBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1573,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Projectile CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Projectile();
             ((ProjectileSetterCommon)((IProjectileGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1588,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Projectile item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1598,7 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1615,13 +1661,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IProjectile :
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IProjectileInternal>,
         IModeled,
         INamed,
         INamedRequired,
         IObjectBounded,
-        IObjectBoundedOptional,
         IObjectId,
         IPlacedTrapTarget,
         IProjectileGetter,
@@ -1630,7 +1676,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
@@ -1683,6 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IProjectileGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IProjectileGetter>,
         IMapsToGetter<IProjectileGetter>,
@@ -1690,7 +1737,6 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
         IObjectIdGetter,
         IPlacedTrapTargetGetter,
         ITranslatedNamedGetter,
@@ -1699,7 +1745,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -1768,26 +1814,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IProjectileGetter item,
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
-            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).ToString(
+            return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IProjectileGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
-            ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).ToString(
+            ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1882,7 +1928,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IProjectileInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ProjectileSetterCommon)((IProjectileGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1897,10 +1943,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Projectile_FieldIndex
+    internal enum Projectile_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1944,7 +1990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Projectile_Registration : ILoquiRegistration
+    internal partial class Projectile_Registration : ILoquiRegistration
     {
         public static readonly Projectile_Registration Instance = new Projectile_Registration();
 
@@ -1986,6 +2032,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PROJ;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.PROJ);
+            var all = RecordCollection.Factory(
+                RecordTypes.PROJ,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.DEST,
+                RecordTypes.DSTD,
+                RecordTypes.DMDL,
+                RecordTypes.DATA,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.VNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ProjectileBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2019,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ProjectileSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ProjectileSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ProjectileSetterCommon Instance = new ProjectileSetterCommon();
 
@@ -2096,7 +2160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IProjectileInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IProjectileInternal>(
                 record: item,
@@ -2109,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Projectile)item,
@@ -2120,7 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Projectile)item,
@@ -2131,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ProjectileCommon : SkyrimMajorRecordCommon
+    internal partial class ProjectileCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ProjectileCommon Instance = new ProjectileCommon();
 
@@ -2155,7 +2219,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Projectile.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
@@ -2199,185 +2262,183 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IProjectileGetter item,
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IProjectileGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Projectile.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Projectile =>");
+                sb.AppendLine($"Projectile =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Projectile) =>");
+                sb.AppendLine($"{name} (Projectile) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IProjectileGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Projectile.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.Destructible?.Overall ?? true)
                 && item.Destructible is {} DestructibleItem)
             {
-                DestructibleItem?.ToString(fg, "Destructible");
+                DestructibleItem?.Print(sb, "Destructible");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Gravity ?? true)
             {
-                fg.AppendItem(item.Gravity, "Gravity");
+                sb.AppendItem(item.Gravity, "Gravity");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Range ?? true)
             {
-                fg.AppendItem(item.Range, "Range");
+                sb.AppendItem(item.Range, "Range");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light.FormKey, "Light");
+                sb.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.MuzzleFlash ?? true)
             {
-                fg.AppendItem(item.MuzzleFlash.FormKey, "MuzzleFlash");
+                sb.AppendItem(item.MuzzleFlash.FormKey, "MuzzleFlash");
             }
             if (printMask?.TracerChance ?? true)
             {
-                fg.AppendItem(item.TracerChance, "TracerChance");
+                sb.AppendItem(item.TracerChance, "TracerChance");
             }
             if (printMask?.ExplosionAltTriggerProximity ?? true)
             {
-                fg.AppendItem(item.ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
+                sb.AppendItem(item.ExplosionAltTriggerProximity, "ExplosionAltTriggerProximity");
             }
             if (printMask?.ExplosionAltTriggerTimer ?? true)
             {
-                fg.AppendItem(item.ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
+                sb.AppendItem(item.ExplosionAltTriggerTimer, "ExplosionAltTriggerTimer");
             }
             if (printMask?.Explosion ?? true)
             {
-                fg.AppendItem(item.Explosion.FormKey, "Explosion");
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                sb.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.MuzzleFlashDuration ?? true)
             {
-                fg.AppendItem(item.MuzzleFlashDuration, "MuzzleFlashDuration");
+                sb.AppendItem(item.MuzzleFlashDuration, "MuzzleFlashDuration");
             }
             if (printMask?.FadeDuration ?? true)
             {
-                fg.AppendItem(item.FadeDuration, "FadeDuration");
+                sb.AppendItem(item.FadeDuration, "FadeDuration");
             }
             if (printMask?.ImpactForce ?? true)
             {
-                fg.AppendItem(item.ImpactForce, "ImpactForce");
+                sb.AppendItem(item.ImpactForce, "ImpactForce");
             }
             if (printMask?.CountdownSound ?? true)
             {
-                fg.AppendItem(item.CountdownSound.FormKey, "CountdownSound");
+                sb.AppendItem(item.CountdownSound.FormKey, "CountdownSound");
             }
             if (printMask?.DisaleSound ?? true)
             {
-                fg.AppendItem(item.DisaleSound.FormKey, "DisaleSound");
+                sb.AppendItem(item.DisaleSound.FormKey, "DisaleSound");
             }
             if (printMask?.DefaultWeaponSource ?? true)
             {
-                fg.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
+                sb.AppendItem(item.DefaultWeaponSource.FormKey, "DefaultWeaponSource");
             }
             if (printMask?.ConeSpread ?? true)
             {
-                fg.AppendItem(item.ConeSpread, "ConeSpread");
+                sb.AppendItem(item.ConeSpread, "ConeSpread");
             }
             if (printMask?.CollisionRadius ?? true)
             {
-                fg.AppendItem(item.CollisionRadius, "CollisionRadius");
+                sb.AppendItem(item.CollisionRadius, "CollisionRadius");
             }
             if (printMask?.Lifetime ?? true)
             {
-                fg.AppendItem(item.Lifetime, "Lifetime");
+                sb.AppendItem(item.Lifetime, "Lifetime");
             }
             if (printMask?.RelaunchInterval ?? true)
             {
-                fg.AppendItem(item.RelaunchInterval, "RelaunchInterval");
+                sb.AppendItem(item.RelaunchInterval, "RelaunchInterval");
             }
             if (printMask?.DecalData ?? true)
             {
-                fg.AppendItem(item.DecalData.FormKey, "DecalData");
+                sb.AppendItem(item.DecalData.FormKey, "DecalData");
             }
             if (printMask?.CollisionLayer ?? true)
             {
-                fg.AppendItem(item.CollisionLayer.FormKey, "CollisionLayer");
+                sb.AppendItem(item.CollisionLayer.FormKey, "CollisionLayer");
             }
             if (printMask?.MuzzleFlashModel ?? true)
             {
-                fg.AppendItem(item.MuzzleFlashModel, "MuzzleFlashModel");
+                sb.AppendItem(item.MuzzleFlashModel, "MuzzleFlashModel");
             }
             if ((printMask?.TextureFilesHashes ?? true)
                 && item.TextureFilesHashes is {} TextureFilesHashesItem)
             {
-                fg.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
+                sb.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2662,22 +2723,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IProjectileGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProjectileGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.ContainedFormLinks)
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2732,7 +2793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ProjectileSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ProjectileSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ProjectileSetterTranslationCommon Instance = new ProjectileSetterTranslationCommon();
 
@@ -3084,7 +3145,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
@@ -3102,13 +3163,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ProjectileBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ProjectileBinaryWriteTranslation Instance = new ProjectileBinaryWriteTranslation();
+        public new static readonly ProjectileBinaryWriteTranslation Instance = new ProjectileBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IProjectileGetter item,
@@ -3122,7 +3183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IProjectileGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -3254,7 +3315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IProjectileGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -3265,12 +3326,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -3282,7 +3346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IProjectileGetter)item,
@@ -3293,7 +3357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IProjectileGetter)item,
@@ -3304,7 +3368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IProjectileGetter)item,
@@ -3314,9 +3378,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ProjectileBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ProjectileBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
+        public new static readonly ProjectileBinaryCreateTranslation Instance = new ProjectileBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PROJ;
         public static void FillBinaryStructs(
@@ -3335,7 +3399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3358,7 +3422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Projectile_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
@@ -3367,7 +3431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Projectile_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
@@ -3441,7 +3505,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3458,16 +3523,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ProjectileBinaryOverlay :
+    internal partial class ProjectileBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IProjectileGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Projectile_Registration.Instance;
-        public new static Projectile_Registration StaticRegistration => Projectile_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Projectile_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ProjectileCommon.Instance;
         [DebuggerStepThrough]
@@ -3475,14 +3540,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ProjectileCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProjectileCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ProjectileBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3494,12 +3559,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -3511,139 +3576,139 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Projectile.DATADataType DATADataTypeState { get; private set; }
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value;
+        private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion
         #region Type
-        private int _TypeLocation => _DATALocation!.Value + 0x2;
+        private int _TypeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public Projectile.TypeEnum Type => _Type_IsSet ? (Projectile.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_TypeLocation, 0x2)) : default;
+        public Projectile.TypeEnum Type => _Type_IsSet ? (Projectile.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x2)) : default;
         #endregion
         #region Gravity
-        private int _GravityLocation => _DATALocation!.Value + 0x4;
+        private int _GravityLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Gravity_IsSet => _DATALocation.HasValue;
-        public Single Gravity => _Gravity_IsSet ? _data.Slice(_GravityLocation, 4).Float() : default;
+        public Single Gravity => _Gravity_IsSet ? _recordData.Slice(_GravityLocation, 4).Float() : default;
         #endregion
         #region Speed
-        private int _SpeedLocation => _DATALocation!.Value + 0x8;
+        private int _SpeedLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Single Speed => _Speed_IsSet ? _data.Slice(_SpeedLocation, 4).Float() : default;
+        public Single Speed => _Speed_IsSet ? _recordData.Slice(_SpeedLocation, 4).Float() : default;
         #endregion
         #region Range
-        private int _RangeLocation => _DATALocation!.Value + 0xC;
+        private int _RangeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Range_IsSet => _DATALocation.HasValue;
-        public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region Light
-        private int _LightLocation => _DATALocation!.Value + 0x10;
+        private int _LightLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region MuzzleFlash
-        private int _MuzzleFlashLocation => _DATALocation!.Value + 0x14;
+        private int _MuzzleFlashLocation => _DATALocation!.Value.Min + 0x14;
         private bool _MuzzleFlash_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MuzzleFlashLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MuzzleFlashLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region TracerChance
-        private int _TracerChanceLocation => _DATALocation!.Value + 0x18;
+        private int _TracerChanceLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TracerChance_IsSet => _DATALocation.HasValue;
-        public Single TracerChance => _TracerChance_IsSet ? _data.Slice(_TracerChanceLocation, 4).Float() : default;
+        public Single TracerChance => _TracerChance_IsSet ? _recordData.Slice(_TracerChanceLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerProximity
-        private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value + 0x1C;
+        private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ExplosionAltTriggerProximity_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _data.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _recordData.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerTimer
-        private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value + 0x20;
+        private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ExplosionAltTriggerTimer_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _data.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _recordData.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
         #endregion
         #region Explosion
-        private int _ExplosionLocation => _DATALocation!.Value + 0x24;
+        private int _ExplosionLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Sound
-        private int _SoundLocation => _DATALocation!.Value + 0x28;
+        private int _SoundLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Sound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region MuzzleFlashDuration
-        private int _MuzzleFlashDurationLocation => _DATALocation!.Value + 0x2C;
+        private int _MuzzleFlashDurationLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _MuzzleFlashDuration_IsSet => _DATALocation.HasValue;
-        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _data.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _recordData.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
         #endregion
         #region FadeDuration
-        private int _FadeDurationLocation => _DATALocation!.Value + 0x30;
+        private int _FadeDurationLocation => _DATALocation!.Value.Min + 0x30;
         private bool _FadeDuration_IsSet => _DATALocation.HasValue;
-        public Single FadeDuration => _FadeDuration_IsSet ? _data.Slice(_FadeDurationLocation, 4).Float() : default;
+        public Single FadeDuration => _FadeDuration_IsSet ? _recordData.Slice(_FadeDurationLocation, 4).Float() : default;
         #endregion
         #region ImpactForce
-        private int _ImpactForceLocation => _DATALocation!.Value + 0x34;
+        private int _ImpactForceLocation => _DATALocation!.Value.Min + 0x34;
         private bool _ImpactForce_IsSet => _DATALocation.HasValue;
-        public Single ImpactForce => _ImpactForce_IsSet ? _data.Slice(_ImpactForceLocation, 4).Float() : default;
+        public Single ImpactForce => _ImpactForce_IsSet ? _recordData.Slice(_ImpactForceLocation, 4).Float() : default;
         #endregion
         #region CountdownSound
-        private int _CountdownSoundLocation => _DATALocation!.Value + 0x38;
+        private int _CountdownSoundLocation => _DATALocation!.Value.Min + 0x38;
         private bool _CountdownSound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CountdownSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CountdownSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DisaleSound
-        private int _DisaleSoundLocation => _DATALocation!.Value + 0x3C;
+        private int _DisaleSoundLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DisaleSound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DisaleSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DisaleSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DefaultWeaponSource
-        private int _DefaultWeaponSourceLocation => _DATALocation!.Value + 0x40;
+        private int _DefaultWeaponSourceLocation => _DATALocation!.Value.Min + 0x40;
         private bool _DefaultWeaponSource_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DefaultWeaponSourceLocation, 0x4)))) : FormLink<IWeaponGetter>.Null;
+        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4)))) : FormLink<IWeaponGetter>.Null;
         #endregion
         #region ConeSpread
-        private int _ConeSpreadLocation => _DATALocation!.Value + 0x44;
+        private int _ConeSpreadLocation => _DATALocation!.Value.Min + 0x44;
         private bool _ConeSpread_IsSet => _DATALocation.HasValue;
-        public Single ConeSpread => _ConeSpread_IsSet ? _data.Slice(_ConeSpreadLocation, 4).Float() : default;
+        public Single ConeSpread => _ConeSpread_IsSet ? _recordData.Slice(_ConeSpreadLocation, 4).Float() : default;
         #endregion
         #region CollisionRadius
-        private int _CollisionRadiusLocation => _DATALocation!.Value + 0x48;
+        private int _CollisionRadiusLocation => _DATALocation!.Value.Min + 0x48;
         private bool _CollisionRadius_IsSet => _DATALocation.HasValue;
-        public Single CollisionRadius => _CollisionRadius_IsSet ? _data.Slice(_CollisionRadiusLocation, 4).Float() : default;
+        public Single CollisionRadius => _CollisionRadius_IsSet ? _recordData.Slice(_CollisionRadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
-        private int _LifetimeLocation => _DATALocation!.Value + 0x4C;
+        private int _LifetimeLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region RelaunchInterval
-        private int _RelaunchIntervalLocation => _DATALocation!.Value + 0x50;
+        private int _RelaunchIntervalLocation => _DATALocation!.Value.Min + 0x50;
         private bool _RelaunchInterval_IsSet => _DATALocation.HasValue;
-        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _data.Slice(_RelaunchIntervalLocation, 4).Float() : default;
+        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _recordData.Slice(_RelaunchIntervalLocation, 4).Float() : default;
         #endregion
         #region DecalData
-        private int _DecalDataLocation => _DATALocation!.Value + 0x54;
+        private int _DecalDataLocation => _DATALocation!.Value.Min + 0x54;
         private bool _DecalData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
-        public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DecalDataLocation, 0x4)))) : FormLink<ITextureSetGetter>.Null;
+        public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DecalDataLocation, 0x4)))) : FormLink<ITextureSetGetter>.Null;
         #endregion
         #region CollisionLayer
-        private int _CollisionLayerLocation => _DATALocation!.Value + 0x58;
+        private int _CollisionLayerLocation => _DATALocation!.Value.Min + 0x58;
         private bool _CollisionLayer_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break1);
-        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? new FormLink<ICollisionLayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CollisionLayerLocation, 0x4)))) : FormLink<ICollisionLayerGetter>.Null;
+        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? new FormLink<ICollisionLayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CollisionLayerLocation, 0x4)))) : FormLink<ICollisionLayerGetter>.Null;
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
-        public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;
-        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public UInt32 SoundLevel => _SoundLevelLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLevelLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt32 SoundLevel => _SoundLevelLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3652,28 +3717,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ProjectileBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ProjectileBinaryOverlay ProjectileFactory(
+        public static IProjectileGetter ProjectileFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ProjectileBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -3683,20 +3751,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ProjectileBinaryOverlay ProjectileFactory(
+        public static IProjectileGetter ProjectileFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ProjectileFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3706,9 +3774,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -3726,7 +3794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Projectile_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
@@ -3736,13 +3804,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Projectile_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x54)
                     {
                         this.DATADataTypeState |= Projectile.DATADataType.Break0;
@@ -3775,17 +3843,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ProjectileMixIn.ToString(
+            ProjectileMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

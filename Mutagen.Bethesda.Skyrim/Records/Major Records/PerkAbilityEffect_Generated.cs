@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkAbilityEffectMixIn.ToString(
+            PerkAbilityEffectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -189,30 +191,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PerkAbilityEffect.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PerkAbilityEffect.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkAbilityEffect.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PerkAbilityEffect.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PerkAbilityEffect.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkAbilityEffect.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Ability ?? true)
                     {
-                        fg.AppendItem(Ability, "Ability");
+                        sb.AppendItem(Ability, "Ability");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -276,37 +273,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Ability, "Ability");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Ability, "Ability");
+                }
             }
             #endregion
 
@@ -367,8 +357,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkAbilityEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkAbilityEffectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAbilityEffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -377,7 +366,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkAbilityEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkAbilityEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -387,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkAbilityEffect CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkAbilityEffect();
             ((PerkAbilityEffectSetterCommon)((IPerkAbilityEffectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -402,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkAbilityEffect item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -412,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -469,26 +458,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPerkAbilityEffectGetter item,
             string? name = null,
             PerkAbilityEffect.Mask<bool>? printMask = null)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).ToString(
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPerkAbilityEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkAbilityEffect.Mask<bool>? printMask = null)
         {
-            ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).ToString(
+            ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -569,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkAbilityEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkAbilityEffectSetterCommon)((IPerkAbilityEffectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -584,10 +573,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkAbilityEffect_FieldIndex
+    internal enum PerkAbilityEffect_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -598,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkAbilityEffect_Registration : ILoquiRegistration
+    internal partial class PerkAbilityEffect_Registration : ILoquiRegistration
     {
         public static readonly PerkAbilityEffect_Registration Instance = new PerkAbilityEffect_Registration();
 
@@ -640,6 +629,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PRKE);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PerkAbilityEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -673,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkAbilityEffectSetterCommon : APerkEffectSetterCommon
+    internal partial class PerkAbilityEffectSetterCommon : APerkEffectSetterCommon
     {
         public new static readonly PerkAbilityEffectSetterCommon Instance = new PerkAbilityEffectSetterCommon();
 
@@ -704,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPerkAbilityEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -717,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkAbilityEffect)item,
@@ -728,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAbilityEffectCommon : APerkEffectCommon
+    internal partial class PerkAbilityEffectCommon : APerkEffectCommon
     {
         public new static readonly PerkAbilityEffectCommon Instance = new PerkAbilityEffectCommon();
 
@@ -752,62 +747,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkAbilityEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Ability = item.Ability.Equals(rhs.Ability);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPerkAbilityEffectGetter item,
             string? name = null,
             PerkAbilityEffect.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPerkAbilityEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkAbilityEffect.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkAbilityEffect =>");
+                sb.AppendLine($"PerkAbilityEffect =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkAbilityEffect) =>");
+                sb.AppendLine($"{name} (PerkAbilityEffect) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkAbilityEffectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkAbilityEffect.Mask<bool>? printMask = null)
         {
             APerkEffectCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Ability ?? true)
             {
-                fg.AppendItem(item.Ability.FormKey, "Ability");
+                sb.AppendItem(item.Ability.FormKey, "Ability");
             }
         }
         
@@ -876,9 +868,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkAbilityEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkAbilityEffectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -889,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkAbilityEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
+    internal partial class PerkAbilityEffectSetterTranslationCommon : APerkEffectSetterTranslationCommon
     {
         public new static readonly PerkAbilityEffectSetterTranslationCommon Instance = new PerkAbilityEffectSetterTranslationCommon();
 
@@ -989,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAbilityEffect_Registration.Instance;
-        public new static PerkAbilityEffect_Registration StaticRegistration => PerkAbilityEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAbilityEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1007,13 +999,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkAbilityEffectBinaryWriteTranslation :
         APerkEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkAbilityEffectBinaryWriteTranslation Instance = new PerkAbilityEffectBinaryWriteTranslation();
+        public new static readonly PerkAbilityEffectBinaryWriteTranslation Instance = new PerkAbilityEffectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkAbilityEffectGetter item,
@@ -1030,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkAbilityEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1044,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkAbilityEffectGetter)item,
@@ -1055,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkAbilityEffectGetter)item,
@@ -1065,9 +1057,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkAbilityEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
+    internal partial class PerkAbilityEffectBinaryCreateTranslation : APerkEffectBinaryCreateTranslation
     {
-        public new readonly static PerkAbilityEffectBinaryCreateTranslation Instance = new PerkAbilityEffectBinaryCreateTranslation();
+        public new static readonly PerkAbilityEffectBinaryCreateTranslation Instance = new PerkAbilityEffectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkAbilityEffect item,
@@ -1092,16 +1084,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkAbilityEffectBinaryOverlay :
+    internal partial class PerkAbilityEffectBinaryOverlay :
         APerkEffectBinaryOverlay,
         IPerkAbilityEffectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkAbilityEffect_Registration.Instance;
-        public new static PerkAbilityEffect_Registration StaticRegistration => PerkAbilityEffect_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkAbilityEffect_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkAbilityEffectCommon.Instance;
         [DebuggerStepThrough]
@@ -1109,14 +1101,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkAbilityEffectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAbilityEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkAbilityEffectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1124,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1132,52 +1124,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PerkAbilityEffectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PerkAbilityEffectBinaryOverlay PerkAbilityEffectFactory(
+        public static IPerkAbilityEffectGetter PerkAbilityEffectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkAbilityEffectBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PerkAbilityEffectBinaryOverlay PerkAbilityEffectFactory(
+        public static IPerkAbilityEffectGetter PerkAbilityEffectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkAbilityEffectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkAbilityEffectMixIn.ToString(
+            PerkAbilityEffectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

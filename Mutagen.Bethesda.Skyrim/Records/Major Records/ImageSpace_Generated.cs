@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,22 +17,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -110,12 +111,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceMixIn.ToString(
+            ImageSpaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -291,46 +293,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ImageSpace.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ImageSpace.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ImageSpace.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ImageSpace.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ImageSpace.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpace.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ENAM ?? true)
                     {
-                        fg.AppendItem(ENAM, "ENAM");
+                        sb.AppendItem(ENAM, "ENAM");
                     }
                     if (printMask?.Hdr?.Overall ?? true)
                     {
-                        Hdr?.ToString(fg);
+                        Hdr?.Print(sb);
                     }
                     if (printMask?.Cinematic?.Overall ?? true)
                     {
-                        Cinematic?.ToString(fg);
+                        Cinematic?.Print(sb);
                     }
                     if (printMask?.Tint?.Overall ?? true)
                     {
-                        Tint?.ToString(fg);
+                        Tint?.Print(sb);
                     }
                     if (printMask?.DepthOfField?.Overall ?? true)
                     {
-                        DepthOfField?.ToString(fg);
+                        DepthOfField?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -434,41 +431,34 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(ENAM, "ENAM");
-                Hdr?.ToString(fg);
-                Cinematic?.ToString(fg);
-                Tint?.ToString(fg);
-                DepthOfField?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ENAM, "ENAM");
+                }
+                Hdr?.Print(sb);
+                Cinematic?.Print(sb);
+                Tint?.Print(sb);
+                DepthOfField?.Print(sb);
             }
             #endregion
 
@@ -618,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -628,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ImageSpace CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpace();
             ((ImageSpaceSetterCommon)((IImageSpaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -643,7 +633,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpace item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -653,7 +643,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -725,26 +715,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IImageSpaceGetter item,
             string? name = null,
             ImageSpace.Mask<bool>? printMask = null)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).ToString(
+            return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IImageSpaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpace.Mask<bool>? printMask = null)
         {
-            ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).ToString(
+            ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -839,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceSetterCommon)((IImageSpaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -854,10 +844,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpace_FieldIndex
+    internal enum ImageSpace_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -874,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpace_Registration : ILoquiRegistration
+    internal partial class ImageSpace_Registration : ILoquiRegistration
     {
         public static readonly ImageSpace_Registration Instance = new ImageSpace_Registration();
 
@@ -916,6 +906,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.IMGS;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.IMGS);
+            var all = RecordCollection.Factory(
+                RecordTypes.IMGS,
+                RecordTypes.ENAM,
+                RecordTypes.HNAM,
+                RecordTypes.CNAM,
+                RecordTypes.TNAM,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -949,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImageSpaceSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImageSpaceSetterCommon Instance = new ImageSpaceSetterCommon();
 
@@ -988,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IImageSpaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IImageSpaceInternal>(
                 record: item,
@@ -1001,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpace)item,
@@ -1012,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpace)item,
@@ -1023,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceCommon : SkyrimMajorRecordCommon
+    internal partial class ImageSpaceCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImageSpaceCommon Instance = new ImageSpaceCommon();
 
@@ -1047,7 +1050,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ENAM = MemorySliceExt.Equal(item.ENAM, rhs.ENAM);
             ret.Hdr = EqualsMaskHelper.EqualsHelper(
                 item.Hdr,
@@ -1072,78 +1074,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IImageSpaceGetter item,
             string? name = null,
             ImageSpace.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IImageSpaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpace =>");
+                sb.AppendLine($"ImageSpace =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpace) =>");
+                sb.AppendLine($"{name} (ImageSpace) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpace.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ENAM ?? true)
                 && item.ENAM is {} ENAMItem)
             {
-                fg.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
+                sb.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
             }
             if ((printMask?.Hdr?.Overall ?? true)
                 && item.Hdr is {} HdrItem)
             {
-                HdrItem?.ToString(fg, "Hdr");
+                HdrItem?.Print(sb, "Hdr");
             }
             if ((printMask?.Cinematic?.Overall ?? true)
                 && item.Cinematic is {} CinematicItem)
             {
-                CinematicItem?.ToString(fg, "Cinematic");
+                CinematicItem?.Print(sb, "Cinematic");
             }
             if ((printMask?.Tint?.Overall ?? true)
                 && item.Tint is {} TintItem)
             {
-                TintItem?.ToString(fg, "Tint");
+                TintItem?.Print(sb, "Tint");
             }
             if ((printMask?.DepthOfField?.Overall ?? true)
                 && item.DepthOfField is {} DepthOfFieldItem)
             {
-                DepthOfFieldItem?.ToString(fg, "DepthOfField");
+                DepthOfFieldItem?.Print(sb, "DepthOfField");
             }
         }
         
@@ -1300,9 +1300,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImageSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImageSpaceSetterTranslationCommon Instance = new ImageSpaceSetterTranslationCommon();
 
@@ -1617,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpace_Registration.Instance;
-        public new static ImageSpace_Registration StaticRegistration => ImageSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1635,18 +1635,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ImageSpaceBinaryWriteTranslation Instance = new ImageSpaceBinaryWriteTranslation();
+        public new static readonly ImageSpaceBinaryWriteTranslation Instance = new ImageSpaceBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IImageSpaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IImageSpaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1700,12 +1700,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1717,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceGetter)item,
@@ -1728,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceGetter)item,
@@ -1739,7 +1742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceGetter)item,
@@ -1749,9 +1752,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImageSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
+        public new static readonly ImageSpaceBinaryCreateTranslation Instance = new ImageSpaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMGS;
         public static void FillBinaryStructs(
@@ -1770,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1808,7 +1811,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1825,16 +1829,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceBinaryOverlay :
+    internal partial class ImageSpaceBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImageSpaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpace_Registration.Instance;
-        public new static ImageSpace_Registration StaticRegistration => ImageSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1842,13 +1846,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1860,23 +1864,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ENAM
         private int? _ENAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ENAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Hdr
         private RangeInt32? _HdrLocation;
-        public IImageSpaceHdrGetter? Hdr => _HdrLocation.HasValue ? ImageSpaceHdrBinaryOverlay.ImageSpaceHdrFactory(new OverlayStream(_data.Slice(_HdrLocation!.Value.Min), _package), _package) : default;
+        public IImageSpaceHdrGetter? Hdr => _HdrLocation.HasValue ? ImageSpaceHdrBinaryOverlay.ImageSpaceHdrFactory(_recordData.Slice(_HdrLocation!.Value.Min), _package) : default;
         #endregion
         #region Cinematic
         private RangeInt32? _CinematicLocation;
-        public IImageSpaceCinematicGetter? Cinematic => _CinematicLocation.HasValue ? ImageSpaceCinematicBinaryOverlay.ImageSpaceCinematicFactory(new OverlayStream(_data.Slice(_CinematicLocation!.Value.Min), _package), _package) : default;
+        public IImageSpaceCinematicGetter? Cinematic => _CinematicLocation.HasValue ? ImageSpaceCinematicBinaryOverlay.ImageSpaceCinematicFactory(_recordData.Slice(_CinematicLocation!.Value.Min), _package) : default;
         #endregion
         #region Tint
         private RangeInt32? _TintLocation;
-        public IImageSpaceTintGetter? Tint => _TintLocation.HasValue ? ImageSpaceTintBinaryOverlay.ImageSpaceTintFactory(new OverlayStream(_data.Slice(_TintLocation!.Value.Min), _package), _package) : default;
+        public IImageSpaceTintGetter? Tint => _TintLocation.HasValue ? ImageSpaceTintBinaryOverlay.ImageSpaceTintFactory(_recordData.Slice(_TintLocation!.Value.Min), _package) : default;
         #endregion
         #region DepthOfField
         private RangeInt32? _DepthOfFieldLocation;
-        public IImageSpaceDepthOfFieldGetter? DepthOfField => _DepthOfFieldLocation.HasValue ? ImageSpaceDepthOfFieldBinaryOverlay.ImageSpaceDepthOfFieldFactory(new OverlayStream(_data.Slice(_DepthOfFieldLocation!.Value.Min), _package), _package) : default;
+        public IImageSpaceDepthOfFieldGetter? DepthOfField => _DepthOfFieldLocation.HasValue ? ImageSpaceDepthOfFieldBinaryOverlay.ImageSpaceDepthOfFieldFactory(_recordData.Slice(_DepthOfFieldLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1885,28 +1889,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ImageSpaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ImageSpaceBinaryOverlay ImageSpaceFactory(
+        public static IImageSpaceGetter ImageSpaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImageSpaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1916,20 +1923,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ImageSpaceBinaryOverlay ImageSpaceFactory(
+        public static IImageSpaceGetter ImageSpaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1939,9 +1946,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ENAM:
@@ -1976,17 +1983,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceMixIn.ToString(
+            ImageSpaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

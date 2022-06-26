@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +66,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionGrassMixIn.ToString(
+            RegionGrassMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -183,34 +185,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(RegionGrass.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(RegionGrass.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RegionGrass.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, RegionGrass.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(RegionGrass.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RegionGrass.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Grass ?? true)
                     {
-                        fg.AppendItem(Grass, "Grass");
+                        sb.AppendItem(Grass, "Grass");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -295,37 +292,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Grass, "Grass");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Grass, "Grass");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -400,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionGrassCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionGrassCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionGrassSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -411,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionGrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -421,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static RegionGrass CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RegionGrass();
             ((RegionGrassSetterCommon)((IRegionGrassGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -436,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RegionGrass item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -446,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -510,26 +502,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRegionGrassGetter item,
             string? name = null,
             RegionGrass.Mask<bool>? printMask = null)
         {
-            return ((RegionGrassCommon)((IRegionGrassGetter)item).CommonInstance()!).ToString(
+            return ((RegionGrassCommon)((IRegionGrassGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRegionGrassGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionGrass.Mask<bool>? printMask = null)
         {
-            ((RegionGrassCommon)((IRegionGrassGetter)item).CommonInstance()!).ToString(
+            ((RegionGrassCommon)((IRegionGrassGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -635,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRegionGrass item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionGrassSetterCommon)((IRegionGrassGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -650,10 +642,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RegionGrass_FieldIndex
+    internal enum RegionGrass_FieldIndex
     {
         Grass = 0,
         Unknown = 1,
@@ -661,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RegionGrass_Registration : ILoquiRegistration
+    internal partial class RegionGrass_Registration : ILoquiRegistration
     {
         public static readonly RegionGrass_Registration Instance = new RegionGrass_Registration();
 
@@ -735,7 +727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RegionGrassSetterCommon
+    internal partial class RegionGrassSetterCommon
     {
         public static readonly RegionGrassSetterCommon Instance = new RegionGrassSetterCommon();
 
@@ -760,7 +752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IRegionGrass item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -772,7 +764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionGrassCommon
+    internal partial class RegionGrassCommon
     {
         public static readonly RegionGrassCommon Instance = new RegionGrassCommon();
 
@@ -796,62 +788,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RegionGrass.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Grass = item.Grass.Equals(rhs.Grass);
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
-        public string ToString(
+        public string Print(
             IRegionGrassGetter item,
             string? name = null,
             RegionGrass.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRegionGrassGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RegionGrass.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RegionGrass =>");
+                sb.AppendLine($"RegionGrass =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RegionGrass) =>");
+                sb.AppendLine($"{name} (RegionGrass) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionGrassGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RegionGrass.Mask<bool>? printMask = null)
         {
             if (printMask?.Grass ?? true)
             {
-                fg.AppendItem(item.Grass.FormKey, "Grass");
+                sb.AppendItem(item.Grass.FormKey, "Grass");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -890,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionGrassGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionGrassGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Grass);
             yield break;
@@ -899,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RegionGrassSetterTranslationCommon
+    internal partial class RegionGrassSetterTranslationCommon
     {
         public static readonly RegionGrassSetterTranslationCommon Instance = new RegionGrassSetterTranslationCommon();
 
@@ -981,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrass_Registration.Instance;
-        public static RegionGrass_Registration StaticRegistration => RegionGrass_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionGrass_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionGrassCommon.Instance;
         [DebuggerStepThrough]
@@ -1005,11 +994,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RegionGrassBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RegionGrassBinaryWriteTranslation Instance = new RegionGrassBinaryWriteTranslation();
+        public static readonly RegionGrassBinaryWriteTranslation Instance = new RegionGrassBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRegionGrassGetter item,
@@ -1024,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IRegionGrassGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1034,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionGrassGetter)item,
@@ -1044,9 +1033,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RegionGrassBinaryCreateTranslation
+    internal partial class RegionGrassBinaryCreateTranslation
     {
-        public readonly static RegionGrassBinaryCreateTranslation Instance = new RegionGrassBinaryCreateTranslation();
+        public static readonly RegionGrassBinaryCreateTranslation Instance = new RegionGrassBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRegionGrass item,
@@ -1067,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IRegionGrassGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionGrassBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1080,16 +1069,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RegionGrassBinaryOverlay :
+    internal partial class RegionGrassBinaryOverlay :
         PluginBinaryOverlay,
         IRegionGrassGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RegionGrass_Registration.Instance;
-        public static RegionGrass_Registration StaticRegistration => RegionGrass_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RegionGrass_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RegionGrassCommon.Instance;
         [DebuggerStepThrough]
@@ -1103,16 +1092,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionGrassCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionGrassCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionGrassBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionGrassBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1120,8 +1109,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGrassGetter> Grass => new FormLink<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public IFormLinkGetter<IGrassGetter> Grass => new FormLink<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1129,24 +1118,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected RegionGrassBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RegionGrassBinaryOverlay RegionGrassFactory(
+        public static IRegionGrassGetter RegionGrassFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RegionGrassBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1155,25 +1150,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static RegionGrassBinaryOverlay RegionGrassFactory(
+        public static IRegionGrassGetter RegionGrassFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionGrassFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionGrassMixIn.ToString(
+            RegionGrassMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

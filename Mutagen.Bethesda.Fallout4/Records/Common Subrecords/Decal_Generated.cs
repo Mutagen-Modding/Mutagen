@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,6 +73,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ParallaxPasses
         public Byte ParallaxPasses { get; set; } = default;
+        public static RangeUInt8 ParallaxPasses_Range = new RangeUInt8(Byte.MinValue, 30);
         #endregion
         #region Flags
         public Decal.Flag Flags { get; set; } = default;
@@ -84,12 +87,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DecalMixIn.ToString(
+            DecalMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -283,70 +287,65 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Decal.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Decal.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Decal.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Decal.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Decal.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Decal.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.MinWidth ?? true)
                     {
-                        fg.AppendItem(MinWidth, "MinWidth");
+                        sb.AppendItem(MinWidth, "MinWidth");
                     }
                     if (printMask?.MaxWidth ?? true)
                     {
-                        fg.AppendItem(MaxWidth, "MaxWidth");
+                        sb.AppendItem(MaxWidth, "MaxWidth");
                     }
                     if (printMask?.MinHeight ?? true)
                     {
-                        fg.AppendItem(MinHeight, "MinHeight");
+                        sb.AppendItem(MinHeight, "MinHeight");
                     }
                     if (printMask?.MaxHeight ?? true)
                     {
-                        fg.AppendItem(MaxHeight, "MaxHeight");
+                        sb.AppendItem(MaxHeight, "MaxHeight");
                     }
                     if (printMask?.Depth ?? true)
                     {
-                        fg.AppendItem(Depth, "Depth");
+                        sb.AppendItem(Depth, "Depth");
                     }
                     if (printMask?.Shininess ?? true)
                     {
-                        fg.AppendItem(Shininess, "Shininess");
+                        sb.AppendItem(Shininess, "Shininess");
                     }
                     if (printMask?.ParallaxScale ?? true)
                     {
-                        fg.AppendItem(ParallaxScale, "ParallaxScale");
+                        sb.AppendItem(ParallaxScale, "ParallaxScale");
                     }
                     if (printMask?.ParallaxPasses ?? true)
                     {
-                        fg.AppendItem(ParallaxPasses, "ParallaxPasses");
+                        sb.AppendItem(ParallaxPasses, "ParallaxPasses");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AlphaThreshold ?? true)
                     {
-                        fg.AppendItem(AlphaThreshold, "AlphaThreshold");
+                        sb.AppendItem(AlphaThreshold, "AlphaThreshold");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -521,46 +520,59 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MinWidth, "MinWidth");
-                fg.AppendItem(MaxWidth, "MaxWidth");
-                fg.AppendItem(MinHeight, "MinHeight");
-                fg.AppendItem(MaxHeight, "MaxHeight");
-                fg.AppendItem(Depth, "Depth");
-                fg.AppendItem(Shininess, "Shininess");
-                fg.AppendItem(ParallaxScale, "ParallaxScale");
-                fg.AppendItem(ParallaxPasses, "ParallaxPasses");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AlphaThreshold, "AlphaThreshold");
-                fg.AppendItem(Color, "Color");
+                {
+                    sb.AppendItem(MinWidth, "MinWidth");
+                }
+                {
+                    sb.AppendItem(MaxWidth, "MaxWidth");
+                }
+                {
+                    sb.AppendItem(MinHeight, "MinHeight");
+                }
+                {
+                    sb.AppendItem(MaxHeight, "MaxHeight");
+                }
+                {
+                    sb.AppendItem(Depth, "Depth");
+                }
+                {
+                    sb.AppendItem(Shininess, "Shininess");
+                }
+                {
+                    sb.AppendItem(ParallaxScale, "ParallaxScale");
+                }
+                {
+                    sb.AppendItem(ParallaxPasses, "ParallaxPasses");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AlphaThreshold, "AlphaThreshold");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
             }
             #endregion
 
@@ -670,10 +682,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = Decal_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DecalBinaryWriteTranslation.Instance;
@@ -681,7 +689,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -691,7 +699,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Decal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Decal();
             ((DecalSetterCommon)((IDecalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -706,7 +714,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Decal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -716,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -796,26 +804,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDecalGetter item,
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
-            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
+            return ((DecalCommon)((IDecalGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDecalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
-            ((DecalCommon)((IDecalGetter)item).CommonInstance()!).ToString(
+            ((DecalCommon)((IDecalGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -921,7 +929,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IDecal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DecalSetterCommon)((IDecalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -936,10 +944,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Decal_FieldIndex
+    internal enum Decal_FieldIndex
     {
         MinWidth = 0,
         MaxWidth = 1,
@@ -956,7 +964,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Decal_Registration : ILoquiRegistration
+    internal partial class Decal_Registration : ILoquiRegistration
     {
         public static readonly Decal_Registration Instance = new Decal_Registration();
 
@@ -998,6 +1006,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DODT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DODT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DecalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1031,7 +1045,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class DecalSetterCommon
+    internal partial class DecalSetterCommon
     {
         public static readonly DecalSetterCommon Instance = new DecalSetterCommon();
 
@@ -1064,12 +1078,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IDecal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DODT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1080,7 +1094,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DecalCommon
+    internal partial class DecalCommon
     {
         public static readonly DecalCommon Instance = new DecalCommon();
 
@@ -1104,7 +1118,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Decal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MinWidth = item.MinWidth.EqualsWithin(rhs.MinWidth);
             ret.MaxWidth = item.MaxWidth.EqualsWithin(rhs.MaxWidth);
             ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
@@ -1118,93 +1131,91 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
         }
         
-        public string ToString(
+        public string Print(
             IDecalGetter item,
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDecalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Decal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Decal =>");
+                sb.AppendLine($"Decal =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Decal) =>");
+                sb.AppendLine($"{name} (Decal) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDecalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Decal.Mask<bool>? printMask = null)
         {
             if (printMask?.MinWidth ?? true)
             {
-                fg.AppendItem(item.MinWidth, "MinWidth");
+                sb.AppendItem(item.MinWidth, "MinWidth");
             }
             if (printMask?.MaxWidth ?? true)
             {
-                fg.AppendItem(item.MaxWidth, "MaxWidth");
+                sb.AppendItem(item.MaxWidth, "MaxWidth");
             }
             if (printMask?.MinHeight ?? true)
             {
-                fg.AppendItem(item.MinHeight, "MinHeight");
+                sb.AppendItem(item.MinHeight, "MinHeight");
             }
             if (printMask?.MaxHeight ?? true)
             {
-                fg.AppendItem(item.MaxHeight, "MaxHeight");
+                sb.AppendItem(item.MaxHeight, "MaxHeight");
             }
             if (printMask?.Depth ?? true)
             {
-                fg.AppendItem(item.Depth, "Depth");
+                sb.AppendItem(item.Depth, "Depth");
             }
             if (printMask?.Shininess ?? true)
             {
-                fg.AppendItem(item.Shininess, "Shininess");
+                sb.AppendItem(item.Shininess, "Shininess");
             }
             if (printMask?.ParallaxScale ?? true)
             {
-                fg.AppendItem(item.ParallaxScale, "ParallaxScale");
+                sb.AppendItem(item.ParallaxScale, "ParallaxScale");
             }
             if (printMask?.ParallaxPasses ?? true)
             {
-                fg.AppendItem(item.ParallaxPasses, "ParallaxPasses");
+                sb.AppendItem(item.ParallaxPasses, "ParallaxPasses");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.AlphaThreshold ?? true)
             {
-                fg.AppendItem(item.AlphaThreshold, "AlphaThreshold");
+                sb.AppendItem(item.AlphaThreshold, "AlphaThreshold");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.Color, "Color");
             }
         }
         
@@ -1288,7 +1299,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDecalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDecalGetter obj)
         {
             yield break;
         }
@@ -1296,7 +1307,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class DecalSetterTranslationCommon
+    internal partial class DecalSetterTranslationCommon
     {
         public static readonly DecalSetterTranslationCommon Instance = new DecalSetterTranslationCommon();
 
@@ -1414,7 +1425,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
-        public static Decal_Registration StaticRegistration => Decal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Decal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
         [DebuggerStepThrough]
@@ -1438,11 +1449,11 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class DecalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
+        public static readonly DecalBinaryWriteTranslation Instance = new DecalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDecalGetter item,
@@ -1483,12 +1494,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IDecalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DODT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1500,7 +1511,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDecalGetter)item,
@@ -1510,9 +1521,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class DecalBinaryCreateTranslation
+    internal partial class DecalBinaryCreateTranslation
     {
-        public readonly static DecalBinaryCreateTranslation Instance = new DecalBinaryCreateTranslation();
+        public static readonly DecalBinaryCreateTranslation Instance = new DecalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDecal item,
@@ -1544,7 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IDecalGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DecalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1557,16 +1568,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class DecalBinaryOverlay :
+    internal partial class DecalBinaryOverlay :
         PluginBinaryOverlay,
         IDecalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Decal_Registration.Instance;
-        public static Decal_Registration StaticRegistration => Decal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Decal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DecalCommon.Instance;
         [DebuggerStepThrough]
@@ -1580,7 +1591,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DecalBinaryWriteTranslation.Instance;
@@ -1588,7 +1599,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DecalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1596,17 +1607,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public Single MinWidth => _data.Slice(0x0, 0x4).Float();
-        public Single MaxWidth => _data.Slice(0x4, 0x4).Float();
-        public Single MinHeight => _data.Slice(0x8, 0x4).Float();
-        public Single MaxHeight => _data.Slice(0xC, 0x4).Float();
-        public Single Depth => _data.Slice(0x10, 0x4).Float();
-        public Single Shininess => _data.Slice(0x14, 0x4).Float();
-        public Single ParallaxScale => _data.Slice(0x18, 0x4).Float();
-        public Byte ParallaxPasses => _data.Span[0x1C];
-        public Decal.Flag Flags => (Decal.Flag)_data.Span.Slice(0x1D, 0x1)[0];
-        public UInt16 AlphaThreshold => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));
-        public Color Color => _data.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single MinWidth => _structData.Slice(0x0, 0x4).Float();
+        public Single MaxWidth => _structData.Slice(0x4, 0x4).Float();
+        public Single MinHeight => _structData.Slice(0x8, 0x4).Float();
+        public Single MaxHeight => _structData.Slice(0xC, 0x4).Float();
+        public Single Depth => _structData.Slice(0x10, 0x4).Float();
+        public Single Shininess => _structData.Slice(0x14, 0x4).Float();
+        public Single ParallaxScale => _structData.Slice(0x18, 0x4).Float();
+        public Byte ParallaxPasses => _structData.Span[0x1C];
+        public Decal.Flag Flags => (Decal.Flag)_structData.Span.Slice(0x1D, 0x1)[0];
+        public UInt16 AlphaThreshold => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x1E, 0x2));
+        public Color Color => _structData.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1614,25 +1625,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected DecalBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DecalBinaryOverlay DecalFactory(
+        public static IDecalGetter DecalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DecalBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1641,25 +1657,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static DecalBinaryOverlay DecalFactory(
+        public static IDecalGetter DecalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DecalFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DecalMixIn.ToString(
+            DecalMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

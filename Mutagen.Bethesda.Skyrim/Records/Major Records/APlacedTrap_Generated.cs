@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,6 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IAPlacedTrapGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -85,16 +87,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEncounterZoneGetter> IAPlacedTrapGetter.EncounterZone => this.EncounterZone;
         #endregion
-        #region Ownership
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Ownership? _Ownership;
-        public Ownership? Ownership
+        #region Owner
+        private readonly IFormLinkNullable<IOwnerGetter> _Owner = new FormLinkNullable<IOwnerGetter>();
+        public IFormLinkNullable<IOwnerGetter> Owner
         {
-            get => _Ownership;
-            set => _Ownership = value;
+            get => _Owner;
+            set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IOwnershipGetter? IAPlacedTrapGetter.Ownership => this.Ownership;
+        IFormLinkNullableGetter<IOwnerGetter> IAPlacedTrapGetter.Owner => this.Owner;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IAPlacedTrapGetter.FactionRank => this.FactionRank;
         #endregion
         #region HeadTrackingWeight
         public Single? HeadTrackingWeight { get; set; }
@@ -244,12 +250,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            APlacedTrapMixIn.ToString(
+            APlacedTrapMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -267,7 +274,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.EncounterZone = initialValue;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.Owner = initialValue;
+                this.FactionRank = initialValue;
                 this.HeadTrackingWeight = initialValue;
                 this.FavorCost = initialValue;
                 this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
@@ -293,7 +301,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem VirtualMachineAdapter,
                 TItem EncounterZone,
-                TItem Ownership,
+                TItem Owner,
+                TItem FactionRank,
                 TItem HeadTrackingWeight,
                 TItem FavorCost,
                 TItem Reflections,
@@ -318,7 +327,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.EncounterZone = EncounterZone;
-                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.Owner = Owner;
+                this.FactionRank = FactionRank;
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.FavorCost = FavorCost;
                 this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, Enumerable.Empty<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>());
@@ -346,7 +356,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public TItem EncounterZone;
-            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem Owner;
+            public TItem FactionRank;
             public TItem HeadTrackingWeight;
             public TItem FavorCost;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>? Reflections;
@@ -376,7 +387,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
-                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
                 if (!object.Equals(this.FavorCost, rhs.FavorCost)) return false;
                 if (!object.Equals(this.Reflections, rhs.Reflections)) return false;
@@ -398,7 +410,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.EncounterZone);
-                hash.Add(this.Ownership);
+                hash.Add(this.Owner);
+                hash.Add(this.FactionRank);
                 hash.Add(this.HeadTrackingWeight);
                 hash.Add(this.FavorCost);
                 hash.Add(this.Reflections);
@@ -429,11 +442,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
                 if (!eval(this.EncounterZone)) return false;
-                if (Ownership != null)
-                {
-                    if (!eval(this.Ownership.Overall)) return false;
-                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.FactionRank)) return false;
                 if (!eval(this.HeadTrackingWeight)) return false;
                 if (!eval(this.FavorCost)) return false;
                 if (this.Reflections != null)
@@ -516,11 +526,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
                 if (eval(this.EncounterZone)) return true;
-                if (Ownership != null)
-                {
-                    if (eval(this.Ownership.Overall)) return true;
-                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Owner)) return true;
+                if (eval(this.FactionRank)) return true;
                 if (eval(this.HeadTrackingWeight)) return true;
                 if (eval(this.FavorCost)) return true;
                 if (this.Reflections != null)
@@ -606,7 +613,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.EncounterZone = eval(this.EncounterZone);
-                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.Owner = eval(this.Owner);
+                obj.FactionRank = eval(this.FactionRank);
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
                 obj.FavorCost = eval(this.FavorCost);
                 if (Reflections != null)
@@ -616,9 +624,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WaterReflection.Mask<R>?>>();
                         obj.Reflections.Specific = l;
-                        foreach (var item in Reflections.Specific.WithIndex())
+                        foreach (var item in Reflections.Specific)
                         {
-                            MaskItemIndexed<R, WaterReflection.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WaterReflection.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WaterReflection.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WaterReflection.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -631,9 +639,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LinkedReferences.Mask<R>?>>();
                         obj.LinkedReferences.Specific = l;
-                        foreach (var item in LinkedReferences.Specific.WithIndex())
+                        foreach (var item in LinkedReferences.Specific)
                         {
-                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LinkedReferences.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LinkedReferences.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -651,9 +659,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.LocationRefTypes.Specific = l;
-                        foreach (var item in LocationRefTypes.Specific.WithIndex())
+                        foreach (var item in LocationRefTypes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -666,9 +674,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.DistantLodData.Specific = l;
-                        foreach (var item in DistantLodData.Specific.WithIndex())
+                        foreach (var item in DistantLodData.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -679,170 +687,157 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(APlacedTrap.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(APlacedTrap.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, APlacedTrap.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, APlacedTrap.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(APlacedTrap.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(APlacedTrap.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.EncounterZone ?? true)
                     {
-                        fg.AppendItem(EncounterZone, "EncounterZone");
+                        sb.AppendItem(EncounterZone, "EncounterZone");
                     }
-                    if (printMask?.Ownership?.Overall ?? true)
+                    if (printMask?.Owner ?? true)
                     {
-                        Ownership?.ToString(fg);
+                        sb.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.HeadTrackingWeight ?? true)
                     {
-                        fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                        sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
                     }
                     if (printMask?.FavorCost ?? true)
                     {
-                        fg.AppendItem(FavorCost, "FavorCost");
+                        sb.AppendItem(FavorCost, "FavorCost");
                     }
                     if ((printMask?.Reflections?.Overall ?? true)
                         && Reflections is {} ReflectionsItem)
                     {
-                        fg.AppendLine("Reflections =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Reflections =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ReflectionsItem.Overall);
+                            sb.AppendItem(ReflectionsItem.Overall);
                             if (ReflectionsItem.Specific != null)
                             {
                                 foreach (var subItem in ReflectionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LinkedReferences?.Overall ?? true)
                         && LinkedReferences is {} LinkedReferencesItem)
                     {
-                        fg.AppendLine("LinkedReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LinkedReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LinkedReferencesItem.Overall);
+                            sb.AppendItem(LinkedReferencesItem.Overall);
                             if (LinkedReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LinkedReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.ActivateParents?.Overall ?? true)
                     {
-                        ActivateParents?.ToString(fg);
+                        ActivateParents?.Print(sb);
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.Print(sb);
                     }
                     if (printMask?.Emittance ?? true)
                     {
-                        fg.AppendItem(Emittance, "Emittance");
+                        sb.AppendItem(Emittance, "Emittance");
                     }
                     if (printMask?.MultiBoundReference ?? true)
                     {
-                        fg.AppendItem(MultiBoundReference, "MultiBoundReference");
+                        sb.AppendItem(MultiBoundReference, "MultiBoundReference");
                     }
                     if (printMask?.IgnoredBySandbox ?? true)
                     {
-                        fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                        sb.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
                     }
                     if ((printMask?.LocationRefTypes?.Overall ?? true)
                         && LocationRefTypes is {} LocationRefTypesItem)
                     {
-                        fg.AppendLine("LocationRefTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationRefTypes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationRefTypesItem.Overall);
+                            sb.AppendItem(LocationRefTypesItem.Overall);
                             if (LocationRefTypesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationRefTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.LocationReference ?? true)
                     {
-                        fg.AppendItem(LocationReference, "LocationReference");
+                        sb.AppendItem(LocationReference, "LocationReference");
                     }
                     if ((printMask?.DistantLodData?.Overall ?? true)
                         && DistantLodData is {} DistantLodDataItem)
                     {
-                        fg.AppendLine("DistantLodData =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DistantLodData =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(DistantLodDataItem.Overall);
+                            sb.AppendItem(DistantLodDataItem.Overall);
                             if (DistantLodDataItem.Specific != null)
                             {
                                 foreach (var subItem in DistantLodDataItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.Placement?.Overall ?? true)
                     {
-                        Placement?.ToString(fg);
+                        Placement?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -855,7 +850,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public Exception? EncounterZone;
-            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? Owner;
+            public Exception? FactionRank;
             public Exception? HeadTrackingWeight;
             public Exception? FavorCost;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>? Reflections;
@@ -882,8 +878,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return VirtualMachineAdapter;
                     case APlacedTrap_FieldIndex.EncounterZone:
                         return EncounterZone;
-                    case APlacedTrap_FieldIndex.Ownership:
-                        return Ownership;
+                    case APlacedTrap_FieldIndex.Owner:
+                        return Owner;
+                    case APlacedTrap_FieldIndex.FactionRank:
+                        return FactionRank;
                     case APlacedTrap_FieldIndex.HeadTrackingWeight:
                         return HeadTrackingWeight;
                     case APlacedTrap_FieldIndex.FavorCost:
@@ -928,8 +926,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case APlacedTrap_FieldIndex.EncounterZone:
                         this.EncounterZone = ex;
                         break;
-                    case APlacedTrap_FieldIndex.Ownership:
-                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                    case APlacedTrap_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case APlacedTrap_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
                         break;
                     case APlacedTrap_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = ex;
@@ -990,8 +991,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case APlacedTrap_FieldIndex.EncounterZone:
                         this.EncounterZone = (Exception?)obj;
                         break;
-                    case APlacedTrap_FieldIndex.Ownership:
-                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                    case APlacedTrap_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case APlacedTrap_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
                         break;
                     case APlacedTrap_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = (Exception?)obj;
@@ -1046,7 +1050,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (EncounterZone != null) return true;
-                if (Ownership != null) return true;
+                if (Owner != null) return true;
+                if (FactionRank != null) return true;
                 if (HeadTrackingWeight != null) return true;
                 if (FavorCost != null) return true;
                 if (Reflections != null) return true;
@@ -1066,137 +1071,137 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(EncounterZone, "EncounterZone");
-                Ownership?.ToString(fg);
-                fg.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
-                fg.AppendItem(FavorCost, "FavorCost");
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
+                }
+                {
+                    sb.AppendItem(FavorCost, "FavorCost");
+                }
                 if (Reflections is {} ReflectionsItem)
                 {
-                    fg.AppendLine("Reflections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Reflections =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ReflectionsItem.Overall);
+                        sb.AppendItem(ReflectionsItem.Overall);
                         if (ReflectionsItem.Specific != null)
                         {
                             foreach (var subItem in ReflectionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LinkedReferences is {} LinkedReferencesItem)
                 {
-                    fg.AppendLine("LinkedReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LinkedReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LinkedReferencesItem.Overall);
+                        sb.AppendItem(LinkedReferencesItem.Overall);
                         if (LinkedReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LinkedReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                ActivateParents?.ToString(fg);
-                EnableParent?.ToString(fg);
-                fg.AppendItem(Emittance, "Emittance");
-                fg.AppendItem(MultiBoundReference, "MultiBoundReference");
-                fg.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                ActivateParents?.Print(sb);
+                EnableParent?.Print(sb);
+                {
+                    sb.AppendItem(Emittance, "Emittance");
+                }
+                {
+                    sb.AppendItem(MultiBoundReference, "MultiBoundReference");
+                }
+                {
+                    sb.AppendItem(IgnoredBySandbox, "IgnoredBySandbox");
+                }
                 if (LocationRefTypes is {} LocationRefTypesItem)
                 {
-                    fg.AppendLine("LocationRefTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationRefTypes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationRefTypesItem.Overall);
+                        sb.AppendItem(LocationRefTypesItem.Overall);
                         if (LocationRefTypesItem.Specific != null)
                         {
                             foreach (var subItem in LocationRefTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(LocationReference, "LocationReference");
+                {
+                    sb.AppendItem(LocationReference, "LocationReference");
+                }
                 if (DistantLodData is {} DistantLodDataItem)
                 {
-                    fg.AppendLine("DistantLodData =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DistantLodData =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(DistantLodDataItem.Overall);
+                        sb.AppendItem(DistantLodDataItem.Overall);
                         if (DistantLodDataItem.Specific != null)
                         {
                             foreach (var subItem in DistantLodDataItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Scale, "Scale");
-                Placement?.ToString(fg);
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                Placement?.Print(sb);
             }
             #endregion
 
@@ -1207,7 +1212,8 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
-                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.FavorCost = this.FavorCost.Combine(rhs.FavorCost);
                 ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
@@ -1246,7 +1252,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public bool EncounterZone;
-            public Ownership.TranslationMask? Ownership;
+            public bool Owner;
+            public bool FactionRank;
             public bool HeadTrackingWeight;
             public bool FavorCost;
             public WaterReflection.TranslationMask? Reflections;
@@ -1270,6 +1277,8 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.EncounterZone = defaultOn;
+                this.Owner = defaultOn;
+                this.FactionRank = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.FavorCost = defaultOn;
                 this.Emittance = defaultOn;
@@ -1288,7 +1297,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((EncounterZone, null));
-                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((Owner, null));
+                ret.Add((FactionRank, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((FavorCost, null));
                 ret.Add((Reflections == null ? DefaultOn : !Reflections.GetCrystal().CopyNothing, Reflections?.GetCrystal()));
@@ -1314,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => APlacedTrapCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APlacedTrapCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapSetterCommon.Instance.RemapLinks(this, mapping);
         public APlacedTrap(
             FormKey formKey,
@@ -1395,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => APlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APlacedTrapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1404,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1428,6 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IKeywordLinkedReference,
         ILinkedReference,
+        ILocationTargetable,
         ILoquiObjectSetter<IAPlacedTrapInternal>,
         IPlaced,
         IPlacedThing,
@@ -1439,7 +1450,8 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
-        new Ownership? Ownership { get; set; }
+        new IFormLinkNullable<IOwnerGetter> Owner { get; set; }
+        new Int32? FactionRank { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
@@ -1474,8 +1486,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IKeywordLinkedReferenceGetter,
         ILinkedReferenceGetter,
+        ILocationTargetableGetter,
         ILoquiObject<IAPlacedTrapGetter>,
         IPlacedGetter,
         IPlacedThingGetter,
@@ -1484,12 +1498,13 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => APlacedTrap_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScriptedGetter
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
-        IOwnershipGetter? Ownership { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
+        Int32? FactionRank { get; }
         Single? HeadTrackingWeight { get; }
         Single? FavorCost { get; }
         IReadOnlyList<IWaterReflectionGetter> Reflections { get; }
@@ -1532,26 +1547,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAPlacedTrapGetter item,
             string? name = null,
             APlacedTrap.Mask<bool>? printMask = null)
         {
-            return ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).ToString(
+            return ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAPlacedTrapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             APlacedTrap.Mask<bool>? printMask = null)
         {
-            ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).ToString(
+            ((APlacedTrapCommon)((IAPlacedTrapGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1646,7 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((APlacedTrapSetterCommon)((IAPlacedTrapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1661,10 +1676,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum APlacedTrap_FieldIndex
+    internal enum APlacedTrap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1674,26 +1689,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         VirtualMachineAdapter = 6,
         EncounterZone = 7,
-        Ownership = 8,
-        HeadTrackingWeight = 9,
-        FavorCost = 10,
-        Reflections = 11,
-        LinkedReferences = 12,
-        ActivateParents = 13,
-        EnableParent = 14,
-        Emittance = 15,
-        MultiBoundReference = 16,
-        IgnoredBySandbox = 17,
-        LocationRefTypes = 18,
-        LocationReference = 19,
-        DistantLodData = 20,
-        Scale = 21,
-        Placement = 22,
+        Owner = 8,
+        FactionRank = 9,
+        HeadTrackingWeight = 10,
+        FavorCost = 11,
+        Reflections = 12,
+        LinkedReferences = 13,
+        ActivateParents = 14,
+        EnableParent = 15,
+        Emittance = 16,
+        MultiBoundReference = 17,
+        IgnoredBySandbox = 18,
+        LocationRefTypes = 19,
+        LocationReference = 20,
+        DistantLodData = 21,
+        Scale = 22,
+        Placement = 23,
     }
     #endregion
 
     #region Registration
-    public partial class APlacedTrap_Registration : ILoquiRegistration
+    internal partial class APlacedTrap_Registration : ILoquiRegistration
     {
         public static readonly APlacedTrap_Registration Instance = new APlacedTrap_Registration();
 
@@ -1706,9 +1722,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "29f40f03-4046-4b2d-b061-b0c5c48d253b";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(APlacedTrap.Mask<>);
 
@@ -1734,42 +1750,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.VMAD,
-                        RecordTypes.NAME,
-                        RecordTypes.XEZN,
-                        RecordTypes.XOWN,
-                        RecordTypes.XRNK,
-                        RecordTypes.XHTW,
-                        RecordTypes.XFVC,
-                        RecordTypes.XPWR,
-                        RecordTypes.XLKR,
-                        RecordTypes.XAPD,
-                        RecordTypes.XESP,
-                        RecordTypes.XEMI,
-                        RecordTypes.XMBR,
-                        RecordTypes.XIS2,
-                        RecordTypes.XLRT,
-                        RecordTypes.XLRL,
-                        RecordTypes.XLOD,
-                        RecordTypes.XSCL,
-                        RecordTypes.DATA,
-                        RecordTypes.PARW,
-                        RecordTypes.PBEA,
-                        RecordTypes.PFLA,
-                        RecordTypes.PCON,
-                        RecordTypes.PBAR,
-                        RecordTypes.PGRE,
-                        RecordTypes.PHZD,
-                        RecordTypes.PMIS
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XEZN,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XLOD,
+                RecordTypes.XSCL,
+                RecordTypes.DATA,
+                RecordTypes.PARW,
+                RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APlacedTrapBinaryWriteTranslation);
         #region Interface
@@ -1804,7 +1816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class APlacedTrapSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class APlacedTrapSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly APlacedTrapSetterCommon Instance = new APlacedTrapSetterCommon();
 
@@ -1815,7 +1827,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.EncounterZone.Clear();
-            item.Ownership = null;
+            item.Owner.Clear();
+            item.FactionRank = default;
             item.HeadTrackingWeight = default;
             item.FavorCost = default;
             item.Reflections.Clear();
@@ -1849,7 +1862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.EncounterZone.Relink(mapping);
-            obj.Ownership?.RemapLinks(mapping);
+            obj.Owner.Relink(mapping);
             obj.Reflections.RemapLinks(mapping);
             obj.LinkedReferences.RemapLinks(mapping);
             obj.ActivateParents?.RemapLinks(mapping);
@@ -1866,14 +1879,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAPlacedTrapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (APlacedTrap)item,
@@ -1884,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (APlacedTrap)item,
@@ -1895,7 +1908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APlacedTrapCommon : SkyrimMajorRecordCommon
+    internal partial class APlacedTrapCommon : SkyrimMajorRecordCommon
     {
         public new static readonly APlacedTrapCommon Instance = new APlacedTrapCommon();
 
@@ -1919,18 +1932,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APlacedTrap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
-            ret.Ownership = EqualsMaskHelper.EqualsHelper(
-                item.Ownership,
-                rhs.Ownership,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = item.Owner.Equals(rhs.Owner);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
             ret.FavorCost = item.FavorCost.EqualsWithin(rhs.FavorCost);
             ret.Reflections = item.Reflections.CollectionEqualsHelper(
@@ -1972,188 +1981,174 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAPlacedTrapGetter item,
             string? name = null,
             APlacedTrap.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAPlacedTrapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             APlacedTrap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"APlacedTrap =>");
+                sb.AppendLine($"APlacedTrap =>");
             }
             else
             {
-                fg.AppendLine($"{name} (APlacedTrap) =>");
+                sb.AppendLine($"{name} (APlacedTrap) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAPlacedTrapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             APlacedTrap.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.EncounterZone ?? true)
             {
-                fg.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
             }
-            if ((printMask?.Ownership?.Overall ?? true)
-                && item.Ownership is {} OwnershipItem)
+            if (printMask?.Owner ?? true)
             {
-                OwnershipItem?.ToString(fg, "Ownership");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if ((printMask?.HeadTrackingWeight ?? true)
                 && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
             {
-                fg.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
+                sb.AppendItem(HeadTrackingWeightItem, "HeadTrackingWeight");
             }
             if ((printMask?.FavorCost ?? true)
                 && item.FavorCost is {} FavorCostItem)
             {
-                fg.AppendItem(FavorCostItem, "FavorCost");
+                sb.AppendItem(FavorCostItem, "FavorCost");
             }
             if (printMask?.Reflections?.Overall ?? true)
             {
-                fg.AppendLine("Reflections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Reflections =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Reflections)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.LinkedReferences?.Overall ?? true)
             {
-                fg.AppendLine("LinkedReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LinkedReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LinkedReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ActivateParents?.Overall ?? true)
                 && item.ActivateParents is {} ActivateParentsItem)
             {
-                ActivateParentsItem?.ToString(fg, "ActivateParents");
+                ActivateParentsItem?.Print(sb, "ActivateParents");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.Print(sb, "EnableParent");
             }
             if (printMask?.Emittance ?? true)
             {
-                fg.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
+                sb.AppendItem(item.Emittance.FormKeyNullable, "Emittance");
             }
             if (printMask?.MultiBoundReference ?? true)
             {
-                fg.AppendItem(item.MultiBoundReference.FormKeyNullable, "MultiBoundReference");
+                sb.AppendItem(item.MultiBoundReference.FormKeyNullable, "MultiBoundReference");
             }
             if ((printMask?.IgnoredBySandbox ?? true)
                 && item.IgnoredBySandbox is {} IgnoredBySandboxItem)
             {
-                fg.AppendLine($"IgnoredBySandbox => {SpanExt.ToHexString(IgnoredBySandboxItem)}");
+                sb.AppendLine($"IgnoredBySandbox => {SpanExt.ToHexString(IgnoredBySandboxItem)}");
             }
             if ((printMask?.LocationRefTypes?.Overall ?? true)
                 && item.LocationRefTypes is {} LocationRefTypesItem)
             {
-                fg.AppendLine("LocationRefTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationRefTypes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationRefTypesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.LocationReference ?? true)
             {
-                fg.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
+                sb.AppendItem(item.LocationReference.FormKeyNullable, "LocationReference");
             }
             if ((printMask?.DistantLodData?.Overall ?? true)
                 && item.DistantLodData is {} DistantLodDataItem)
             {
-                fg.AppendLine("DistantLodData =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DistantLodData =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in DistantLodDataItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if ((printMask?.Placement?.Overall ?? true)
                 && item.Placement is {} PlacementItem)
             {
-                PlacementItem?.ToString(fg, "Placement");
+                PlacementItem?.Print(sb, "Placement");
             }
         }
         
@@ -2215,13 +2210,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
+            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Owner) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
-                {
-                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership))) return false;
-                }
-                else if (!isOwnershipEqual) return false;
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
             {
@@ -2233,11 +2228,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Reflections) ?? true))
             {
-                if (!lhs.Reflections.SequenceEqualNullable(rhs.Reflections)) return false;
+                if (!lhs.Reflections.SequenceEqual(rhs.Reflections, (l, r) => ((WaterReflectionCommon)((IWaterReflectionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Reflections)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.LinkedReferences) ?? true))
             {
-                if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
+                if (!lhs.LinkedReferences.SequenceEqual(rhs.LinkedReferences, (l, r) => ((LinkedReferencesCommon)((ILinkedReferencesGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.LinkedReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ActivateParents) ?? true))
             {
@@ -2324,9 +2319,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.EncounterZone);
-            if (item.Ownership is {} Ownershipitem)
+            hash.Add(item.Owner);
+            if (item.FactionRank is {} FactionRankitem)
             {
-                hash.Add(Ownershipitem);
+                hash.Add(FactionRankitem);
             }
             if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
@@ -2386,59 +2382,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAPlacedTrapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAPlacedTrapGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.EncounterZone.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EncounterZone);
+                yield return EncounterZoneInfo;
             }
-            if (obj.Ownership is {} OwnershipItems)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                foreach (var item in OwnershipItems.ContainedFormLinks)
-                {
-                    yield return item;
-                }
+                yield return OwnerInfo;
             }
-            foreach (var item in obj.Reflections.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Reflections.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LinkedReferences.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LinkedReferences.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.ActivateParents is {} ActivateParentsItems)
             {
-                foreach (var item in ActivateParentsItems.ContainedFormLinks)
+                foreach (var item in ActivateParentsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.ContainedFormLinks)
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.Emittance.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Emittance, out var EmittanceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Emittance);
+                yield return EmittanceInfo;
             }
-            if (obj.MultiBoundReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MultiBoundReference, out var MultiBoundReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MultiBoundReference);
+                yield return MultiBoundReferenceInfo;
             }
             if (obj.LocationRefTypes is {} LocationRefTypesItem)
             {
@@ -2447,9 +2440,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.LocationReference, out var LocationReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.LocationReference);
+                yield return LocationReferenceInfo;
             }
             yield break;
         }
@@ -2490,7 +2483,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class APlacedTrapSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class APlacedTrapSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly APlacedTrapSetterTranslationCommon Instance = new APlacedTrapSetterTranslationCommon();
 
@@ -2553,31 +2546,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)APlacedTrap_FieldIndex.Ownership);
-                try
-                {
-                    if(rhs.Ownership is {} rhsOwnership)
-                    {
-                        item.Ownership = rhsOwnership.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership));
-                    }
-                    else
-                    {
-                        item.Ownership = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Owner.SetTo(rhs.Owner.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
             }
             if ((copyMask?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
             {
@@ -2915,7 +2890,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APlacedTrap_Registration.Instance;
-        public new static APlacedTrap_Registration StaticRegistration => APlacedTrap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => APlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -2933,18 +2908,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class APlacedTrapBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
+        public new static readonly APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAPlacedTrapGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2964,13 +2939,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.EncounterZone,
                 header: translationParams.ConvertToCustom(RecordTypes.XEZN));
-            if (item.Ownership is {} OwnershipItem)
-            {
-                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
-                    item: OwnershipItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Owner,
+                header: translationParams.ConvertToCustom(RecordTypes.XOWN));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadTrackingWeight,
@@ -2982,7 +2958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWaterReflectionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Reflections,
-                transl: (MutagenWriter subWriter, IWaterReflectionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWaterReflectionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WaterReflectionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2993,7 +2969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedReferencesGetter>.Instance.Write(
                 writer: writer,
                 items: item.LinkedReferences,
-                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILinkedReferencesGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LinkedReferencesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3031,7 +3007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LocationRefTypes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XLRT),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3075,19 +3051,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Write(
             MutagenWriter writer,
             IAPlacedTrapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                writer.MetaData.FormVersion = item.FormVersion;
-                WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    translationParams: translationParams);
-                writer.MetaData.FormVersion = null;
+                if (!item.IsDeleted)
+                {
+                    writer.MetaData.FormVersion = item.FormVersion;
+                    WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        translationParams: translationParams);
+                    writer.MetaData.FormVersion = null;
+                }
             }
             catch (Exception ex)
             {
@@ -3098,7 +3077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAPlacedTrapGetter)item,
@@ -3109,7 +3088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAPlacedTrapGetter)item,
@@ -3120,7 +3099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAPlacedTrapGetter)item,
@@ -3130,9 +3109,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class APlacedTrapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class APlacedTrapBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
+        public new static readonly APlacedTrapBinaryCreateTranslation Instance = new APlacedTrapBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static ParseResult FillBinaryRecordTypes(
@@ -3142,7 +3121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3165,12 +3144,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)APlacedTrap_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)APlacedTrap_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams);
-                    return (int)APlacedTrap_FieldIndex.Ownership;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)APlacedTrap_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XHTW:
                 {
@@ -3189,7 +3172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Reflections.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WaterReflection>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XPWR,
+                            triggeringRecord: WaterReflection_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: WaterReflection.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.Reflections;
@@ -3199,7 +3182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LinkedReferences.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XLKR,
+                            triggeringRecord: LinkedReferences_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LinkedReferences.TryCreateFromBinary));
                     return (int)APlacedTrap_FieldIndex.LinkedReferences;
@@ -3208,7 +3191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)APlacedTrap_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XESP:
@@ -3278,7 +3261,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3299,16 +3283,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class APlacedTrapBinaryOverlay :
+    internal abstract partial class APlacedTrapBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAPlacedTrapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => APlacedTrap_Registration.Instance;
-        public new static APlacedTrap_Registration StaticRegistration => APlacedTrap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => APlacedTrap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => APlacedTrapCommon.Instance;
         [DebuggerStepThrough]
@@ -3316,14 +3300,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => APlacedTrapCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APlacedTrapCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => APlacedTrapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((APlacedTrapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3334,7 +3318,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region TrapForm
         public partial ParseResult TrapFormCustomParse(
@@ -3343,49 +3328,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
-        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
-        public IOwnershipGetter? Ownership { get; private set; }
+        #region Owner
+        private int? _OwnerLocation;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        #endregion
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
-        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FavorCost
         private int? _FavorCostLocation;
-        public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = ListExt.Empty<WaterReflectionBinaryOverlay>();
-        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
+        public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = Array.Empty<IWaterReflectionGetter>();
+        public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = Array.Empty<ILinkedReferencesGetter>();
         public IActivateParentsGetter? ActivateParents { get; private set; }
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
         #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
         #endregion
         #region MultiBoundReference
         private int? _MultiBoundReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference => _MultiBoundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MultiBoundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference => _MultiBoundReferenceLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MultiBoundReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region IgnoredBySandbox
         private int? _IgnoredBySandboxLocation;
-        public ReadOnlyMemorySlice<Byte>? IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IgnoredBySandboxLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? IgnoredBySandbox => _IgnoredBySandboxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IgnoredBySandboxLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
+        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => _LocationReferenceLocation.HasValue ? new FormLinkNullable<ILocationRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationRecordGetter>.Null;
         #endregion
         public IReadOnlyList<Single>? DistantLodData { get; private set; }
         #region Scale
         private int? _ScaleLocation;
-        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Placement
         private RangeInt32? _PlacementLocation;
-        public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(new OverlayStream(_data.Slice(_PlacementLocation!.Value.Min), _package), _package) : default;
+        public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(_recordData.Slice(_PlacementLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3394,10 +3386,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected APlacedTrapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -3411,9 +3403,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -3433,13 +3425,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (int)APlacedTrap_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XOWN:
+                {
+                    _OwnerLocation = (stream.Position - offset);
+                    return (int)APlacedTrap_FieldIndex.Owner;
+                }
                 case RecordTypeInts.XRNK:
                 {
-                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
-                        stream: stream,
-                        package: _package,
-                        parseParams: parseParams);
-                    return (int)APlacedTrap_FieldIndex.Ownership;
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)APlacedTrap_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XHTW:
                 {
@@ -3453,28 +3446,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XPWR:
                 {
-                    this.Reflections = BinaryOverlayList.FactoryByArray<WaterReflectionBinaryOverlay>(
+                    this.Reflections = BinaryOverlayList.FactoryByArray<IWaterReflectionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => WaterReflectionBinaryOverlay.WaterReflectionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: WaterReflection_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)APlacedTrap_FieldIndex.Reflections;
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<LinkedReferencesBinaryOverlay>(
+                    this.LinkedReferences = BinaryOverlayList.FactoryByArray<ILinkedReferencesGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LinkedReferences_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)APlacedTrap_FieldIndex.LinkedReferences;
@@ -3484,7 +3479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.ActivateParents = ActivateParentsBinaryOverlay.ActivateParentsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)APlacedTrap_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XESP:
@@ -3509,8 +3504,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -3526,8 +3521,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLOD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.DistantLodData = BinaryOverlayList.FactoryByStartIndex<Single>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -3553,17 +3548,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            APlacedTrapMixIn.ToString(
+            APlacedTrapMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

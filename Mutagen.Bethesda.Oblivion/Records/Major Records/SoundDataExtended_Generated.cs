@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -63,12 +65,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundDataExtendedMixIn.ToString(
+            SoundDataExtendedMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -206,38 +209,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SoundDataExtended.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SoundDataExtended.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SoundDataExtended.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SoundDataExtended.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SoundDataExtended.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundDataExtended.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.StaticAttenuation ?? true)
                     {
-                        fg.AppendItem(StaticAttenuation, "StaticAttenuation");
+                        sb.AppendItem(StaticAttenuation, "StaticAttenuation");
                     }
                     if (printMask?.StopTime ?? true)
                     {
-                        fg.AppendItem(StopTime, "StopTime");
+                        sb.AppendItem(StopTime, "StopTime");
                     }
                     if (printMask?.StartTime ?? true)
                     {
-                        fg.AppendItem(StartTime, "StartTime");
+                        sb.AppendItem(StartTime, "StartTime");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -321,39 +319,36 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(StaticAttenuation, "StaticAttenuation");
-                fg.AppendItem(StopTime, "StopTime");
-                fg.AppendItem(StartTime, "StartTime");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                }
+                {
+                    sb.AppendItem(StopTime, "StopTime");
+                }
+                {
+                    sb.AppendItem(StartTime, "StartTime");
+                }
             }
             #endregion
 
@@ -421,16 +416,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public new static readonly RecordType GrupRecordType = SoundDataExtended_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDataExtendedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -440,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static SoundDataExtended CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundDataExtended();
             ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -455,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundDataExtended item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -465,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -538,26 +529,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISoundDataExtendedInternalGetter item,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
-            return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).ToString(
+            return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISoundDataExtendedInternalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
-            ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).ToString(
+            ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -638,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISoundDataExtendedInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -653,10 +644,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SoundDataExtended_FieldIndex
+    internal enum SoundDataExtended_FieldIndex
     {
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
@@ -669,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SoundDataExtended_Registration : ILoquiRegistration
+    internal partial class SoundDataExtended_Registration : ILoquiRegistration
     {
         public static readonly SoundDataExtended_Registration Instance = new SoundDataExtended_Registration();
 
@@ -711,6 +702,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SNDX;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.SNDX);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SoundDataExtendedBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -744,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoundDataExtendedSetterCommon : SoundDataSetterCommon
+    internal partial class SoundDataExtendedSetterCommon : SoundDataSetterCommon
     {
         public new static readonly SoundDataExtendedSetterCommon Instance = new SoundDataExtendedSetterCommon();
 
@@ -775,12 +772,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ISoundDataExtendedInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SNDX),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -791,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             ISoundDataInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundDataExtended)item,
@@ -802,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundDataExtendedCommon : SoundDataCommon
+    internal partial class SoundDataExtendedCommon : SoundDataCommon
     {
         public new static readonly SoundDataExtendedCommon Instance = new SoundDataExtendedCommon();
 
@@ -826,72 +823,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundDataExtended.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
             ret.StopTime = item.StopTime.EqualsWithin(rhs.StopTime);
             ret.StartTime = item.StartTime.EqualsWithin(rhs.StartTime);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISoundDataExtendedInternalGetter item,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISoundDataExtendedInternalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundDataExtended =>");
+                sb.AppendLine($"SoundDataExtended =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundDataExtended) =>");
+                sb.AppendLine($"{name} (SoundDataExtended) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundDataExtendedInternalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
             SoundDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.StaticAttenuation ?? true)
             {
-                fg.AppendItem(item.StaticAttenuation, "StaticAttenuation");
+                sb.AppendItem(item.StaticAttenuation, "StaticAttenuation");
             }
             if (printMask?.StopTime ?? true)
             {
-                fg.AppendItem(item.StopTime, "StopTime");
+                sb.AppendItem(item.StopTime, "StopTime");
             }
             if (printMask?.StartTime ?? true)
             {
-                fg.AppendItem(item.StartTime, "StartTime");
+                sb.AppendItem(item.StartTime, "StartTime");
             }
         }
         
@@ -970,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundDataExtendedGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundDataExtendedGetter obj)
         {
             yield break;
         }
@@ -978,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
+    internal partial class SoundDataExtendedSetterTranslationCommon : SoundDataSetterTranslationCommon
     {
         public new static readonly SoundDataExtendedSetterTranslationCommon Instance = new SoundDataExtendedSetterTranslationCommon();
 
@@ -1115,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
-        public new static SoundDataExtended_Registration StaticRegistration => SoundDataExtended_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         [DebuggerStepThrough]
@@ -1133,13 +1127,13 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoundDataExtendedBinaryWriteTranslation :
         SoundDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundDataExtendedBinaryWriteTranslation Instance = new SoundDataExtendedBinaryWriteTranslation();
+        public new static readonly SoundDataExtendedBinaryWriteTranslation Instance = new SoundDataExtendedBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundDataExtendedInternalGetter item,
@@ -1190,12 +1184,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ISoundDataExtendedInternalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SNDX),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1207,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundDataExtendedInternalGetter)item,
@@ -1218,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             ISoundDataInternalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundDataExtendedInternalGetter)item,
@@ -1228,9 +1222,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoundDataExtendedBinaryCreateTranslation : SoundDataBinaryCreateTranslation
+    internal partial class SoundDataExtendedBinaryCreateTranslation : SoundDataBinaryCreateTranslation
     {
-        public new readonly static SoundDataExtendedBinaryCreateTranslation Instance = new SoundDataExtendedBinaryCreateTranslation();
+        public new static readonly SoundDataExtendedBinaryCreateTranslation Instance = new SoundDataExtendedBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundDataExtendedInternal item,
@@ -1272,16 +1266,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SoundDataExtendedBinaryOverlay :
+    internal partial class SoundDataExtendedBinaryOverlay :
         SoundDataBinaryOverlay,
         ISoundDataExtendedInternalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDataExtended_Registration.Instance;
-        public new static SoundDataExtended_Registration StaticRegistration => SoundDataExtended_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDataExtendedCommon.Instance;
         [DebuggerStepThrough]
@@ -1289,13 +1283,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDataExtendedBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDataExtendedBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1303,9 +1297,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
+        #region StopTime
+        public partial Single GetStopTimeCustom(int location);
         public Single StopTime => GetStopTimeCustom(location: 0xA);
+        #endregion
+        #region StartTime
+        public partial Single GetStartTimeCustom(int location);
         public Single StartTime => GetStartTimeCustom(location: 0xB);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1313,25 +1313,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected SoundDataExtendedBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SoundDataExtendedBinaryOverlay SoundDataExtendedFactory(
+        public static ISoundDataExtendedInternalGetter SoundDataExtendedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundDataExtendedBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1340,25 +1345,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static SoundDataExtendedBinaryOverlay SoundDataExtendedFactory(
+        public static ISoundDataExtendedInternalGetter SoundDataExtendedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundDataExtendedFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundDataExtendedMixIn.ToString(
+            SoundDataExtendedMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

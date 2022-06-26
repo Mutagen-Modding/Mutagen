@@ -6,14 +6,10 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +52,13 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebugStructOrderMixIn.ToString(
+            DebugStructOrderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -205,9 +202,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Names.Specific = l;
-                        foreach (var item in Names.Specific.WithIndex())
+                        foreach (var item in Names.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -216,57 +213,50 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DebugStructOrder.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DebugStructOrder.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DebugStructOrder.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DebugStructOrder.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DebugStructOrder.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DebugStructOrder.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectName ?? true)
                     {
-                        fg.AppendItem(ObjectName, "ObjectName");
+                        sb.AppendItem(ObjectName, "ObjectName");
                     }
                     if (printMask?.OrderName ?? true)
                     {
-                        fg.AppendItem(OrderName, "OrderName");
+                        sb.AppendItem(OrderName, "OrderName");
                     }
                     if ((printMask?.Names?.Overall ?? true)
                         && Names is {} NamesItem)
                     {
-                        fg.AppendLine("Names =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Names =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(NamesItem.Overall);
+                            sb.AppendItem(NamesItem.Overall);
                             if (NamesItem.Specific != null)
                             {
                                 foreach (var subItem in NamesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -361,58 +351,51 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ObjectName, "ObjectName");
-                fg.AppendItem(OrderName, "OrderName");
+                {
+                    sb.AppendItem(ObjectName, "ObjectName");
+                }
+                {
+                    sb.AppendItem(OrderName, "OrderName");
+                }
                 if (Names is {} NamesItem)
                 {
-                    fg.AppendLine("Names =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Names =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(NamesItem.Overall);
+                        sb.AppendItem(NamesItem.Overall);
                         if (NamesItem.Specific != null)
                         {
                             foreach (var subItem in NamesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -491,7 +474,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -554,26 +537,26 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebugStructOrderGetter item,
             string? name = null,
             DebugStructOrder.Mask<bool>? printMask = null)
         {
-            return ((DebugStructOrderCommon)((IDebugStructOrderGetter)item).CommonInstance()!).ToString(
+            return ((DebugStructOrderCommon)((IDebugStructOrderGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebugStructOrderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugStructOrder.Mask<bool>? printMask = null)
         {
-            ((DebugStructOrderCommon)((IDebugStructOrderGetter)item).CommonInstance()!).ToString(
+            ((DebugStructOrderCommon)((IDebugStructOrderGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -680,10 +663,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugStructOrder_FieldIndex
+    internal enum DebugStructOrder_FieldIndex
     {
         ObjectName = 0,
         OrderName = 1,
@@ -692,7 +675,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugStructOrder_Registration : ILoquiRegistration
+    internal partial class DebugStructOrder_Registration : ILoquiRegistration
     {
         public static readonly DebugStructOrder_Registration Instance = new DebugStructOrder_Registration();
 
@@ -765,7 +748,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugStructOrderSetterCommon
+    internal partial class DebugStructOrderSetterCommon
     {
         public static readonly DebugStructOrderSetterCommon Instance = new DebugStructOrderSetterCommon();
 
@@ -780,7 +763,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugStructOrderCommon
+    internal partial class DebugStructOrderCommon
     {
         public static readonly DebugStructOrderCommon Instance = new DebugStructOrderCommon();
 
@@ -804,7 +787,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             DebugStructOrder.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectName = string.Equals(item.ObjectName, rhs.ObjectName);
             ret.OrderName = string.Equals(item.OrderName, rhs.OrderName);
             ret.Names = item.Names.CollectionEqualsHelper(
@@ -813,75 +795,69 @@ namespace Mutagen.Bethesda.Pex.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDebugStructOrderGetter item,
             string? name = null,
             DebugStructOrder.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebugStructOrderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugStructOrder.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DebugStructOrder =>");
+                sb.AppendLine($"DebugStructOrder =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DebugStructOrder) =>");
+                sb.AppendLine($"{name} (DebugStructOrder) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebugStructOrderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DebugStructOrder.Mask<bool>? printMask = null)
         {
             if (printMask?.ObjectName ?? true)
             {
-                fg.AppendItem(item.ObjectName, "ObjectName");
+                sb.AppendItem(item.ObjectName, "ObjectName");
             }
             if (printMask?.OrderName ?? true)
             {
-                fg.AppendItem(item.OrderName, "OrderName");
+                sb.AppendItem(item.OrderName, "OrderName");
             }
             if (printMask?.Names?.Overall ?? true)
             {
-                fg.AppendLine("Names =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Names =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Names)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -925,7 +901,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugStructOrderSetterTranslationCommon
+    internal partial class DebugStructOrderSetterTranslationCommon
     {
         public static readonly DebugStructOrderSetterTranslationCommon Instance = new DebugStructOrderSetterTranslationCommon();
 
@@ -1024,7 +1000,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugStructOrder_Registration.Instance;
-        public static DebugStructOrder_Registration StaticRegistration => DebugStructOrder_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugStructOrder_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugStructOrderCommon.Instance;
         [DebuggerStepThrough]

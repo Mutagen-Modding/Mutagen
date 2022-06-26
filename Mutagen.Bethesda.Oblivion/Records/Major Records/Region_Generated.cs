@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,21 +20,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -146,12 +147,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.ToString(
+            RegionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -388,9 +390,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
                         obj.Areas.Specific = l;
-                        foreach (var item in Areas.Specific.WithIndex())
+                        foreach (var item in Areas.Specific)
                         {
-                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -405,81 +407,72 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Region.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Region.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Region.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Region.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.MapColor ?? true)
                     {
-                        fg.AppendItem(MapColor, "MapColor");
+                        sb.AppendItem(MapColor, "MapColor");
                     }
                     if (printMask?.Worldspace ?? true)
                     {
-                        fg.AppendItem(Worldspace, "Worldspace");
+                        sb.AppendItem(Worldspace, "Worldspace");
                     }
                     if ((printMask?.Areas?.Overall ?? true)
                         && Areas is {} AreasItem)
                     {
-                        fg.AppendLine("Areas =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Areas =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AreasItem.Overall);
+                            sb.AppendItem(AreasItem.Overall);
                             if (AreasItem.Specific != null)
                             {
                                 foreach (var subItem in AreasItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Objects?.Overall ?? true)
                     {
-                        Objects?.ToString(fg);
+                        Objects?.Print(sb);
                     }
                     if (printMask?.Weather?.Overall ?? true)
                     {
-                        Weather?.ToString(fg);
+                        Weather?.Print(sb);
                     }
                     if (printMask?.MapName?.Overall ?? true)
                     {
-                        MapName?.ToString(fg);
+                        MapName?.Print(sb);
                     }
                     if (printMask?.Grasses?.Overall ?? true)
                     {
-                        Grasses?.ToString(fg);
+                        Grasses?.Print(sb);
                     }
                     if (printMask?.Sounds?.Overall ?? true)
                     {
-                        Sounds?.ToString(fg);
+                        Sounds?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -623,66 +616,59 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(MapColor, "MapColor");
-                fg.AppendItem(Worldspace, "Worldspace");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                {
+                    sb.AppendItem(MapColor, "MapColor");
+                }
+                {
+                    sb.AppendItem(Worldspace, "Worldspace");
+                }
                 if (Areas is {} AreasItem)
                 {
-                    fg.AppendLine("Areas =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Areas =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AreasItem.Overall);
+                        sb.AppendItem(AreasItem.Overall);
                         if (AreasItem.Specific != null)
                         {
                             foreach (var subItem in AreasItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                Objects?.ToString(fg);
-                Weather?.ToString(fg);
-                MapName?.ToString(fg);
-                Grasses?.ToString(fg);
-                Sounds?.ToString(fg);
+                Objects?.Print(sb);
+                Weather?.Print(sb);
+                MapName?.Print(sb);
+                Grasses?.Print(sb);
+                Sounds?.Print(sb);
             }
             #endregion
 
@@ -770,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSetterCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
         {
@@ -831,7 +817,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -841,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Region CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Region();
             ((RegionSetterCommon)((IRegionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -856,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Region item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -866,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -948,26 +934,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRegionGetter item,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
+            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1062,7 +1048,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRegionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1077,10 +1063,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Region_FieldIndex
+    internal enum Region_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1100,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Region_Registration : ILoquiRegistration
+    internal partial class Region_Registration : ILoquiRegistration
     {
         public static readonly Region_Registration Instance = new Region_Registration();
 
@@ -1142,6 +1128,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.REGN);
+            var all = RecordCollection.Factory(
+                RecordTypes.REGN,
+                RecordTypes.ICON,
+                RecordTypes.RCLR,
+                RecordTypes.WNAM,
+                RecordTypes.RPLI,
+                RecordTypes.RPLD,
+                RecordTypes.RDAT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RegionSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class RegionSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly RegionSetterCommon Instance = new RegionSetterCommon();
 
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRegionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IRegionInternal>(
                 record: item,
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Region)item,
@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Region)item,
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionCommon : OblivionMajorRecordCommon
+    internal partial class RegionCommon : OblivionMajorRecordCommon
     {
         public new static readonly RegionCommon Instance = new RegionCommon();
 
@@ -1282,7 +1282,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Region.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
             ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
@@ -1318,110 +1317,104 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IRegionGetter item,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Region =>");
+                sb.AppendLine($"Region =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Region) =>");
+                sb.AppendLine($"{name} (Region) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Region.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if ((printMask?.MapColor ?? true)
                 && item.MapColor is {} MapColorItem)
             {
-                fg.AppendItem(MapColorItem, "MapColor");
+                sb.AppendItem(MapColorItem, "MapColor");
             }
             if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
+                sb.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
             }
             if (printMask?.Areas?.Overall ?? true)
             {
-                fg.AppendLine("Areas =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Areas =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Areas)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Objects?.Overall ?? true)
                 && item.Objects is {} ObjectsItem)
             {
-                ObjectsItem?.ToString(fg, "Objects");
+                ObjectsItem?.Print(sb, "Objects");
             }
             if ((printMask?.Weather?.Overall ?? true)
                 && item.Weather is {} WeatherItem)
             {
-                WeatherItem?.ToString(fg, "Weather");
+                WeatherItem?.Print(sb, "Weather");
             }
             if ((printMask?.MapName?.Overall ?? true)
                 && item.MapName is {} MapNameItem)
             {
-                MapNameItem?.ToString(fg, "MapName");
+                MapNameItem?.Print(sb, "MapName");
             }
             if ((printMask?.Grasses?.Overall ?? true)
                 && item.Grasses is {} GrassesItem)
             {
-                GrassesItem?.ToString(fg, "Grasses");
+                GrassesItem?.Print(sb, "Grasses");
             }
             if ((printMask?.Sounds?.Overall ?? true)
                 && item.Sounds is {} SoundsItem)
             {
-                SoundsItem?.ToString(fg, "Sounds");
+                SoundsItem?.Print(sb, "Sounds");
             }
         }
         
@@ -1483,7 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
-                if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
+                if (!lhs.Areas.SequenceEqual(rhs.Areas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Region_FieldIndex.Areas)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
@@ -1606,40 +1599,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Worldspace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Worldspace, out var WorldspaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Worldspace);
+                yield return WorldspaceInfo;
             }
             if (obj.Objects is {} ObjectsItems)
             {
-                foreach (var item in ObjectsItems.ContainedFormLinks)
+                foreach (var item in ObjectsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Weather is {} WeatherItems)
             {
-                foreach (var item in WeatherItems.ContainedFormLinks)
+                foreach (var item in WeatherItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Grasses is {} GrassesItems)
             {
-                foreach (var item in GrassesItems.ContainedFormLinks)
+                foreach (var item in GrassesItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Sounds is {} SoundsItems)
             {
-                foreach (var item in SoundsItems.ContainedFormLinks)
+                foreach (var item in SoundsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1685,7 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RegionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class RegionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly RegionSetterTranslationCommon Instance = new RegionSetterTranslationCommon();
 
@@ -2006,7 +1999,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2024,18 +2017,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RegionBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
+        public new static readonly RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRegionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2057,7 +2050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
                 writer: writer,
                 items: item.Areas,
-                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2086,7 +2079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRegionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2097,12 +2090,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2114,7 +2110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionGetter)item,
@@ -2125,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionGetter)item,
@@ -2136,7 +2132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionGetter)item,
@@ -2146,9 +2142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RegionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class RegionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
+        public new static readonly RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REGN;
         public static void FillBinaryStructs(
@@ -2167,7 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2198,7 +2194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Areas.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
+                            triggeringRecord: RegionArea_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RegionArea.TryCreateFromBinary));
                     return (int)Region_FieldIndex.Areas;
@@ -2216,7 +2212,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2237,16 +2234,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RegionBinaryOverlay :
+    internal partial class RegionBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IRegionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -2254,14 +2251,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2276,17 +2273,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial String? GetIconCustom();
         public String? Icon => GetIconCustom();
         #endregion
         #region MapColor
         private int? _MapColorLocation;
-        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
+        public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = Array.Empty<IRegionAreaGetter>();
         #region RegionAreaLogic
         public partial ParseResult RegionAreaLogicCustomParse(
             OverlayStream stream,
@@ -2299,28 +2297,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RegionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RegionBinaryOverlay RegionFactory(
+        public static IRegionGetter RegionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RegionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2330,20 +2331,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RegionBinaryOverlay RegionFactory(
+        public static IRegionGetter RegionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2353,9 +2354,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ICON:
@@ -2379,10 +2380,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
                 {
-                    this.Areas = this.ParseRepeatedTypelessSubrecord<RegionAreaBinaryOverlay>(
+                    this.Areas = this.ParseRepeatedTypelessSubrecord<IRegionAreaGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: RegionArea_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: RegionArea_Registration.TriggerSpecs,
                         factory: RegionAreaBinaryOverlay.RegionAreaFactory);
                     return (int)Region_FieldIndex.Areas;
                 }
@@ -2399,17 +2400,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.ToString(
+            RegionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

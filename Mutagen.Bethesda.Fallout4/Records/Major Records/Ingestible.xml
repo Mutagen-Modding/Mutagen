@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingestible" recordType="ALCH" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="12503adc-e228-4b45-a88a-bee5aac320fd" ID="222">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <FormLink name="CraftingSound" refName="SoundDescriptor" recordType="CUSD" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <String name="Description" recordType="DESC" translated="DL" />
+      <Float name="Weight" recordType="DATA" nullable="False" />
+      <Data recordType="ENIT">
+        <Fields>
+          <UInt32 name="Value" />
+          <Enum name="Flags" enumName="Ingestible.Flag" byteLength="4" />
+          <FormLink name="Addiction" refName="Spell" />
+          <Float name="AddictionChance" />
+          <FormLink name="ConsumeSound" refName="SoundDescriptor" />
+        </Fields>
+      </Data>
+      <String name="AddictionName" recordType="DNAM" translated="DL" />
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

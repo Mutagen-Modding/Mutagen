@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -19,15 +15,15 @@ public class ModGroupMerger
     {
         using var inputStream = streamCreator();
         using var inputStreamJumpback = streamCreator();
-        using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
+        using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
         long runningDiff = 0;
         var fileLocs = RecordLocator.GetLocations(
             inputStream,
             interest: interest,
-            additionalCriteria: (stream, recType, len) =>
+            additionalCriteria: (_, majorHeader) =>
             {
-                return stream.GetMajorRecord().IsCompressed;
+                return majorHeader.IsCompressed;
             });
         
         inputStream.Position = 0;
@@ -36,7 +32,7 @@ public class ModGroupMerger
         foreach (var loc in fileLocs.GrupLocations)
         {
             inputStream.Position = loc.Key;
-            var group = inputStream.ReadGroup();
+            var group = inputStream.ReadGroupHeader();
             if (!group.IsTopLevel) continue;
             dict.GetOrAdd(loc.Value.ContainedRecordType).Add(loc.Value);
         }
@@ -79,7 +75,7 @@ public class ModGroupMerger
 
             if (inputStream.Complete) break;
             
-            var groupMeta = inputStream.GetGroup();
+            var groupMeta = inputStream.GetGroupHeader();
 
             if (!dict.TryGetValue(groupMeta.ContainedRecordType, out var groupLocations))
             {
@@ -105,7 +101,7 @@ public class ModGroupMerger
             foreach (var groupLoc in groupLocations)
             {
                 inputStream.Position = groupLoc.Location.Min;
-                var targetGroupMeta = inputStream.GetGroupFrame(readSafe: false);
+                var targetGroupMeta = inputStream.GetGroup(readSafe: false);
                 totalLen += targetGroupMeta.Content.Length;
                 writer.BaseStream.Write(targetGroupMeta.Content);
             }

@@ -89,7 +89,7 @@
   </Object>
   <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord" GUID="dc10b70e-654d-4b0d-ae7f-6f548dfad269" ID="204">
     <Fields>
-      <Float name="LevelMult" binary="Custom" />
+      <Float name="LevelMult" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="e65aa7ba-d430-4857-97e8-59d0930b622a" ID="205">

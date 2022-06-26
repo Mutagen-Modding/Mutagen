@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            IngredientDataMixIn.ToString(
+            IngredientDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,34 +177,29 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(IngredientData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(IngredientData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, IngredientData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, IngredientData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(IngredientData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(IngredientData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -286,37 +284,32 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -390,10 +383,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = IngredientData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IngredientDataBinaryWriteTranslation.Instance;
@@ -401,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngredientDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -411,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static IngredientData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IngredientData();
             ((IngredientDataSetterCommon)((IIngredientDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -426,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out IngredientData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -436,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -498,26 +487,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IIngredientDataGetter item,
             string? name = null,
             IngredientData.Mask<bool>? printMask = null)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).ToString(
+            return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IIngredientDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             IngredientData.Mask<bool>? printMask = null)
         {
-            ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).ToString(
+            ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -623,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IIngredientData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IngredientDataSetterCommon)((IIngredientDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -638,10 +627,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum IngredientData_FieldIndex
+    internal enum IngredientData_FieldIndex
     {
         Value = 0,
         Flags = 1,
@@ -649,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class IngredientData_Registration : ILoquiRegistration
+    internal partial class IngredientData_Registration : ILoquiRegistration
     {
         public static readonly IngredientData_Registration Instance = new IngredientData_Registration();
 
@@ -691,6 +680,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ENIT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.ENIT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(IngredientDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -724,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class IngredientDataSetterCommon
+    internal partial class IngredientDataSetterCommon
     {
         public static readonly IngredientDataSetterCommon Instance = new IngredientDataSetterCommon();
 
@@ -748,12 +743,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IIngredientData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ENIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -764,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientDataCommon
+    internal partial class IngredientDataCommon
     {
         public static readonly IngredientDataCommon Instance = new IngredientDataCommon();
 
@@ -788,62 +783,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IngredientData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Value = item.Value == rhs.Value;
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IIngredientDataGetter item,
             string? name = null,
             IngredientData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IIngredientDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             IngredientData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"IngredientData =>");
+                sb.AppendLine($"IngredientData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (IngredientData) =>");
+                sb.AppendLine($"{name} (IngredientData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IIngredientDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             IngredientData.Mask<bool>? printMask = null)
         {
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -882,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIngredientDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIngredientDataGetter obj)
         {
             yield break;
         }
@@ -890,7 +882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class IngredientDataSetterTranslationCommon
+    internal partial class IngredientDataSetterTranslationCommon
     {
         public static readonly IngredientDataSetterTranslationCommon Instance = new IngredientDataSetterTranslationCommon();
 
@@ -972,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IngredientData_Registration.Instance;
-        public static IngredientData_Registration StaticRegistration => IngredientData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => IngredientData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IngredientDataCommon.Instance;
         [DebuggerStepThrough]
@@ -996,11 +988,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class IngredientDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IngredientDataBinaryWriteTranslation Instance = new IngredientDataBinaryWriteTranslation();
+        public static readonly IngredientDataBinaryWriteTranslation Instance = new IngredientDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IIngredientDataGetter item,
@@ -1016,12 +1008,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IIngredientDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ENIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1033,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIngredientDataGetter)item,
@@ -1043,9 +1035,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class IngredientDataBinaryCreateTranslation
+    internal partial class IngredientDataBinaryCreateTranslation
     {
-        public readonly static IngredientDataBinaryCreateTranslation Instance = new IngredientDataBinaryCreateTranslation();
+        public static readonly IngredientDataBinaryCreateTranslation Instance = new IngredientDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IIngredientData item,
@@ -1068,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IIngredientDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngredientDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1081,16 +1073,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class IngredientDataBinaryOverlay :
+    internal partial class IngredientDataBinaryOverlay :
         PluginBinaryOverlay,
         IIngredientDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IngredientData_Registration.Instance;
-        public static IngredientData_Registration StaticRegistration => IngredientData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => IngredientData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IngredientDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1104,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IngredientDataBinaryWriteTranslation.Instance;
@@ -1112,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IngredientDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1120,8 +1112,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IngredientFlag Flags => (IngredientFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public IngredientFlag Flags => (IngredientFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1129,25 +1121,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected IngredientDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static IngredientDataBinaryOverlay IngredientDataFactory(
+        public static IIngredientDataGetter IngredientDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new IngredientDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1156,25 +1153,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static IngredientDataBinaryOverlay IngredientDataFactory(
+        public static IIngredientDataGetter IngredientDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return IngredientDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            IngredientDataMixIn.ToString(
+            IngredientDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

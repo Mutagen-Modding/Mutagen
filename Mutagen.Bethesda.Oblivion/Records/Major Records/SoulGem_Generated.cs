@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,20 +21,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -129,12 +130,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoulGemMixIn.ToString(
+            SoulGemMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -310,54 +312,49 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SoulGem.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SoulGem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SoulGem.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SoulGem.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SoulGem.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoulGem.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                     if (printMask?.ContainedSoul ?? true)
                     {
-                        fg.AppendItem(ContainedSoul, "ContainedSoul");
+                        sb.AppendItem(ContainedSoul, "ContainedSoul");
                     }
                     if (printMask?.MaximumCapacity ?? true)
                     {
-                        fg.AppendItem(MaximumCapacity, "MaximumCapacity");
+                        sb.AppendItem(MaximumCapacity, "MaximumCapacity");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -481,43 +478,44 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(Script, "Script");
-                Data?.ToString(fg);
-                fg.AppendItem(ContainedSoul, "ContainedSoul");
-                fg.AppendItem(MaximumCapacity, "MaximumCapacity");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(ContainedSoul, "ContainedSoul");
+                }
+                {
+                    sb.AppendItem(MaximumCapacity, "MaximumCapacity");
+                }
             }
             #endregion
 
@@ -601,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoulGem_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoulGemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoulGemCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemSetterCommon.Instance.RemapLinks(this, mapping);
         public SoulGem(FormKey formKey)
         {
@@ -662,7 +660,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoulGemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -672,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static SoulGem CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoulGem();
             ((SoulGemSetterCommon)((ISoulGemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -687,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoulGem item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -697,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -799,26 +797,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISoulGemGetter item,
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).ToString(
+            return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISoulGemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
-            ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).ToString(
+            ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -913,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISoulGemInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoulGemSetterCommon)((ISoulGemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -928,10 +926,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SoulGem_FieldIndex
+    internal enum SoulGem_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -949,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SoulGem_Registration : ILoquiRegistration
+    internal partial class SoulGem_Registration : ILoquiRegistration
     {
         public static readonly SoulGem_Registration Instance = new SoulGem_Registration();
 
@@ -991,6 +989,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SLGM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.SLGM);
+            var all = RecordCollection.Factory(
+                RecordTypes.SLGM,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.ICON,
+                RecordTypes.SCRI,
+                RecordTypes.DATA,
+                RecordTypes.SOUL,
+                RecordTypes.SLCP);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1024,7 +1037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SoulGemSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class SoulGemSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly SoulGemSetterCommon Instance = new SoulGemSetterCommon();
 
@@ -1066,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ISoulGemInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISoulGemInternal>(
                 record: item,
@@ -1079,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoulGem)item,
@@ -1090,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoulGem)item,
@@ -1101,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoulGemCommon : OblivionMajorRecordCommon
+    internal partial class SoulGemCommon : OblivionMajorRecordCommon
     {
         public new static readonly SoulGemCommon Instance = new SoulGemCommon();
 
@@ -1125,7 +1138,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoulGem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
@@ -1144,87 +1156,85 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISoulGemGetter item,
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISoulGemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoulGem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoulGem =>");
+                sb.AppendLine($"SoulGem =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoulGem) =>");
+                sb.AppendLine($"{name} (SoulGem) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoulGemGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoulGem.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.ContainedSoul ?? true)
                 && item.ContainedSoul is {} ContainedSoulItem)
             {
-                fg.AppendItem(ContainedSoulItem, "ContainedSoul");
+                sb.AppendItem(ContainedSoulItem, "ContainedSoul");
             }
             if ((printMask?.MaximumCapacity ?? true)
                 && item.MaximumCapacity is {} MaximumCapacityItem)
             {
-                fg.AppendItem(MaximumCapacityItem, "MaximumCapacity");
+                sb.AppendItem(MaximumCapacityItem, "MaximumCapacity");
             }
         }
         
@@ -1384,15 +1394,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoulGemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoulGemGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
             yield break;
         }
@@ -1435,7 +1445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SoulGemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class SoulGemSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly SoulGemSetterTranslationCommon Instance = new SoulGemSetterTranslationCommon();
 
@@ -1662,7 +1672,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -1680,18 +1690,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SoulGemBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoulGemBinaryWriteTranslation Instance = new SoulGemBinaryWriteTranslation();
+        public new static readonly SoulGemBinaryWriteTranslation Instance = new SoulGemBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISoulGemGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1740,7 +1750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ISoulGemGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1751,12 +1761,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1768,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoulGemGetter)item,
@@ -1779,7 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoulGemGetter)item,
@@ -1790,7 +1803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoulGemGetter)item,
@@ -1800,9 +1813,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SoulGemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class SoulGemBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
+        public new static readonly SoulGemBinaryCreateTranslation Instance = new SoulGemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SLGM;
         public static void FillBinaryStructs(
@@ -1821,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1838,7 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)SoulGem_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -1883,7 +1896,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1900,16 +1914,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SoulGemBinaryOverlay :
+    internal partial class SoulGemBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ISoulGemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
-        public new static SoulGem_Registration StaticRegistration => SoulGem_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoulGem_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoulGemCommon.Instance;
         [DebuggerStepThrough]
@@ -1917,14 +1931,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoulGemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoulGemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoulGemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoulGemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1936,7 +1950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -1945,23 +1959,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public ISoulGemDataGetter? Data => _DataLocation.HasValue ? SoulGemDataBinaryOverlay.SoulGemDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public ISoulGemDataGetter? Data => _DataLocation.HasValue ? SoulGemDataBinaryOverlay.SoulGemDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_data, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
+        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
-        public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
+        public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1970,28 +1984,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected SoulGemBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SoulGemBinaryOverlay SoulGemFactory(
+        public static ISoulGemGetter SoulGemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoulGemBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2001,20 +2018,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static SoulGemBinaryOverlay SoulGemFactory(
+        public static ISoulGemGetter SoulGemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoulGemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2024,9 +2041,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2039,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)SoulGem_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
@@ -2074,17 +2091,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoulGemMixIn.ToString(
+            SoulGemMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

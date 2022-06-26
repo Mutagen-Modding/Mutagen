@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class ScenePhaseFragment
 {
-    public partial class ScenePhaseFragment
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            OnStart = 0x01,
-            OnCompletion = 0x02,
-        }
+        OnStart = 0x01,
+        OnCompletion = 0x02,
     }
 }

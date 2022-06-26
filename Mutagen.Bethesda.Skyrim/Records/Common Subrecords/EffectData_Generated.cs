@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,12 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EffectDataMixIn.ToString(
+            EffectDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -186,38 +189,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(EffectData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(EffectData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EffectData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, EffectData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(EffectData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EffectData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Magnitude ?? true)
                     {
-                        fg.AppendItem(Magnitude, "Magnitude");
+                        sb.AppendItem(Magnitude, "Magnitude");
                     }
                     if (printMask?.Area ?? true)
                     {
-                        fg.AppendItem(Area, "Area");
+                        sb.AppendItem(Area, "Area");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -312,38 +310,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Magnitude, "Magnitude");
-                fg.AppendItem(Area, "Area");
-                fg.AppendItem(Duration, "Duration");
+                {
+                    sb.AppendItem(Magnitude, "Magnitude");
+                }
+                {
+                    sb.AppendItem(Area, "Area");
+                }
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
             }
             #endregion
 
@@ -421,10 +416,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = EffectData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectDataBinaryWriteTranslation.Instance;
@@ -432,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -442,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static EffectData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EffectData();
             ((EffectDataSetterCommon)((IEffectDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -457,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EffectData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -467,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -531,26 +522,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IEffectDataGetter item,
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
-            return ((EffectDataCommon)((IEffectDataGetter)item).CommonInstance()!).ToString(
+            return ((EffectDataCommon)((IEffectDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
-            ((EffectDataCommon)((IEffectDataGetter)item).CommonInstance()!).ToString(
+            ((EffectDataCommon)((IEffectDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -656,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEffectData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EffectDataSetterCommon)((IEffectDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -671,10 +662,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum EffectData_FieldIndex
+    internal enum EffectData_FieldIndex
     {
         Magnitude = 0,
         Area = 1,
@@ -683,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class EffectData_Registration : ILoquiRegistration
+    internal partial class EffectData_Registration : ILoquiRegistration
     {
         public static readonly EffectData_Registration Instance = new EffectData_Registration();
 
@@ -725,6 +716,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.EFIT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.EFIT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(EffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -758,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EffectDataSetterCommon
+    internal partial class EffectDataSetterCommon
     {
         public static readonly EffectDataSetterCommon Instance = new EffectDataSetterCommon();
 
@@ -783,12 +780,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IEffectData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.EFIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EffectDataCommon
+    internal partial class EffectDataCommon
     {
         public static readonly EffectDataCommon Instance = new EffectDataCommon();
 
@@ -823,67 +820,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EffectData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Magnitude = item.Magnitude.EqualsWithin(rhs.Magnitude);
             ret.Area = item.Area == rhs.Area;
             ret.Duration = item.Duration == rhs.Duration;
         }
         
-        public string ToString(
+        public string Print(
             IEffectDataGetter item,
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EffectData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EffectData =>");
+                sb.AppendLine($"EffectData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EffectData) =>");
+                sb.AppendLine($"{name} (EffectData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EffectData.Mask<bool>? printMask = null)
         {
             if (printMask?.Magnitude ?? true)
             {
-                fg.AppendItem(item.Magnitude, "Magnitude");
+                sb.AppendItem(item.Magnitude, "Magnitude");
             }
             if (printMask?.Area ?? true)
             {
-                fg.AppendItem(item.Area, "Area");
+                sb.AppendItem(item.Area, "Area");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendItem(item.Duration, "Duration");
+                sb.AppendItem(item.Duration, "Duration");
             }
         }
         
@@ -927,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEffectDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectDataGetter obj)
         {
             yield break;
         }
@@ -935,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EffectDataSetterTranslationCommon
+    internal partial class EffectDataSetterTranslationCommon
     {
         public static readonly EffectDataSetterTranslationCommon Instance = new EffectDataSetterTranslationCommon();
 
@@ -1021,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectData_Registration.Instance;
-        public static EffectData_Registration StaticRegistration => EffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1045,11 +1039,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EffectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EffectDataBinaryWriteTranslation Instance = new EffectDataBinaryWriteTranslation();
+        public static readonly EffectDataBinaryWriteTranslation Instance = new EffectDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEffectDataGetter item,
@@ -1065,12 +1059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IEffectDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.EFIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1082,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEffectDataGetter)item,
@@ -1092,9 +1086,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EffectDataBinaryCreateTranslation
+    internal partial class EffectDataBinaryCreateTranslation
     {
-        public readonly static EffectDataBinaryCreateTranslation Instance = new EffectDataBinaryCreateTranslation();
+        public static readonly EffectDataBinaryCreateTranslation Instance = new EffectDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEffectData item,
@@ -1116,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IEffectDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1129,16 +1123,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EffectDataBinaryOverlay :
+    internal partial class EffectDataBinaryOverlay :
         PluginBinaryOverlay,
         IEffectDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectData_Registration.Instance;
-        public static EffectData_Registration StaticRegistration => EffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1152,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectDataBinaryWriteTranslation.Instance;
@@ -1160,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EffectDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1168,9 +1162,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single Magnitude => _data.Slice(0x0, 0x4).Float();
-        public Int32 Area => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Single Magnitude => _structData.Slice(0x0, 0x4).Float();
+        public Int32 Area => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1178,25 +1172,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected EffectDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static EffectDataBinaryOverlay EffectDataFactory(
+        public static IEffectDataGetter EffectDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EffectDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1205,25 +1204,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static EffectDataBinaryOverlay EffectDataFactory(
+        public static IEffectDataGetter EffectDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return EffectDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EffectDataMixIn.ToString(
+            EffectDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

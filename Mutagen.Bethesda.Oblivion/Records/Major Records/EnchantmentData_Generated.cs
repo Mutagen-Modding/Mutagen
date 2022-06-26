@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EnchantmentDataMixIn.ToString(
+            EnchantmentDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(EnchantmentData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(EnchantmentData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EnchantmentData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, EnchantmentData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(EnchantmentData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EnchantmentData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.ChargeAmount ?? true)
                     {
-                        fg.AppendItem(ChargeAmount, "ChargeAmount");
+                        sb.AppendItem(ChargeAmount, "ChargeAmount");
                     }
                     if (printMask?.EnchantCost ?? true)
                     {
-                        fg.AppendItem(EnchantCost, "EnchantCost");
+                        sb.AppendItem(EnchantCost, "EnchantCost");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(ChargeAmount, "ChargeAmount");
-                fg.AppendItem(EnchantCost, "EnchantCost");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(ChargeAmount, "ChargeAmount");
+                }
+                {
+                    sb.AppendItem(EnchantCost, "EnchantCost");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -452,10 +449,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = EnchantmentData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EnchantmentDataBinaryWriteTranslation.Instance;
@@ -463,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -473,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static EnchantmentData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EnchantmentData();
             ((EnchantmentDataSetterCommon)((IEnchantmentDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -488,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EnchantmentData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -498,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,26 +557,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IEnchantmentDataGetter item,
             string? name = null,
             EnchantmentData.Mask<bool>? printMask = null)
         {
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).ToString(
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IEnchantmentDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EnchantmentData.Mask<bool>? printMask = null)
         {
-            ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).ToString(
+            ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -689,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IEnchantmentData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EnchantmentDataSetterCommon)((IEnchantmentDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -704,10 +697,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum EnchantmentData_FieldIndex
+    internal enum EnchantmentData_FieldIndex
     {
         Type = 0,
         ChargeAmount = 1,
@@ -717,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class EnchantmentData_Registration : ILoquiRegistration
+    internal partial class EnchantmentData_Registration : ILoquiRegistration
     {
         public static readonly EnchantmentData_Registration Instance = new EnchantmentData_Registration();
 
@@ -759,6 +752,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ENIT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.ENIT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(EnchantmentDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -792,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class EnchantmentDataSetterCommon
+    internal partial class EnchantmentDataSetterCommon
     {
         public static readonly EnchantmentDataSetterCommon Instance = new EnchantmentDataSetterCommon();
 
@@ -818,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IEnchantmentData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ENIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnchantmentDataCommon
+    internal partial class EnchantmentDataCommon
     {
         public static readonly EnchantmentDataCommon Instance = new EnchantmentDataCommon();
 
@@ -858,72 +857,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EnchantmentData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
             ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IEnchantmentDataGetter item,
             string? name = null,
             EnchantmentData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IEnchantmentDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EnchantmentData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EnchantmentData =>");
+                sb.AppendLine($"EnchantmentData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EnchantmentData) =>");
+                sb.AppendLine($"{name} (EnchantmentData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEnchantmentDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EnchantmentData.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.ChargeAmount ?? true)
             {
-                fg.AppendItem(item.ChargeAmount, "ChargeAmount");
+                sb.AppendItem(item.ChargeAmount, "ChargeAmount");
             }
             if (printMask?.EnchantCost ?? true)
             {
-                fg.AppendItem(item.EnchantCost, "EnchantCost");
+                sb.AppendItem(item.EnchantCost, "EnchantCost");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -972,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEnchantmentDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEnchantmentDataGetter obj)
         {
             yield break;
         }
@@ -980,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class EnchantmentDataSetterTranslationCommon
+    internal partial class EnchantmentDataSetterTranslationCommon
     {
         public static readonly EnchantmentDataSetterTranslationCommon Instance = new EnchantmentDataSetterTranslationCommon();
 
@@ -1070,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,11 +1090,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class EnchantmentDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EnchantmentDataBinaryWriteTranslation Instance = new EnchantmentDataBinaryWriteTranslation();
+        public static readonly EnchantmentDataBinaryWriteTranslation Instance = new EnchantmentDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEnchantmentDataGetter item,
@@ -1119,12 +1115,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IEnchantmentDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ENIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1136,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEnchantmentDataGetter)item,
@@ -1146,9 +1142,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class EnchantmentDataBinaryCreateTranslation
+    internal partial class EnchantmentDataBinaryCreateTranslation
     {
-        public readonly static EnchantmentDataBinaryCreateTranslation Instance = new EnchantmentDataBinaryCreateTranslation();
+        public static readonly EnchantmentDataBinaryCreateTranslation Instance = new EnchantmentDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEnchantmentData item,
@@ -1175,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IEnchantmentDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1188,16 +1184,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EnchantmentDataBinaryOverlay :
+    internal partial class EnchantmentDataBinaryOverlay :
         PluginBinaryOverlay,
         IEnchantmentDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EnchantmentData_Registration.Instance;
-        public static EnchantmentData_Registration StaticRegistration => EnchantmentData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnchantmentData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EnchantmentDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1211,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EnchantmentDataBinaryWriteTranslation.Instance;
@@ -1219,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EnchantmentDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1227,10 +1223,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Enchantment.EnchantmentType Type => (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public UInt32 ChargeAmount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public UInt32 EnchantCost => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public Enchantment.Flag Flags => (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public Enchantment.EnchantmentType Type => (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public UInt32 ChargeAmount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public UInt32 EnchantCost => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Enchantment.Flag Flags => (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1238,25 +1234,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected EnchantmentDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static EnchantmentDataBinaryOverlay EnchantmentDataFactory(
+        public static IEnchantmentDataGetter EnchantmentDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EnchantmentDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1265,25 +1266,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static EnchantmentDataBinaryOverlay EnchantmentDataFactory(
+        public static IEnchantmentDataGetter EnchantmentDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return EnchantmentDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EnchantmentDataMixIn.ToString(
+            EnchantmentDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

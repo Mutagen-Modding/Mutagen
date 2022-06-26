@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -141,12 +142,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MessageMixIn.ToString(
+            MessageMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -332,9 +334,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, MessageButton.Mask<R>?>>();
                         obj.MenuButtons.Specific = l;
-                        foreach (var item in MenuButtons.Specific.WithIndex())
+                        foreach (var item in MenuButtons.Specific)
                         {
-                            MaskItemIndexed<R, MessageButton.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MessageButton.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MessageButton.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MessageButton.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -344,73 +346,64 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Message.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Message.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Message.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Message.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Message.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Message.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.INAM ?? true)
                     {
-                        fg.AppendItem(INAM, "INAM");
+                        sb.AppendItem(INAM, "INAM");
                     }
                     if (printMask?.Quest ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        sb.AppendItem(Quest, "Quest");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.DisplayTime ?? true)
                     {
-                        fg.AppendItem(DisplayTime, "DisplayTime");
+                        sb.AppendItem(DisplayTime, "DisplayTime");
                     }
                     if ((printMask?.MenuButtons?.Overall ?? true)
                         && MenuButtons is {} MenuButtonsItem)
                     {
-                        fg.AppendLine("MenuButtons =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MenuButtons =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MenuButtonsItem.Overall);
+                            sb.AppendItem(MenuButtonsItem.Overall);
                             if (MenuButtonsItem.Specific != null)
                             {
                                 foreach (var subItem in MenuButtonsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -534,63 +527,62 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Description, "Description");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(INAM, "INAM");
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(DisplayTime, "DisplayTime");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(INAM, "INAM");
+                }
+                {
+                    sb.AppendItem(Quest, "Quest");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(DisplayTime, "DisplayTime");
+                }
                 if (MenuButtons is {} MenuButtonsItem)
                 {
-                    fg.AppendLine("MenuButtons =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MenuButtons =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MenuButtonsItem.Overall);
+                        sb.AppendItem(MenuButtonsItem.Overall);
                         if (MenuButtonsItem.Specific != null)
                         {
                             foreach (var subItem in MenuButtonsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -676,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Message_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MessageCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MessageCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageSetterCommon.Instance.RemapLinks(this, mapping);
         public Message(
             FormKey formKey,
@@ -754,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -764,7 +756,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Message CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Message();
             ((MessageSetterCommon)((IMessageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -779,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Message item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -789,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -883,26 +875,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMessageGetter item,
             string? name = null,
             Message.Mask<bool>? printMask = null)
         {
-            return ((MessageCommon)((IMessageGetter)item).CommonInstance()!).ToString(
+            return ((MessageCommon)((IMessageGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMessageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Message.Mask<bool>? printMask = null)
         {
-            ((MessageCommon)((IMessageGetter)item).CommonInstance()!).ToString(
+            ((MessageCommon)((IMessageGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -997,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMessageInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MessageSetterCommon)((IMessageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1012,10 +1004,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Message_FieldIndex
+    internal enum Message_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1034,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Message_Registration : ILoquiRegistration
+    internal partial class Message_Registration : ILoquiRegistration
     {
         public static readonly Message_Registration Instance = new Message_Registration();
 
@@ -1076,6 +1068,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MESG;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MESG);
+            var all = RecordCollection.Factory(
+                RecordTypes.MESG,
+                RecordTypes.DESC,
+                RecordTypes.FULL,
+                RecordTypes.INAM,
+                RecordTypes.QNAM,
+                RecordTypes.DNAM,
+                RecordTypes.TNAM,
+                RecordTypes.ITXT,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MessageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1109,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MessageSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MessageSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MessageSetterCommon Instance = new MessageSetterCommon();
 
@@ -1152,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IMessageInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMessageInternal>(
                 record: item,
@@ -1165,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Message)item,
@@ -1176,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Message)item,
@@ -1187,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MessageCommon : SkyrimMajorRecordCommon
+    internal partial class MessageCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MessageCommon Instance = new MessageCommon();
 
@@ -1211,7 +1221,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.INAM = MemoryExtensions.SequenceEqual(item.INAM.Span, rhs.INAM.Span);
@@ -1225,97 +1234,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IMessageGetter item,
             string? name = null,
             Message.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMessageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Message.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Message =>");
+                sb.AppendLine($"Message =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Message) =>");
+                sb.AppendLine($"{name} (Message) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMessageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Message.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.INAM ?? true)
             {
-                fg.AppendLine($"INAM => {SpanExt.ToHexString(item.INAM)}");
+                sb.AppendLine($"INAM => {SpanExt.ToHexString(item.INAM)}");
             }
             if (printMask?.Quest ?? true)
             {
-                fg.AppendItem(item.Quest.FormKeyNullable, "Quest");
+                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.DisplayTime ?? true)
                 && item.DisplayTime is {} DisplayTimeItem)
             {
-                fg.AppendItem(DisplayTimeItem, "DisplayTime");
+                sb.AppendItem(DisplayTimeItem, "DisplayTime");
             }
             if (printMask?.MenuButtons?.Overall ?? true)
             {
-                fg.AppendLine("MenuButtons =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MenuButtons =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.MenuButtons)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1391,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
             {
-                if (!lhs.MenuButtons.SequenceEqualNullable(rhs.MenuButtons)) return false;
+                if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons, (l, r) => ((MessageButtonCommon)((IMessageButtonGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Message_FieldIndex.MenuButtons)))) return false;
             }
             return true;
         }
@@ -1457,18 +1460,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMessageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMessageGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Quest.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Quest);
+                yield return QuestInfo;
             }
             foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1513,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MessageSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MessageSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MessageSetterTranslationCommon Instance = new MessageSetterTranslationCommon();
 
@@ -1716,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]
@@ -1734,18 +1737,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MessageBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MessageBinaryWriteTranslation Instance = new MessageBinaryWriteTranslation();
+        public new static readonly MessageBinaryWriteTranslation Instance = new MessageBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMessageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1783,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMessageButtonGetter>.Instance.Write(
                 writer: writer,
                 items: item.MenuButtons,
-                transl: (MutagenWriter subWriter, IMessageButtonGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IMessageButtonGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((MessageButtonBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1796,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IMessageGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1807,12 +1810,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1824,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMessageGetter)item,
@@ -1835,7 +1841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMessageGetter)item,
@@ -1846,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMessageGetter)item,
@@ -1856,9 +1862,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MessageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MessageBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
+        public new static readonly MessageBinaryCreateTranslation Instance = new MessageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MESG;
         public static void FillBinaryStructs(
@@ -1877,7 +1883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1932,7 +1938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuButtons.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MessageButton>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MessageButton_Registration.TriggeringRecordTypes,
+                            triggeringRecord: MessageButton_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: MessageButton.TryCreateFromBinary));
                     return (int)Message_FieldIndex.MenuButtons;
@@ -1944,7 +1950,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1961,16 +1968,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MessageBinaryOverlay :
+    internal partial class MessageBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMessageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Message_Registration.Instance;
-        public new static Message_Registration StaticRegistration => Message_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Message_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MessageCommon.Instance;
         [DebuggerStepThrough]
@@ -1978,14 +1985,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MessageCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MessageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MessageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1997,11 +2004,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2013,21 +2020,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INAMLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
+        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Message.Flag Flags => _FlagsLocation.HasValue ? (Message.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Message.Flag);
+        public Message.Flag Flags => _FlagsLocation.HasValue ? (Message.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Message.Flag);
         #endregion
         #region DisplayTime
         private int? _DisplayTimeLocation;
-        public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = ListExt.Empty<MessageButtonBinaryOverlay>();
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = Array.Empty<IMessageButtonGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2035,28 +2042,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected MessageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MessageBinaryOverlay MessageFactory(
+        public static IMessageGetter MessageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MessageBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2066,20 +2076,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MessageBinaryOverlay MessageFactory(
+        public static IMessageGetter MessageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MessageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2089,9 +2099,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DESC:
@@ -2127,10 +2137,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ITXT:
                 case RecordTypeInts.CTDA:
                 {
-                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<MessageButtonBinaryOverlay>(
+                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<IMessageButtonGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: MessageButton_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: MessageButton_Registration.TriggerSpecs,
                         factory: MessageButtonBinaryOverlay.MessageButtonFactory);
                     return (int)Message_FieldIndex.MenuButtons;
                 }
@@ -2141,17 +2151,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MessageMixIn.ToString(
+            MessageMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

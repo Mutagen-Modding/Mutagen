@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public enum Level
 {
-    public enum Level
-    {
-        Easy,
-        Medium,
-        Hard,
-        VeryHard
-    }
+    Easy,
+    Medium,
+    Hard,
+    VeryHard
 }

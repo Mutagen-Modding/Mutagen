@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+	<TargetFramework>net6.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <PackageId>Mutagen.Bethesda.Json</PackageId>
     <Authors>Noggog</Authors>
@@ -33,5 +33,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.json&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
+  </Target>
 
 </Project>

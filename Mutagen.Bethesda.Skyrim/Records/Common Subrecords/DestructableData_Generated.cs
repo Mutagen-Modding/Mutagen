@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DestructableDataMixIn.ToString(
+            DestructableDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DestructableData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DestructableData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DestructableData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DestructableData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DestructableData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DestructableData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.DESTCount ?? true)
                     {
-                        fg.AppendItem(DESTCount, "DESTCount");
+                        sb.AppendItem(DESTCount, "DESTCount");
                     }
                     if (printMask?.VATSTargetable ?? true)
                     {
-                        fg.AppendItem(VATSTargetable, "VATSTargetable");
+                        sb.AppendItem(VATSTargetable, "VATSTargetable");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(DESTCount, "DESTCount");
-                fg.AppendItem(VATSTargetable, "VATSTargetable");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(DESTCount, "DESTCount");
+                }
+                {
+                    sb.AppendItem(VATSTargetable, "VATSTargetable");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -452,10 +449,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = DestructableData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructableDataBinaryWriteTranslation.Instance;
@@ -463,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructableDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -473,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DestructableData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructableData();
             ((DestructableDataSetterCommon)((IDestructableDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -488,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DestructableData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -498,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,26 +557,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDestructableDataGetter item,
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
-            return ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).ToString(
+            return ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDestructableDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
-            ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).ToString(
+            ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -689,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDestructableData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DestructableDataSetterCommon)((IDestructableDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -704,10 +697,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DestructableData_FieldIndex
+    internal enum DestructableData_FieldIndex
     {
         Health = 0,
         DESTCount = 1,
@@ -717,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DestructableData_Registration : ILoquiRegistration
+    internal partial class DestructableData_Registration : ILoquiRegistration
     {
         public static readonly DestructableData_Registration Instance = new DestructableData_Registration();
 
@@ -759,6 +752,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DEST;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DEST);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DestructableDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -792,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DestructableDataSetterCommon
+    internal partial class DestructableDataSetterCommon
     {
         public static readonly DestructableDataSetterCommon Instance = new DestructableDataSetterCommon();
 
@@ -818,12 +817,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IDestructableData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DEST),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DestructableDataCommon
+    internal partial class DestructableDataCommon
     {
         public static readonly DestructableDataCommon Instance = new DestructableDataCommon();
 
@@ -858,72 +857,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DestructableData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Health = item.Health == rhs.Health;
             ret.DESTCount = item.DESTCount == rhs.DESTCount;
             ret.VATSTargetable = item.VATSTargetable == rhs.VATSTargetable;
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
-        public string ToString(
+        public string Print(
             IDestructableDataGetter item,
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDestructableDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DestructableData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DestructableData =>");
+                sb.AppendLine($"DestructableData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DestructableData) =>");
+                sb.AppendLine($"{name} (DestructableData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDestructableDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DestructableData.Mask<bool>? printMask = null)
         {
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.DESTCount ?? true)
             {
-                fg.AppendItem(item.DESTCount, "DESTCount");
+                sb.AppendItem(item.DESTCount, "DESTCount");
             }
             if (printMask?.VATSTargetable ?? true)
             {
-                fg.AppendItem(item.VATSTargetable, "VATSTargetable");
+                sb.AppendItem(item.VATSTargetable, "VATSTargetable");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -972,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDestructableDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDestructableDataGetter obj)
         {
             yield break;
         }
@@ -980,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DestructableDataSetterTranslationCommon
+    internal partial class DestructableDataSetterTranslationCommon
     {
         public static readonly DestructableDataSetterTranslationCommon Instance = new DestructableDataSetterTranslationCommon();
 
@@ -1070,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructableData_Registration.Instance;
-        public static DestructableData_Registration StaticRegistration => DestructableData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructableDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,11 +1090,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DestructableDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DestructableDataBinaryWriteTranslation Instance = new DestructableDataBinaryWriteTranslation();
+        public static readonly DestructableDataBinaryWriteTranslation Instance = new DestructableDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDestructableDataGetter item,
@@ -1113,12 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IDestructableDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DEST),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1130,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDestructableDataGetter)item,
@@ -1140,9 +1136,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DestructableDataBinaryCreateTranslation
+    internal partial class DestructableDataBinaryCreateTranslation
     {
-        public readonly static DestructableDataBinaryCreateTranslation Instance = new DestructableDataBinaryCreateTranslation();
+        public static readonly DestructableDataBinaryCreateTranslation Instance = new DestructableDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDestructableData item,
@@ -1165,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDestructableDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructableDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1178,16 +1174,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DestructableDataBinaryOverlay :
+    internal partial class DestructableDataBinaryOverlay :
         PluginBinaryOverlay,
         IDestructableDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructableData_Registration.Instance;
-        public static DestructableData_Registration StaticRegistration => DestructableData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructableData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructableDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructableDataBinaryWriteTranslation.Instance;
@@ -1209,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructableDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1217,10 +1213,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Int32 Health => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public Byte DESTCount => _data.Span[0x4];
-        public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] == 1;
-        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public Int32 Health => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public Byte DESTCount => _structData.Span[0x4];
+        public Boolean VATSTargetable => _structData.Slice(0x5, 0x1)[0] >= 1;
+        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1228,25 +1224,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected DestructableDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DestructableDataBinaryOverlay DestructableDataFactory(
+        public static IDestructableDataGetter DestructableDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DestructableDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1255,25 +1256,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static DestructableDataBinaryOverlay DestructableDataFactory(
+        public static IDestructableDataGetter DestructableDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DestructableDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DestructableDataMixIn.ToString(
+            DestructableDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

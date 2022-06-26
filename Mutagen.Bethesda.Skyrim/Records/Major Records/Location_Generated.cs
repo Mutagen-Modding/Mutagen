@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,17 +27,16 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -400,12 +401,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationMixIn.ToString(
+            LocationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1069,9 +1071,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
                         obj.ActorCellPersistentReferences.Specific = l;
-                        foreach (var item in ActorCellPersistentReferences.Specific.WithIndex())
+                        foreach (var item in ActorCellPersistentReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1084,9 +1086,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
                         obj.LocationCellPersistentReferences.Specific = l;
-                        foreach (var item in LocationCellPersistentReferences.Specific.WithIndex())
+                        foreach (var item in LocationCellPersistentReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1099,9 +1101,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ReferenceCellPersistentReferences.Specific = l;
-                        foreach (var item in ReferenceCellPersistentReferences.Specific.WithIndex())
+                        foreach (var item in ReferenceCellPersistentReferences.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1113,9 +1115,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
                         obj.ActorCellUniques.Specific = l;
-                        foreach (var item in ActorCellUniques.Specific.WithIndex())
+                        foreach (var item in ActorCellUniques.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1128,9 +1130,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
                         obj.LocationCellUniques.Specific = l;
-                        foreach (var item in LocationCellUniques.Specific.WithIndex())
+                        foreach (var item in LocationCellUniques.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1143,9 +1145,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ReferenceCellUnique.Specific = l;
-                        foreach (var item in ReferenceCellUnique.Specific.WithIndex())
+                        foreach (var item in ReferenceCellUnique.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1157,9 +1159,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
                         obj.ActorCellStaticReferences.Specific = l;
-                        foreach (var item in ActorCellStaticReferences.Specific.WithIndex())
+                        foreach (var item in ActorCellStaticReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1172,9 +1174,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
                         obj.LocationCellStaticReferences.Specific = l;
-                        foreach (var item in LocationCellStaticReferences.Specific.WithIndex())
+                        foreach (var item in LocationCellStaticReferences.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1187,9 +1189,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ReferenceCellStaticReferences.Specific = l;
-                        foreach (var item in ReferenceCellStaticReferences.Specific.WithIndex())
+                        foreach (var item in ReferenceCellStaticReferences.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1201,9 +1203,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
                         obj.ActorCellEncounterCell.Specific = l;
-                        foreach (var item in ActorCellEncounterCell.Specific.WithIndex())
+                        foreach (var item in ActorCellEncounterCell.Specific)
                         {
-                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1216,9 +1218,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
                         obj.LocationCellEncounterCell.Specific = l;
-                        foreach (var item in LocationCellEncounterCell.Specific.WithIndex())
+                        foreach (var item in LocationCellEncounterCell.Specific)
                         {
-                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1231,9 +1233,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
                         obj.ReferenceCellEncounterCell.Specific = l;
-                        foreach (var item in ReferenceCellEncounterCell.Specific.WithIndex())
+                        foreach (var item in ReferenceCellEncounterCell.Specific)
                         {
-                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1246,9 +1248,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ActorCellMarkerReference.Specific = l;
-                        foreach (var item in ActorCellMarkerReference.Specific.WithIndex())
+                        foreach (var item in ActorCellMarkerReference.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1260,9 +1262,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.LocationCellMarkerReference.Specific = l;
-                        foreach (var item in LocationCellMarkerReference.Specific.WithIndex())
+                        foreach (var item in LocationCellMarkerReference.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1274,9 +1276,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
                         obj.ActorCellEnablePoint.Specific = l;
-                        foreach (var item in ActorCellEnablePoint.Specific.WithIndex())
+                        foreach (var item in ActorCellEnablePoint.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1289,9 +1291,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
                         obj.LocationCellEnablePoint.Specific = l;
-                        foreach (var item in LocationCellEnablePoint.Specific.WithIndex())
+                        foreach (var item in LocationCellEnablePoint.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1305,9 +1307,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1323,449 +1325,388 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Location.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Location.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Location.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Location.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
                         && ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("ActorCellPersistentReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellPersistentReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorCellPersistentReferencesItem.Overall);
+                            sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
                             if (ActorCellPersistentReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
                         && LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("LocationCellPersistentReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellPersistentReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationCellPersistentReferencesItem.Overall);
+                            sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
                             if (LocationCellPersistentReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
                         && ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("ReferenceCellPersistentReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellPersistentReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
+                            sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
                             if (ReferenceCellPersistentReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellUniques?.Overall ?? true)
                         && ActorCellUniques is {} ActorCellUniquesItem)
                     {
-                        fg.AppendLine("ActorCellUniques =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellUniques =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorCellUniquesItem.Overall);
+                            sb.AppendItem(ActorCellUniquesItem.Overall);
                             if (ActorCellUniquesItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellUniquesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellUniques?.Overall ?? true)
                         && LocationCellUniques is {} LocationCellUniquesItem)
                     {
-                        fg.AppendLine("LocationCellUniques =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellUniques =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationCellUniquesItem.Overall);
+                            sb.AppendItem(LocationCellUniquesItem.Overall);
                             if (LocationCellUniquesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellUniquesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellUnique?.Overall ?? true)
                         && ReferenceCellUnique is {} ReferenceCellUniqueItem)
                     {
-                        fg.AppendLine("ReferenceCellUnique =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellUnique =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ReferenceCellUniqueItem.Overall);
+                            sb.AppendItem(ReferenceCellUniqueItem.Overall);
                             if (ReferenceCellUniqueItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellUniqueItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
                         && ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
                     {
-                        fg.AppendLine("ActorCellStaticReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellStaticReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorCellStaticReferencesItem.Overall);
+                            sb.AppendItem(ActorCellStaticReferencesItem.Overall);
                             if (ActorCellStaticReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellStaticReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
                         && LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
                     {
-                        fg.AppendLine("LocationCellStaticReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellStaticReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationCellStaticReferencesItem.Overall);
+                            sb.AppendItem(LocationCellStaticReferencesItem.Overall);
                             if (LocationCellStaticReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellStaticReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
                         && ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
                     {
-                        fg.AppendLine("ReferenceCellStaticReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellStaticReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ReferenceCellStaticReferencesItem.Overall);
+                            sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
                             if (ReferenceCellStaticReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellEncounterCell?.Overall ?? true)
                         && ActorCellEncounterCell is {} ActorCellEncounterCellItem)
                     {
-                        fg.AppendLine("ActorCellEncounterCell =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellEncounterCell =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorCellEncounterCellItem.Overall);
+                            sb.AppendItem(ActorCellEncounterCellItem.Overall);
                             if (ActorCellEncounterCellItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellEncounterCellItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellEncounterCell?.Overall ?? true)
                         && LocationCellEncounterCell is {} LocationCellEncounterCellItem)
                     {
-                        fg.AppendLine("LocationCellEncounterCell =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellEncounterCell =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationCellEncounterCellItem.Overall);
+                            sb.AppendItem(LocationCellEncounterCellItem.Overall);
                             if (LocationCellEncounterCellItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellEncounterCellItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ReferenceCellEncounterCell?.Overall ?? true)
                         && ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
                     {
-                        fg.AppendLine("ReferenceCellEncounterCell =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ReferenceCellEncounterCell =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ReferenceCellEncounterCellItem.Overall);
+                            sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
                             if (ReferenceCellEncounterCellItem.Specific != null)
                             {
                                 foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
                         && ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("ActorCellMarkerReference =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellMarkerReference =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorCellMarkerReferenceItem.Overall);
+                            sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
                             if (ActorCellMarkerReferenceItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
                         && LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("LocationCellMarkerReference =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellMarkerReference =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationCellMarkerReferenceItem.Overall);
+                            sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
                             if (LocationCellMarkerReferenceItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
                         && ActorCellEnablePoint is {} ActorCellEnablePointItem)
                     {
-                        fg.AppendLine("ActorCellEnablePoint =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorCellEnablePoint =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorCellEnablePointItem.Overall);
+                            sb.AppendItem(ActorCellEnablePointItem.Overall);
                             if (ActorCellEnablePointItem.Specific != null)
                             {
                                 foreach (var subItem in ActorCellEnablePointItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
                         && LocationCellEnablePoint is {} LocationCellEnablePointItem)
                     {
-                        fg.AppendLine("LocationCellEnablePoint =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LocationCellEnablePoint =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LocationCellEnablePointItem.Overall);
+                            sb.AppendItem(LocationCellEnablePointItem.Overall);
                             if (LocationCellEnablePointItem.Specific != null)
                             {
                                 foreach (var subItem in LocationCellEnablePointItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.ParentLocation ?? true)
                     {
-                        fg.AppendItem(ParentLocation, "ParentLocation");
+                        sb.AppendItem(ParentLocation, "ParentLocation");
                     }
                     if (printMask?.Music ?? true)
                     {
-                        fg.AppendItem(Music, "Music");
+                        sb.AppendItem(Music, "Music");
                     }
                     if (printMask?.UnreportedCrimeFaction ?? true)
                     {
-                        fg.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
+                        sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
                     }
                     if (printMask?.WorldLocationMarkerRef ?? true)
                     {
-                        fg.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
+                        sb.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
                     }
                     if (printMask?.WorldLocationRadius ?? true)
                     {
-                        fg.AppendItem(WorldLocationRadius, "WorldLocationRadius");
+                        sb.AppendItem(WorldLocationRadius, "WorldLocationRadius");
                     }
                     if (printMask?.HorseMarkerRef ?? true)
                     {
-                        fg.AppendItem(HorseMarkerRef, "HorseMarkerRef");
+                        sb.AppendItem(HorseMarkerRef, "HorseMarkerRef");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -2069,418 +2010,369 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
                 if (ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
                 {
-                    fg.AppendLine("ActorCellPersistentReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellPersistentReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorCellPersistentReferencesItem.Overall);
+                        sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
                         if (ActorCellPersistentReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
                 {
-                    fg.AppendLine("LocationCellPersistentReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellPersistentReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationCellPersistentReferencesItem.Overall);
+                        sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
                         if (LocationCellPersistentReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
                 {
-                    fg.AppendLine("ReferenceCellPersistentReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellPersistentReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
+                        sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
                         if (ReferenceCellPersistentReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ActorCellUniques is {} ActorCellUniquesItem)
                 {
-                    fg.AppendLine("ActorCellUniques =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellUniques =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorCellUniquesItem.Overall);
+                        sb.AppendItem(ActorCellUniquesItem.Overall);
                         if (ActorCellUniquesItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellUniquesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LocationCellUniques is {} LocationCellUniquesItem)
                 {
-                    fg.AppendLine("LocationCellUniques =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellUniques =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationCellUniquesItem.Overall);
+                        sb.AppendItem(LocationCellUniquesItem.Overall);
                         if (LocationCellUniquesItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellUniquesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ReferenceCellUnique is {} ReferenceCellUniqueItem)
                 {
-                    fg.AppendLine("ReferenceCellUnique =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellUnique =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ReferenceCellUniqueItem.Overall);
+                        sb.AppendItem(ReferenceCellUniqueItem.Overall);
                         if (ReferenceCellUniqueItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellUniqueItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
                 {
-                    fg.AppendLine("ActorCellStaticReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellStaticReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorCellStaticReferencesItem.Overall);
+                        sb.AppendItem(ActorCellStaticReferencesItem.Overall);
                         if (ActorCellStaticReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellStaticReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
                 {
-                    fg.AppendLine("LocationCellStaticReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellStaticReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationCellStaticReferencesItem.Overall);
+                        sb.AppendItem(LocationCellStaticReferencesItem.Overall);
                         if (LocationCellStaticReferencesItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellStaticReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
                 {
-                    fg.AppendLine("ReferenceCellStaticReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellStaticReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ReferenceCellStaticReferencesItem.Overall);
+                        sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
                         if (ReferenceCellStaticReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ActorCellEncounterCell is {} ActorCellEncounterCellItem)
                 {
-                    fg.AppendLine("ActorCellEncounterCell =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellEncounterCell =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorCellEncounterCellItem.Overall);
+                        sb.AppendItem(ActorCellEncounterCellItem.Overall);
                         if (ActorCellEncounterCellItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellEncounterCellItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LocationCellEncounterCell is {} LocationCellEncounterCellItem)
                 {
-                    fg.AppendLine("LocationCellEncounterCell =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellEncounterCell =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationCellEncounterCellItem.Overall);
+                        sb.AppendItem(LocationCellEncounterCellItem.Overall);
                         if (LocationCellEncounterCellItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellEncounterCellItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
                 {
-                    fg.AppendLine("ReferenceCellEncounterCell =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ReferenceCellEncounterCell =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ReferenceCellEncounterCellItem.Overall);
+                        sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
                         if (ReferenceCellEncounterCellItem.Specific != null)
                         {
                             foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
                 {
-                    fg.AppendLine("ActorCellMarkerReference =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellMarkerReference =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorCellMarkerReferenceItem.Overall);
+                        sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
                         if (ActorCellMarkerReferenceItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
                 {
-                    fg.AppendLine("LocationCellMarkerReference =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellMarkerReference =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationCellMarkerReferenceItem.Overall);
+                        sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
                         if (LocationCellMarkerReferenceItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (ActorCellEnablePoint is {} ActorCellEnablePointItem)
                 {
-                    fg.AppendLine("ActorCellEnablePoint =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorCellEnablePoint =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorCellEnablePointItem.Overall);
+                        sb.AppendItem(ActorCellEnablePointItem.Overall);
                         if (ActorCellEnablePointItem.Specific != null)
                         {
                             foreach (var subItem in ActorCellEnablePointItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (LocationCellEnablePoint is {} LocationCellEnablePointItem)
                 {
-                    fg.AppendLine("LocationCellEnablePoint =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LocationCellEnablePoint =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LocationCellEnablePointItem.Overall);
+                        sb.AppendItem(LocationCellEnablePointItem.Overall);
                         if (LocationCellEnablePointItem.Specific != null)
                         {
                             foreach (var subItem in LocationCellEnablePointItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Name, "Name");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(ParentLocation, "ParentLocation");
-                fg.AppendItem(Music, "Music");
-                fg.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
-                fg.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
-                fg.AppendItem(WorldLocationRadius, "WorldLocationRadius");
-                fg.AppendItem(HorseMarkerRef, "HorseMarkerRef");
-                fg.AppendItem(Color, "Color");
+                {
+                    sb.AppendItem(ParentLocation, "ParentLocation");
+                }
+                {
+                    sb.AppendItem(Music, "Music");
+                }
+                {
+                    sb.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
+                }
+                {
+                    sb.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
+                }
+                {
+                    sb.AppendItem(WorldLocationRadius, "WorldLocationRadius");
+                }
+                {
+                    sb.AppendItem(HorseMarkerRef, "HorseMarkerRef");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
             }
             #endregion
 
@@ -2627,7 +2519,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationSetterCommon.Instance.RemapLinks(this, mapping);
         public Location(
             FormKey formKey,
@@ -2705,7 +2597,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2715,7 +2607,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Location CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Location();
             ((LocationSetterCommon)((ILocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2730,7 +2622,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Location item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2740,7 +2632,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -2882,26 +2774,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationGetter item,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
-            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).ToString(
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
-            ((LocationCommon)((ILocationGetter)item).CommonInstance()!).ToString(
+            ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2996,7 +2888,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -3011,10 +2903,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Location_FieldIndex
+    internal enum Location_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3051,7 +2943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Location_Registration : ILoquiRegistration
+    internal partial class Location_Registration : ILoquiRegistration
     {
         public static readonly Location_Registration Instance = new Location_Registration();
 
@@ -3093,6 +2985,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LCTN;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.LCTN);
+            var all = RecordCollection.Factory(
+                RecordTypes.LCTN,
+                RecordTypes.ACPR,
+                RecordTypes.LCPR,
+                RecordTypes.RCPR,
+                RecordTypes.ACUN,
+                RecordTypes.LCUN,
+                RecordTypes.RCUN,
+                RecordTypes.ACSR,
+                RecordTypes.LCSR,
+                RecordTypes.RCSR,
+                RecordTypes.ACEC,
+                RecordTypes.LCEC,
+                RecordTypes.RCEC,
+                RecordTypes.ACID,
+                RecordTypes.LCID,
+                RecordTypes.ACEP,
+                RecordTypes.LCEP,
+                RecordTypes.FULL,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.PNAM,
+                RecordTypes.NAM1,
+                RecordTypes.FNAM,
+                RecordTypes.MNAM,
+                RecordTypes.RNAM,
+                RecordTypes.NAM0,
+                RecordTypes.CNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3126,7 +3052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class LocationSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly LocationSetterCommon Instance = new LocationSetterCommon();
 
@@ -3207,7 +3133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILocationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILocationInternal>(
                 record: item,
@@ -3220,7 +3146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Location)item,
@@ -3231,7 +3157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Location)item,
@@ -3242,7 +3168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCommon : SkyrimMajorRecordCommon
+    internal partial class LocationCommon : SkyrimMajorRecordCommon
     {
         public new static readonly LocationCommon Instance = new LocationCommon();
 
@@ -3266,7 +3192,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ActorCellPersistentReferences = item.ActorCellPersistentReferences.CollectionEqualsHelper(
                 rhs.ActorCellPersistentReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3346,408 +3271,338 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILocationGetter item,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Location.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Location =>");
+                sb.AppendLine($"Location =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Location) =>");
+                sb.AppendLine($"{name} (Location) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Location.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
                 && item.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
             {
-                fg.AppendLine("ActorCellPersistentReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellPersistentReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
                 && item.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
             {
-                fg.AppendLine("LocationCellPersistentReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellPersistentReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
                 && item.ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
             {
-                fg.AppendLine("ReferenceCellPersistentReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellPersistentReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ReferenceCellPersistentReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ActorCellUniques?.Overall ?? true)
                 && item.ActorCellUniques is {} ActorCellUniquesItem)
             {
-                fg.AppendLine("ActorCellUniques =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellUniques =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorCellUniquesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.LocationCellUniques?.Overall ?? true)
                 && item.LocationCellUniques is {} LocationCellUniquesItem)
             {
-                fg.AppendLine("LocationCellUniques =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellUniques =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationCellUniquesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ReferenceCellUnique?.Overall ?? true)
                 && item.ReferenceCellUnique is {} ReferenceCellUniqueItem)
             {
-                fg.AppendLine("ReferenceCellUnique =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellUnique =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ReferenceCellUniqueItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
                 && item.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
             {
-                fg.AppendLine("ActorCellStaticReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellStaticReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorCellStaticReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
                 && item.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
             {
-                fg.AppendLine("LocationCellStaticReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellStaticReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationCellStaticReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
                 && item.ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
             {
-                fg.AppendLine("ReferenceCellStaticReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellStaticReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ReferenceCellStaticReferencesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.ActorCellEncounterCell?.Overall ?? true)
             {
-                fg.AppendLine("ActorCellEncounterCell =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellEncounterCell =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.ActorCellEncounterCell)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.LocationCellEncounterCell?.Overall ?? true)
             {
-                fg.AppendLine("LocationCellEncounterCell =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellEncounterCell =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LocationCellEncounterCell)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.ReferenceCellEncounterCell?.Overall ?? true)
             {
-                fg.AppendLine("ReferenceCellEncounterCell =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ReferenceCellEncounterCell =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.ReferenceCellEncounterCell)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
                 && item.ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
             {
-                fg.AppendLine("ActorCellMarkerReference =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellMarkerReference =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
                 && item.LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
             {
-                fg.AppendLine("LocationCellMarkerReference =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellMarkerReference =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationCellMarkerReferenceItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
                 && item.ActorCellEnablePoint is {} ActorCellEnablePointItem)
             {
-                fg.AppendLine("ActorCellEnablePoint =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorCellEnablePoint =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorCellEnablePointItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
                 && item.LocationCellEnablePoint is {} LocationCellEnablePointItem)
             {
-                fg.AppendLine("LocationCellEnablePoint =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LocationCellEnablePoint =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in LocationCellEnablePointItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.ParentLocation ?? true)
             {
-                fg.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
+                sb.AppendItem(item.ParentLocation.FormKeyNullable, "ParentLocation");
             }
             if (printMask?.Music ?? true)
             {
-                fg.AppendItem(item.Music.FormKeyNullable, "Music");
+                sb.AppendItem(item.Music.FormKeyNullable, "Music");
             }
             if (printMask?.UnreportedCrimeFaction ?? true)
             {
-                fg.AppendItem(item.UnreportedCrimeFaction.FormKeyNullable, "UnreportedCrimeFaction");
+                sb.AppendItem(item.UnreportedCrimeFaction.FormKeyNullable, "UnreportedCrimeFaction");
             }
             if (printMask?.WorldLocationMarkerRef ?? true)
             {
-                fg.AppendItem(item.WorldLocationMarkerRef.FormKeyNullable, "WorldLocationMarkerRef");
+                sb.AppendItem(item.WorldLocationMarkerRef.FormKeyNullable, "WorldLocationMarkerRef");
             }
             if ((printMask?.WorldLocationRadius ?? true)
                 && item.WorldLocationRadius is {} WorldLocationRadiusItem)
             {
-                fg.AppendItem(WorldLocationRadiusItem, "WorldLocationRadius");
+                sb.AppendItem(WorldLocationRadiusItem, "WorldLocationRadius");
             }
             if (printMask?.HorseMarkerRef ?? true)
             {
-                fg.AppendItem(item.HorseMarkerRef.FormKeyNullable, "HorseMarkerRef");
+                sb.AppendItem(item.HorseMarkerRef.FormKeyNullable, "HorseMarkerRef");
             }
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                fg.AppendItem(ColorItem, "Color");
+                sb.AppendItem(ColorItem, "Color");
             }
         }
         
@@ -3799,11 +3654,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
             {
-                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
+                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
             {
-                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
+                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
             {
@@ -3811,11 +3666,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
             {
-                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
+                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
             {
-                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
+                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
             {
@@ -3823,11 +3678,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
             {
-                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
+                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
             {
-                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
+                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
             {
@@ -3835,15 +3690,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
             {
-                if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
+                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
             {
-                if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
+                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
             {
-                if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
+                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
             {
@@ -3855,11 +3710,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
             {
-                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
+                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
             {
-                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
+                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
             {
@@ -3982,22 +3837,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
             {
-                foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
             {
-                foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4011,14 +3866,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.ActorCellUniques is {} ActorCellUniquesItem)
             {
-                foreach (var item in ActorCellUniquesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellUniquesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellUniques is {} LocationCellUniquesItem)
             {
-                foreach (var item in LocationCellUniquesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellUniquesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4032,14 +3887,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
             {
-                foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
             {
-                foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4051,15 +3906,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4079,14 +3934,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.ActorCellEnablePoint is {} ActorCellEnablePointItem)
             {
-                foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.LocationCellEnablePoint is {} LocationCellEnablePointItem)
             {
-                foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4098,25 +3953,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ParentLocation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ParentLocation, out var ParentLocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ParentLocation);
+                yield return ParentLocationInfo;
             }
-            if (obj.Music.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Music);
+                yield return MusicInfo;
             }
-            if (obj.UnreportedCrimeFaction.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UnreportedCrimeFaction, out var UnreportedCrimeFactionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UnreportedCrimeFaction);
+                yield return UnreportedCrimeFactionInfo;
             }
-            if (obj.WorldLocationMarkerRef.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.WorldLocationMarkerRef, out var WorldLocationMarkerRefInfo))
             {
-                yield return FormLinkInformation.Factory(obj.WorldLocationMarkerRef);
+                yield return WorldLocationMarkerRefInfo;
             }
-            if (obj.HorseMarkerRef.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HorseMarkerRef, out var HorseMarkerRefInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HorseMarkerRef);
+                yield return HorseMarkerRefInfo;
             }
             yield break;
         }
@@ -4159,7 +4014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class LocationSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly LocationSetterTranslationCommon Instance = new LocationSetterTranslationCommon();
 
@@ -4836,7 +4691,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public new static Location_Registration StaticRegistration => Location_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -4854,18 +4709,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
+        public new static readonly LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILocationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -4875,7 +4730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorCellPersistentReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACPR),
-                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4887,7 +4742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LocationCellPersistentReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCPR),
-                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4899,7 +4754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ReferenceCellPersistentReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCPR),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4909,7 +4764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorCellUniques,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACUN),
-                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationCellUniqueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4921,7 +4776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LocationCellUniques,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCUN),
-                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationCellUniqueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4933,7 +4788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ReferenceCellUnique,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCUN),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4943,7 +4798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorCellStaticReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACSR),
-                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationCellStaticReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4955,7 +4810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LocationCellStaticReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCSR),
-                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationCellStaticReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -4967,7 +4822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ReferenceCellStaticReferences,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCSR),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4976,7 +4831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
                 writer: writer,
                 items: item.ActorCellEncounterCell,
-                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     using (HeaderExport.Subrecord(writer, RecordTypes.ACEC))
@@ -4990,7 +4845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
                 writer: writer,
                 items: item.LocationCellEncounterCell,
-                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     using (HeaderExport.Subrecord(writer, RecordTypes.LCEC))
@@ -5004,7 +4859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
                 writer: writer,
                 items: item.ReferenceCellEncounterCell,
-                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     using (HeaderExport.Subrecord(writer, RecordTypes.RCEC))
@@ -5019,7 +4874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorCellMarkerReference,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACID),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5029,7 +4884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LocationCellMarkerReference,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCID),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5039,7 +4894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorCellEnablePoint,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACEP),
-                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationCellEnablePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5051,7 +4906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.LocationCellEnablePoint,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCEP),
-                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LocationCellEnablePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5071,7 +4926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5110,7 +4965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILocationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -5121,12 +4976,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -5138,7 +4996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationGetter)item,
@@ -5149,7 +5007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationGetter)item,
@@ -5160,7 +5018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationGetter)item,
@@ -5170,9 +5028,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class LocationBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
+        public new static readonly LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LCTN;
         public static void FillBinaryStructs(
@@ -5191,7 +5049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -5368,8 +5226,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Location_FieldIndex.Name;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -5430,7 +5288,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -5447,16 +5306,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationBinaryOverlay :
+    internal partial class LocationBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ILocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
-        public new static Location_Registration StaticRegistration => Location_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Location_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
@@ -5464,14 +5323,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -5490,16 +5349,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
-        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; private set; }
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -5515,31 +5374,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region Music
         private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region WorldLocationMarkerRef
         private int? _WorldLocationMarkerRefLocation;
-        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;
-        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region HorseMarkerRef
         private int? _HorseMarkerRefLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;
-        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5548,28 +5407,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LocationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationBinaryOverlay LocationFactory(
+        public static ILocationGetter LocationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LocationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -5579,20 +5441,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LocationBinaryOverlay LocationFactory(
+        public static ILocationGetter LocationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -5602,16 +5464,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ACPR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<ILocationReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5621,9 +5483,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LCPR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<ILocationReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5633,8 +5495,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RCPR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5645,9 +5507,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ACUN:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5657,9 +5519,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LCUN:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationCellUniqueBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<ILocationCellUniqueGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5669,8 +5531,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RCUN:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5681,9 +5543,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ACSR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellStaticReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -5693,9 +5555,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LCSR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<ILocationCellStaticReferenceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -5705,8 +5567,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RCSR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5717,9 +5579,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ACEC:
                 {
-                    this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                    this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RecordTypes.ACEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
@@ -5727,9 +5589,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LCEC:
                 {
-                    this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                    this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RecordTypes.LCEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
@@ -5737,9 +5599,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RCEC:
                 {
-                    this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                    this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         trigger: RecordTypes.RCEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
@@ -5747,8 +5609,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ACID:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5759,8 +5621,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LCID:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -5771,9 +5633,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ACEP:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<ILocationCellEnablePointGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5783,9 +5645,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LCEP:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<ILocationCellEnablePointGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -5798,8 +5660,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _NameLocation = (stream.Position - offset);
                     return (int)Location_FieldIndex.Name;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
@@ -5807,7 +5669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Location_FieldIndex.Keywords;
                 }
@@ -5853,17 +5715,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationMixIn.ToString(
+            LocationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,23 +19,23 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -164,12 +165,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MaterialObjectMixIn.ToString(
+            MaterialObjectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -396,9 +398,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.DNAMs.Specific = l;
-                        foreach (var item in DNAMs.Specific.WithIndex())
+                        foreach (var item in DNAMs.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -417,93 +419,86 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MaterialObject.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MaterialObject.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MaterialObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MaterialObject.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MaterialObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MaterialObject.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if ((printMask?.DNAMs?.Overall ?? true)
                         && DNAMs is {} DNAMsItem)
                     {
-                        fg.AppendLine("DNAMs =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DNAMs =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(DNAMsItem.Overall);
+                            sb.AppendItem(DNAMsItem.Overall);
                             if (DNAMsItem.Specific != null)
                             {
                                 foreach (var subItem in DNAMsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.FalloffScale ?? true)
                     {
-                        fg.AppendItem(FalloffScale, "FalloffScale");
+                        sb.AppendItem(FalloffScale, "FalloffScale");
                     }
                     if (printMask?.FalloffBias ?? true)
                     {
-                        fg.AppendItem(FalloffBias, "FalloffBias");
+                        sb.AppendItem(FalloffBias, "FalloffBias");
                     }
                     if (printMask?.NoiseUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseUvScale, "NoiseUvScale");
+                        sb.AppendItem(NoiseUvScale, "NoiseUvScale");
                     }
                     if (printMask?.MaterialUvScale ?? true)
                     {
-                        fg.AppendItem(MaterialUvScale, "MaterialUvScale");
+                        sb.AppendItem(MaterialUvScale, "MaterialUvScale");
                     }
                     if (printMask?.ProjectionVector ?? true)
                     {
-                        fg.AppendItem(ProjectionVector, "ProjectionVector");
+                        sb.AppendItem(ProjectionVector, "ProjectionVector");
                     }
                     if (printMask?.NormalDampener ?? true)
                     {
-                        fg.AppendItem(NormalDampener, "NormalDampener");
+                        sb.AppendItem(NormalDampener, "NormalDampener");
                     }
                     if (printMask?.SinglePassColor ?? true)
                     {
-                        fg.AppendItem(SinglePassColor, "SinglePassColor");
+                        sb.AppendItem(SinglePassColor, "SinglePassColor");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.HasSnow ?? true)
                     {
-                        fg.AppendItem(HasSnow, "HasSnow");
+                        sb.AppendItem(HasSnow, "HasSnow");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -677,69 +672,78 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
+                base.PrintFillInternal(sb);
+                Model?.Print(sb);
                 if (DNAMs is {} DNAMsItem)
                 {
-                    fg.AppendLine("DNAMs =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DNAMs =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(DNAMsItem.Overall);
+                        sb.AppendItem(DNAMsItem.Overall);
                         if (DNAMsItem.Specific != null)
                         {
                             foreach (var subItem in DNAMsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(FalloffScale, "FalloffScale");
-                fg.AppendItem(FalloffBias, "FalloffBias");
-                fg.AppendItem(NoiseUvScale, "NoiseUvScale");
-                fg.AppendItem(MaterialUvScale, "MaterialUvScale");
-                fg.AppendItem(ProjectionVector, "ProjectionVector");
-                fg.AppendItem(NormalDampener, "NormalDampener");
-                fg.AppendItem(SinglePassColor, "SinglePassColor");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(HasSnow, "HasSnow");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(FalloffScale, "FalloffScale");
+                }
+                {
+                    sb.AppendItem(FalloffBias, "FalloffBias");
+                }
+                {
+                    sb.AppendItem(NoiseUvScale, "NoiseUvScale");
+                }
+                {
+                    sb.AppendItem(MaterialUvScale, "MaterialUvScale");
+                }
+                {
+                    sb.AppendItem(ProjectionVector, "ProjectionVector");
+                }
+                {
+                    sb.AppendItem(NormalDampener, "NormalDampener");
+                }
+                {
+                    sb.AppendItem(SinglePassColor, "SinglePassColor");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(HasSnow, "HasSnow");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -844,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MaterialObject_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialObjectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public MaterialObject(
             FormKey formKey,
@@ -929,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => MaterialObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MaterialObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -939,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static MaterialObject CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MaterialObject();
             ((MaterialObjectSetterCommon)((IMaterialObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -954,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MaterialObject item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -964,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1062,26 +1066,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMaterialObjectGetter item,
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
-            return ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).ToString(
+            return ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMaterialObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
-            ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).ToString(
+            ((MaterialObjectCommon)((IMaterialObjectGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1176,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IMaterialObjectInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MaterialObjectSetterCommon)((IMaterialObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1191,10 +1195,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum MaterialObject_FieldIndex
+    internal enum MaterialObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1218,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class MaterialObject_Registration : ILoquiRegistration
+    internal partial class MaterialObject_Registration : ILoquiRegistration
     {
         public static readonly MaterialObject_Registration Instance = new MaterialObject_Registration();
 
@@ -1260,6 +1264,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MATO;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MATO);
+            var all = RecordCollection.Factory(
+                RecordTypes.MATO,
+                RecordTypes.MODL,
+                RecordTypes.DNAM,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1293,7 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MaterialObjectSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class MaterialObjectSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly MaterialObjectSetterCommon Instance = new MaterialObjectSetterCommon();
 
@@ -1340,7 +1355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IMaterialObjectInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMaterialObjectInternal>(
                 record: item,
@@ -1353,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MaterialObject)item,
@@ -1364,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MaterialObject)item,
@@ -1375,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MaterialObjectCommon : SkyrimMajorRecordCommon
+    internal partial class MaterialObjectCommon : SkyrimMajorRecordCommon
     {
         public new static readonly MaterialObjectCommon Instance = new MaterialObjectCommon();
 
@@ -1399,7 +1414,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MaterialObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1422,116 +1436,110 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IMaterialObjectGetter item,
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMaterialObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MaterialObject =>");
+                sb.AppendLine($"MaterialObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MaterialObject) =>");
+                sb.AppendLine($"{name} (MaterialObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMaterialObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MaterialObject.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.DNAMs?.Overall ?? true)
             {
-                fg.AppendLine("DNAMs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DNAMs =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.DNAMs)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
+                            sb.AppendLine($"Item => {SpanExt.ToHexString(subItem)}");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.FalloffScale ?? true)
             {
-                fg.AppendItem(item.FalloffScale, "FalloffScale");
+                sb.AppendItem(item.FalloffScale, "FalloffScale");
             }
             if (printMask?.FalloffBias ?? true)
             {
-                fg.AppendItem(item.FalloffBias, "FalloffBias");
+                sb.AppendItem(item.FalloffBias, "FalloffBias");
             }
             if (printMask?.NoiseUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseUvScale, "NoiseUvScale");
+                sb.AppendItem(item.NoiseUvScale, "NoiseUvScale");
             }
             if (printMask?.MaterialUvScale ?? true)
             {
-                fg.AppendItem(item.MaterialUvScale, "MaterialUvScale");
+                sb.AppendItem(item.MaterialUvScale, "MaterialUvScale");
             }
             if (printMask?.ProjectionVector ?? true)
             {
-                fg.AppendItem(item.ProjectionVector, "ProjectionVector");
+                sb.AppendItem(item.ProjectionVector, "ProjectionVector");
             }
             if (printMask?.NormalDampener ?? true)
             {
-                fg.AppendItem(item.NormalDampener, "NormalDampener");
+                sb.AppendItem(item.NormalDampener, "NormalDampener");
             }
             if (printMask?.SinglePassColor ?? true)
             {
-                fg.AppendItem(item.SinglePassColor, "SinglePassColor");
+                sb.AppendItem(item.SinglePassColor, "SinglePassColor");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.HasSnow ?? true)
             {
-                fg.AppendItem(item.HasSnow, "HasSnow");
+                sb.AppendItem(item.HasSnow, "HasSnow");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1699,15 +1707,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMaterialObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMaterialObjectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1753,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MaterialObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class MaterialObjectSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly MaterialObjectSetterTranslationCommon Instance = new MaterialObjectSetterTranslationCommon();
 
@@ -1993,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialObject_Registration.Instance;
-        public new static MaterialObject_Registration StaticRegistration => MaterialObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -2011,13 +2019,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MaterialObjectBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MaterialObjectBinaryWriteTranslation Instance = new MaterialObjectBinaryWriteTranslation();
+        public new static readonly MaterialObjectBinaryWriteTranslation Instance = new MaterialObjectBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMaterialObjectGetter item,
@@ -2031,7 +2039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IMaterialObjectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2093,7 +2101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IMaterialObjectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2104,12 +2112,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2121,7 +2132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMaterialObjectGetter)item,
@@ -2132,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMaterialObjectGetter)item,
@@ -2143,7 +2154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMaterialObjectGetter)item,
@@ -2153,9 +2164,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MaterialObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class MaterialObjectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MaterialObjectBinaryCreateTranslation Instance = new MaterialObjectBinaryCreateTranslation();
+        public new static readonly MaterialObjectBinaryCreateTranslation Instance = new MaterialObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MATO;
         public static void FillBinaryStructs(
@@ -2174,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2183,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)MaterialObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.DNAM:
@@ -2236,7 +2247,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2253,16 +2265,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MaterialObjectBinaryOverlay :
+    internal partial class MaterialObjectBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IMaterialObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialObject_Registration.Instance;
-        public new static MaterialObject_Registration StaticRegistration => MaterialObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -2270,14 +2282,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MaterialObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MaterialObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2288,53 +2300,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public IModelGetter? Model { get; private set; }
-        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();
-        private int? _DATALocation;
+        public IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; private set; } = Array.Empty<ReadOnlyMemorySlice<Byte>>();
+        private RangeInt32? _DATALocation;
         public MaterialObject.DATADataType DATADataTypeState { get; private set; }
         #region FalloffScale
-        private int _FalloffScaleLocation => _DATALocation!.Value;
+        private int _FalloffScaleLocation => _DATALocation!.Value.Min;
         private bool _FalloffScale_IsSet => _DATALocation.HasValue;
-        public Single FalloffScale => _FalloffScale_IsSet ? _data.Slice(_FalloffScaleLocation, 4).Float() : default;
+        public Single FalloffScale => _FalloffScale_IsSet ? _recordData.Slice(_FalloffScaleLocation, 4).Float() : default;
         #endregion
         #region FalloffBias
-        private int _FalloffBiasLocation => _DATALocation!.Value + 0x4;
+        private int _FalloffBiasLocation => _DATALocation!.Value.Min + 0x4;
         private bool _FalloffBias_IsSet => _DATALocation.HasValue;
-        public Single FalloffBias => _FalloffBias_IsSet ? _data.Slice(_FalloffBiasLocation, 4).Float() : default;
+        public Single FalloffBias => _FalloffBias_IsSet ? _recordData.Slice(_FalloffBiasLocation, 4).Float() : default;
         #endregion
         #region NoiseUvScale
-        private int _NoiseUvScaleLocation => _DATALocation!.Value + 0x8;
+        private int _NoiseUvScaleLocation => _DATALocation!.Value.Min + 0x8;
         private bool _NoiseUvScale_IsSet => _DATALocation.HasValue;
-        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _data.Slice(_NoiseUvScaleLocation, 4).Float() : default;
+        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _recordData.Slice(_NoiseUvScaleLocation, 4).Float() : default;
         #endregion
         #region MaterialUvScale
-        private int _MaterialUvScaleLocation => _DATALocation!.Value + 0xC;
+        private int _MaterialUvScaleLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MaterialUvScale_IsSet => _DATALocation.HasValue;
-        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _data.Slice(_MaterialUvScaleLocation, 4).Float() : default;
+        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _recordData.Slice(_MaterialUvScaleLocation, 4).Float() : default;
         #endregion
         #region ProjectionVector
-        private int _ProjectionVectorLocation => _DATALocation!.Value + 0x10;
+        private int _ProjectionVectorLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ProjectionVector_IsSet => _DATALocation.HasValue;
-        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_ProjectionVectorLocation, 12)) : default;
+        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_ProjectionVectorLocation, 12)) : default;
         #endregion
         #region NormalDampener
-        private int _NormalDampenerLocation => _DATALocation!.Value + 0x1C;
+        private int _NormalDampenerLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _NormalDampener_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0);
-        public Single NormalDampener => _NormalDampener_IsSet ? _data.Slice(_NormalDampenerLocation, 4).Float() : default;
+        public Single NormalDampener => _NormalDampener_IsSet ? _recordData.Slice(_NormalDampenerLocation, 4).Float() : default;
         #endregion
         #region SinglePassColor
-        private int _SinglePassColorLocation => _DATALocation!.Value + 0x20;
+        private int _SinglePassColorLocation => _DATALocation!.Value.Min + 0x20;
         private bool _SinglePassColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
-        public Color SinglePassColor => _SinglePassColor_IsSet ? _data.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        public Color SinglePassColor => _SinglePassColor_IsSet ? _recordData.Slice(_SinglePassColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x2C;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
-        public MaterialObject.Flag Flags => _Flags_IsSet ? (MaterialObject.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public MaterialObject.Flag Flags => _Flags_IsSet ? (MaterialObject.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region HasSnow
-        private int _HasSnowLocation => _DATALocation!.Value + 0x30;
+        private int _HasSnowLocation => _DATALocation!.Value.Min + 0x30;
         private bool _HasSnow_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break2);
-        public Boolean HasSnow => _HasSnow_IsSet ? _data.Slice(_HasSnowLocation, 4)[0] == 1 : default;
+        public Boolean HasSnow => _HasSnow_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HasSnowLocation, 4)) >= 1 : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2343,28 +2355,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected MaterialObjectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MaterialObjectBinaryOverlay MaterialObjectFactory(
+        public static IMaterialObjectGetter MaterialObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MaterialObjectBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2374,20 +2389,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MaterialObjectBinaryOverlay MaterialObjectFactory(
+        public static IMaterialObjectGetter MaterialObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MaterialObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2397,9 +2412,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
@@ -2407,7 +2422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)MaterialObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.DNAM:
@@ -2415,19 +2430,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.DNAMs = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => p.MetaData.Constants.SubrecordFrame(s).Content,
+                        getter: (s, p) => p.MetaData.Constants.Subrecord(s).Content,
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)MaterialObject_FieldIndex.DNAMs;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1C)
                     {
                         this.DATADataTypeState |= MaterialObject.DATADataType.Break0;
@@ -2449,17 +2464,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MaterialObjectMixIn.ToString(
+            MaterialObjectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

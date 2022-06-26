@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -53,12 +55,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ANpcLevelMixIn.ToString(
+            ANpcLevelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -147,26 +150,21 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ANpcLevel.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ANpcLevel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ANpcLevel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ANpcLevel.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ANpcLevel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ANpcLevel.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -231,34 +229,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
             }
             #endregion
@@ -332,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -341,7 +330,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -405,26 +394,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IANpcLevelGetter item,
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
-            return ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).ToString(
+            return ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IANpcLevelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
-            ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).ToString(
+            ((ANpcLevelCommon)((IANpcLevelGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -530,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IANpcLevel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ANpcLevelSetterCommon)((IANpcLevelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -545,16 +534,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ANpcLevel_FieldIndex
+    internal enum ANpcLevel_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class ANpcLevel_Registration : ILoquiRegistration
+    internal partial class ANpcLevel_Registration : ILoquiRegistration
     {
         public static readonly ANpcLevel_Registration Instance = new ANpcLevel_Registration();
 
@@ -628,7 +617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ANpcLevelSetterCommon
+    internal partial class ANpcLevelSetterCommon
     {
         public static readonly ANpcLevelSetterCommon Instance = new ANpcLevelSetterCommon();
 
@@ -650,14 +639,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IANpcLevel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         #endregion
         
     }
-    public partial class ANpcLevelCommon
+    internal partial class ANpcLevelCommon
     {
         public static readonly ANpcLevelCommon Instance = new ANpcLevelCommon();
 
@@ -681,51 +670,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANpcLevel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
-        public string ToString(
+        public string Print(
             IANpcLevelGetter item,
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IANpcLevelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ANpcLevel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ANpcLevel =>");
+                sb.AppendLine($"ANpcLevel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ANpcLevel) =>");
+                sb.AppendLine($"{name} (ANpcLevel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IANpcLevelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ANpcLevel.Mask<bool>? printMask = null)
         {
         }
@@ -755,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IANpcLevelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IANpcLevelGetter obj)
         {
             yield break;
         }
@@ -763,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ANpcLevelSetterTranslationCommon
+    internal partial class ANpcLevelSetterTranslationCommon
     {
         public static readonly ANpcLevelSetterTranslationCommon Instance = new ANpcLevelSetterTranslationCommon();
 
@@ -837,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -861,23 +847,23 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ANpcLevelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ANpcLevelBinaryWriteTranslation Instance = new ANpcLevelBinaryWriteTranslation();
+        public static readonly ANpcLevelBinaryWriteTranslation Instance = new ANpcLevelBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IANpcLevelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IANpcLevelGetter)item,
@@ -887,9 +873,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ANpcLevelBinaryCreateTranslation
+    internal partial class ANpcLevelBinaryCreateTranslation
     {
-        public readonly static ANpcLevelBinaryCreateTranslation Instance = new ANpcLevelBinaryCreateTranslation();
+        public static readonly ANpcLevelBinaryCreateTranslation Instance = new ANpcLevelBinaryCreateTranslation();
 
     }
 
@@ -902,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IANpcLevelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcLevelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -915,16 +901,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class ANpcLevelBinaryOverlay :
+    internal abstract partial class ANpcLevelBinaryOverlay :
         PluginBinaryOverlay,
         IANpcLevelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ANpcLevel_Registration.Instance;
-        public static ANpcLevel_Registration StaticRegistration => ANpcLevel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ANpcLevel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => ANpcLevelCommon.Instance;
         [DebuggerStepThrough]
@@ -938,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANpcLevelBinaryWriteTranslation.Instance;
@@ -946,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ANpcLevelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -961,10 +947,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ANpcLevelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -973,12 +959,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ANpcLevelMixIn.ToString(
+            ANpcLevelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

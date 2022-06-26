@@ -1,26 +1,23 @@
-using System.Collections.Generic;
+namespace Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Records
+/// <summary>
+/// An interface for classes that contain FormKeys and can enumerate them.
+/// </summary>
+public interface IFormLinkContainer : IFormLinkContainerGetter
 {
     /// <summary>
-    /// An interface for classes that contain FormKeys and can enumerate them.
+    /// Swaps out all links to point to new FormKeys
     /// </summary>
-    public interface IFormLinkContainer : IFormLinkContainerGetter
-    {
-        /// <summary>
-        /// Swaps out all links to point to new FormKeys
-        /// </summary>
-        void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping);
-    }
+    void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping);
+}
 
+/// <summary>
+/// An interface for classes that contain FormKeys and can enumerate them.
+/// </summary>
+public interface IFormLinkContainerGetter
+{
     /// <summary>
-    /// An interface for classes that contain FormKeys and can enumerate them.
+    /// Enumerate of all contained FormKeys within object and subobjects
     /// </summary>
-    public interface IFormLinkContainerGetter
-    {
-        /// <summary>
-        /// Enumerable of all contained FormKeys
-        /// </summary>
-        IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
-    }
+    IEnumerable<IFormLinkGetter> EnumerateFormLinks();
 }

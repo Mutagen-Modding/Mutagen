@@ -1,16 +1,14 @@
-﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Fallout4.Records;
 
@@ -26,7 +24,7 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
 
     #region IGroupGetter Forwarding
 
-    public IEnumerable<IFormLinkGetter> ContainedFormLinks => _groupMerge.ContainedFormLinks;
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => _groupMerge.EnumerateFormLinks();
 
     public IMod SourceMod => _groupMerge.SourceMod;
     
@@ -45,6 +43,8 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     public IEnumerable<FormKey> FormKeys => _groupMerge.FormKeys;
 
     IEnumerable<IMajorRecordGetter> IGroupGetter.Records => ((IGroupGetter)_groupMerge).Records;
+    
+    public Type ContainedRecordType => typeof(TMajor);
 
     public bool ContainsKey(FormKey key)
     {
@@ -103,7 +103,7 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     
     void IBinaryItem.WriteToBinary(
         MutagenWriter writer,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         ((Fallout4GroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
             item: this,
@@ -111,9 +111,9 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(FileGeneration fg, string? name = null)
+    public void Print(StructuredStringBuilder fg, string? name = null)
     {
-        Fallout4GroupMixIn.ToString(
+        Fallout4GroupMixIn.Print(
             item: this,
             name: name);
     }
@@ -123,4 +123,6 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     IEnumerable<TRhs> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TRhs>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor, TRhs>(throwIfUnknown: throwIfUnknown);
     [DebuggerStepThrough]
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+
+    public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
 }

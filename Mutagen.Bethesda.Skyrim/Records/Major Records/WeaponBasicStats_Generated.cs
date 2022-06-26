@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -60,12 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeaponBasicStatsMixIn.ToString(
+            WeaponBasicStatsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -187,38 +190,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeaponBasicStats.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeaponBasicStats.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeaponBasicStats.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeaponBasicStats.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeaponBasicStats.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeaponBasicStats.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -313,38 +311,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Damage, "Damage");
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
             }
             #endregion
 
@@ -422,10 +417,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = WeaponBasicStats_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponBasicStatsBinaryWriteTranslation.Instance;
@@ -433,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponBasicStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -443,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeaponBasicStats CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeaponBasicStats();
             ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -458,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeaponBasicStats item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -468,7 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -534,26 +525,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeaponBasicStatsGetter item,
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).ToString(
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeaponBasicStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).ToString(
+            ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -659,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeaponBasicStats item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -674,10 +665,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeaponBasicStats_FieldIndex
+    internal enum WeaponBasicStats_FieldIndex
     {
         Value = 0,
         Weight = 1,
@@ -686,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeaponBasicStats_Registration : ILoquiRegistration
+    internal partial class WeaponBasicStats_Registration : ILoquiRegistration
     {
         public static readonly WeaponBasicStats_Registration Instance = new WeaponBasicStats_Registration();
 
@@ -728,6 +719,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBasicStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -761,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeaponBasicStatsSetterCommon
+    internal partial class WeaponBasicStatsSetterCommon
     {
         public static readonly WeaponBasicStatsSetterCommon Instance = new WeaponBasicStatsSetterCommon();
 
@@ -786,12 +783,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeaponBasicStats item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -802,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeaponBasicStatsCommon
+    internal partial class WeaponBasicStatsCommon
     {
         public static readonly WeaponBasicStatsCommon Instance = new WeaponBasicStatsCommon();
 
@@ -826,67 +823,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeaponBasicStats.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Damage = item.Damage == rhs.Damage;
         }
         
-        public string ToString(
+        public string Print(
             IWeaponBasicStatsGetter item,
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeaponBasicStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeaponBasicStats =>");
+                sb.AppendLine($"WeaponBasicStats =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeaponBasicStats) =>");
+                sb.AppendLine($"{name} (WeaponBasicStats) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponBasicStatsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeaponBasicStats.Mask<bool>? printMask = null)
         {
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
         }
         
@@ -930,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponBasicStatsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponBasicStatsGetter obj)
         {
             yield break;
         }
@@ -938,7 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeaponBasicStatsSetterTranslationCommon
+    internal partial class WeaponBasicStatsSetterTranslationCommon
     {
         public static readonly WeaponBasicStatsSetterTranslationCommon Instance = new WeaponBasicStatsSetterTranslationCommon();
 
@@ -1024,7 +1018,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,11 +1042,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeaponBasicStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeaponBasicStatsBinaryWriteTranslation Instance = new WeaponBasicStatsBinaryWriteTranslation();
+        public static readonly WeaponBasicStatsBinaryWriteTranslation Instance = new WeaponBasicStatsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeaponBasicStatsGetter item,
@@ -1068,12 +1062,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeaponBasicStatsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1085,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeaponBasicStatsGetter)item,
@@ -1095,9 +1089,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeaponBasicStatsBinaryCreateTranslation
+    internal partial class WeaponBasicStatsBinaryCreateTranslation
     {
-        public readonly static WeaponBasicStatsBinaryCreateTranslation Instance = new WeaponBasicStatsBinaryCreateTranslation();
+        public static readonly WeaponBasicStatsBinaryCreateTranslation Instance = new WeaponBasicStatsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeaponBasicStats item,
@@ -1119,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeaponBasicStatsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponBasicStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1132,16 +1126,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeaponBasicStatsBinaryOverlay :
+    internal partial class WeaponBasicStatsBinaryOverlay :
         PluginBinaryOverlay,
         IWeaponBasicStatsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
-        public static WeaponBasicStats_Registration StaticRegistration => WeaponBasicStats_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
@@ -1155,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponBasicStatsBinaryWriteTranslation.Instance;
@@ -1163,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponBasicStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,9 +1165,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public Single Weight => _data.Slice(0x4, 0x4).Float();
-        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public Single Weight => _structData.Slice(0x4, 0x4).Float();
+        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x8, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1181,25 +1175,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeaponBasicStatsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeaponBasicStatsBinaryOverlay WeaponBasicStatsFactory(
+        public static IWeaponBasicStatsGetter WeaponBasicStatsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xA,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeaponBasicStatsBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xA + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1208,25 +1207,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeaponBasicStatsBinaryOverlay WeaponBasicStatsFactory(
+        public static IWeaponBasicStatsGetter WeaponBasicStatsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeaponBasicStatsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeaponBasicStatsMixIn.ToString(
+            WeaponBasicStatsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,17 +1,16 @@
 ﻿using Microsoft.VisualBasic.CompilerServices;
 
-namespace Mutagen.Bethesda.Environments.DI
+namespace Mutagen.Bethesda.Environments.DI;
+
+public interface IGameReleaseContext
 {
-    public interface IGameReleaseContext
-    {
-        GameRelease Release { get; }
-    }
+    GameRelease Release { get; }
+}
 
-    public record GameReleaseInjection(GameRelease Release)
-        : IGameReleaseContext;
+public record GameReleaseInjection(GameRelease Release)
+    : IGameReleaseContext;
 
-    public class GameReleasePlaceholder : IGameReleaseContext
-    {
-        public GameRelease Release => throw new IncompleteInitialization();
-    }
+public class GameReleasePlaceholder : IGameReleaseContext
+{
+    public GameRelease Release => throw new IncompleteInitialization();
 }

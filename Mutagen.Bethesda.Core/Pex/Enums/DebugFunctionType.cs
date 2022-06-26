@@ -1,9 +1,8 @@
-namespace Mutagen.Bethesda.Pex
+namespace Mutagen.Bethesda.Pex;
+
+public enum DebugFunctionType : byte
 {
-    public enum DebugFunctionType : byte
-    {
-        Method = 0,
-        Getter = 1,
-        Setter = 2
-    }
+    Method = 0,
+    Getter = 1,
+    Setter = 2
 }

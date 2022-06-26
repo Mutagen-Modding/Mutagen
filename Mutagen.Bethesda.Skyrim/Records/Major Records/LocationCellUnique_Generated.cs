@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -82,12 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationCellUniqueMixIn.ToString(
+            LocationCellUniqueMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,38 +211,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LocationCellUnique.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LocationCellUnique.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationCellUnique.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LocationCellUnique.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LocationCellUnique.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationCellUnique.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Actor ?? true)
                     {
-                        fg.AppendItem(Actor, "Actor");
+                        sb.AppendItem(Actor, "Actor");
                     }
                     if (printMask?.Ref ?? true)
                     {
-                        fg.AppendItem(Ref, "Ref");
+                        sb.AppendItem(Ref, "Ref");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -335,38 +332,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Actor, "Actor");
-                fg.AppendItem(Ref, "Ref");
-                fg.AppendItem(Location, "Location");
+                {
+                    sb.AppendItem(Actor, "Actor");
+                }
+                {
+                    sb.AppendItem(Ref, "Ref");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
             }
             #endregion
 
@@ -445,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCellUniqueCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellUniqueCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -456,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -466,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LocationCellUnique CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationCellUnique();
             ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -481,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationCellUnique item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -491,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -557,26 +551,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationCellUniqueGetter item,
             string? name = null,
             LocationCellUnique.Mask<bool>? printMask = null)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).ToString(
+            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationCellUniqueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationCellUnique.Mask<bool>? printMask = null)
         {
-            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).ToString(
+            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -682,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILocationCellUnique item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -697,10 +691,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LocationCellUnique_FieldIndex
+    internal enum LocationCellUnique_FieldIndex
     {
         Actor = 0,
         Ref = 1,
@@ -709,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LocationCellUnique_Registration : ILoquiRegistration
+    internal partial class LocationCellUnique_Registration : ILoquiRegistration
     {
         public static readonly LocationCellUnique_Registration Instance = new LocationCellUnique_Registration();
 
@@ -783,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LocationCellUniqueSetterCommon
+    internal partial class LocationCellUniqueSetterCommon
     {
         public static readonly LocationCellUniqueSetterCommon Instance = new LocationCellUniqueSetterCommon();
 
@@ -811,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILocationCellUnique item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -823,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellUniqueCommon
+    internal partial class LocationCellUniqueCommon
     {
         public static readonly LocationCellUniqueCommon Instance = new LocationCellUniqueCommon();
 
@@ -847,67 +841,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LocationCellUnique.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Actor = item.Actor.Equals(rhs.Actor);
             ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Location = item.Location.Equals(rhs.Location);
         }
         
-        public string ToString(
+        public string Print(
             ILocationCellUniqueGetter item,
             string? name = null,
             LocationCellUnique.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationCellUniqueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationCellUnique.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationCellUnique =>");
+                sb.AppendLine($"LocationCellUnique =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationCellUnique) =>");
+                sb.AppendLine($"{name} (LocationCellUnique) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationCellUniqueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationCellUnique.Mask<bool>? printMask = null)
         {
             if (printMask?.Actor ?? true)
             {
-                fg.AppendItem(item.Actor.FormKey, "Actor");
+                sb.AppendItem(item.Actor.FormKey, "Actor");
             }
             if (printMask?.Ref ?? true)
             {
-                fg.AppendItem(item.Ref.FormKey, "Ref");
+                sb.AppendItem(item.Ref.FormKey, "Ref");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location.FormKey, "Location");
+                sb.AppendItem(item.Location.FormKey, "Location");
             }
         }
         
@@ -951,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationCellUniqueGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationCellUniqueGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Actor);
             yield return FormLinkInformation.Factory(obj.Ref);
@@ -962,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LocationCellUniqueSetterTranslationCommon
+    internal partial class LocationCellUniqueSetterTranslationCommon
     {
         public static readonly LocationCellUniqueSetterTranslationCommon Instance = new LocationCellUniqueSetterTranslationCommon();
 
@@ -1048,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static LocationCellUnique_Registration StaticRegistration => LocationCellUnique_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellUniqueCommon.Instance;
         [DebuggerStepThrough]
@@ -1072,11 +1063,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LocationCellUniqueBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocationCellUniqueBinaryWriteTranslation Instance = new LocationCellUniqueBinaryWriteTranslation();
+        public static readonly LocationCellUniqueBinaryWriteTranslation Instance = new LocationCellUniqueBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationCellUniqueGetter item,
@@ -1096,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILocationCellUniqueGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1106,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationCellUniqueGetter)item,
@@ -1116,9 +1107,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LocationCellUniqueBinaryCreateTranslation
+    internal partial class LocationCellUniqueBinaryCreateTranslation
     {
-        public readonly static LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
+        public static readonly LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationCellUnique item,
@@ -1140,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILocationCellUniqueGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellUniqueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1153,16 +1144,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellUniqueBinaryOverlay :
+    internal partial class LocationCellUniqueBinaryOverlay :
         PluginBinaryOverlay,
         ILocationCellUniqueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static LocationCellUnique_Registration StaticRegistration => LocationCellUnique_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LocationCellUniqueCommon.Instance;
         [DebuggerStepThrough]
@@ -1176,16 +1167,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCellUniqueCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellUniqueCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1193,9 +1184,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcGetter> Actor => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IPlacedNpcGetter> Ref => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ILocationGetter> Location => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<INpcGetter> Actor => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedNpcGetter> Ref => new FormLink<IPlacedNpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ILocationGetter> Location => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1203,24 +1194,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LocationCellUniqueBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationCellUniqueBinaryOverlay LocationCellUniqueFactory(
+        public static ILocationCellUniqueGetter LocationCellUniqueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LocationCellUniqueBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xC),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1229,25 +1226,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LocationCellUniqueBinaryOverlay LocationCellUniqueFactory(
+        public static ILocationCellUniqueGetter LocationCellUniqueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationCellUniqueFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationCellUniqueMixIn.ToString(
+            LocationCellUniqueMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

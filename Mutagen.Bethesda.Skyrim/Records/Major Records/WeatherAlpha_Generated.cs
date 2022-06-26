@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherAlphaMixIn.ToString(
+            WeatherAlphaMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeatherAlpha.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeatherAlpha.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeatherAlpha.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeatherAlpha.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeatherAlpha.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherAlpha.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Sunrise ?? true)
                     {
-                        fg.AppendItem(Sunrise, "Sunrise");
+                        sb.AppendItem(Sunrise, "Sunrise");
                     }
                     if (printMask?.Day ?? true)
                     {
-                        fg.AppendItem(Day, "Day");
+                        sb.AppendItem(Day, "Day");
                     }
                     if (printMask?.Sunset ?? true)
                     {
-                        fg.AppendItem(Sunset, "Sunset");
+                        sb.AppendItem(Sunset, "Sunset");
                     }
                     if (printMask?.Night ?? true)
                     {
-                        fg.AppendItem(Night, "Night");
+                        sb.AppendItem(Night, "Night");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Sunrise, "Sunrise");
-                fg.AppendItem(Day, "Day");
-                fg.AppendItem(Sunset, "Sunset");
-                fg.AppendItem(Night, "Night");
+                {
+                    sb.AppendItem(Sunrise, "Sunrise");
+                }
+                {
+                    sb.AppendItem(Day, "Day");
+                }
+                {
+                    sb.AppendItem(Sunset, "Sunset");
+                }
+                {
+                    sb.AppendItem(Night, "Night");
+                }
             }
             #endregion
 
@@ -459,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAlphaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -469,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherAlpha CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherAlpha();
             ((WeatherAlphaSetterCommon)((IWeatherAlphaGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -484,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherAlpha item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -494,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -560,26 +557,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherAlphaGetter item,
             string? name = null,
             WeatherAlpha.Mask<bool>? printMask = null)
         {
-            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)item).CommonInstance()!).ToString(
+            return ((WeatherAlphaCommon)((IWeatherAlphaGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherAlphaGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherAlpha.Mask<bool>? printMask = null)
         {
-            ((WeatherAlphaCommon)((IWeatherAlphaGetter)item).CommonInstance()!).ToString(
+            ((WeatherAlphaCommon)((IWeatherAlphaGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -685,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherAlpha item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherAlphaSetterCommon)((IWeatherAlphaGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -700,10 +697,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherAlpha_FieldIndex
+    internal enum WeatherAlpha_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -713,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherAlpha_Registration : ILoquiRegistration
+    internal partial class WeatherAlpha_Registration : ILoquiRegistration
     {
         public static readonly WeatherAlpha_Registration Instance = new WeatherAlpha_Registration();
 
@@ -787,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherAlphaSetterCommon
+    internal partial class WeatherAlphaSetterCommon
     {
         public static readonly WeatherAlphaSetterCommon Instance = new WeatherAlphaSetterCommon();
 
@@ -813,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeatherAlpha item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -825,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAlphaCommon
+    internal partial class WeatherAlphaCommon
     {
         public static readonly WeatherAlphaCommon Instance = new WeatherAlphaCommon();
 
@@ -849,72 +846,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherAlpha.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = item.Sunrise.EqualsWithin(rhs.Sunrise);
             ret.Day = item.Day.EqualsWithin(rhs.Day);
             ret.Sunset = item.Sunset.EqualsWithin(rhs.Sunset);
             ret.Night = item.Night.EqualsWithin(rhs.Night);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherAlphaGetter item,
             string? name = null,
             WeatherAlpha.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherAlphaGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherAlpha.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherAlpha =>");
+                sb.AppendLine($"WeatherAlpha =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherAlpha) =>");
+                sb.AppendLine($"{name} (WeatherAlpha) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherAlphaGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherAlpha.Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise ?? true)
             {
-                fg.AppendItem(item.Sunrise, "Sunrise");
+                sb.AppendItem(item.Sunrise, "Sunrise");
             }
             if (printMask?.Day ?? true)
             {
-                fg.AppendItem(item.Day, "Day");
+                sb.AppendItem(item.Day, "Day");
             }
             if (printMask?.Sunset ?? true)
             {
-                fg.AppendItem(item.Sunset, "Sunset");
+                sb.AppendItem(item.Sunset, "Sunset");
             }
             if (printMask?.Night ?? true)
             {
-                fg.AppendItem(item.Night, "Night");
+                sb.AppendItem(item.Night, "Night");
             }
         }
         
@@ -963,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherAlphaGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherAlphaGetter obj)
         {
             yield break;
         }
@@ -971,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherAlphaSetterTranslationCommon
+    internal partial class WeatherAlphaSetterTranslationCommon
     {
         public static readonly WeatherAlphaSetterTranslationCommon Instance = new WeatherAlphaSetterTranslationCommon();
 
@@ -1061,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]
@@ -1085,11 +1079,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherAlphaBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherAlphaBinaryWriteTranslation Instance = new WeatherAlphaBinaryWriteTranslation();
+        public static readonly WeatherAlphaBinaryWriteTranslation Instance = new WeatherAlphaBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherAlphaGetter item,
@@ -1112,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherAlphaGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1122,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherAlphaGetter)item,
@@ -1132,9 +1126,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherAlphaBinaryCreateTranslation
+    internal partial class WeatherAlphaBinaryCreateTranslation
     {
-        public readonly static WeatherAlphaBinaryCreateTranslation Instance = new WeatherAlphaBinaryCreateTranslation();
+        public static readonly WeatherAlphaBinaryCreateTranslation Instance = new WeatherAlphaBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherAlpha item,
@@ -1157,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherAlphaGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAlphaBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1170,16 +1164,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherAlphaBinaryOverlay :
+    internal partial class WeatherAlphaBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherAlphaGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherAlpha_Registration.Instance;
-        public static WeatherAlpha_Registration StaticRegistration => WeatherAlpha_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherAlpha_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherAlphaCommon.Instance;
         [DebuggerStepThrough]
@@ -1193,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherAlphaBinaryWriteTranslation.Instance;
@@ -1201,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherAlphaBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1209,10 +1203,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single Sunrise => _data.Slice(0x0, 0x4).Float();
-        public Single Day => _data.Slice(0x4, 0x4).Float();
-        public Single Sunset => _data.Slice(0x8, 0x4).Float();
-        public Single Night => _data.Slice(0xC, 0x4).Float();
+        public Single Sunrise => _structData.Slice(0x0, 0x4).Float();
+        public Single Day => _structData.Slice(0x4, 0x4).Float();
+        public Single Sunset => _structData.Slice(0x8, 0x4).Float();
+        public Single Night => _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1220,24 +1214,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeatherAlphaBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeatherAlphaBinaryOverlay WeatherAlphaFactory(
+        public static IWeatherAlphaGetter WeatherAlphaFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherAlphaBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1246,25 +1246,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeatherAlphaBinaryOverlay WeatherAlphaFactory(
+        public static IWeatherAlphaGetter WeatherAlphaFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherAlphaFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherAlphaMixIn.ToString(
+            WeatherAlphaMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

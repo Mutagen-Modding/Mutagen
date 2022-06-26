@@ -1,12 +1,10 @@
-﻿using System.IO;
-using FluentAssertions;
-using Mutagen.Bethesda.Core.UnitTests.AutoData;
+﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Testing;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Xunit;
 using Noggog.Testing.IO;
-using Noggog.Utility;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Streams;
 

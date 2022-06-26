@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,22 +18,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -132,12 +133,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TextureSetMixIn.ToString(
+            TextureSetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -351,70 +353,65 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(TextureSet.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(TextureSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TextureSet.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, TextureSet.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(TextureSet.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TextureSet.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Diffuse ?? true)
                     {
-                        fg.AppendItem(Diffuse, "Diffuse");
+                        sb.AppendItem(Diffuse, "Diffuse");
                     }
                     if (printMask?.NormalOrGloss ?? true)
                     {
-                        fg.AppendItem(NormalOrGloss, "NormalOrGloss");
+                        sb.AppendItem(NormalOrGloss, "NormalOrGloss");
                     }
                     if (printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
                     {
-                        fg.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
+                        sb.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
                     }
                     if (printMask?.GlowOrDetailMap ?? true)
                     {
-                        fg.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
+                        sb.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
                     }
                     if (printMask?.Height ?? true)
                     {
-                        fg.AppendItem(Height, "Height");
+                        sb.AppendItem(Height, "Height");
                     }
                     if (printMask?.Environment ?? true)
                     {
-                        fg.AppendItem(Environment, "Environment");
+                        sb.AppendItem(Environment, "Environment");
                     }
                     if (printMask?.Multilayer ?? true)
                     {
-                        fg.AppendItem(Multilayer, "Multilayer");
+                        sb.AppendItem(Multilayer, "Multilayer");
                     }
                     if (printMask?.BacklightMaskOrSpecular ?? true)
                     {
-                        fg.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
+                        sb.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
                     }
                     if (printMask?.Decal?.Overall ?? true)
                     {
-                        Decal?.ToString(fg);
+                        Decal?.Print(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -578,47 +575,56 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Diffuse, "Diffuse");
-                fg.AppendItem(NormalOrGloss, "NormalOrGloss");
-                fg.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
-                fg.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
-                fg.AppendItem(Height, "Height");
-                fg.AppendItem(Environment, "Environment");
-                fg.AppendItem(Multilayer, "Multilayer");
-                fg.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
-                Decal?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
+                base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Diffuse, "Diffuse");
+                }
+                {
+                    sb.AppendItem(NormalOrGloss, "NormalOrGloss");
+                }
+                {
+                    sb.AppendItem(EnvironmentMaskOrSubsurfaceTint, "EnvironmentMaskOrSubsurfaceTint");
+                }
+                {
+                    sb.AppendItem(GlowOrDetailMap, "GlowOrDetailMap");
+                }
+                {
+                    sb.AppendItem(Height, "Height");
+                }
+                {
+                    sb.AppendItem(Environment, "Environment");
+                }
+                {
+                    sb.AppendItem(Multilayer, "Multilayer");
+                }
+                {
+                    sb.AppendItem(BacklightMaskOrSpecular, "BacklightMaskOrSpecular");
+                }
+                Decal?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -794,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -804,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static TextureSet CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TextureSet();
             ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -819,7 +825,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TextureSet item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -829,7 +835,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -846,15 +852,16 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITextureSet :
+        IExplodeSpawn,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBounded,
-        IObjectBoundedOptional,
         IObjectId,
+        IPlaceableObject,
         ISkyrimMajorRecordInternal,
         ITextureSetGetter
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new String? Diffuse { get; set; }
@@ -880,16 +887,17 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITextureSetGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         ILoquiObject<ITextureSetGetter>,
         IMapsToGetter<ITextureSetGetter>,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
-        IObjectIdGetter
+        IObjectIdGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -927,26 +935,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITextureSetGetter item,
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
+            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITextureSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
+            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1041,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITextureSetInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1056,10 +1064,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TextureSet_FieldIndex
+    internal enum TextureSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1082,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TextureSet_Registration : ILoquiRegistration
+    internal partial class TextureSet_Registration : ILoquiRegistration
     {
         public static readonly TextureSet_Registration Instance = new TextureSet_Registration();
 
@@ -1124,6 +1132,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TXST;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.TXST);
+            var all = RecordCollection.Factory(
+                RecordTypes.TXST,
+                RecordTypes.OBND,
+                RecordTypes.TX00,
+                RecordTypes.TX01,
+                RecordTypes.TX02,
+                RecordTypes.TX03,
+                RecordTypes.TX04,
+                RecordTypes.TX05,
+                RecordTypes.TX06,
+                RecordTypes.TX07,
+                RecordTypes.DODT,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1157,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TextureSetSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class TextureSetSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly TextureSetSetterCommon Instance = new TextureSetSetterCommon();
 
@@ -1202,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ITextureSetInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ITextureSetInternal>(
                 record: item,
@@ -1215,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (TextureSet)item,
@@ -1226,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (TextureSet)item,
@@ -1237,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TextureSetCommon : SkyrimMajorRecordCommon
+    internal partial class TextureSetCommon : SkyrimMajorRecordCommon
     {
         public new static readonly TextureSetCommon Instance = new TextureSetCommon();
 
@@ -1261,7 +1288,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TextureSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Diffuse = string.Equals(item.Diffuse, rhs.Diffuse);
             ret.NormalOrGloss = string.Equals(item.NormalOrGloss, rhs.NormalOrGloss);
@@ -1280,107 +1306,105 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ITextureSetGetter item,
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITextureSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TextureSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TextureSet =>");
+                sb.AppendLine($"TextureSet =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TextureSet) =>");
+                sb.AppendLine($"{name} (TextureSet) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITextureSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TextureSet.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Diffuse ?? true)
                 && item.Diffuse is {} DiffuseItem)
             {
-                fg.AppendItem(DiffuseItem, "Diffuse");
+                sb.AppendItem(DiffuseItem, "Diffuse");
             }
             if ((printMask?.NormalOrGloss ?? true)
                 && item.NormalOrGloss is {} NormalOrGlossItem)
             {
-                fg.AppendItem(NormalOrGlossItem, "NormalOrGloss");
+                sb.AppendItem(NormalOrGlossItem, "NormalOrGloss");
             }
             if ((printMask?.EnvironmentMaskOrSubsurfaceTint ?? true)
                 && item.EnvironmentMaskOrSubsurfaceTint is {} EnvironmentMaskOrSubsurfaceTintItem)
             {
-                fg.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
+                sb.AppendItem(EnvironmentMaskOrSubsurfaceTintItem, "EnvironmentMaskOrSubsurfaceTint");
             }
             if ((printMask?.GlowOrDetailMap ?? true)
                 && item.GlowOrDetailMap is {} GlowOrDetailMapItem)
             {
-                fg.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
+                sb.AppendItem(GlowOrDetailMapItem, "GlowOrDetailMap");
             }
             if ((printMask?.Height ?? true)
                 && item.Height is {} HeightItem)
             {
-                fg.AppendItem(HeightItem, "Height");
+                sb.AppendItem(HeightItem, "Height");
             }
             if ((printMask?.Environment ?? true)
                 && item.Environment is {} EnvironmentItem)
             {
-                fg.AppendItem(EnvironmentItem, "Environment");
+                sb.AppendItem(EnvironmentItem, "Environment");
             }
             if ((printMask?.Multilayer ?? true)
                 && item.Multilayer is {} MultilayerItem)
             {
-                fg.AppendItem(MultilayerItem, "Multilayer");
+                sb.AppendItem(MultilayerItem, "Multilayer");
             }
             if ((printMask?.BacklightMaskOrSpecular ?? true)
                 && item.BacklightMaskOrSpecular is {} BacklightMaskOrSpecularItem)
             {
-                fg.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
+                sb.AppendItem(BacklightMaskOrSpecularItem, "BacklightMaskOrSpecular");
             }
             if ((printMask?.Decal?.Overall ?? true)
                 && item.Decal is {} DecalItem)
             {
-                DecalItem?.ToString(fg, "Decal");
+                DecalItem?.Print(sb, "Decal");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
         }
         
@@ -1574,9 +1598,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITextureSetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITextureSetGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1621,7 +1645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TextureSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class TextureSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly TextureSetSetterTranslationCommon Instance = new TextureSetSetterTranslationCommon();
 
@@ -1860,7 +1884,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1878,18 +1902,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TextureSetBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TextureSetBinaryWriteTranslation Instance = new TextureSetBinaryWriteTranslation();
+        public new static readonly TextureSetBinaryWriteTranslation Instance = new TextureSetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ITextureSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1957,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ITextureSetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1968,12 +1992,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1985,7 +2012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -1996,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2007,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITextureSetGetter)item,
@@ -2017,9 +2044,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TextureSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class TextureSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
+        public new static readonly TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TXST;
         public static void FillBinaryStructs(
@@ -2038,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2132,7 +2159,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2149,16 +2177,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TextureSetBinaryOverlay :
+    internal partial class TextureSetBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ITextureSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration StaticRegistration => TextureSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TextureSetCommon.Instance;
         [DebuggerStepThrough]
@@ -2166,13 +2194,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2184,48 +2212,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Diffuse
         private int? _DiffuseLocation;
-        public String? Diffuse => _DiffuseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DiffuseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Diffuse => _DiffuseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DiffuseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region NormalOrGloss
         private int? _NormalOrGlossLocation;
-        public String? NormalOrGloss => _NormalOrGlossLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NormalOrGlossLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? NormalOrGloss => _NormalOrGlossLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NormalOrGlossLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region EnvironmentMaskOrSubsurfaceTint
         private int? _EnvironmentMaskOrSubsurfaceTintLocation;
-        public String? EnvironmentMaskOrSubsurfaceTint => _EnvironmentMaskOrSubsurfaceTintLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentMaskOrSubsurfaceTintLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? EnvironmentMaskOrSubsurfaceTint => _EnvironmentMaskOrSubsurfaceTintLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentMaskOrSubsurfaceTintLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region GlowOrDetailMap
         private int? _GlowOrDetailMapLocation;
-        public String? GlowOrDetailMap => _GlowOrDetailMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _GlowOrDetailMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? GlowOrDetailMap => _GlowOrDetailMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlowOrDetailMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Height
         private int? _HeightLocation;
-        public String? Height => _HeightLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Height => _HeightLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Environment
         private int? _EnvironmentLocation;
-        public String? Environment => _EnvironmentLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Environment => _EnvironmentLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Multilayer
         private int? _MultilayerLocation;
-        public String? Multilayer => _MultilayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MultilayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Multilayer => _MultilayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MultilayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region BacklightMaskOrSpecular
         private int? _BacklightMaskOrSpecularLocation;
-        public String? BacklightMaskOrSpecular => _BacklightMaskOrSpecularLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _BacklightMaskOrSpecularLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? BacklightMaskOrSpecular => _BacklightMaskOrSpecularLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BacklightMaskOrSpecularLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
-        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new OverlayStream(_data.Slice(_DecalLocation!.Value.Min), _package), _package) : default;
+        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(_recordData.Slice(_DecalLocation!.Value.Min), _package) : default;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public TextureSet.Flag? Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TextureSet.Flag?);
+        public TextureSet.Flag? Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(TextureSet.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2234,28 +2262,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected TextureSetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TextureSetBinaryOverlay TextureSetFactory(
+        public static ITextureSetGetter TextureSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TextureSetBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2265,20 +2296,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static TextureSetBinaryOverlay TextureSetFactory(
+        public static ITextureSetGetter TextureSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TextureSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2288,9 +2319,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -2355,17 +2386,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TextureSetMixIn.ToString(
+            TextureSetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

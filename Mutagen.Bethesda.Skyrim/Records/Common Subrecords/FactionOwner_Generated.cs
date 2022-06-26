@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -67,12 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FactionOwnerMixIn.ToString(
+            FactionOwnerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -193,34 +195,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FactionOwner.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FactionOwner.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FactionOwner.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FactionOwner.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FactionOwner.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FactionOwner.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Faction ?? true)
                     {
-                        fg.AppendItem(Faction, "Faction");
+                        sb.AppendItem(Faction, "Faction");
                     }
                     if (printMask?.RequiredRank ?? true)
                     {
-                        fg.AppendItem(RequiredRank, "RequiredRank");
+                        sb.AppendItem(RequiredRank, "RequiredRank");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -294,38 +291,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Faction, "Faction");
-                fg.AppendItem(RequiredRank, "RequiredRank");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Faction, "Faction");
+                }
+                {
+                    sb.AppendItem(RequiredRank, "RequiredRank");
+                }
             }
             #endregion
 
@@ -390,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionOwnerCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionOwnerCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionOwnerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -399,7 +391,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => FactionOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FactionOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -409,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static FactionOwner CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FactionOwner();
             ((FactionOwnerSetterCommon)((IFactionOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -424,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FactionOwner item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -434,7 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -493,26 +485,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFactionOwnerGetter item,
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).ToString(
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFactionOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
-            ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).ToString(
+            ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -593,7 +585,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFactionOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FactionOwnerSetterCommon)((IFactionOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -608,10 +600,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FactionOwner_FieldIndex
+    internal enum FactionOwner_FieldIndex
     {
         Faction = 0,
         RequiredRank = 1,
@@ -619,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FactionOwner_Registration : ILoquiRegistration
+    internal partial class FactionOwner_Registration : ILoquiRegistration
     {
         public static readonly FactionOwner_Registration Instance = new FactionOwner_Registration();
 
@@ -693,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FactionOwnerSetterCommon : OwnerTargetSetterCommon
+    internal partial class FactionOwnerSetterCommon : OwnerTargetSetterCommon
     {
         public new static readonly FactionOwnerSetterCommon Instance = new FactionOwnerSetterCommon();
 
@@ -725,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IFactionOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -737,7 +729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FactionOwner)item,
@@ -748,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FactionOwnerCommon : OwnerTargetCommon
+    internal partial class FactionOwnerCommon : OwnerTargetCommon
     {
         public new static readonly FactionOwnerCommon Instance = new FactionOwnerCommon();
 
@@ -772,67 +764,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FactionOwner.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Faction = item.Faction.Equals(rhs.Faction);
             ret.RequiredRank = item.RequiredRank == rhs.RequiredRank;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFactionOwnerGetter item,
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFactionOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FactionOwner.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FactionOwner =>");
+                sb.AppendLine($"FactionOwner =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FactionOwner) =>");
+                sb.AppendLine($"{name} (FactionOwner) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFactionOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FactionOwner.Mask<bool>? printMask = null)
         {
             OwnerTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Faction ?? true)
             {
-                fg.AppendItem(item.Faction.FormKey, "Faction");
+                sb.AppendItem(item.Faction.FormKey, "Faction");
             }
             if (printMask?.RequiredRank ?? true)
             {
-                fg.AppendItem(item.RequiredRank, "RequiredRank");
+                sb.AppendItem(item.RequiredRank, "RequiredRank");
             }
         }
         
@@ -898,9 +887,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFactionOwnerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionOwnerGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -911,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FactionOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
+    internal partial class FactionOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
     {
         public new static readonly FactionOwnerSetterTranslationCommon Instance = new FactionOwnerSetterTranslationCommon();
 
@@ -1015,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FactionOwner_Registration.Instance;
-        public new static FactionOwner_Registration StaticRegistration => FactionOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FactionOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1033,13 +1022,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FactionOwnerBinaryWriteTranslation :
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FactionOwnerBinaryWriteTranslation Instance = new FactionOwnerBinaryWriteTranslation();
+        public new static readonly FactionOwnerBinaryWriteTranslation Instance = new FactionOwnerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFactionOwnerGetter item,
@@ -1054,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IFactionOwnerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1064,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFactionOwnerGetter)item,
@@ -1075,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IOwnerTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFactionOwnerGetter)item,
@@ -1085,9 +1074,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FactionOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
+    internal partial class FactionOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
-        public new readonly static FactionOwnerBinaryCreateTranslation Instance = new FactionOwnerBinaryCreateTranslation();
+        public new static readonly FactionOwnerBinaryCreateTranslation Instance = new FactionOwnerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFactionOwner item,
@@ -1110,16 +1099,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FactionOwnerBinaryOverlay :
+    internal partial class FactionOwnerBinaryOverlay :
         OwnerTargetBinaryOverlay,
         IFactionOwnerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FactionOwner_Registration.Instance;
-        public new static FactionOwner_Registration StaticRegistration => FactionOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FactionOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1127,14 +1116,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionOwnerCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionOwnerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FactionOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1142,8 +1131,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 RequiredRank => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 RequiredRank => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1151,24 +1140,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected FactionOwnerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FactionOwnerBinaryOverlay FactionOwnerFactory(
+        public static IFactionOwnerGetter FactionOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new FactionOwnerBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1177,25 +1172,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static FactionOwnerBinaryOverlay FactionOwnerFactory(
+        public static IFactionOwnerGetter FactionOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FactionOwnerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FactionOwnerMixIn.ToString(
+            FactionOwnerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

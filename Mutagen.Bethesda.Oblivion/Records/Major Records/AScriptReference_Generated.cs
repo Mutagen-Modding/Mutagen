@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +56,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AScriptReferenceMixIn.ToString(
+            AScriptReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -149,26 +151,21 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AScriptReference.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AScriptReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AScriptReference.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AScriptReference.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AScriptReference.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AScriptReference.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -233,34 +230,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
             }
             #endregion
@@ -328,7 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AScriptReferenceCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AScriptReferenceCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AScriptReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -339,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AScriptReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -348,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -414,26 +402,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAScriptReferenceGetter item,
             string? name = null,
             AScriptReference.Mask<bool>? printMask = null)
         {
-            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).ToString(
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAScriptReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AScriptReference.Mask<bool>? printMask = null)
         {
-            ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).ToString(
+            ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -539,7 +527,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAScriptReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AScriptReferenceSetterCommon)((IAScriptReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -554,16 +542,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AScriptReference_FieldIndex
+    internal enum AScriptReference_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class AScriptReference_Registration : ILoquiRegistration
+    internal partial class AScriptReference_Registration : ILoquiRegistration
     {
         public static readonly AScriptReference_Registration Instance = new AScriptReference_Registration();
 
@@ -604,17 +592,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.SCRV,
-                        RecordTypes.SCRO
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.SCRV,
+                RecordTypes.SCRO);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AScriptReferenceBinaryWriteTranslation);
         #region Interface
@@ -649,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AScriptReferenceSetterCommon
+    internal partial class AScriptReferenceSetterCommon
     {
         public static readonly AScriptReferenceSetterCommon Instance = new AScriptReferenceSetterCommon();
 
@@ -671,14 +655,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IAScriptReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         #endregion
         
     }
-    public partial class AScriptReferenceCommon
+    internal partial class AScriptReferenceCommon
     {
         public static readonly AScriptReferenceCommon Instance = new AScriptReferenceCommon();
 
@@ -702,51 +686,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AScriptReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
-        public string ToString(
+        public string Print(
             IAScriptReferenceGetter item,
             string? name = null,
             AScriptReference.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAScriptReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AScriptReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AScriptReference =>");
+                sb.AppendLine($"AScriptReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AScriptReference) =>");
+                sb.AppendLine($"{name} (AScriptReference) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAScriptReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AScriptReference.Mask<bool>? printMask = null)
         {
         }
@@ -776,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAScriptReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAScriptReferenceGetter obj)
         {
             yield break;
         }
@@ -784,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AScriptReferenceSetterTranslationCommon
+    internal partial class AScriptReferenceSetterTranslationCommon
     {
         public static readonly AScriptReferenceSetterTranslationCommon Instance = new AScriptReferenceSetterTranslationCommon();
 
@@ -858,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AScriptReference_Registration.Instance;
-        public static AScriptReference_Registration StaticRegistration => AScriptReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AScriptReference_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AScriptReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -882,23 +863,23 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AScriptReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AScriptReferenceBinaryWriteTranslation Instance = new AScriptReferenceBinaryWriteTranslation();
+        public static readonly AScriptReferenceBinaryWriteTranslation Instance = new AScriptReferenceBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IAScriptReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAScriptReferenceGetter)item,
@@ -908,9 +889,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AScriptReferenceBinaryCreateTranslation
+    internal partial class AScriptReferenceBinaryCreateTranslation
     {
-        public readonly static AScriptReferenceBinaryCreateTranslation Instance = new AScriptReferenceBinaryCreateTranslation();
+        public static readonly AScriptReferenceBinaryCreateTranslation Instance = new AScriptReferenceBinaryCreateTranslation();
 
     }
 
@@ -923,7 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAScriptReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AScriptReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -936,16 +917,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public abstract partial class AScriptReferenceBinaryOverlay :
+    internal abstract partial class AScriptReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IAScriptReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AScriptReference_Registration.Instance;
-        public static AScriptReference_Registration StaticRegistration => AScriptReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AScriptReference_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => AScriptReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -959,16 +940,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AScriptReferenceCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AScriptReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AScriptReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AScriptReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -983,10 +964,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected AScriptReferenceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -995,12 +976,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AScriptReferenceMixIn.ToString(
+            AScriptReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

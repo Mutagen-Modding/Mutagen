@@ -1,36 +1,31 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using System;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class SceneAdapterBinaryCreateTranslation
 {
-    namespace Internals
+    public static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, ISceneAdapter item)
     {
-        public partial class SceneAdapterBinaryCreateTranslation
-        {
-            public static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, ISceneAdapter item)
-            {
-                item.ScriptFragments = Mutagen.Bethesda.Skyrim.SceneScriptFragments.CreateFromBinary(frame: frame);
-            }
-        }
+        item.ScriptFragments = Mutagen.Bethesda.Skyrim.SceneScriptFragments.CreateFromBinary(frame: frame);
+    }
+}
 
-        public partial class SceneAdapterBinaryWriteTranslation
-        {
-            public static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, ISceneAdapterGetter item)
-            {
-                if (item.ScriptFragments is not {} frags) return;
-                frags.WriteToBinary(writer);
-            }
-        }
+partial class SceneAdapterBinaryWriteTranslation
+{
+    public static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, ISceneAdapterGetter item)
+    {
+        if (item.ScriptFragments is not {} frags) return;
+        frags.WriteToBinary(writer);
+    }
+}
 
-        public partial class SceneAdapterBinaryOverlay
-        {
-            ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
-            {
-                if (this.ScriptsEndingPos == _data.Length) return null;
-                return SceneScriptFragmentsBinaryOverlay.SceneScriptFragmentsFactory(
-                    _data.Slice(this.ScriptsEndingPos),
-                    _package);
-            }
-        }
+partial class SceneAdapterBinaryOverlay
+{
+    public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
+    {
+        if (this.ScriptsEndingPos == _structData.Length) return null;
+        return SceneScriptFragmentsBinaryOverlay.SceneScriptFragmentsFactory(
+            _structData.Slice(this.ScriptsEndingPos),
+            _package);
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Destructible" objType="Subrecord" GUID="4cbfc6ca-72eb-48e2-9b76-578e8078efff" ID="105">
+    <Fields>
+      <RefDirect name="Data" refName="DestructableData" />
+      <RefList name="Resistances" refName="ResistanceDestructible" recordType="DAMC" />
+      <RefList name="Stages" refName="DestructionStage" />
+    </Fields>
+  </Object>
+  <Object name="DestructableData" objType="Subrecord" recordType="DEST" GUID="b29f0a71-098b-4c11-a42a-2f7a5d2a79f6" ID="106">
+    <Fields>
+      <Int32 name="Health" />
+      <UInt8 name="DESTCount" />
+      <Enum name="Flags" enumName="Destructible.DestructibleFlag" byteLength="1" />
+      <Int16 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="ResistanceDestructible" objType="Subrecord" GUID="53c2a9a0-bd8e-461e-92c5-ef7f9daafce5" ID="143">
+    <Fields>
+      <FormLink name="DamageType" refName="DamageType" />
+      <UInt32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF" GUID="54a3e642-e581-4a85-8837-267614ca6e48" ID="108">
+    <Fields>
+      <RefDirect name="Data" refName="DestructionStageData" />
+      <String name="SequenceName" recordType="DSTA" nullable="True" />
+      <RefDirect name="Model" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="DMDL" />
+          <Mapping From="MODT" To="DMDT" />
+          <Mapping From="MODC" To="DMDC" />
+          <Mapping From="MODS" To="DMDS" />
+        </RecordTypeOverrides>
+      </RefDirect>
+    </Fields>
+  </Object>
+  <Object name="DestructionStageData" objType="Subrecord" recordType="DSTD" GUID="2373572d-1a07-434b-b11b-474169645efd" ID="109">
+    <Fields>
+      <UInt8 name="HealthPercent" />
+      <UInt8 name="Index" />
+      <UInt8 name="ModelDamageStage" />
+      <Enum name="Flags" enumName="Destructible.DestructionStageDataFlag" byteLength="1" />
+      <Int32 name="SelfDamagePerSecond" />
+      <FormLink name="Explosion" refName="Explosion" />
+      <FormLink name="Debris" refName="Debris" />
+      <Int32 name="DebrisCount" />
+    </Fields>
+  </Object>
+</Loqui>

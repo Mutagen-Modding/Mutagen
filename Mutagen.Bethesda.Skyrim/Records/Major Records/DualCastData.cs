@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class DualCastData
 {
-    public partial class DualCastData
+    [Flags]
+    public enum InheritScaleType
     {
-        [Flags]
-        public enum InheritScaleType
-        {
-            HitEffectArt,
-            Projectile,
-            Explosion,
-        }
+        HitEffectArt,
+        Projectile,
+        Explosion,
     }
 }

@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -69,13 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? ITreeGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -207,12 +209,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TreeMixIn.ToString(
+            TreeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -460,78 +463,73 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Tree.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Tree.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Tree.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Tree.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Tree.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.VirtualMachineAdapter?.Overall ?? true)
                     {
-                        VirtualMachineAdapter?.ToString(fg);
+                        VirtualMachineAdapter?.Print(sb);
                     }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Ingredient ?? true)
                     {
-                        fg.AppendItem(Ingredient, "Ingredient");
+                        sb.AppendItem(Ingredient, "Ingredient");
                     }
                     if (printMask?.HarvestSound ?? true)
                     {
-                        fg.AppendItem(HarvestSound, "HarvestSound");
+                        sb.AppendItem(HarvestSound, "HarvestSound");
                     }
                     if (printMask?.Production?.Overall ?? true)
                     {
-                        Production?.ToString(fg);
+                        Production?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.TrunkFlexibility ?? true)
                     {
-                        fg.AppendItem(TrunkFlexibility, "TrunkFlexibility");
+                        sb.AppendItem(TrunkFlexibility, "TrunkFlexibility");
                     }
                     if (printMask?.BranchFlexibility ?? true)
                     {
-                        fg.AppendItem(BranchFlexibility, "BranchFlexibility");
+                        sb.AppendItem(BranchFlexibility, "BranchFlexibility");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.LeafAmplitude ?? true)
                     {
-                        fg.AppendItem(LeafAmplitude, "LeafAmplitude");
+                        sb.AppendItem(LeafAmplitude, "LeafAmplitude");
                     }
                     if (printMask?.LeafFrequency ?? true)
                     {
-                        fg.AppendItem(LeafFrequency, "LeafFrequency");
+                        sb.AppendItem(LeafFrequency, "LeafFrequency");
                     }
                     if (printMask?.CNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                        sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -715,49 +713,58 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                VirtualMachineAdapter?.ToString(fg);
-                ObjectBounds?.ToString(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Ingredient, "Ingredient");
-                fg.AppendItem(HarvestSound, "HarvestSound");
-                Production?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(TrunkFlexibility, "TrunkFlexibility");
-                fg.AppendItem(BranchFlexibility, "BranchFlexibility");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(LeafAmplitude, "LeafAmplitude");
-                fg.AppendItem(LeafFrequency, "LeafFrequency");
-                fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Ingredient, "Ingredient");
+                }
+                {
+                    sb.AppendItem(HarvestSound, "HarvestSound");
+                }
+                Production?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(TrunkFlexibility, "TrunkFlexibility");
+                }
+                {
+                    sb.AppendItem(BranchFlexibility, "BranchFlexibility");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(LeafAmplitude, "LeafAmplitude");
+                }
+                {
+                    sb.AppendItem(LeafFrequency, "LeafFrequency");
+                }
+                {
+                    sb.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -863,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Tree_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TreeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TreeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TreeSetterCommon.Instance.RemapLinks(this, mapping);
         public Tree(
             FormKey formKey,
@@ -950,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -960,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Tree CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Tree();
             ((TreeSetterCommon)((ITreeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -975,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Tree item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -985,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1002,6 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ITree :
+        IExplodeSpawn,
         IFormLinkContainer,
         IHarvestable,
         ILoquiObjectSetter<ITreeInternal>,
@@ -1009,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired,
         IObjectBounded,
-        IObjectBoundedOptional,
+        IPlaceableObject,
         IRegionTarget,
         IScripted,
         ISkyrimMajorRecordInternal,
@@ -1022,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
@@ -1059,15 +1067,17 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITreeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestableGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ITreeGetter>,
         IMapsToGetter<ITreeGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter,
         IRegionTargetGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
@@ -1076,13 +1086,13 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScriptedGetter
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -1135,26 +1145,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITreeGetter item,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
-            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).ToString(
+            return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
-            ((TreeCommon)((ITreeGetter)item).CommonInstance()!).ToString(
+            ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1249,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITreeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TreeSetterCommon)((ITreeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1264,10 +1274,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Tree_FieldIndex
+    internal enum Tree_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1292,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Tree_Registration : ILoquiRegistration
+    internal partial class Tree_Registration : ILoquiRegistration
     {
         public static readonly Tree_Registration Instance = new Tree_Registration();
 
@@ -1334,6 +1344,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TREE;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.TREE);
+            var all = RecordCollection.Factory(
+                RecordTypes.TREE,
+                RecordTypes.VMAD,
+                RecordTypes.OBND,
+                RecordTypes.MODL,
+                RecordTypes.PFIG,
+                RecordTypes.SNAM,
+                RecordTypes.PFPC,
+                RecordTypes.FULL,
+                RecordTypes.CNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1367,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TreeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class TreeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly TreeSetterCommon Instance = new TreeSetterCommon();
 
@@ -1418,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ITreeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ITreeInternal>(
                 record: item,
@@ -1431,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Tree)item,
@@ -1442,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Tree)item,
@@ -1453,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TreeCommon : SkyrimMajorRecordCommon
+    internal partial class TreeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly TreeCommon Instance = new TreeCommon();
 
@@ -1477,7 +1503,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Tree.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
                 item.VirtualMachineAdapter,
                 rhs.VirtualMachineAdapter,
@@ -1506,109 +1531,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ITreeGetter item,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Tree.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Tree =>");
+                sb.AppendLine($"Tree =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Tree) =>");
+                sb.AppendLine($"{name} (Tree) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITreeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Tree.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
                 && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
             {
-                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
             }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.Ingredient ?? true)
             {
-                fg.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
+                sb.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
             if (printMask?.HarvestSound ?? true)
             {
-                fg.AppendItem(item.HarvestSound.FormKeyNullable, "HarvestSound");
+                sb.AppendItem(item.HarvestSound.FormKeyNullable, "HarvestSound");
             }
             if ((printMask?.Production?.Overall ?? true)
                 && item.Production is {} ProductionItem)
             {
-                ProductionItem?.ToString(fg, "Production");
+                ProductionItem?.Print(sb, "Production");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.TrunkFlexibility ?? true)
             {
-                fg.AppendItem(item.TrunkFlexibility, "TrunkFlexibility");
+                sb.AppendItem(item.TrunkFlexibility, "TrunkFlexibility");
             }
             if (printMask?.BranchFlexibility ?? true)
             {
-                fg.AppendItem(item.BranchFlexibility, "BranchFlexibility");
+                sb.AppendItem(item.BranchFlexibility, "BranchFlexibility");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
             if (printMask?.LeafAmplitude ?? true)
             {
-                fg.AppendItem(item.LeafAmplitude, "LeafAmplitude");
+                sb.AppendItem(item.LeafAmplitude, "LeafAmplitude");
             }
             if (printMask?.LeafFrequency ?? true)
             {
-                fg.AppendItem(item.LeafFrequency, "LeafFrequency");
+                sb.AppendItem(item.LeafFrequency, "LeafFrequency");
             }
             if (printMask?.CNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
+                sb.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
             }
         }
         
@@ -1802,33 +1825,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITreeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITreeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.ContainedFormLinks)
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.Ingredient.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Ingredient, out var IngredientInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Ingredient);
+                yield return IngredientInfo;
             }
-            if (obj.HarvestSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.HarvestSound, out var HarvestSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.HarvestSound);
+                yield return HarvestSoundInfo;
             }
             yield break;
         }
@@ -1871,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TreeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class TreeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly TreeSetterTranslationCommon Instance = new TreeSetterTranslationCommon();
 
@@ -2162,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -2180,13 +2203,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TreeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
+        public new static readonly TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITreeGetter item,
@@ -2200,7 +2223,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2269,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ITreeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2280,12 +2303,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2297,7 +2323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITreeGetter)item,
@@ -2308,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITreeGetter)item,
@@ -2319,7 +2345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITreeGetter)item,
@@ -2329,9 +2355,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TreeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class TreeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
+        public new static readonly TreeBinaryCreateTranslation Instance = new TreeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TREE;
         public static void FillBinaryStructs(
@@ -2350,7 +2376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2369,7 +2395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.PFIG:
@@ -2416,7 +2442,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2433,16 +2460,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TreeBinaryOverlay :
+    internal partial class TreeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ITreeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
-        public new static Tree_Registration StaticRegistration => Tree_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Tree_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TreeCommon.Instance;
         [DebuggerStepThrough]
@@ -2450,14 +2477,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => TreeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TreeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TreeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2470,29 +2497,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
         #region Ingredient
         private int? _IngredientLocation;
-        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
+        public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => _IngredientLocation.HasValue ? new FormLinkNullable<IHarvestTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IngredientLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHarvestTargetGetter>.Null;
         #endregion
         #region HarvestSound
         private int? _HarvestSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound => _HarvestSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HarvestSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Production
         private RangeInt32? _ProductionLocation;
-        public ISeasonalIngredientProductionGetter? Production => _ProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new OverlayStream(_data.Slice(_ProductionLocation!.Value.Min), _package), _package) : default;
+        public ISeasonalIngredientProductionGetter? Production => _ProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(_recordData.Slice(_ProductionLocation!.Value.Min), _package) : default;
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2502,32 +2530,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        private int? _CNAMLocation;
+        private RangeInt32? _CNAMLocation;
         public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
         #region TrunkFlexibility
-        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value;
+        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value.Min;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _data.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
+        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _recordData.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
         #endregion
         #region BranchFlexibility
-        private int _BranchFlexibilityLocation => _CNAMLocation!.Value + 0x4;
+        private int _BranchFlexibilityLocation => _CNAMLocation!.Value.Min + 0x4;
         private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single BranchFlexibility => _BranchFlexibility_IsSet ? _data.Slice(_BranchFlexibilityLocation, 4).Float() : default;
+        public Single BranchFlexibility => _BranchFlexibility_IsSet ? _recordData.Slice(_BranchFlexibilityLocation, 4).Float() : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _CNAMLocation!.Value + 0x8;
+        private int _UnknownLocation => _CNAMLocation!.Value.Min + 0x8;
         private bool _Unknown_IsSet => _CNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region LeafAmplitude
-        private int _LeafAmplitudeLocation => _CNAMLocation!.Value + 0x28;
+        private int _LeafAmplitudeLocation => _CNAMLocation!.Value.Min + 0x28;
         private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
-        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _data.Slice(_LeafAmplitudeLocation, 4).Float() : default;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _recordData.Slice(_LeafAmplitudeLocation, 4).Float() : default;
         #endregion
         #region LeafFrequency
-        private int _LeafFrequencyLocation => _CNAMLocation!.Value + 0x2C;
+        private int _LeafFrequencyLocation => _CNAMLocation!.Value.Min + 0x2C;
         private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
-        public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _recordData.Slice(_LeafFrequencyLocation, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2536,28 +2564,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected TreeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TreeBinaryOverlay TreeFactory(
+        public static ITreeGetter TreeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TreeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2567,20 +2598,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static TreeBinaryOverlay TreeFactory(
+        public static ITreeGetter TreeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TreeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2590,9 +2621,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VMAD:
@@ -2610,7 +2641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.PFIG:
@@ -2635,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _CNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:
@@ -2645,17 +2676,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TreeMixIn.ToString(
+            TreeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

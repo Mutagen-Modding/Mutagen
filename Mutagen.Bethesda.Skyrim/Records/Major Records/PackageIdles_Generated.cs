@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -72,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageIdlesMixIn.ToString(
+            PackageIdlesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -221,9 +223,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Animations.Specific = l;
-                        foreach (var item in Animations.Specific.WithIndex())
+                        foreach (var item in Animations.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -232,57 +234,50 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PackageIdles.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PackageIdles.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PackageIdles.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PackageIdles.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PackageIdles.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PackageIdles.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.TimerSetting ?? true)
                     {
-                        fg.AppendItem(TimerSetting, "TimerSetting");
+                        sb.AppendItem(TimerSetting, "TimerSetting");
                     }
                     if ((printMask?.Animations?.Overall ?? true)
                         && Animations is {} AnimationsItem)
                     {
-                        fg.AppendLine("Animations =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Animations =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AnimationsItem.Overall);
+                            sb.AppendItem(AnimationsItem.Overall);
                             if (AnimationsItem.Specific != null)
                             {
                                 foreach (var subItem in AnimationsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -377,58 +372,51 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(TimerSetting, "TimerSetting");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(TimerSetting, "TimerSetting");
+                }
                 if (Animations is {} AnimationsItem)
                 {
-                    fg.AppendLine("Animations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Animations =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AnimationsItem.Overall);
+                        sb.AppendItem(AnimationsItem.Overall);
                         if (AnimationsItem.Specific != null)
                         {
                             foreach (var subItem in AnimationsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -508,8 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PackageIdles_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageIdlesCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -520,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageIdlesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -530,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PackageIdles CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageIdles();
             ((PackageIdlesSetterCommon)((IPackageIdlesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -545,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageIdles item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -555,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -621,26 +608,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPackageIdlesGetter item,
             string? name = null,
             PackageIdles.Mask<bool>? printMask = null)
         {
-            return ((PackageIdlesCommon)((IPackageIdlesGetter)item).CommonInstance()!).ToString(
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPackageIdlesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageIdles.Mask<bool>? printMask = null)
         {
-            ((PackageIdlesCommon)((IPackageIdlesGetter)item).CommonInstance()!).ToString(
+            ((PackageIdlesCommon)((IPackageIdlesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -746,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPackageIdles item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageIdlesSetterCommon)((IPackageIdlesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -761,10 +748,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageIdles_FieldIndex
+    internal enum PackageIdles_FieldIndex
     {
         Type = 0,
         TimerSetting = 1,
@@ -773,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageIdles_Registration : ILoquiRegistration
+    internal partial class PackageIdles_Registration : ILoquiRegistration
     {
         public static readonly PackageIdles_Registration Instance = new PackageIdles_Registration();
 
@@ -815,6 +802,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.IDLF;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.IDLF);
+            var all = RecordCollection.Factory(
+                RecordTypes.IDLF,
+                RecordTypes.IDLT,
+                RecordTypes.IDLA,
+                RecordTypes.IDLC);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PackageIdlesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -848,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageIdlesSetterCommon
+    internal partial class PackageIdlesSetterCommon
     {
         public static readonly PackageIdlesSetterCommon Instance = new PackageIdlesSetterCommon();
 
@@ -874,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPackageIdles item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -887,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageIdlesCommon
+    internal partial class PackageIdlesCommon
     {
         public static readonly PackageIdlesCommon Instance = new PackageIdlesCommon();
 
@@ -911,7 +909,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageIdles.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.TimerSetting = item.TimerSetting.EqualsWithin(rhs.TimerSetting);
             ret.Animations = item.Animations.CollectionEqualsHelper(
@@ -920,75 +917,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IPackageIdlesGetter item,
             string? name = null,
             PackageIdles.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPackageIdlesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageIdles.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PackageIdles =>");
+                sb.AppendLine($"PackageIdles =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PackageIdles) =>");
+                sb.AppendLine($"{name} (PackageIdles) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPackageIdlesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PackageIdles.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.TimerSetting ?? true)
             {
-                fg.AppendItem(item.TimerSetting, "TimerSetting");
+                sb.AppendItem(item.TimerSetting, "TimerSetting");
             }
             if (printMask?.Animations?.Overall ?? true)
             {
-                fg.AppendLine("Animations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Animations =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Animations)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1032,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageIdlesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageIdlesGetter obj)
         {
             foreach (var item in obj.Animations)
             {
@@ -1044,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageIdlesSetterTranslationCommon
+    internal partial class PackageIdlesSetterTranslationCommon
     {
         public static readonly PackageIdlesSetterTranslationCommon Instance = new PackageIdlesSetterTranslationCommon();
 
@@ -1145,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageIdles_Registration.Instance;
-        public static PackageIdles_Registration StaticRegistration => PackageIdles_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageIdlesCommon.Instance;
         [DebuggerStepThrough]
@@ -1169,16 +1160,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageIdlesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
+        public static readonly PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPackageIdlesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
@@ -1222,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPackageIdlesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1233,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageIdlesGetter)item,
@@ -1243,9 +1234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageIdlesBinaryCreateTranslation
+    internal partial class PackageIdlesBinaryCreateTranslation
     {
-        public readonly static PackageIdlesBinaryCreateTranslation Instance = new PackageIdlesBinaryCreateTranslation();
+        public static readonly PackageIdlesBinaryCreateTranslation Instance = new PackageIdlesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageIdles item,
@@ -1260,14 +1251,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1281,8 +1272,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
-                case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
+                case RecordTypeInts.IDLA:
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
@@ -1313,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPackageIdlesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageIdlesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1326,16 +1317,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageIdlesBinaryOverlay :
+    internal partial class PackageIdlesBinaryOverlay :
         PluginBinaryOverlay,
         IPackageIdlesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageIdles_Registration.Instance;
-        public static PackageIdles_Registration StaticRegistration => PackageIdles_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageIdlesCommon.Instance;
         [DebuggerStepThrough]
@@ -1349,16 +1340,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PackageIdlesCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageIdlesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageIdlesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1368,13 +1359,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
+        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
         #endregion
         #region TimerSetting
         partial void TimerSettingCustomParse(
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Single GetTimerSettingCustom();
         public Single TimerSetting => GetTimerSettingCustom();
         #endregion
         #region Animations
@@ -1392,42 +1384,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PackageIdlesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PackageIdlesBinaryOverlay PackageIdlesFactory(
+        public static IPackageIdlesGetter PackageIdlesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PackageIdlesBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PackageIdlesBinaryOverlay PackageIdlesFactory(
+        public static IPackageIdlesGetter PackageIdlesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageIdlesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1437,14 +1435,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
                     return (int)PackageIdles_FieldIndex.Type;
                 }
@@ -1456,8 +1454,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset);
                     return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
-                case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
+                case RecordTypeInts.IDLA:
                 {
                     AnimationsCustomParse(
                         stream: stream,
@@ -1473,12 +1471,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageIdlesMixIn.ToString(
+            PackageIdlesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

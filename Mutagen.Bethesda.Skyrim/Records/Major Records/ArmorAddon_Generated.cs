@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,22 +18,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -146,12 +147,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorAddonMixIn.ToString(
+            ArmorAddonMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -451,9 +453,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.AdditionalRaces.Specific = l;
-                        foreach (var item in AdditionalRaces.Specific.WithIndex())
+                        foreach (var item in AdditionalRaces.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -465,113 +467,106 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ArmorAddon.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ArmorAddon.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorAddon.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ArmorAddon.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ArmorAddon.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ArmorAddon.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.BodyTemplate?.Overall ?? true)
                     {
-                        BodyTemplate?.ToString(fg);
+                        BodyTemplate?.Print(sb);
                     }
                     if (printMask?.Race ?? true)
                     {
-                        fg.AppendItem(Race, "Race");
+                        sb.AppendItem(Race, "Race");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Priority => {Priority}");
+                        sb.AppendLine($"Priority => {Priority}");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
+                        sb.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.DetectionSoundValue ?? true)
                     {
-                        fg.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                        sb.AppendItem(DetectionSoundValue, "DetectionSoundValue");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.WeaponAdjust ?? true)
                     {
-                        fg.AppendItem(WeaponAdjust, "WeaponAdjust");
+                        sb.AppendItem(WeaponAdjust, "WeaponAdjust");
                     }
                     if (WorldModel != null
                         && (printMask?.WorldModel?.Overall ?? true))
                     {
-                        fg.AppendLine($"WorldModel => {WorldModel}");
+                        sb.AppendLine($"WorldModel => {WorldModel}");
                     }
                     if (FirstPersonModel != null
                         && (printMask?.FirstPersonModel?.Overall ?? true))
                     {
-                        fg.AppendLine($"FirstPersonModel => {FirstPersonModel}");
+                        sb.AppendLine($"FirstPersonModel => {FirstPersonModel}");
                     }
                     if (SkinTexture != null
                         && (printMask?.SkinTexture?.Overall ?? true))
                     {
-                        fg.AppendLine($"SkinTexture => {SkinTexture}");
+                        sb.AppendLine($"SkinTexture => {SkinTexture}");
                     }
                     if (TextureSwapList != null
                         && (printMask?.TextureSwapList?.Overall ?? true))
                     {
-                        fg.AppendLine($"TextureSwapList => {TextureSwapList}");
+                        sb.AppendLine($"TextureSwapList => {TextureSwapList}");
                     }
                     if ((printMask?.AdditionalRaces?.Overall ?? true)
                         && AdditionalRaces is {} AdditionalRacesItem)
                     {
-                        fg.AppendLine("AdditionalRaces =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("AdditionalRaces =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AdditionalRacesItem.Overall);
+                            sb.AppendItem(AdditionalRacesItem.Overall);
                             if (AdditionalRacesItem.Specific != null)
                             {
                                 foreach (var subItem in AdditionalRacesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.FootstepSound ?? true)
                     {
-                        fg.AppendItem(FootstepSound, "FootstepSound");
+                        sb.AppendItem(FootstepSound, "FootstepSound");
                     }
                     if (printMask?.ArtObject ?? true)
                     {
-                        fg.AppendItem(ArtObject, "ArtObject");
+                        sb.AppendItem(ArtObject, "ArtObject");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -785,85 +780,94 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                BodyTemplate?.ToString(fg);
-                fg.AppendItem(Race, "Race");
-                fg.AppendLine($"Priority => {Priority}");
-                fg.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(DetectionSoundValue, "DetectionSoundValue");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(WeaponAdjust, "WeaponAdjust");
+                base.PrintFillInternal(sb);
+                BodyTemplate?.Print(sb);
+                {
+                    sb.AppendItem(Race, "Race");
+                }
+                {
+                    sb.AppendLine($"Priority => {Priority}");
+                }
+                {
+                    sb.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(WeaponAdjust, "WeaponAdjust");
+                }
                 if (WorldModel != null)
                 {
-                    fg.AppendLine($"WorldModel => {WorldModel}");
+                    sb.AppendLine($"WorldModel => {WorldModel}");
                 }
                 if (FirstPersonModel != null)
                 {
-                    fg.AppendLine($"FirstPersonModel => {FirstPersonModel}");
+                    sb.AppendLine($"FirstPersonModel => {FirstPersonModel}");
                 }
                 if (SkinTexture != null)
                 {
-                    fg.AppendLine($"SkinTexture => {SkinTexture}");
+                    sb.AppendLine($"SkinTexture => {SkinTexture}");
                 }
                 if (TextureSwapList != null)
                 {
-                    fg.AppendLine($"TextureSwapList => {TextureSwapList}");
+                    sb.AppendLine($"TextureSwapList => {TextureSwapList}");
                 }
                 if (AdditionalRaces is {} AdditionalRacesItem)
                 {
-                    fg.AppendLine("AdditionalRaces =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("AdditionalRaces =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AdditionalRacesItem.Overall);
+                        sb.AppendItem(AdditionalRacesItem.Overall);
                         if (AdditionalRacesItem.Specific != null)
                         {
                             foreach (var subItem in AdditionalRacesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(FootstepSound, "FootstepSound");
-                fg.AppendItem(ArtObject, "ArtObject");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                {
+                    sb.AppendItem(FootstepSound, "FootstepSound");
+                }
+                {
+                    sb.AppendItem(ArtObject, "ArtObject");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -978,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSetterCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(
             FormKey formKey,
@@ -1060,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorAddonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1070,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ArmorAddon CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ArmorAddon();
             ((ArmorAddonSetterCommon)((IArmorAddonGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1085,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ArmorAddon item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1095,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1113,6 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmorAddon :
         IArmorAddonGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonInternal>,
         ISkyrimMajorRecordInternal
@@ -1152,6 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IArmorAddonGetter>,
         IMapsToGetter<IArmorAddonGetter>
@@ -1197,26 +1203,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IArmorAddonGetter item,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
-            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IArmorAddonGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
-            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
+            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1311,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IArmorAddonInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ArmorAddonSetterCommon)((IArmorAddonGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1326,10 +1332,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ArmorAddon_FieldIndex
+    internal enum ArmorAddon_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1357,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ArmorAddon_Registration : ILoquiRegistration
+    internal partial class ArmorAddon_Registration : ILoquiRegistration
     {
         public static readonly ArmorAddon_Registration Instance = new ArmorAddon_Registration();
 
@@ -1399,47 +1405,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.ARMA);
+            var all = RecordCollection.Factory(
+                RecordTypes.ARMA,
+                RecordTypes.BODT,
+                RecordTypes.BOD2,
+                RecordTypes.RNAM,
+                RecordTypes.DNAM,
+                RecordTypes.MOD2,
+                RecordTypes.MOD3,
+                RecordTypes.MO2T,
+                RecordTypes.MO2S,
+                RecordTypes.MO3T,
+                RecordTypes.MO3S,
+                RecordTypes.MOD4,
+                RecordTypes.MOD5,
+                RecordTypes.MO4T,
+                RecordTypes.MO4S,
+                RecordTypes.MO5T,
+                RecordTypes.MO5S,
+                RecordTypes.NAM0,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.MODL,
+                RecordTypes.SNDD,
+                RecordTypes.ONAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD3")),
+                RecordTypes.MODL,
+                RecordTypes.MOD3),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO3T")),
+                RecordTypes.MODT,
+                RecordTypes.MO3T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO3S")));
+                RecordTypes.MODS,
+                RecordTypes.MO3S));
         public static RecordTypeConverter WorldModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD2")),
+                RecordTypes.MODL,
+                RecordTypes.MOD2),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO2T")),
+                RecordTypes.MODT,
+                RecordTypes.MO2T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO2S")));
+                RecordTypes.MODS,
+                RecordTypes.MO2S));
         public static RecordTypeConverter FirstPersonModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD5")),
+                RecordTypes.MODL,
+                RecordTypes.MOD5),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO5T")),
+                RecordTypes.MODT,
+                RecordTypes.MO5T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO5S")));
+                RecordTypes.MODS,
+                RecordTypes.MO5S));
         public static RecordTypeConverter FirstPersonModelMaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("MOD4")),
+                RecordTypes.MODL,
+                RecordTypes.MOD4),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("MO4T")),
+                RecordTypes.MODT,
+                RecordTypes.MO4T),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("MO4S")));
+                RecordTypes.MODS,
+                RecordTypes.MO4S));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1472,7 +1509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ArmorAddonSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ArmorAddonSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ArmorAddonSetterCommon Instance = new ArmorAddonSetterCommon();
 
@@ -1532,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IArmorAddonInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
                 record: item,
@@ -1545,7 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ArmorAddon)item,
@@ -1556,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ArmorAddon)item,
@@ -1567,7 +1604,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ArmorAddonCommon : SkyrimMajorRecordCommon
+    internal partial class ArmorAddonCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ArmorAddonCommon Instance = new ArmorAddonCommon();
 
@@ -1591,7 +1628,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.BodyTemplate = EqualsMaskHelper.EqualsHelper(
                 item.BodyTemplate,
                 rhs.BodyTemplate,
@@ -1638,136 +1674,130 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IArmorAddonGetter item,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IArmorAddonGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ArmorAddon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ArmorAddon =>");
+                sb.AppendLine($"ArmorAddon =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ArmorAddon) =>");
+                sb.AppendLine($"{name} (ArmorAddon) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IArmorAddonGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ArmorAddon.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.BodyTemplate?.Overall ?? true)
                 && item.BodyTemplate is {} BodyTemplateItem)
             {
-                BodyTemplateItem?.ToString(fg, "BodyTemplate");
+                BodyTemplateItem?.Print(sb, "BodyTemplate");
             }
             if (printMask?.Race ?? true)
             {
-                fg.AppendItem(item.Race.FormKeyNullable, "Race");
+                sb.AppendItem(item.Race.FormKeyNullable, "Race");
             }
             if (true)
             {
-                item.Priority.ToString(fg, "Priority");
+                item.Priority.Print(sb, "Priority");
             }
             if (true)
             {
-                item.WeightSliderEnabled.ToString(fg, "WeightSliderEnabled");
+                item.WeightSliderEnabled.Print(sb, "WeightSliderEnabled");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.DetectionSoundValue ?? true)
             {
-                fg.AppendItem(item.DetectionSoundValue, "DetectionSoundValue");
+                sb.AppendItem(item.DetectionSoundValue, "DetectionSoundValue");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.WeaponAdjust ?? true)
             {
-                fg.AppendItem(item.WeaponAdjust, "WeaponAdjust");
+                sb.AppendItem(item.WeaponAdjust, "WeaponAdjust");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
                 && item.WorldModel is {} WorldModelItem)
             {
-                WorldModelItem?.ToString(fg, "WorldModel");
+                WorldModelItem?.Print(sb, "WorldModel");
             }
             if ((printMask?.FirstPersonModel?.Overall ?? true)
                 && item.FirstPersonModel is {} FirstPersonModelItem)
             {
-                FirstPersonModelItem?.ToString(fg, "FirstPersonModel");
+                FirstPersonModelItem?.Print(sb, "FirstPersonModel");
             }
             if ((printMask?.SkinTexture?.Overall ?? true)
                 && item.SkinTexture is {} SkinTextureItem)
             {
-                SkinTextureItem?.ToString(fg, "SkinTexture");
+                SkinTextureItem?.Print(sb, "SkinTexture");
             }
             if ((printMask?.TextureSwapList?.Overall ?? true)
                 && item.TextureSwapList is {} TextureSwapListItem)
             {
-                TextureSwapListItem?.ToString(fg, "TextureSwapList");
+                TextureSwapListItem?.Print(sb, "TextureSwapList");
             }
             if (printMask?.AdditionalRaces?.Overall ?? true)
             {
-                fg.AppendLine("AdditionalRaces =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("AdditionalRaces =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.AdditionalRaces)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.FootstepSound ?? true)
             {
-                fg.AppendItem(item.FootstepSound.FormKeyNullable, "FootstepSound");
+                sb.AppendItem(item.FootstepSound.FormKeyNullable, "FootstepSound");
             }
             if (printMask?.ArtObject ?? true)
             {
-                fg.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
+                sb.AppendItem(item.ArtObject.FormKeyNullable, "ArtObject");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1967,26 +1997,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IArmorAddonGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Race.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Race);
+                yield return RaceInfo;
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2009,13 +2039,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.FootstepSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FootstepSound, out var FootstepSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FootstepSound);
+                yield return FootstepSoundInfo;
             }
-            if (obj.ArtObject.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ArtObject, out var ArtObjectInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ArtObject);
+                yield return ArtObjectInfo;
             }
             yield break;
         }
@@ -2058,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ArmorAddonSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ArmorAddonSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ArmorAddonSetterTranslationCommon Instance = new ArmorAddonSetterTranslationCommon();
 
@@ -2344,7 +2374,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
@@ -2362,13 +2392,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ArmorAddonBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
+        public new static readonly ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IArmorAddonGetter item,
@@ -2382,7 +2412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IArmorAddonGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2416,7 +2446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.WorldModel,
                 femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                 maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -2431,7 +2461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.FirstPersonModel,
                 femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                 maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -2446,7 +2476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.SkinTexture,
                 maleMarker: RecordTypes.NAM0,
                 femaleMarker: RecordTypes.NAM1,
-                transl: (MutagenWriter subWriter, IFormLinkNullableGetter<ITextureSetGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkNullableGetter<ITextureSetGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
@@ -2457,7 +2487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.TextureSwapList,
                 maleMarker: RecordTypes.NAM2,
                 femaleMarker: RecordTypes.NAM3,
-                transl: (MutagenWriter subWriter, IFormLinkNullableGetter<IFormListGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkNullableGetter<IFormListGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
@@ -2466,7 +2496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AdditionalRaces,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRaceGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2512,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IArmorAddonGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2523,12 +2553,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2540,7 +2573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IArmorAddonGetter)item,
@@ -2551,7 +2584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorAddonGetter)item,
@@ -2562,7 +2595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IArmorAddonGetter)item,
@@ -2572,9 +2605,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ArmorAddonBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ArmorAddonBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
+        public new static readonly ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMA;
         public static void FillBinaryStructs(
@@ -2593,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2700,7 +2733,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2725,16 +2759,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ArmorAddonBinaryOverlay :
+    internal partial class ArmorAddonBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IArmorAddonGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
-        public new static ArmorAddon_Registration StaticRegistration => ArmorAddon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
@@ -2742,14 +2776,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ArmorAddonCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ArmorAddonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2764,23 +2798,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         #region Race
         private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Priority
-        private int _PriorityLocation => _DNAMLocation!.Value;
+        private int _PriorityLocation => _DNAMLocation!.Value.Min;
         private bool _Priority_IsSet => _DNAMLocation.HasValue;
         public IGenderedItemGetter<Byte> Priority
         {
             get
             {
                 if (!_Priority_IsSet) return new GenderedItem<Byte>(default, default);
-                var data = _data.Slice(_PriorityLocation);
+                var data = _recordData.Slice(_PriorityLocation);
                 return new GenderedItem<Byte>(
                     data[0],
                     data.Slice(1)[0]);
@@ -2788,28 +2823,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         #region WeightSliderEnabled
-        private int _WeightSliderEnabledLocation => _DNAMLocation!.Value + 0x2;
+        private int _WeightSliderEnabledLocation => _DNAMLocation!.Value.Min + 0x2;
+        public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom();
         public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DNAMLocation!.Value + 0x4;
+        private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region DetectionSoundValue
-        private int _DetectionSoundValueLocation => _DNAMLocation!.Value + 0x6;
+        private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
-        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _data.Span[_DetectionSoundValueLocation] : default;
+        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DNAMLocation!.Value + 0x7;
+        private int _Unknown2Location => _DNAMLocation!.Value.Min + 0x7;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
-        public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
+        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default;
         #endregion
         #region WeaponAdjust
-        private int _WeaponAdjustLocation => _DNAMLocation!.Value + 0x8;
+        private int _WeaponAdjustLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
-        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _data.Slice(_WeaponAdjustLocation, 4).Float() : default;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _recordData.Slice(_WeaponAdjustLocation, 4).Float() : default;
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;
@@ -2827,14 +2863,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? _TextureSwapListOverlay;
         public IGenderedItemGetter<IFormLinkNullableGetter<IFormListGetter>>? TextureSwapList => _TextureSwapListOverlay;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = ListExt.Empty<IFormLinkGetter<IRaceGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; private set; } = Array.Empty<IFormLinkGetter<IRaceGetter>>();
         #region FootstepSound
         private int? _FootstepSoundLocation;
-        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
+        public IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
         #endregion
         #region ArtObject
         private int? _ArtObjectLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2843,28 +2879,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ArmorAddonBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ArmorAddonBinaryOverlay ArmorAddonFactory(
+        public static IArmorAddonGetter ArmorAddonFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ArmorAddonBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2874,20 +2913,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ArmorAddonBinaryOverlay ArmorAddonFactory(
+        public static IArmorAddonGetter ArmorAddonFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ArmorAddonFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2897,9 +2936,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BODT:
@@ -2918,7 +2957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:
@@ -2978,7 +3017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
@@ -2998,17 +3037,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorAddonMixIn.ToString(
+            ArmorAddonMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

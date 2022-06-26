@@ -72,6 +72,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - SpellUnleveled
 - Weapon
 - Worldspace
+### IPositionRotation
+- Location
+- TeleportDestination
 ### IWeightValue
 - AlchemicalApparatusData
 - AmmunitionData
@@ -166,6 +169,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IWeightValue
 ### LocalVariable
 - INamed
+### Location
+- IPositionRotation
 ### MagicEffect
 - IModeled
 - INamed
@@ -204,6 +209,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Static
 - IModeled
+### TeleportDestination
+- IPositionRotation
 ### Tree
 - IModeled
 ### Weapon

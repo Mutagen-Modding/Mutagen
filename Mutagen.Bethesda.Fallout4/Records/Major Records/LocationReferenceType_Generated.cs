@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,21 +19,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,19 +60,26 @@ namespace Mutagen.Bethesda.Fallout4
         Color? ILocationReferenceTypeGetter.Color => this.Color;
         #endregion
         #region TNAM
-        public String? TNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILocationReferenceTypeGetter.TNAM => this.TNAM;
+        protected MemorySlice<Byte>? _TNAM;
+        public MemorySlice<Byte>? TNAM
+        {
+            get => this._TNAM;
+            set => this._TNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILocationReferenceTypeGetter.TNAM => this.TNAM;
         #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceTypeMixIn.ToString(
+            LocationReferenceTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -188,34 +196,29 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LocationReferenceType.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LocationReferenceType.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationReferenceType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LocationReferenceType.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LocationReferenceType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationReferenceType.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.TNAM ?? true)
                     {
-                        fg.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(TNAM, "TNAM");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -289,38 +292,33 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(TNAM, "TNAM");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(TNAM, "TNAM");
+                }
             }
             #endregion
 
@@ -455,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -465,7 +463,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static LocationReferenceType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationReferenceType();
             ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -480,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationReferenceType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -490,7 +488,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -513,7 +511,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ILocationReferenceTypeInternal>
     {
         new Color? Color { get; set; }
-        new String? TNAM { get; set; }
+        new MemorySlice<Byte>? TNAM { get; set; }
     }
 
     public partial interface ILocationReferenceTypeInternal :
@@ -533,7 +531,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }
-        String? TNAM { get; }
+        ReadOnlyMemorySlice<Byte>? TNAM { get; }
 
     }
 
@@ -558,26 +556,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationReferenceTypeGetter item,
             string? name = null,
             LocationReferenceType.Mask<bool>? printMask = null)
         {
-            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).ToString(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationReferenceTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationReferenceType.Mask<bool>? printMask = null)
         {
-            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).ToString(
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -672,7 +670,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILocationReferenceTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -687,10 +685,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationReferenceType_FieldIndex
+    internal enum LocationReferenceType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -704,7 +702,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class LocationReferenceType_Registration : ILoquiRegistration
+    internal partial class LocationReferenceType_Registration : ILoquiRegistration
     {
         public static readonly LocationReferenceType_Registration Instance = new LocationReferenceType_Registration();
 
@@ -746,6 +744,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LCRT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.LCRT);
+            var all = RecordCollection.Factory(
+                RecordTypes.LCRT,
+                RecordTypes.CNAM,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -779,7 +787,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationReferenceTypeSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class LocationReferenceTypeSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly LocationReferenceTypeSetterCommon Instance = new LocationReferenceTypeSetterCommon();
 
@@ -815,7 +823,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ILocationReferenceTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILocationReferenceTypeInternal>(
                 record: item,
@@ -828,7 +836,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationReferenceType)item,
@@ -839,7 +847,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationReferenceType)item,
@@ -850,7 +858,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeCommon : Fallout4MajorRecordCommon
+    internal partial class LocationReferenceTypeCommon : Fallout4MajorRecordCommon
     {
         public new static readonly LocationReferenceTypeCommon Instance = new LocationReferenceTypeCommon();
 
@@ -874,69 +882,66 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             LocationReferenceType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.TNAM = string.Equals(item.TNAM, rhs.TNAM);
+            ret.TNAM = MemorySliceExt.Equal(item.TNAM, rhs.TNAM);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILocationReferenceTypeGetter item,
             string? name = null,
             LocationReferenceType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationReferenceTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationReferenceType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationReferenceType =>");
+                sb.AppendLine($"LocationReferenceType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationReferenceType) =>");
+                sb.AppendLine($"{name} (LocationReferenceType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationReferenceTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationReferenceType.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                fg.AppendItem(ColorItem, "Color");
+                sb.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.TNAM ?? true)
                 && item.TNAM is {} TNAMItem)
             {
-                fg.AppendItem(TNAMItem, "TNAM");
+                sb.AppendLine($"TNAM => {SpanExt.ToHexString(TNAMItem)}");
             }
         }
         
@@ -992,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                if (!string.Equals(lhs.TNAM, rhs.TNAM)) return false;
+                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
             }
             return true;
         }
@@ -1026,9 +1031,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 hash.Add(Coloritem);
             }
-            if (item.TNAM is {} TNAMitem)
+            if (item.TNAM is {} TNAMItem)
             {
-                hash.Add(TNAMitem);
+                hash.Add(TNAMItem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1053,9 +1058,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationReferenceTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationReferenceTypeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1100,7 +1105,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationReferenceTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class LocationReferenceTypeSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly LocationReferenceTypeSetterTranslationCommon Instance = new LocationReferenceTypeSetterTranslationCommon();
 
@@ -1139,7 +1144,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                if(rhs.TNAM is {} TNAMrhs)
+                {
+                    item.TNAM = TNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.TNAM = default;
+                }
             }
         }
         
@@ -1263,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration StaticRegistration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1281,18 +1293,18 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationReferenceTypeBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationReferenceTypeBinaryWriteTranslation Instance = new LocationReferenceTypeBinaryWriteTranslation();
+        public new static readonly LocationReferenceTypeBinaryWriteTranslation Instance = new LocationReferenceTypeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILocationReferenceTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1302,17 +1314,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Color,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
         }
 
         public void Write(
             MutagenWriter writer,
             ILocationReferenceTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1323,12 +1334,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1340,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1351,7 +1365,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1362,7 +1376,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationReferenceTypeGetter)item,
@@ -1372,9 +1386,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationReferenceTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class LocationReferenceTypeBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
+        public new static readonly LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LCRT;
         public static void FillBinaryStructs(
@@ -1393,7 +1407,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1407,9 +1421,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.TNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LocationReferenceType_FieldIndex.TNAM;
                 }
                 default:
@@ -1419,7 +1431,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1436,16 +1449,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationReferenceTypeBinaryOverlay :
+    internal partial class LocationReferenceTypeBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ILocationReferenceTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
-        public new static LocationReferenceType_Registration StaticRegistration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1453,13 +1466,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1471,11 +1484,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region Color
         private int? _ColorLocation;
-        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region TNAM
         private int? _TNAMLocation;
-        public String? TNAM => _TNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ReadOnlyMemorySlice<Byte>? TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1484,28 +1497,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected LocationReferenceTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LocationReferenceTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1515,20 +1531,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LocationReferenceTypeBinaryOverlay LocationReferenceTypeFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationReferenceTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1538,9 +1554,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CNAM:
@@ -1560,17 +1576,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceTypeMixIn.ToString(
+            LocationReferenceTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

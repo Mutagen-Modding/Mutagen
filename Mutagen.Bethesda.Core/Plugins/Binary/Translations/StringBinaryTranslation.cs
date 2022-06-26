@@ -1,21 +1,20 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using System;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
 public class StringBinaryTranslation
-
 {
     public static readonly StringBinaryTranslation Instance = new();
 
-    public virtual bool Parse(
-        MutagenFrame reader,
+    public virtual bool Parse<TReader>(
+        TReader reader,
         out string item)
+        where TReader : IMutagenReadStream
     {
         return Parse(
             reader: reader,
@@ -23,29 +22,32 @@ public class StringBinaryTranslation
             item: out item);
     }
 
-    public bool Parse(
-        MutagenFrame reader,
+    public bool Parse<TReader>(
+        TReader reader,
         bool parseWhole,
         out string item,
         StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        where TReader : IMutagenReadStream
     {
         item = Parse(reader, parseWhole: parseWhole, stringBinaryType: binaryType, encoding: reader.MetaData.Encodings.NonTranslated);
         return true;
     }
 
-    public string Parse(
-        MutagenFrame reader,
+    public string Parse<TReader>(
+        TReader reader,
         bool parseWhole = true,
         StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        where TReader : IMutagenReadStream
     {
         return Parse(reader, reader.MetaData.Encodings.NonTranslated, parseWhole, stringBinaryType);
     }
 
-    public string Parse(
-        MutagenFrame reader,
+    public string Parse<TReader>(
+        TReader reader,
         IMutagenEncoding encoding,
         bool parseWhole = true,
         StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        where TReader : IMutagenReadStream
     {
         switch (stringBinaryType)
         {
@@ -57,7 +59,7 @@ public class StringBinaryTranslation
                 }
                 else
                 {
-                    return BinaryStringUtility.ParseUnknownLengthString(reader.Reader, encoding);
+                    return BinaryStringUtility.ParseUnknownLengthString(reader, encoding);
                 }
             case StringBinaryType.PrependLength:
             {
@@ -74,11 +76,12 @@ public class StringBinaryTranslation
         }
     }
 
-    public TranslatedString Parse(
-        MutagenFrame reader,
+    public TranslatedString Parse<TReader>(
+        TReader reader,
         StringsSource source,
         StringBinaryType stringBinaryType,
         bool parseWhole = true)
+        where TReader : IMutagenReadStream
     {
         if (reader.MetaData.StringsLookup != null)
         {
@@ -128,9 +131,31 @@ public class StringBinaryTranslation
         }
     }
 
+    public string Parse(
+        ReadOnlyMemorySlice<byte> data,
+        IMutagenEncoding encoding,
+        bool parseWhole = true)
+    {
+        if (parseWhole)
+        {
+            return BinaryStringUtility.ProcessWholeToZString(data, encoding);
+        }
+        else
+        {
+            return BinaryStringUtility.ParseUnknownLengthString(data, encoding);
+        }
+    }
+
     public void Write(
         MutagenWriter writer,
         string item)
+    {
+        BinaryStringUtility.Write(writer, item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
+    }
+
+    public void Write(
+        MutagenWriter writer,
+        ReadOnlySpan<char> item)
     {
         BinaryStringUtility.Write(writer, item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
     }

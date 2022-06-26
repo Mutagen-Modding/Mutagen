@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -140,12 +141,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueInformationMixIn.ToString(
+            ActorValueInformationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -330,9 +332,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>>();
                         obj.PerkTree.Specific = l;
-                        foreach (var item in PerkTree.Specific.WithIndex())
+                        foreach (var item in PerkTree.Specific)
                         {
-                            MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ActorValuePerkNode.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -342,69 +344,60 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ActorValueInformation.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ActorValueInformation.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ActorValueInformation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ActorValueInformation.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if (printMask?.Abbreviation ?? true)
                     {
-                        fg.AppendItem(Abbreviation, "Abbreviation");
+                        sb.AppendItem(Abbreviation, "Abbreviation");
                     }
                     if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(CNAM, "CNAM");
                     }
                     if (printMask?.Skill?.Overall ?? true)
                     {
-                        Skill?.ToString(fg);
+                        Skill?.Print(sb);
                     }
                     if ((printMask?.PerkTree?.Overall ?? true)
                         && PerkTree is {} PerkTreeItem)
                     {
-                        fg.AppendLine("PerkTree =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PerkTree =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PerkTreeItem.Overall);
+                            sb.AppendItem(PerkTreeItem.Overall);
                             if (PerkTreeItem.Specific != null)
                             {
                                 foreach (var subItem in PerkTreeItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -518,62 +511,57 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
-                fg.AppendItem(Abbreviation, "Abbreviation");
-                fg.AppendItem(CNAM, "CNAM");
-                Skill?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Abbreviation, "Abbreviation");
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                Skill?.Print(sb);
                 if (PerkTree is {} PerkTreeItem)
                 {
-                    fg.AppendLine("PerkTree =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PerkTree =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PerkTreeItem.Overall);
+                        sb.AppendItem(PerkTreeItem.Overall);
                         if (PerkTreeItem.Specific != null)
                         {
                             foreach (var subItem in PerkTreeItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -654,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ActorValueInformation_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActorValueInformationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActorValueInformationCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValueInformationSetterCommon.Instance.RemapLinks(this, mapping);
         public ActorValueInformation(
             FormKey formKey,
@@ -732,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -742,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ActorValueInformation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValueInformation();
             ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -757,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActorValueInformation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -767,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -859,26 +847,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IActorValueInformationGetter item,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).ToString(
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).ToString(
+            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -973,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IActorValueInformationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -988,10 +976,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ActorValueInformation_FieldIndex
+    internal enum ActorValueInformation_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1009,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ActorValueInformation_Registration : ILoquiRegistration
+    internal partial class ActorValueInformation_Registration : ILoquiRegistration
     {
         public static readonly ActorValueInformation_Registration Instance = new ActorValueInformation_Registration();
 
@@ -1051,6 +1039,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AVIF;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.AVIF);
+            var all = RecordCollection.Factory(
+                RecordTypes.AVIF,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.ANAM,
+                RecordTypes.CNAM,
+                RecordTypes.AVSK,
+                RecordTypes.PNAM,
+                RecordTypes.FNAM,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM,
+                RecordTypes.HNAM,
+                RecordTypes.VNAM,
+                RecordTypes.SNAM,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ActorValueInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1084,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActorValueInformationSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ActorValueInformationSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ActorValueInformationSetterCommon Instance = new ActorValueInformationSetterCommon();
 
@@ -1125,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IActorValueInformationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IActorValueInformationInternal>(
                 record: item,
@@ -1138,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ActorValueInformation)item,
@@ -1149,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ActorValueInformation)item,
@@ -1160,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValueInformationCommon : SkyrimMajorRecordCommon
+    internal partial class ActorValueInformationCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ActorValueInformationCommon Instance = new ActorValueInformationCommon();
 
@@ -1184,7 +1193,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ActorValueInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Abbreviation = string.Equals(item.Abbreviation, rhs.Abbreviation);
@@ -1201,96 +1209,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IActorValueInformationGetter item,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActorValueInformation =>");
+                sb.AppendLine($"ActorValueInformation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActorValueInformation) =>");
+                sb.AppendLine($"{name} (ActorValueInformation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if ((printMask?.Abbreviation ?? true)
                 && item.Abbreviation is {} AbbreviationItem)
             {
-                fg.AppendItem(AbbreviationItem, "Abbreviation");
+                sb.AppendItem(AbbreviationItem, "Abbreviation");
             }
             if ((printMask?.CNAM ?? true)
                 && item.CNAM is {} CNAMItem)
             {
-                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.Skill?.Overall ?? true)
                 && item.Skill is {} SkillItem)
             {
-                SkillItem?.ToString(fg, "Skill");
+                SkillItem?.Print(sb, "Skill");
             }
             if (printMask?.PerkTree?.Overall ?? true)
             {
-                fg.AppendLine("PerkTree =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PerkTree =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PerkTree)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1366,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.PerkTree) ?? true))
             {
-                if (!lhs.PerkTree.SequenceEqualNullable(rhs.PerkTree)) return false;
+                if (!lhs.PerkTree.SequenceEqual(rhs.PerkTree, (l, r) => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ActorValueInformation_FieldIndex.PerkTree)))) return false;
             }
             return true;
         }
@@ -1440,13 +1442,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActorValueInformationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueInformationGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.PerkTree.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.PerkTree.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1491,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValueInformationSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ActorValueInformationSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ActorValueInformationSetterTranslationCommon Instance = new ActorValueInformationSetterTranslationCommon();
 
@@ -1719,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1737,18 +1739,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValueInformationBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ActorValueInformationBinaryWriteTranslation Instance = new ActorValueInformationBinaryWriteTranslation();
+        public new static readonly ActorValueInformationBinaryWriteTranslation Instance = new ActorValueInformationBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IActorValueInformationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1785,7 +1787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActorValuePerkNodeGetter>.Instance.Write(
                 writer: writer,
                 items: item.PerkTree,
-                transl: (MutagenWriter subWriter, IActorValuePerkNodeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IActorValuePerkNodeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ActorValuePerkNodeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1798,7 +1800,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IActorValueInformationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1809,12 +1811,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1826,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActorValueInformationGetter)item,
@@ -1837,7 +1842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IActorValueInformationGetter)item,
@@ -1848,7 +1853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IActorValueInformationGetter)item,
@@ -1858,9 +1863,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActorValueInformationBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ActorValueInformationBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
+        public new static readonly ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AVIF;
         public static void FillBinaryStructs(
@@ -1879,7 +1884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1926,7 +1931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PerkTree.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValuePerkNode>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.PNAM,
+                            triggeringRecord: ActorValuePerkNode_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ActorValuePerkNode.TryCreateFromBinary));
                     return (int)ActorValueInformation_FieldIndex.PerkTree;
@@ -1938,7 +1943,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1955,16 +1961,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActorValueInformationBinaryOverlay :
+    internal partial class ActorValueInformationBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IActorValueInformationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1972,14 +1978,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActorValueInformationCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActorValueInformationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1991,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2003,21 +2009,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region Abbreviation
         private int? _AbbreviationLocation;
-        public String? Abbreviation => _AbbreviationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AbbreviationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Abbreviation => _AbbreviationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region CNAM
         private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Skill
         private RangeInt32? _SkillLocation;
-        public IActorValueSkillGetter? Skill => _SkillLocation.HasValue ? ActorValueSkillBinaryOverlay.ActorValueSkillFactory(new OverlayStream(_data.Slice(_SkillLocation!.Value.Min), _package), _package) : default;
+        public IActorValueSkillGetter? Skill => _SkillLocation.HasValue ? ActorValueSkillBinaryOverlay.ActorValueSkillFactory(_recordData.Slice(_SkillLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IActorValuePerkNodeGetter> PerkTree { get; private set; } = ListExt.Empty<ActorValuePerkNodeBinaryOverlay>();
+        public IReadOnlyList<IActorValuePerkNodeGetter> PerkTree { get; private set; } = Array.Empty<IActorValuePerkNodeGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2025,28 +2031,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ActorValueInformationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ActorValueInformationBinaryOverlay ActorValueInformationFactory(
+        public static IActorValueInformationGetter ActorValueInformationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ActorValueInformationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2056,20 +2065,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ActorValueInformationBinaryOverlay ActorValueInformationFactory(
+        public static IActorValueInformationGetter ActorValueInformationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActorValueInformationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2079,9 +2088,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -2111,10 +2120,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.PerkTree = this.ParseRepeatedTypelessSubrecord<ActorValuePerkNodeBinaryOverlay>(
+                    this.PerkTree = this.ParseRepeatedTypelessSubrecord<IActorValuePerkNodeGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: RecordTypes.PNAM,
+                        translationParams: translationParams,
+                        trigger: ActorValuePerkNode_Registration.TriggerSpecs,
                         factory: ActorValuePerkNodeBinaryOverlay.ActorValuePerkNodeFactory);
                     return (int)ActorValueInformation_FieldIndex.PerkTree;
                 }
@@ -2125,17 +2134,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueInformationMixIn.ToString(
+            ActorValueInformationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

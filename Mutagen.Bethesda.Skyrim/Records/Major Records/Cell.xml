@@ -25,7 +25,7 @@
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
       <ByteArray name="OcclusionData" recordType="TVDT" />
-      <ByteArray name="MaxHeightData" recordType="MHDT" />
+      <RefDirect name="MaxHeightData" refName="CellMaxHeightData" />
       <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
       <ByteArray name="LNAM" recordType="LNAM" />
       <Float name="WaterHeight" recordType="XCLW" />
@@ -38,7 +38,10 @@
       <ByteArray name="XWCS" recordType="XWCS" />
       <RefDirect name="WaterVelocity" refName="CellWaterVelocity" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="LockList" recordType="XILL">
         <Interface>ILockList</Interface>
       </FormLink>
@@ -49,17 +52,17 @@
       <FormLink name="Music" refName="MusicType" recordType="XCMO" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
-      <RefList name="NavigationMeshes" binary="NoGeneration" refName="ANavigationMesh" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />
       <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
-      <RefList name="Persistent" binary="NoGeneration" objType="Record" >
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
       <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
       <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
-      <RefList name="Temporary" binary="NoGeneration" objType="Record" >
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
         <Interface>IPlaced</Interface>
       </RefList>
     </Fields>
@@ -72,7 +75,6 @@
     </Fields>
   </Object>
   <Object name="CellLighting" objType="Subrecord" recordType="XCLL" GUID="ee8cc403-808a-41cb-81c4-e94fd1fca22d" ID="284">
-    <Interface>IAmbientColorsCommon</Interface>
     <Fields>
       <Color name="AmbientColor" binaryType="Alpha" />
       <Color name="DirectionalColor" binaryType="Alpha" />
@@ -84,15 +86,8 @@
       <Float name="DirectionalFade" />
       <Float name="FogClipDistance" />
       <Float name="FogPower" />
-      <Color name="AmbientDirectionalXPlus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalXMinus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalYPlus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalYMinus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalZPlus" binaryType="Alpha" />
-      <Color name="AmbientDirectionalZMinus" binaryType="Alpha" />
+      <RefDirect name="AmbientColors" refName="AmbientColors" />
       <Break />
-      <Color name="AmbientSpecular" binaryType="Alpha" />
-      <Float name="AmbientScale" />
       <Color name="FogFarColor" binaryType="Alpha" />
       <Float name="FogMax" />
       <Float name="LightFadeBegin" />
@@ -106,6 +101,14 @@
       <Int32 name="Unknown" />
       <P3Float name="Angle" />
       <ByteArray name="Unknown2" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord" GUID="1805172c-baaf-4ee9-9bc6-d850a5e68bdf" ID="481">
+    <Fields>
+      <Float name="Offset" />
+      <Array2d name="HeightMap" fixedWidth="32" fixedHeight="32">
+        <UInt8 />
+      </Array2d>
     </Fields>
   </Object>
 </Loqui>

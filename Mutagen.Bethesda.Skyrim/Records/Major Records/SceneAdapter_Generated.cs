@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -63,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SceneAdapterMixIn.ToString(
+            SceneAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -194,30 +197,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SceneAdapter.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SceneAdapter.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SceneAdapter.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SceneAdapter.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SceneAdapter.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SceneAdapter.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ScriptFragments?.Overall ?? true)
                     {
-                        ScriptFragments?.ToString(fg);
+                        ScriptFragments?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -281,37 +279,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ScriptFragments?.ToString(fg);
+                base.PrintFillInternal(sb);
+                ScriptFragments?.Print(sb);
             }
             #endregion
 
@@ -371,7 +360,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = SceneAdapter_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SceneAdapterCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SceneAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -379,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SceneAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -389,7 +379,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static SceneAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SceneAdapter();
             ((SceneAdapterSetterCommon)((ISceneAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -404,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SceneAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -414,7 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -469,26 +459,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISceneAdapterGetter item,
             string? name = null,
             SceneAdapter.Mask<bool>? printMask = null)
         {
-            return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).ToString(
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISceneAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SceneAdapter.Mask<bool>? printMask = null)
         {
-            ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).ToString(
+            ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -569,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISceneAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SceneAdapterSetterCommon)((ISceneAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -584,10 +574,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SceneAdapter_FieldIndex
+    internal enum SceneAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -597,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SceneAdapter_Registration : ILoquiRegistration
+    internal partial class SceneAdapter_Registration : ILoquiRegistration
     {
         public static readonly SceneAdapter_Registration Instance = new SceneAdapter_Registration();
 
@@ -639,6 +629,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.VMAD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SceneAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -672,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SceneAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class SceneAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly SceneAdapterSetterCommon Instance = new SceneAdapterSetterCommon();
 
@@ -702,12 +698,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISceneAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -718,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SceneAdapter)item,
@@ -729,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class SceneAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly SceneAdapterCommon Instance = new SceneAdapterCommon();
 
@@ -753,7 +749,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SceneAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ScriptFragments = EqualsMaskHelper.EqualsHelper(
                 item.ScriptFragments,
                 rhs.ScriptFragments,
@@ -762,58 +757,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISceneAdapterGetter item,
             string? name = null,
             SceneAdapter.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISceneAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SceneAdapter.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SceneAdapter =>");
+                sb.AppendLine($"SceneAdapter =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SceneAdapter) =>");
+                sb.AppendLine($"{name} (SceneAdapter) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISceneAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SceneAdapter.Mask<bool>? printMask = null)
         {
             AVirtualMachineAdapterCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ScriptFragments?.Overall ?? true)
                 && item.ScriptFragments is {} ScriptFragmentsItem)
             {
-                ScriptFragmentsItem?.ToString(fg, "ScriptFragments");
+                ScriptFragmentsItem?.Print(sb, "ScriptFragments");
             }
         }
         
@@ -887,9 +880,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISceneAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISceneAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -899,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SceneAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class SceneAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly SceneAdapterSetterTranslationCommon Instance = new SceneAdapterSetterTranslationCommon();
 
@@ -1021,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneAdapter_Registration.Instance;
-        public new static SceneAdapter_Registration StaticRegistration => SceneAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1039,13 +1032,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SceneAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SceneAdapterBinaryWriteTranslation Instance = new SceneAdapterBinaryWriteTranslation();
+        public new static readonly SceneAdapterBinaryWriteTranslation Instance = new SceneAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISceneAdapterGetter item,
@@ -1075,12 +1068,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISceneAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1092,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISceneAdapterGetter)item,
@@ -1103,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISceneAdapterGetter)item,
@@ -1113,9 +1106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SceneAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class SceneAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static SceneAdapterBinaryCreateTranslation Instance = new SceneAdapterBinaryCreateTranslation();
+        public new static readonly SceneAdapterBinaryCreateTranslation Instance = new SceneAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISceneAdapter item,
@@ -1147,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SceneAdapterBinaryOverlay :
+    internal partial class SceneAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         ISceneAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SceneAdapter_Registration.Instance;
-        public new static SceneAdapter_Registration StaticRegistration => SceneAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SceneAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SceneAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1164,13 +1157,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SceneAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SceneAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1179,6 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region ScriptFragments
+        public partial ISceneScriptFragmentsGetter? GetScriptFragmentsCustom(int location);
         public ISceneScriptFragmentsGetter? ScriptFragments => GetScriptFragmentsCustom(location: ScriptsEndingPos);
         protected int ScriptFragmentsEndingPos;
         partial void CustomScriptFragmentsEndPos();
@@ -1190,25 +1184,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SceneAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SceneAdapterBinaryOverlay SceneAdapterFactory(
+        public static ISceneAdapterGetter SceneAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SceneAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomScriptFragmentsEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1217,25 +1216,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static SceneAdapterBinaryOverlay SceneAdapterFactory(
+        public static ISceneAdapterGetter SceneAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SceneAdapterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SceneAdapterMixIn.ToString(
+            SceneAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

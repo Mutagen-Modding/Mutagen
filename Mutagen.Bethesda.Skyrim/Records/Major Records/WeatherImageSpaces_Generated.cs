@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -50,54 +51,55 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        private readonly IFormLink<IImageSpaceAdapterGetter> _Sunrise = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> Sunrise
+        private readonly IFormLink<IImageSpaceGetter> _Sunrise = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> Sunrise
         {
             get => _Sunrise;
             set => _Sunrise.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherImageSpacesGetter.Sunrise => this.Sunrise;
         #endregion
         #region Day
-        private readonly IFormLink<IImageSpaceAdapterGetter> _Day = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> Day
+        private readonly IFormLink<IImageSpaceGetter> _Day = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> Day
         {
             get => _Day;
             set => _Day.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Day => this.Day;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherImageSpacesGetter.Day => this.Day;
         #endregion
         #region Sunset
-        private readonly IFormLink<IImageSpaceAdapterGetter> _Sunset = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> Sunset
+        private readonly IFormLink<IImageSpaceGetter> _Sunset = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> Sunset
         {
             get => _Sunset;
             set => _Sunset.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherImageSpacesGetter.Sunset => this.Sunset;
         #endregion
         #region Night
-        private readonly IFormLink<IImageSpaceAdapterGetter> _Night = new FormLink<IImageSpaceAdapterGetter>();
-        public IFormLink<IImageSpaceAdapterGetter> Night
+        private readonly IFormLink<IImageSpaceGetter> _Night = new FormLink<IImageSpaceGetter>();
+        public IFormLink<IImageSpaceGetter> Night
         {
             get => _Night;
             set => _Night.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IImageSpaceAdapterGetter> IWeatherImageSpacesGetter.Night => this.Night;
+        IFormLinkGetter<IImageSpaceGetter> IWeatherImageSpacesGetter.Night => this.Night;
         #endregion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherImageSpacesMixIn.ToString(
+            WeatherImageSpacesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -228,42 +230,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeatherImageSpaces.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeatherImageSpaces.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeatherImageSpaces.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeatherImageSpaces.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeatherImageSpaces.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherImageSpaces.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Sunrise ?? true)
                     {
-                        fg.AppendItem(Sunrise, "Sunrise");
+                        sb.AppendItem(Sunrise, "Sunrise");
                     }
                     if (printMask?.Day ?? true)
                     {
-                        fg.AppendItem(Day, "Day");
+                        sb.AppendItem(Day, "Day");
                     }
                     if (printMask?.Sunset ?? true)
                     {
-                        fg.AppendItem(Sunset, "Sunset");
+                        sb.AppendItem(Sunset, "Sunset");
                     }
                     if (printMask?.Night ?? true)
                     {
-                        fg.AppendItem(Night, "Night");
+                        sb.AppendItem(Night, "Night");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -368,39 +365,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Sunrise, "Sunrise");
-                fg.AppendItem(Day, "Day");
-                fg.AppendItem(Sunset, "Sunset");
-                fg.AppendItem(Night, "Night");
+                {
+                    sb.AppendItem(Sunrise, "Sunrise");
+                }
+                {
+                    sb.AppendItem(Day, "Day");
+                }
+                {
+                    sb.AppendItem(Sunset, "Sunset");
+                }
+                {
+                    sb.AppendItem(Night, "Night");
+                }
             }
             #endregion
 
@@ -483,8 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WeatherImageSpaces_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherImageSpacesCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherImageSpacesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -495,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -505,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherImageSpaces CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherImageSpaces();
             ((WeatherImageSpacesSetterCommon)((IWeatherImageSpacesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -520,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherImageSpaces item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -530,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -551,10 +546,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWeatherImageSpaces>,
         IWeatherImageSpacesGetter
     {
-        new IFormLink<IImageSpaceAdapterGetter> Sunrise { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> Day { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> Sunset { get; set; }
-        new IFormLink<IImageSpaceAdapterGetter> Night { get; set; }
+        new IFormLink<IImageSpaceGetter> Sunrise { get; set; }
+        new IFormLink<IImageSpaceGetter> Day { get; set; }
+        new IFormLink<IImageSpaceGetter> Sunset { get; set; }
+        new IFormLink<IImageSpaceGetter> Night { get; set; }
     }
 
     public partial interface IWeatherImageSpacesGetter :
@@ -570,10 +565,10 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeatherImageSpaces_Registration.Instance;
-        IFormLinkGetter<IImageSpaceAdapterGetter> Sunrise { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> Day { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> Sunset { get; }
-        IFormLinkGetter<IImageSpaceAdapterGetter> Night { get; }
+        IFormLinkGetter<IImageSpaceGetter> Sunrise { get; }
+        IFormLinkGetter<IImageSpaceGetter> Day { get; }
+        IFormLinkGetter<IImageSpaceGetter> Sunset { get; }
+        IFormLinkGetter<IImageSpaceGetter> Night { get; }
 
     }
 
@@ -598,26 +593,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherImageSpacesGetter item,
             string? name = null,
             WeatherImageSpaces.Mask<bool>? printMask = null)
         {
-            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).ToString(
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherImageSpacesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherImageSpaces.Mask<bool>? printMask = null)
         {
-            ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).ToString(
+            ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -723,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherImageSpaces item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherImageSpacesSetterCommon)((IWeatherImageSpacesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -738,10 +733,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherImageSpaces_FieldIndex
+    internal enum WeatherImageSpaces_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -751,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherImageSpaces_Registration : ILoquiRegistration
+    internal partial class WeatherImageSpaces_Registration : ILoquiRegistration
     {
         public static readonly WeatherImageSpaces_Registration Instance = new WeatherImageSpaces_Registration();
 
@@ -793,6 +788,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.IMSP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.IMSP);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherImageSpacesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherImageSpacesSetterCommon
+    internal partial class WeatherImageSpacesSetterCommon
     {
         public static readonly WeatherImageSpacesSetterCommon Instance = new WeatherImageSpacesSetterCommon();
 
@@ -856,12 +857,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeatherImageSpaces item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.IMSP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherImageSpacesCommon
+    internal partial class WeatherImageSpacesCommon
     {
         public static readonly WeatherImageSpacesCommon Instance = new WeatherImageSpacesCommon();
 
@@ -896,72 +897,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherImageSpaces.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = item.Sunrise.Equals(rhs.Sunrise);
             ret.Day = item.Day.Equals(rhs.Day);
             ret.Sunset = item.Sunset.Equals(rhs.Sunset);
             ret.Night = item.Night.Equals(rhs.Night);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherImageSpacesGetter item,
             string? name = null,
             WeatherImageSpaces.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherImageSpacesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherImageSpaces.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherImageSpaces =>");
+                sb.AppendLine($"WeatherImageSpaces =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherImageSpaces) =>");
+                sb.AppendLine($"{name} (WeatherImageSpaces) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherImageSpacesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherImageSpaces.Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise ?? true)
             {
-                fg.AppendItem(item.Sunrise.FormKey, "Sunrise");
+                sb.AppendItem(item.Sunrise.FormKey, "Sunrise");
             }
             if (printMask?.Day ?? true)
             {
-                fg.AppendItem(item.Day.FormKey, "Day");
+                sb.AppendItem(item.Day.FormKey, "Day");
             }
             if (printMask?.Sunset ?? true)
             {
-                fg.AppendItem(item.Sunset.FormKey, "Sunset");
+                sb.AppendItem(item.Sunset.FormKey, "Sunset");
             }
             if (printMask?.Night ?? true)
             {
-                fg.AppendItem(item.Night.FormKey, "Night");
+                sb.AppendItem(item.Night.FormKey, "Night");
             }
         }
         
@@ -1010,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherImageSpacesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherImageSpacesGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sunrise);
             yield return FormLinkInformation.Factory(obj.Day);
@@ -1022,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherImageSpacesSetterTranslationCommon
+    internal partial class WeatherImageSpacesSetterTranslationCommon
     {
         public static readonly WeatherImageSpacesSetterTranslationCommon Instance = new WeatherImageSpacesSetterTranslationCommon();
 
@@ -1112,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherImageSpaces_Registration.Instance;
-        public static WeatherImageSpaces_Registration StaticRegistration => WeatherImageSpaces_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherImageSpaces_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherImageSpacesCommon.Instance;
         [DebuggerStepThrough]
@@ -1136,11 +1134,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherImageSpacesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherImageSpacesBinaryWriteTranslation Instance = new WeatherImageSpacesBinaryWriteTranslation();
+        public static readonly WeatherImageSpacesBinaryWriteTranslation Instance = new WeatherImageSpacesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherImageSpacesGetter item,
@@ -1163,12 +1161,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherImageSpacesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.IMSP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1180,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherImageSpacesGetter)item,
@@ -1190,9 +1188,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherImageSpacesBinaryCreateTranslation
+    internal partial class WeatherImageSpacesBinaryCreateTranslation
     {
-        public readonly static WeatherImageSpacesBinaryCreateTranslation Instance = new WeatherImageSpacesBinaryCreateTranslation();
+        public static readonly WeatherImageSpacesBinaryCreateTranslation Instance = new WeatherImageSpacesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherImageSpaces item,
@@ -1215,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherImageSpacesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1228,16 +1226,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherImageSpacesBinaryOverlay :
+    internal partial class WeatherImageSpacesBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherImageSpacesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherImageSpaces_Registration.Instance;
-        public static WeatherImageSpaces_Registration StaticRegistration => WeatherImageSpaces_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherImageSpaces_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherImageSpacesCommon.Instance;
         [DebuggerStepThrough]
@@ -1251,16 +1249,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherImageSpacesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherImageSpacesCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherImageSpacesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherImageSpacesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1268,10 +1266,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IImageSpaceAdapterGetter> Sunrise => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IImageSpaceAdapterGetter> Day => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IImageSpaceAdapterGetter> Sunset => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IImageSpaceAdapterGetter> Night => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IImageSpaceGetter> Sunrise => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IImageSpaceGetter> Day => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IImageSpaceGetter> Sunset => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IImageSpaceGetter> Night => new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1279,25 +1277,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeatherImageSpacesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeatherImageSpacesBinaryOverlay WeatherImageSpacesFactory(
+        public static IWeatherImageSpacesGetter WeatherImageSpacesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherImageSpacesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1306,25 +1309,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeatherImageSpacesBinaryOverlay WeatherImageSpacesFactory(
+        public static IWeatherImageSpacesGetter WeatherImageSpacesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherImageSpacesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherImageSpacesMixIn.ToString(
+            WeatherImageSpacesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

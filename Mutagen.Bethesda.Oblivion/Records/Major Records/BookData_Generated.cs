@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BookDataMixIn.ToString(
+            BookDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(BookData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(BookData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BookData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, BookData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(BookData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BookData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Teaches ?? true)
                     {
-                        fg.AppendItem(Teaches, "Teaches");
+                        sb.AppendItem(Teaches, "Teaches");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Teaches, "Teaches");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Teaches, "Teaches");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
             }
             #endregion
 
@@ -452,10 +449,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = BookData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BookDataBinaryWriteTranslation.Instance;
@@ -463,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -473,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static BookData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookData();
             ((BookDataSetterCommon)((IBookDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -488,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -498,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,26 +557,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBookDataGetter item,
             string? name = null,
             BookData.Mask<bool>? printMask = null)
         {
-            return ((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).ToString(
+            return ((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBookDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BookData.Mask<bool>? printMask = null)
         {
-            ((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).ToString(
+            ((BookDataCommon)((IBookDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -689,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IBookData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookDataSetterCommon)((IBookDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -704,10 +697,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum BookData_FieldIndex
+    internal enum BookData_FieldIndex
     {
         Flags = 0,
         Teaches = 1,
@@ -717,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class BookData_Registration : ILoquiRegistration
+    internal partial class BookData_Registration : ILoquiRegistration
     {
         public static readonly BookData_Registration Instance = new BookData_Registration();
 
@@ -759,6 +752,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(BookDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -792,7 +791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BookDataSetterCommon
+    internal partial class BookDataSetterCommon
     {
         public static readonly BookDataSetterCommon Instance = new BookDataSetterCommon();
 
@@ -818,12 +817,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IBookData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BookDataCommon
+    internal partial class BookDataCommon
     {
         public static readonly BookDataCommon Instance = new BookDataCommon();
 
@@ -858,72 +857,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BookData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
-        public string ToString(
+        public string Print(
             IBookDataGetter item,
             string? name = null,
             BookData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBookDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BookData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BookData =>");
+                sb.AppendLine($"BookData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BookData) =>");
+                sb.AppendLine($"{name} (BookData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBookDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BookData.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Teaches ?? true)
             {
-                fg.AppendItem(item.Teaches, "Teaches");
+                sb.AppendItem(item.Teaches, "Teaches");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
         }
         
@@ -972,7 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBookDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookDataGetter obj)
         {
             yield break;
         }
@@ -980,7 +976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BookDataSetterTranslationCommon
+    internal partial class BookDataSetterTranslationCommon
     {
         public static readonly BookDataSetterTranslationCommon Instance = new BookDataSetterTranslationCommon();
 
@@ -1070,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookData_Registration.Instance;
-        public static BookData_Registration StaticRegistration => BookData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BookData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BookDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,11 +1090,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BookDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BookDataBinaryWriteTranslation Instance = new BookDataBinaryWriteTranslation();
+        public static readonly BookDataBinaryWriteTranslation Instance = new BookDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookDataGetter item,
@@ -1123,12 +1119,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IBookDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1140,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookDataGetter)item,
@@ -1150,9 +1146,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BookDataBinaryCreateTranslation
+    internal partial class BookDataBinaryCreateTranslation
     {
-        public readonly static BookDataBinaryCreateTranslation Instance = new BookDataBinaryCreateTranslation();
+        public static readonly BookDataBinaryCreateTranslation Instance = new BookDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookData item,
@@ -1179,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IBookDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1192,16 +1188,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BookDataBinaryOverlay :
+    internal partial class BookDataBinaryOverlay :
         PluginBinaryOverlay,
         IBookDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookData_Registration.Instance;
-        public static BookData_Registration StaticRegistration => BookData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BookData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BookDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1215,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BookDataBinaryWriteTranslation.Instance;
@@ -1223,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1231,10 +1227,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Book.BookFlag Flags => (Book.BookFlag)_data.Span.Slice(0x0, 0x1)[0];
-        public Skill Teaches => (Skill)_data.Span.Slice(0x1, 0x1)[0];
-        public Single Value => _data.Slice(0x2, 0x4).Float();
-        public Single Weight => _data.Slice(0x6, 0x4).Float();
+        public Book.BookFlag Flags => (Book.BookFlag)_structData.Span.Slice(0x0, 0x1)[0];
+        public Skill Teaches => (Skill)_structData.Span.Slice(0x1, 0x1)[0];
+        public Single Value => _structData.Slice(0x2, 0x4).Float();
+        public Single Weight => _structData.Slice(0x6, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1242,25 +1238,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected BookDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BookDataBinaryOverlay BookDataFactory(
+        public static IBookDataGetter BookDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xA,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BookDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xA + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1269,25 +1270,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static BookDataBinaryOverlay BookDataFactory(
+        public static IBookDataGetter BookDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BookDataMixIn.ToString(
+            BookDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -289,3 +289,6 @@ Mutagen.Bethesda.Fallout4/Mutagen.Bethesda.Fallout4.xml
 Mutagen.Bethesda.Sqlite/Mutagen.Bethesda.Sqlite.xml
 
 *wpftmp.csproj
+GenerationLines.txt
+
+*.bak

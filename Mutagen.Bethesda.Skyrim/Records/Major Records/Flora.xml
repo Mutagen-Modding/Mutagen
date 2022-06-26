@@ -20,5 +20,7 @@
       <RefDirect name="Production" refName="SeasonalIngredientProduction" />
     </Fields>
     <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

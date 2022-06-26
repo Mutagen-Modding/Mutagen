@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -75,12 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LinkedReferencesMixIn.ToString(
+            LinkedReferencesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -202,38 +204,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LinkedReferences.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LinkedReferences.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LinkedReferences.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LinkedReferences.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LinkedReferences.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LinkedReferences.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.KeywordOrReference ?? true)
                     {
-                        fg.AppendItem(KeywordOrReference, "KeywordOrReference");
+                        sb.AppendItem(KeywordOrReference, "KeywordOrReference");
                     }
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendItem(Reference, "Reference");
+                        sb.AppendItem(Reference, "Reference");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -328,38 +325,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(KeywordOrReference, "KeywordOrReference");
-                fg.AppendItem(Reference, "Reference");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(KeywordOrReference, "KeywordOrReference");
+                }
+                {
+                    sb.AppendItem(Reference, "Reference");
+                }
             }
             #endregion
 
@@ -438,13 +432,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LinkedReferences_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LinkedReferencesCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedReferencesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -455,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LinkedReferencesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -465,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LinkedReferences CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LinkedReferences();
             ((LinkedReferencesSetterCommon)((ILinkedReferencesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -480,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LinkedReferences item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -490,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -556,26 +549,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILinkedReferencesGetter item,
             string? name = null,
             LinkedReferences.Mask<bool>? printMask = null)
         {
-            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).ToString(
+            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILinkedReferencesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LinkedReferences.Mask<bool>? printMask = null)
         {
-            ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).ToString(
+            ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -681,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILinkedReferences item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LinkedReferencesSetterCommon)((ILinkedReferencesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -696,10 +689,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LinkedReferences_FieldIndex
+    internal enum LinkedReferences_FieldIndex
     {
         Versioning = 0,
         KeywordOrReference = 1,
@@ -708,7 +701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LinkedReferences_Registration : ILoquiRegistration
+    internal partial class LinkedReferences_Registration : ILoquiRegistration
     {
         public static readonly LinkedReferences_Registration Instance = new LinkedReferences_Registration();
 
@@ -750,6 +743,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XLKR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XLKR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LinkedReferencesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -783,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LinkedReferencesSetterCommon
+    internal partial class LinkedReferencesSetterCommon
     {
         public static readonly LinkedReferencesSetterCommon Instance = new LinkedReferencesSetterCommon();
 
@@ -811,12 +810,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILinkedReferences item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLKR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -827,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LinkedReferencesCommon
+    internal partial class LinkedReferencesCommon
     {
         public static readonly LinkedReferencesCommon Instance = new LinkedReferencesCommon();
 
@@ -851,67 +850,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LinkedReferences.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.KeywordOrReference = item.KeywordOrReference.Equals(rhs.KeywordOrReference);
             ret.Reference = item.Reference.Equals(rhs.Reference);
         }
         
-        public string ToString(
+        public string Print(
             ILinkedReferencesGetter item,
             string? name = null,
             LinkedReferences.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILinkedReferencesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LinkedReferences.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LinkedReferences =>");
+                sb.AppendLine($"LinkedReferences =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LinkedReferences) =>");
+                sb.AppendLine($"{name} (LinkedReferences) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILinkedReferencesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LinkedReferences.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.KeywordOrReference ?? true)
             {
-                fg.AppendItem(item.KeywordOrReference.FormKey, "KeywordOrReference");
+                sb.AppendItem(item.KeywordOrReference.FormKey, "KeywordOrReference");
             }
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference.FormKey, "Reference");
+                sb.AppendItem(item.Reference.FormKey, "Reference");
             }
         }
         
@@ -955,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILinkedReferencesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILinkedReferencesGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.KeywordOrReference);
             if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) yield break;
@@ -966,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LinkedReferencesSetterTranslationCommon
+    internal partial class LinkedReferencesSetterTranslationCommon
     {
         public static readonly LinkedReferencesSetterTranslationCommon Instance = new LinkedReferencesSetterTranslationCommon();
 
@@ -1053,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferences_Registration.Instance;
-        public static LinkedReferences_Registration StaticRegistration => LinkedReferences_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferencesCommon.Instance;
         [DebuggerStepThrough]
@@ -1077,11 +1073,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LinkedReferencesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LinkedReferencesBinaryWriteTranslation Instance = new LinkedReferencesBinaryWriteTranslation();
+        public static readonly LinkedReferencesBinaryWriteTranslation Instance = new LinkedReferencesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILinkedReferencesGetter item,
@@ -1101,12 +1097,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILinkedReferencesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLKR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1118,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILinkedReferencesGetter)item,
@@ -1128,9 +1124,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LinkedReferencesBinaryCreateTranslation
+    internal partial class LinkedReferencesBinaryCreateTranslation
     {
-        public readonly static LinkedReferencesBinaryCreateTranslation Instance = new LinkedReferencesBinaryCreateTranslation();
+        public static readonly LinkedReferencesBinaryCreateTranslation Instance = new LinkedReferencesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILinkedReferences item,
@@ -1156,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILinkedReferencesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LinkedReferencesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1169,16 +1165,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LinkedReferencesBinaryOverlay :
+    internal partial class LinkedReferencesBinaryOverlay :
         PluginBinaryOverlay,
         ILinkedReferencesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LinkedReferences_Registration.Instance;
-        public static LinkedReferences_Registration StaticRegistration => LinkedReferences_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedReferences_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LinkedReferencesCommon.Instance;
         [DebuggerStepThrough]
@@ -1192,16 +1188,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LinkedReferencesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LinkedReferencesCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LinkedReferencesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LinkedReferencesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1210,8 +1206,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public LinkedReferences.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference => new FormLink<IKeywordLinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IKeywordLinkedReferenceGetter> KeywordOrReference => new FormLink<IKeywordLinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1219,26 +1215,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LinkedReferencesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LinkedReferencesBinaryOverlay LinkedReferencesFactory(
+        public static ILinkedReferencesGetter LinkedReferencesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LinkedReferencesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x4)
+            if (ret._structData.Length <= 0x4)
             {
                 ret.Versioning |= LinkedReferences.VersioningBreaks.Break0;
             }
@@ -1249,25 +1250,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LinkedReferencesBinaryOverlay LinkedReferencesFactory(
+        public static ILinkedReferencesGetter LinkedReferencesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LinkedReferencesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LinkedReferencesMixIn.ToString(
+            LinkedReferencesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

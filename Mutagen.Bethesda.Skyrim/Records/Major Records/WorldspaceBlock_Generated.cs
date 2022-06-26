@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -82,12 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceBlockMixIn.ToString(
+            WorldspaceBlockMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -260,9 +262,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>>();
                         obj.Items.Specific = l;
-                        foreach (var item in Items.Specific.WithIndex())
+                        foreach (var item in Items.Specific)
                         {
-                            MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceSubBlock.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -272,69 +274,60 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WorldspaceBlock.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WorldspaceBlock.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceBlock.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WorldspaceBlock.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WorldspaceBlock.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WorldspaceBlock.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.BlockNumberY ?? true)
                     {
-                        fg.AppendItem(BlockNumberY, "BlockNumberY");
+                        sb.AppendItem(BlockNumberY, "BlockNumberY");
                     }
                     if (printMask?.BlockNumberX ?? true)
                     {
-                        fg.AppendItem(BlockNumberX, "BlockNumberX");
+                        sb.AppendItem(BlockNumberX, "BlockNumberX");
                     }
                     if (printMask?.GroupType ?? true)
                     {
-                        fg.AppendItem(GroupType, "GroupType");
+                        sb.AppendItem(GroupType, "GroupType");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendItem(LastModified, "LastModified");
+                        sb.AppendItem(LastModified, "LastModified");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Items?.Overall ?? true)
                         && Items is {} ItemsItem)
                     {
-                        fg.AppendLine("Items =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ItemsItem.Overall);
+                            sb.AppendItem(ItemsItem.Overall);
                             if (ItemsItem.Specific != null)
                             {
                                 foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -459,61 +452,58 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(BlockNumberY, "BlockNumberY");
-                fg.AppendItem(BlockNumberX, "BlockNumberX");
-                fg.AppendItem(GroupType, "GroupType");
-                fg.AppendItem(LastModified, "LastModified");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(BlockNumberY, "BlockNumberY");
+                }
+                {
+                    sb.AppendItem(BlockNumberX, "BlockNumberX");
+                }
+                {
+                    sb.AppendItem(GroupType, "GroupType");
+                }
+                {
+                    sb.AppendItem(LastModified, "LastModified");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
                 if (Items is {} ItemsItem)
                 {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ItemsItem.Overall);
+                        sb.AppendItem(ItemsItem.Overall);
                         if (ItemsItem.Specific != null)
                         {
                             foreach (var subItem in ItemsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -605,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)WorldspaceSubBlock.GrupRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceBlockCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceBlockCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -650,7 +640,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -660,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceBlock CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceBlock();
             ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -675,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceBlock item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -685,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -759,26 +749,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWorldspaceBlockGetter item,
             string? name = null,
             WorldspaceBlock.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWorldspaceBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceBlock.Mask<bool>? printMask = null)
         {
-            ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -891,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this IWorldspaceBlockGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -921,7 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceBlock obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1099,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceBlock item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceBlockSetterCommon)((IWorldspaceBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1114,10 +1104,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceBlock_FieldIndex
+    internal enum WorldspaceBlock_FieldIndex
     {
         BlockNumberY = 0,
         BlockNumberX = 1,
@@ -1129,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceBlock_Registration : ILoquiRegistration
+    internal partial class WorldspaceBlock_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceBlock_Registration Instance = new WorldspaceBlock_Registration();
 
@@ -1204,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceBlockSetterCommon
+    internal partial class WorldspaceBlockSetterCommon
     {
         public static readonly WorldspaceBlockSetterCommon Instance = new WorldspaceBlockSetterCommon();
 
@@ -1307,10 +1297,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1338,6 +1328,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
                     foreach (var subItem in obj.Items)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1417,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWorldspaceBlock item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -1430,7 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceBlockCommon
+    internal partial class WorldspaceBlockCommon
     {
         public static readonly WorldspaceBlockCommon Instance = new WorldspaceBlockCommon();
 
@@ -1454,7 +1476,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceBlock.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.BlockNumberY = item.BlockNumberY == rhs.BlockNumberY;
             ret.BlockNumberX = item.BlockNumberX == rhs.BlockNumberX;
             ret.GroupType = item.GroupType == rhs.GroupType;
@@ -1466,87 +1487,81 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IWorldspaceBlockGetter item,
             string? name = null,
             WorldspaceBlock.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWorldspaceBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceBlock.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceBlock =>");
+                sb.AppendLine($"WorldspaceBlock =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceBlock) =>");
+                sb.AppendLine($"{name} (WorldspaceBlock) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WorldspaceBlock.Mask<bool>? printMask = null)
         {
             if (printMask?.BlockNumberY ?? true)
             {
-                fg.AppendItem(item.BlockNumberY, "BlockNumberY");
+                sb.AppendItem(item.BlockNumberY, "BlockNumberY");
             }
             if (printMask?.BlockNumberX ?? true)
             {
-                fg.AppendItem(item.BlockNumberX, "BlockNumberX");
+                sb.AppendItem(item.BlockNumberX, "BlockNumberX");
             }
             if (printMask?.GroupType ?? true)
             {
-                fg.AppendItem(item.GroupType, "GroupType");
+                sb.AppendItem(item.GroupType, "GroupType");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendItem(item.LastModified, "LastModified");
+                sb.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Items?.Overall ?? true)
             {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Items)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1579,7 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)WorldspaceBlock_FieldIndex.Items)))) return false;
             }
             return true;
         }
@@ -1605,9 +1620,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceBlockGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceBlockGetter obj)
         {
-            foreach (var item in obj.Items.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1693,10 +1708,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "ANavigationMesh":
-                case "IANavigationMeshGetter":
-                case "IANavigationMesh":
-                case "IANavigationMeshInternal":
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
                     foreach (var subItem in obj.Items)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -1741,191 +1756,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "IComplexLocation":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IComplexLocationGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILocationTargetable":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILocationTargetableGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwner":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IOwnerGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReference":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IKeywordLinkedReferenceGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILinkedReference":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "ILinkedReferenceGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlaced":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimple":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedSimpleGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThing":
-                {
-                    if (!WorldspaceBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedThingGetter":
-                {
-                    foreach (var subItem in obj.Items)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Skyrim, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -1940,7 +1779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceBlockSetterTranslationCommon
+    internal partial class WorldspaceBlockSetterTranslationCommon
     {
         public static readonly WorldspaceBlockSetterTranslationCommon Instance = new WorldspaceBlockSetterTranslationCommon();
 
@@ -2058,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -2082,11 +1921,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
+        public static readonly WorldspaceBlockBinaryWriteTranslation Instance = new WorldspaceBlockBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceBlockGetter item,
@@ -2105,12 +1944,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWorldspaceBlockGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceSubBlockGetter>.Instance.Write(
                 writer: writer,
                 items: item.Items,
-                transl: (MutagenWriter subWriter, IWorldspaceSubBlockGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWorldspaceSubBlockGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WorldspaceSubBlockBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2123,7 +1962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceBlockGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Group(
                 writer: writer,
@@ -2142,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceBlockGetter)item,
@@ -2152,9 +1991,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceBlockBinaryCreateTranslation
+    internal partial class WorldspaceBlockBinaryCreateTranslation
     {
-        public readonly static WorldspaceBlockBinaryCreateTranslation Instance = new WorldspaceBlockBinaryCreateTranslation();
+        public static readonly WorldspaceBlockBinaryCreateTranslation Instance = new WorldspaceBlockBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceBlock item,
@@ -2175,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2208,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceBlockGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2221,16 +2060,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceBlockBinaryOverlay :
+    internal partial class WorldspaceBlockBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceBlockGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceBlock_Registration.Instance;
-        public static WorldspaceBlock_Registration StaticRegistration => WorldspaceBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -2244,9 +2083,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceBlockCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceBlockCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -2259,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2267,12 +2106,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = ListExt.Empty<WorldspaceSubBlockBinaryOverlay>();
+        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public IReadOnlyList<IWorldspaceSubBlockGetter> Items { get; private set; } = Array.Empty<IWorldspaceSubBlockGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2280,26 +2119,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WorldspaceBlockBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
+        public static IWorldspaceBlockGetter WorldspaceBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractGroupMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceBlockBinaryOverlay(
-                bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2308,20 +2150,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static WorldspaceBlockBinaryOverlay WorldspaceBlockFactory(
+        public static IWorldspaceBlockGetter WorldspaceBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceBlockFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -2331,21 +2173,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.GRUP:
                 {
-                    this.Items = BinaryOverlayList.FactoryByArray<WorldspaceSubBlockBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByArray<IWorldspaceSubBlockGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => WorldspaceSubBlockBinaryOverlay.WorldspaceSubBlockFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: RecordTypes.GRUP,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.GroupConstants,
                             skipHeader: false));
                     return (int)WorldspaceBlock_FieldIndex.Items;
@@ -2356,12 +2199,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceBlockMixIn.ToString(
+            WorldspaceBlockMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

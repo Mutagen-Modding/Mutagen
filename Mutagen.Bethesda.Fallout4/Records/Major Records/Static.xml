@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Static" recordType="STAT" objType="Record" baseClass="Fallout4MajorRecord" majorFlags="true" GUID="ecd28406-13ba-4ad0-b206-c6b54b791a0b" ID="155">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="ForcedLocRefType" refName="LocationReferenceType" recordType="FTYP" />
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="MaxAngle" min="30" max="120" />
+          <FormLink name="Material" refName="MaterialObject" />
+          <Break />
+          <Float name="LeafAmplitude" />
+          <Float name="LeafFrequency" />
+        </Fields>
+      </Data>
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
+      <RefList name="DistantLods" refName="DistantLod" binary="NoGeneration" />
+      <CustomLogic name="DistantLodParsing" recordType="MNAM" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IStaticObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+  <Object name="DistantLod" objType="Subrecord" GUID="795bff20-ec22-4c22-a3f5-bfb3b2ee105e" ID="331">
+    <Fields>
+      <String name="Mesh" />
+      <ByteArray name="Data" />
+    </Fields>
+  </Object>
+</Loqui>

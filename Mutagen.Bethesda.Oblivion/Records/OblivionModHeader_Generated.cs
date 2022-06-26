@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -112,12 +113,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            OblivionModHeaderMixIn.ToString(
+            OblivionModHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -325,9 +327,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, MasterReference.Mask<R>?>>();
                         obj.MasterReferences.Specific = l;
-                        foreach (var item in MasterReferences.Specific.WithIndex())
+                        foreach (var item in MasterReferences.Specific)
                         {
-                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -337,81 +339,72 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(OblivionModHeader.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(OblivionModHeader.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OblivionModHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, OblivionModHeader.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(OblivionModHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(OblivionModHeader.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FormID ?? true)
                     {
-                        fg.AppendItem(FormID, "FormID");
+                        sb.AppendItem(FormID, "FormID");
                     }
                     if (printMask?.Version ?? true)
                     {
-                        fg.AppendItem(Version, "Version");
+                        sb.AppendItem(Version, "Version");
                     }
                     if (printMask?.Stats?.Overall ?? true)
                     {
-                        Stats?.ToString(fg);
+                        Stats?.Print(sb);
                     }
                     if (printMask?.TypeOffsets ?? true)
                     {
-                        fg.AppendItem(TypeOffsets, "TypeOffsets");
+                        sb.AppendItem(TypeOffsets, "TypeOffsets");
                     }
                     if (printMask?.Deleted ?? true)
                     {
-                        fg.AppendItem(Deleted, "Deleted");
+                        sb.AppendItem(Deleted, "Deleted");
                     }
                     if (printMask?.Author ?? true)
                     {
-                        fg.AppendItem(Author, "Author");
+                        sb.AppendItem(Author, "Author");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
                         && MasterReferences is {} MasterReferencesItem)
                     {
-                        fg.AppendLine("MasterReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MasterReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MasterReferencesItem.Overall);
+                            sb.AppendItem(MasterReferencesItem.Overall);
                             if (MasterReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in MasterReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -566,64 +559,65 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FormID, "FormID");
-                fg.AppendItem(Version, "Version");
-                Stats?.ToString(fg);
-                fg.AppendItem(TypeOffsets, "TypeOffsets");
-                fg.AppendItem(Deleted, "Deleted");
-                fg.AppendItem(Author, "Author");
-                fg.AppendItem(Description, "Description");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FormID, "FormID");
+                }
+                {
+                    sb.AppendItem(Version, "Version");
+                }
+                Stats?.Print(sb);
+                {
+                    sb.AppendItem(TypeOffsets, "TypeOffsets");
+                }
+                {
+                    sb.AppendItem(Deleted, "Deleted");
+                }
+                {
+                    sb.AppendItem(Author, "Author");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (MasterReferences is {} MasterReferencesItem)
                 {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MasterReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MasterReferencesItem.Overall);
+                        sb.AppendItem(MasterReferencesItem.Overall);
                         if (MasterReferencesItem.Specific != null)
                         {
                             foreach (var subItem in MasterReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -735,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -745,7 +739,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static OblivionModHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new OblivionModHeader();
             ((OblivionModHeaderSetterCommon)((IOblivionModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -760,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out OblivionModHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -770,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -846,26 +840,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IOblivionModHeaderGetter item,
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
-            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).ToString(
+            return ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IOblivionModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
-            ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).ToString(
+            ((OblivionModHeaderCommon)((IOblivionModHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -971,7 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((OblivionModHeaderSetterCommon)((IOblivionModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -986,10 +980,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum OblivionModHeader_FieldIndex
+    internal enum OblivionModHeader_FieldIndex
     {
         Flags = 0,
         FormID = 1,
@@ -1004,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class OblivionModHeader_Registration : ILoquiRegistration
+    internal partial class OblivionModHeader_Registration : ILoquiRegistration
     {
         public static readonly OblivionModHeader_Registration Instance = new OblivionModHeader_Registration();
 
@@ -1046,6 +1040,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.TES4);
+            var all = RecordCollection.Factory(
+                RecordTypes.TES4,
+                RecordTypes.HEDR,
+                RecordTypes.OFST,
+                RecordTypes.DELE,
+                RecordTypes.CNAM,
+                RecordTypes.SNAM,
+                RecordTypes.MAST,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1079,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class OblivionModHeaderSetterCommon
+    internal partial class OblivionModHeaderSetterCommon
     {
         public static readonly OblivionModHeaderSetterCommon Instance = new OblivionModHeaderSetterCommon();
 
@@ -1110,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IOblivionModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
@@ -1126,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionModHeaderCommon
+    internal partial class OblivionModHeaderCommon
     {
         public static readonly OblivionModHeaderCommon Instance = new OblivionModHeaderCommon();
 
@@ -1150,7 +1159,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
@@ -1165,103 +1173,97 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IOblivionModHeaderGetter item,
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IOblivionModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"OblivionModHeader =>");
+                sb.AppendLine($"OblivionModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (OblivionModHeader) =>");
+                sb.AppendLine($"{name} (OblivionModHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IOblivionModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             OblivionModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FormID ?? true)
             {
-                fg.AppendItem(item.FormID, "FormID");
+                sb.AppendItem(item.FormID, "FormID");
             }
             if (printMask?.Version ?? true)
             {
-                fg.AppendItem(item.Version, "Version");
+                sb.AppendItem(item.Version, "Version");
             }
             if (printMask?.Stats?.Overall ?? true)
             {
-                item.Stats?.ToString(fg, "Stats");
+                item.Stats?.Print(sb, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
                 && item.TypeOffsets is {} TypeOffsetsItem)
             {
-                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
+                sb.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
                 && item.Deleted is {} DeletedItem)
             {
-                fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
+                sb.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
                 && item.Author is {} AuthorItem)
             {
-                fg.AppendItem(AuthorItem, "Author");
+                sb.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.MasterReferences?.Overall ?? true)
             {
-                fg.AppendLine("MasterReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MasterReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.MasterReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1310,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)OblivionModHeader_FieldIndex.MasterReferences)))) return false;
             }
             return true;
         }
@@ -1351,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOblivionModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOblivionModHeaderGetter obj)
         {
             yield break;
         }
@@ -1359,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class OblivionModHeaderSetterTranslationCommon
+    internal partial class OblivionModHeaderSetterTranslationCommon
     {
         public static readonly OblivionModHeaderSetterTranslationCommon Instance = new OblivionModHeaderSetterTranslationCommon();
 
@@ -1521,7 +1523,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionModHeader_Registration.Instance;
-        public static OblivionModHeader_Registration StaticRegistration => OblivionModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1545,11 +1547,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
+        public static readonly OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IOblivionModHeaderGetter item,
@@ -1566,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             IOblivionModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
@@ -1612,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IOblivionModHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1631,7 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IOblivionModHeaderGetter)item,
@@ -1641,9 +1643,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class OblivionModHeaderBinaryCreateTranslation
+    internal partial class OblivionModHeaderBinaryCreateTranslation
     {
-        public readonly static OblivionModHeaderBinaryCreateTranslation Instance = new OblivionModHeaderBinaryCreateTranslation();
+        public static readonly OblivionModHeaderBinaryCreateTranslation Instance = new OblivionModHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IOblivionModHeader item,
@@ -1663,7 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1729,7 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1742,16 +1744,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionModHeaderBinaryOverlay :
+    internal partial class OblivionModHeaderBinaryOverlay :
         PluginBinaryOverlay,
         IOblivionModHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionModHeader_Registration.Instance;
-        public static OblivionModHeader_Registration StaticRegistration => OblivionModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OblivionModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => OblivionModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1765,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => OblivionModHeaderBinaryWriteTranslation.Instance;
@@ -1773,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OblivionModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1781,31 +1783,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public OblivionModHeader.HeaderFlag Flags => (OblivionModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public OblivionModHeader.HeaderFlag Flags => (OblivionModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         #region Stats
         private RangeInt32? _StatsLocation;
-        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(new OverlayStream(_data.Slice(_StatsLocation!.Value.Min), _package), _package) : default;
+        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(_recordData.Slice(_StatsLocation!.Value.Min), _package) : default;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets
         private int? _TypeOffsetsLocation;
-        public ReadOnlyMemorySlice<Byte>? TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TypeOffsetsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeOffsetsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Deleted
         private int? _DeletedLocation;
-        public ReadOnlyMemorySlice<Byte>? Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DeletedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeletedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Author
         private int? _AuthorLocation;
-        public String? Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AuthorLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AuthorLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1813,26 +1815,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected OblivionModHeaderBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static OblivionModHeaderBinaryOverlay OblivionModHeaderFactory(
+        public static IOblivionModHeaderGetter OblivionModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new OblivionModHeaderBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1841,20 +1846,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static OblivionModHeaderBinaryOverlay OblivionModHeaderFactory(
+        public static IOblivionModHeaderGetter OblivionModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return OblivionModHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1864,9 +1869,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.HEDR:
@@ -1896,10 +1901,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.MAST:
                 {
-                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
+                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<IMasterReferenceGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: RecordTypes.MAST,
+                        translationParams: translationParams,
+                        trigger: MasterReference_Registration.TriggerSpecs,
                         factory: MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)OblivionModHeader_FieldIndex.MasterReferences;
                 }
@@ -1909,12 +1914,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            OblivionModHeaderMixIn.ToString(
+            OblivionModHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

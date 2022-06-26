@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -68,12 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterReflectionMixIn.ToString(
+            WaterReflectionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -195,38 +197,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WaterReflection.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WaterReflection.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WaterReflection.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WaterReflection.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WaterReflection.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WaterReflection.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendItem(Water, "Water");
+                        sb.AppendItem(Water, "Water");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -321,38 +318,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Water, "Water");
-                fg.AppendItem(Type, "Type");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -431,13 +425,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WaterReflection_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
             Break0 = 1
         }
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterReflectionCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterReflectionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -448,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterReflectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -458,7 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WaterReflection CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterReflection();
             ((WaterReflectionSetterCommon)((IWaterReflectionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -473,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WaterReflection item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -483,7 +476,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -549,26 +542,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWaterReflectionGetter item,
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).ToString(
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWaterReflectionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
-            ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).ToString(
+            ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -674,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWaterReflection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WaterReflectionSetterCommon)((IWaterReflectionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -689,10 +682,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WaterReflection_FieldIndex
+    internal enum WaterReflection_FieldIndex
     {
         Versioning = 0,
         Water = 1,
@@ -701,7 +694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WaterReflection_Registration : ILoquiRegistration
+    internal partial class WaterReflection_Registration : ILoquiRegistration
     {
         public static readonly WaterReflection_Registration Instance = new WaterReflection_Registration();
 
@@ -743,6 +736,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XPWR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XPWR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WaterReflectionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -776,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WaterReflectionSetterCommon
+    internal partial class WaterReflectionSetterCommon
     {
         public static readonly WaterReflectionSetterCommon Instance = new WaterReflectionSetterCommon();
 
@@ -802,12 +801,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWaterReflection item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XPWR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -818,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterReflectionCommon
+    internal partial class WaterReflectionCommon
     {
         public static readonly WaterReflectionCommon Instance = new WaterReflectionCommon();
 
@@ -842,67 +841,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WaterReflection.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Water = item.Water.Equals(rhs.Water);
             ret.Type = item.Type == rhs.Type;
         }
         
-        public string ToString(
+        public string Print(
             IWaterReflectionGetter item,
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWaterReflectionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WaterReflection.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WaterReflection =>");
+                sb.AppendLine($"WaterReflection =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WaterReflection) =>");
+                sb.AppendLine($"{name} (WaterReflection) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWaterReflectionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WaterReflection.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKey, "Water");
+                sb.AppendItem(item.Water.FormKey, "Water");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -946,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWaterReflectionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterReflectionGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Water);
             yield break;
@@ -955,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterReflectionSetterTranslationCommon
+    internal partial class WaterReflectionSetterTranslationCommon
     {
         public static readonly WaterReflectionSetterTranslationCommon Instance = new WaterReflectionSetterTranslationCommon();
 
@@ -1042,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterReflection_Registration.Instance;
-        public static WaterReflection_Registration StaticRegistration => WaterReflection_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WaterReflection_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterReflectionCommon.Instance;
         [DebuggerStepThrough]
@@ -1066,11 +1062,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WaterReflectionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WaterReflectionBinaryWriteTranslation Instance = new WaterReflectionBinaryWriteTranslation();
+        public static readonly WaterReflectionBinaryWriteTranslation Instance = new WaterReflectionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWaterReflectionGetter item,
@@ -1091,12 +1087,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWaterReflectionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XPWR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1108,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWaterReflectionGetter)item,
@@ -1118,9 +1114,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WaterReflectionBinaryCreateTranslation
+    internal partial class WaterReflectionBinaryCreateTranslation
     {
-        public readonly static WaterReflectionBinaryCreateTranslation Instance = new WaterReflectionBinaryCreateTranslation();
+        public static readonly WaterReflectionBinaryCreateTranslation Instance = new WaterReflectionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWaterReflection item,
@@ -1148,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWaterReflectionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterReflectionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1161,16 +1157,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WaterReflectionBinaryOverlay :
+    internal partial class WaterReflectionBinaryOverlay :
         PluginBinaryOverlay,
         IWaterReflectionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterReflection_Registration.Instance;
-        public static WaterReflection_Registration StaticRegistration => WaterReflection_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WaterReflection_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterReflectionCommon.Instance;
         [DebuggerStepThrough]
@@ -1184,16 +1180,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterReflectionCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterReflectionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WaterReflectionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterReflectionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1202,8 +1198,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WaterReflection.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public WaterReflection.Flag Type => _data.Span.Length <= 0x4 ? default : (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public WaterReflection.Flag Type => _structData.Span.Length <= 0x4 ? default : (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1211,26 +1207,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WaterReflectionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WaterReflectionBinaryOverlay WaterReflectionFactory(
+        public static IWaterReflectionGetter WaterReflectionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WaterReflectionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x4)
+            if (ret._structData.Length <= 0x4)
             {
                 ret.Versioning |= WaterReflection.VersioningBreaks.Break0;
             }
@@ -1241,25 +1242,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WaterReflectionBinaryOverlay WaterReflectionFactory(
+        public static IWaterReflectionGetter WaterReflectionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WaterReflectionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterReflectionMixIn.ToString(
+            WaterReflectionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

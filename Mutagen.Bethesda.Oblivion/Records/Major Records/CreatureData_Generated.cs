@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -95,12 +97,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CreatureDataMixIn.ToString(
+            CreatureDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -330,86 +333,81 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CreatureData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CreatureData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CreatureData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CreatureData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CreatureData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CreatureData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.CombatSkill ?? true)
                     {
-                        fg.AppendItem(CombatSkill, "CombatSkill");
+                        sb.AppendItem(CombatSkill, "CombatSkill");
                     }
                     if (printMask?.MagicSkill ?? true)
                     {
-                        fg.AppendItem(MagicSkill, "MagicSkill");
+                        sb.AppendItem(MagicSkill, "MagicSkill");
                     }
                     if (printMask?.StealthSkill ?? true)
                     {
-                        fg.AppendItem(StealthSkill, "StealthSkill");
+                        sb.AppendItem(StealthSkill, "StealthSkill");
                     }
                     if (printMask?.SoulLevel ?? true)
                     {
-                        fg.AppendItem(SoulLevel, "SoulLevel");
+                        sb.AppendItem(SoulLevel, "SoulLevel");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.AttackDamage ?? true)
                     {
-                        fg.AppendItem(AttackDamage, "AttackDamage");
+                        sb.AppendItem(AttackDamage, "AttackDamage");
                     }
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendItem(Strength, "Strength");
+                        sb.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Intelligence ?? true)
                     {
-                        fg.AppendItem(Intelligence, "Intelligence");
+                        sb.AppendItem(Intelligence, "Intelligence");
                     }
                     if (printMask?.Willpower ?? true)
                     {
-                        fg.AppendItem(Willpower, "Willpower");
+                        sb.AppendItem(Willpower, "Willpower");
                     }
                     if (printMask?.Agility ?? true)
                     {
-                        fg.AppendItem(Agility, "Agility");
+                        sb.AppendItem(Agility, "Agility");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Endurance ?? true)
                     {
-                        fg.AppendItem(Endurance, "Endurance");
+                        sb.AppendItem(Endurance, "Endurance");
                     }
                     if (printMask?.Personality ?? true)
                     {
-                        fg.AppendItem(Personality, "Personality");
+                        sb.AppendItem(Personality, "Personality");
                     }
                     if (printMask?.Luck ?? true)
                     {
-                        fg.AppendItem(Luck, "Luck");
+                        sb.AppendItem(Luck, "Luck");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -624,50 +622,71 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(CombatSkill, "CombatSkill");
-                fg.AppendItem(MagicSkill, "MagicSkill");
-                fg.AppendItem(StealthSkill, "StealthSkill");
-                fg.AppendItem(SoulLevel, "SoulLevel");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(AttackDamage, "AttackDamage");
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Intelligence, "Intelligence");
-                fg.AppendItem(Willpower, "Willpower");
-                fg.AppendItem(Agility, "Agility");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Endurance, "Endurance");
-                fg.AppendItem(Personality, "Personality");
-                fg.AppendItem(Luck, "Luck");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(CombatSkill, "CombatSkill");
+                }
+                {
+                    sb.AppendItem(MagicSkill, "MagicSkill");
+                }
+                {
+                    sb.AppendItem(StealthSkill, "StealthSkill");
+                }
+                {
+                    sb.AppendItem(SoulLevel, "SoulLevel");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(AttackDamage, "AttackDamage");
+                }
+                {
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Intelligence, "Intelligence");
+                }
+                {
+                    sb.AppendItem(Willpower, "Willpower");
+                }
+                {
+                    sb.AppendItem(Agility, "Agility");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Endurance, "Endurance");
+                }
+                {
+                    sb.AppendItem(Personality, "Personality");
+                }
+                {
+                    sb.AppendItem(Luck, "Luck");
+                }
             }
             #endregion
 
@@ -793,10 +812,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = CreatureData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureDataBinaryWriteTranslation.Instance;
@@ -804,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -814,7 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CreatureData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreatureData();
             ((CreatureDataSetterCommon)((ICreatureDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -829,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CreatureData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -839,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -927,26 +942,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICreatureDataGetter item,
             string? name = null,
             CreatureData.Mask<bool>? printMask = null)
         {
-            return ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).ToString(
+            return ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICreatureDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreatureData.Mask<bool>? printMask = null)
         {
-            ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).ToString(
+            ((CreatureDataCommon)((ICreatureDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1052,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICreatureData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CreatureDataSetterCommon)((ICreatureDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1067,10 +1082,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CreatureData_FieldIndex
+    internal enum CreatureData_FieldIndex
     {
         Type = 0,
         CombatSkill = 1,
@@ -1091,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CreatureData_Registration : ILoquiRegistration
+    internal partial class CreatureData_Registration : ILoquiRegistration
     {
         public static readonly CreatureData_Registration Instance = new CreatureData_Registration();
 
@@ -1133,6 +1148,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CreatureDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1166,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureDataSetterCommon
+    internal partial class CreatureDataSetterCommon
     {
         public static readonly CreatureDataSetterCommon Instance = new CreatureDataSetterCommon();
 
@@ -1203,12 +1224,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ICreatureData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1219,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureDataCommon
+    internal partial class CreatureDataCommon
     {
         public static readonly CreatureDataCommon Instance = new CreatureDataCommon();
 
@@ -1243,7 +1264,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.CombatSkill = item.CombatSkill == rhs.CombatSkill;
             ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
@@ -1261,109 +1281,107 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Luck = item.Luck == rhs.Luck;
         }
         
-        public string ToString(
+        public string Print(
             ICreatureDataGetter item,
             string? name = null,
             CreatureData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICreatureDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreatureData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CreatureData =>");
+                sb.AppendLine($"CreatureData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CreatureData) =>");
+                sb.AppendLine($"{name} (CreatureData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICreatureDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CreatureData.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.CombatSkill ?? true)
             {
-                fg.AppendItem(item.CombatSkill, "CombatSkill");
+                sb.AppendItem(item.CombatSkill, "CombatSkill");
             }
             if (printMask?.MagicSkill ?? true)
             {
-                fg.AppendItem(item.MagicSkill, "MagicSkill");
+                sb.AppendItem(item.MagicSkill, "MagicSkill");
             }
             if (printMask?.StealthSkill ?? true)
             {
-                fg.AppendItem(item.StealthSkill, "StealthSkill");
+                sb.AppendItem(item.StealthSkill, "StealthSkill");
             }
             if (printMask?.SoulLevel ?? true)
             {
-                fg.AppendItem(item.SoulLevel, "SoulLevel");
+                sb.AppendItem(item.SoulLevel, "SoulLevel");
             }
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.AttackDamage ?? true)
             {
-                fg.AppendItem(item.AttackDamage, "AttackDamage");
+                sb.AppendItem(item.AttackDamage, "AttackDamage");
             }
             if (printMask?.Strength ?? true)
             {
-                fg.AppendItem(item.Strength, "Strength");
+                sb.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Intelligence ?? true)
             {
-                fg.AppendItem(item.Intelligence, "Intelligence");
+                sb.AppendItem(item.Intelligence, "Intelligence");
             }
             if (printMask?.Willpower ?? true)
             {
-                fg.AppendItem(item.Willpower, "Willpower");
+                sb.AppendItem(item.Willpower, "Willpower");
             }
             if (printMask?.Agility ?? true)
             {
-                fg.AppendItem(item.Agility, "Agility");
+                sb.AppendItem(item.Agility, "Agility");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Endurance ?? true)
             {
-                fg.AppendItem(item.Endurance, "Endurance");
+                sb.AppendItem(item.Endurance, "Endurance");
             }
             if (printMask?.Personality ?? true)
             {
-                fg.AppendItem(item.Personality, "Personality");
+                sb.AppendItem(item.Personality, "Personality");
             }
             if (printMask?.Luck ?? true)
             {
-                fg.AppendItem(item.Luck, "Luck");
+                sb.AppendItem(item.Luck, "Luck");
             }
         }
         
@@ -1467,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICreatureDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICreatureDataGetter obj)
         {
             yield break;
         }
@@ -1475,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureDataSetterTranslationCommon
+    internal partial class CreatureDataSetterTranslationCommon
     {
         public static readonly CreatureDataSetterTranslationCommon Instance = new CreatureDataSetterTranslationCommon();
 
@@ -1609,7 +1627,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureData_Registration.Instance;
-        public static CreatureData_Registration StaticRegistration => CreatureData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1633,11 +1651,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CreatureDataBinaryWriteTranslation Instance = new CreatureDataBinaryWriteTranslation();
+        public static readonly CreatureDataBinaryWriteTranslation Instance = new CreatureDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICreatureDataGetter item,
@@ -1669,12 +1687,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ICreatureDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1686,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICreatureDataGetter)item,
@@ -1696,9 +1714,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureDataBinaryCreateTranslation
+    internal partial class CreatureDataBinaryCreateTranslation
     {
-        public readonly static CreatureDataBinaryCreateTranslation Instance = new CreatureDataBinaryCreateTranslation();
+        public static readonly CreatureDataBinaryCreateTranslation Instance = new CreatureDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICreatureData item,
@@ -1736,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICreatureDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1749,16 +1767,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CreatureDataBinaryOverlay :
+    internal partial class CreatureDataBinaryOverlay :
         PluginBinaryOverlay,
         ICreatureDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureData_Registration.Instance;
-        public static CreatureData_Registration StaticRegistration => CreatureData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1772,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureDataBinaryWriteTranslation.Instance;
@@ -1780,7 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1788,21 +1806,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Creature.Types Type => (Creature.Types)_data.Span.Slice(0x0, 0x1)[0];
-        public Byte CombatSkill => _data.Span[0x1];
-        public Byte MagicSkill => _data.Span[0x2];
-        public Byte StealthSkill => _data.Span[0x3];
-        public SoulLevel SoulLevel => (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x6, 0x4));
-        public UInt16 AttackDamage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public Byte Strength => _data.Span[0xC];
-        public Byte Intelligence => _data.Span[0xD];
-        public Byte Willpower => _data.Span[0xE];
-        public Byte Agility => _data.Span[0xF];
-        public Byte Speed => _data.Span[0x10];
-        public Byte Endurance => _data.Span[0x11];
-        public Byte Personality => _data.Span[0x12];
-        public Byte Luck => _data.Span[0x13];
+        public Creature.Types Type => (Creature.Types)_structData.Span.Slice(0x0, 0x1)[0];
+        public Byte CombatSkill => _structData.Span[0x1];
+        public Byte MagicSkill => _structData.Span[0x2];
+        public Byte StealthSkill => _structData.Span[0x3];
+        public SoulLevel SoulLevel => (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x4, 0x2));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x6, 0x4));
+        public UInt16 AttackDamage => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public Byte Strength => _structData.Span[0xC];
+        public Byte Intelligence => _structData.Span[0xD];
+        public Byte Willpower => _structData.Span[0xE];
+        public Byte Agility => _structData.Span[0xF];
+        public Byte Speed => _structData.Span[0x10];
+        public Byte Endurance => _structData.Span[0x11];
+        public Byte Personality => _structData.Span[0x12];
+        public Byte Luck => _structData.Span[0x13];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1810,25 +1828,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected CreatureDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CreatureDataBinaryOverlay CreatureDataFactory(
+        public static ICreatureDataGetter CreatureDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CreatureDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1837,25 +1860,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static CreatureDataBinaryOverlay CreatureDataFactory(
+        public static ICreatureDataGetter CreatureDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CreatureDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CreatureDataMixIn.ToString(
+            CreatureDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
@@ -9,6 +8,7 @@ public class BoolType : Loqui.Generation.BoolType
 {
     public RecordType? BoolAsMarker;
     public int ByteLength { get; private set; }
+    public int? ImportantByteLength { get; private set; }
 
     public override async Task Load(XElement node, bool requireName = true)
     {
@@ -20,5 +20,6 @@ public class BoolType : Loqui.Generation.BoolType
         }
         this.GetFieldData().RecordType = BoolAsMarker;
         ByteLength = node.GetAttribute<int>(Constants.ByteLength, 1);
+        ImportantByteLength = node.GetAttribute<int?>(Constants.ImportantByteLength, null);
     }
 }

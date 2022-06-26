@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class SoundOutputModel
 {
-    public partial class SoundOutputModel
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            AttenuatesWithDistance = 0x01,
-            AllowsRumble = 0x02,
-        }
+        AttenuatesWithDistance = 0x01,
+        AllowsRumble = 0x02,
+    }
 
-        public enum TypeEnum
-        {
-            UsesHrtf,
-            DefinedSpeakerOutput,
-        }
+    public enum TypeEnum
+    {
+        UsesHrtf,
+        DefinedSpeakerOutput,
     }
 }

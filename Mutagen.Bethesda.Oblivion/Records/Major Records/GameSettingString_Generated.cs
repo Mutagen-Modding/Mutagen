@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -60,12 +61,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GameSettingStringMixIn.ToString(
+            GameSettingStringMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -171,30 +173,25 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(GameSettingString.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(GameSettingString.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, GameSettingString.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, GameSettingString.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(GameSettingString.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(GameSettingString.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -258,37 +255,30 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Data, "Data");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -409,7 +399,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => GameSettingStringBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GameSettingStringBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -419,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static GameSettingString CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GameSettingString();
             ((GameSettingStringSetterCommon)((IGameSettingStringGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -434,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GameSettingString item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -444,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -508,26 +498,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IGameSettingStringGetter item,
             string? name = null,
             GameSettingString.Mask<bool>? printMask = null)
         {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).ToString(
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IGameSettingStringGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GameSettingString.Mask<bool>? printMask = null)
         {
-            ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).ToString(
+            ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -622,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IGameSettingStringInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GameSettingStringSetterCommon)((IGameSettingStringGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -637,10 +627,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum GameSettingString_FieldIndex
+    internal enum GameSettingString_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -652,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class GameSettingString_Registration : ILoquiRegistration
+    internal partial class GameSettingString_Registration : ILoquiRegistration
     {
         public static readonly GameSettingString_Registration Instance = new GameSettingString_Registration();
 
@@ -694,6 +684,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GMST;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.GMST);
+            var all = RecordCollection.Factory(
+                RecordTypes.GMST,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(GameSettingStringBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -727,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GameSettingStringSetterCommon : GameSettingSetterCommon
+    internal partial class GameSettingStringSetterCommon : GameSettingSetterCommon
     {
         public new static readonly GameSettingStringSetterCommon Instance = new GameSettingStringSetterCommon();
 
@@ -767,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IGameSettingStringInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IGameSettingStringInternal>(
                 record: item,
@@ -780,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IGameSettingInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSettingString)item,
@@ -791,7 +790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSettingString)item,
@@ -802,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GameSettingString)item,
@@ -813,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GameSettingStringCommon : GameSettingCommon
+    internal partial class GameSettingStringCommon : GameSettingCommon
     {
         public new static readonly GameSettingStringCommon Instance = new GameSettingStringCommon();
 
@@ -837,63 +836,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GameSettingString.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = string.Equals(item.Data, rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IGameSettingStringGetter item,
             string? name = null,
             GameSettingString.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IGameSettingStringGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GameSettingString.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"GameSettingString =>");
+                sb.AppendLine($"GameSettingString =>");
             }
             else
             {
-                fg.AppendLine($"{name} (GameSettingString) =>");
+                sb.AppendLine($"{name} (GameSettingString) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IGameSettingStringGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             GameSettingString.Mask<bool>? printMask = null)
         {
             GameSettingCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
             {
-                fg.AppendItem(DataItem, "Data");
+                sb.AppendItem(DataItem, "Data");
             }
         }
         
@@ -1035,9 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGameSettingStringGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGameSettingStringGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1093,7 +1089,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GameSettingStringSetterTranslationCommon : GameSettingSetterTranslationCommon
+    internal partial class GameSettingStringSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
         public new static readonly GameSettingStringSetterTranslationCommon Instance = new GameSettingStringSetterTranslationCommon();
 
@@ -1282,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration StaticRegistration => GameSettingString_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingStringCommon.Instance;
         [DebuggerStepThrough]
@@ -1300,18 +1296,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GameSettingStringBinaryWriteTranslation :
         GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GameSettingStringBinaryWriteTranslation Instance = new GameSettingStringBinaryWriteTranslation();
+        public new static readonly GameSettingStringBinaryWriteTranslation Instance = new GameSettingStringBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IGameSettingStringGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1327,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IGameSettingStringGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1338,12 +1334,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1355,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGameSettingStringGetter)item,
@@ -1366,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IGameSettingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingStringGetter)item,
@@ -1377,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingStringGetter)item,
@@ -1388,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGameSettingStringGetter)item,
@@ -1398,9 +1397,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class GameSettingStringBinaryCreateTranslation : GameSettingBinaryCreateTranslation
+    internal partial class GameSettingStringBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
-        public new readonly static GameSettingStringBinaryCreateTranslation Instance = new GameSettingStringBinaryCreateTranslation();
+        public new static readonly GameSettingStringBinaryCreateTranslation Instance = new GameSettingStringBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GMST;
         public static void FillBinaryStructs(
@@ -1419,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1439,7 +1438,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1456,16 +1456,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class GameSettingStringBinaryOverlay :
+    internal partial class GameSettingStringBinaryOverlay :
         GameSettingBinaryOverlay,
         IGameSettingStringGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
-        public new static GameSettingString_Registration StaticRegistration => GameSettingString_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingString_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GameSettingStringCommon.Instance;
         [DebuggerStepThrough]
@@ -1473,13 +1473,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GameSettingStringBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GameSettingStringBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private int? _DataLocation;
-        public String? Data => _DataLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Data => _DataLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1500,28 +1500,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected GameSettingStringBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static GameSettingStringBinaryOverlay GameSettingStringFactory(
+        public static IGameSettingStringGetter GameSettingStringFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new GameSettingStringBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1531,20 +1534,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static GameSettingStringBinaryOverlay GameSettingStringFactory(
+        public static IGameSettingStringGetter GameSettingStringFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return GameSettingStringFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1554,9 +1557,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
@@ -1571,17 +1574,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GameSettingStringMixIn.ToString(
+            GameSettingStringMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

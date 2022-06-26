@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,18 +18,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -84,12 +85,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceGenDataMixIn.ToString(
+            FaceGenDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -211,38 +213,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FaceGenData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FaceGenData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FaceGenData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FaceGenData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FaceGenData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FaceGenData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.SymmetricGeometry ?? true)
                     {
-                        fg.AppendItem(SymmetricGeometry, "SymmetricGeometry");
+                        sb.AppendItem(SymmetricGeometry, "SymmetricGeometry");
                     }
                     if (printMask?.AsymmetricGeometry ?? true)
                     {
-                        fg.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
+                        sb.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
                     }
                     if (printMask?.SymmetricTexture ?? true)
                     {
-                        fg.AppendItem(SymmetricTexture, "SymmetricTexture");
+                        sb.AppendItem(SymmetricTexture, "SymmetricTexture");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -337,38 +334,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SymmetricGeometry, "SymmetricGeometry");
-                fg.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
-                fg.AppendItem(SymmetricTexture, "SymmetricTexture");
+                {
+                    sb.AppendItem(SymmetricGeometry, "SymmetricGeometry");
+                }
+                {
+                    sb.AppendItem(AsymmetricGeometry, "AsymmetricGeometry");
+                }
+                {
+                    sb.AppendItem(SymmetricTexture, "SymmetricTexture");
+                }
             }
             #endregion
 
@@ -453,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -463,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static FaceGenData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceGenData();
             ((FaceGenDataSetterCommon)((IFaceGenDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -478,7 +472,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FaceGenData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -488,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -552,26 +546,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFaceGenDataGetter item,
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
-            return ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).ToString(
+            return ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFaceGenDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
-            ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).ToString(
+            ((FaceGenDataCommon)((IFaceGenDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -677,7 +671,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IFaceGenData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FaceGenDataSetterCommon)((IFaceGenDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -692,10 +686,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum FaceGenData_FieldIndex
+    internal enum FaceGenData_FieldIndex
     {
         SymmetricGeometry = 0,
         AsymmetricGeometry = 1,
@@ -704,7 +698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class FaceGenData_Registration : ILoquiRegistration
+    internal partial class FaceGenData_Registration : ILoquiRegistration
     {
         public static readonly FaceGenData_Registration Instance = new FaceGenData_Registration();
 
@@ -745,18 +739,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.FGGS,
-                        RecordTypes.FGGA,
-                        RecordTypes.FGTS
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.FGGS,
+                RecordTypes.FGGA,
+                RecordTypes.FGTS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FaceGenDataBinaryWriteTranslation);
         #region Interface
@@ -791,7 +781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class FaceGenDataSetterCommon
+    internal partial class FaceGenDataSetterCommon
     {
         public static readonly FaceGenDataSetterCommon Instance = new FaceGenDataSetterCommon();
 
@@ -816,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IFaceGenData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -829,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FaceGenDataCommon
+    internal partial class FaceGenDataCommon
     {
         public static readonly FaceGenDataCommon Instance = new FaceGenDataCommon();
 
@@ -853,70 +843,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FaceGenData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SymmetricGeometry = MemorySliceExt.Equal(item.SymmetricGeometry, rhs.SymmetricGeometry);
             ret.AsymmetricGeometry = MemorySliceExt.Equal(item.AsymmetricGeometry, rhs.AsymmetricGeometry);
             ret.SymmetricTexture = MemorySliceExt.Equal(item.SymmetricTexture, rhs.SymmetricTexture);
         }
         
-        public string ToString(
+        public string Print(
             IFaceGenDataGetter item,
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFaceGenDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FaceGenData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FaceGenData =>");
+                sb.AppendLine($"FaceGenData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FaceGenData) =>");
+                sb.AppendLine($"{name} (FaceGenData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFaceGenDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FaceGenData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SymmetricGeometry ?? true)
                 && item.SymmetricGeometry is {} SymmetricGeometryItem)
             {
-                fg.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
+                sb.AppendLine($"SymmetricGeometry => {SpanExt.ToHexString(SymmetricGeometryItem)}");
             }
             if ((printMask?.AsymmetricGeometry ?? true)
                 && item.AsymmetricGeometry is {} AsymmetricGeometryItem)
             {
-                fg.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
+                sb.AppendLine($"AsymmetricGeometry => {SpanExt.ToHexString(AsymmetricGeometryItem)}");
             }
             if ((printMask?.SymmetricTexture ?? true)
                 && item.SymmetricTexture is {} SymmetricTextureItem)
             {
-                fg.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
+                sb.AppendLine($"SymmetricTexture => {SpanExt.ToHexString(SymmetricTextureItem)}");
             }
         }
         
@@ -969,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFaceGenDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceGenDataGetter obj)
         {
             yield break;
         }
@@ -977,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class FaceGenDataSetterTranslationCommon
+    internal partial class FaceGenDataSetterTranslationCommon
     {
         public static readonly FaceGenDataSetterTranslationCommon Instance = new FaceGenDataSetterTranslationCommon();
 
@@ -1084,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1108,16 +1095,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class FaceGenDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FaceGenDataBinaryWriteTranslation Instance = new FaceGenDataBinaryWriteTranslation();
+        public static readonly FaceGenDataBinaryWriteTranslation Instance = new FaceGenDataBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFaceGenDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1136,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IFaceGenDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1147,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFaceGenDataGetter)item,
@@ -1157,9 +1144,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class FaceGenDataBinaryCreateTranslation
+    internal partial class FaceGenDataBinaryCreateTranslation
     {
-        public readonly static FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
+        public static readonly FaceGenDataBinaryCreateTranslation Instance = new FaceGenDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFaceGenData item,
@@ -1174,28 +1161,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.FGGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricGeometry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SymmetricGeometry = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FaceGenData_FieldIndex.SymmetricGeometry;
                 }
                 case RecordTypeInts.FGGA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.AsymmetricGeometry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AsymmetricGeometry = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FaceGenData_FieldIndex.AsymmetricGeometry;
                 }
                 case RecordTypeInts.FGTS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricTexture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SymmetricTexture = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FaceGenData_FieldIndex.SymmetricTexture;
@@ -1216,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IFaceGenDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceGenDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1229,16 +1216,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class FaceGenDataBinaryOverlay :
+    internal partial class FaceGenDataBinaryOverlay :
         PluginBinaryOverlay,
         IFaceGenDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
-        public static FaceGenData_Registration StaticRegistration => FaceGenData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceGenData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceGenDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1252,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceGenDataBinaryWriteTranslation.Instance;
@@ -1260,7 +1247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceGenDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1270,15 +1257,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region SymmetricGeometry
         private int? _SymmetricGeometryLocation;
-        public ReadOnlyMemorySlice<Byte>? SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SymmetricGeometry => _SymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region AsymmetricGeometry
         private int? _AsymmetricGeometryLocation;
-        public ReadOnlyMemorySlice<Byte>? AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _AsymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? AsymmetricGeometry => _AsymmetricGeometryLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AsymmetricGeometryLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SymmetricTexture
         private int? _SymmetricTextureLocation;
-        public ReadOnlyMemorySlice<Byte>? SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SymmetricTextureLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SymmetricTexture => _SymmetricTextureLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SymmetricTextureLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1287,42 +1274,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected FaceGenDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FaceGenDataBinaryOverlay FaceGenDataFactory(
+        public static IFaceGenDataGetter FaceGenDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FaceGenDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static FaceGenDataBinaryOverlay FaceGenDataFactory(
+        public static IFaceGenDataGetter FaceGenDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FaceGenDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1332,26 +1325,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FGGS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricGeometry, translationParams)) return ParseResult.Stop;
                     _SymmetricGeometryLocation = (stream.Position - offset);
                     return (int)FaceGenData_FieldIndex.SymmetricGeometry;
                 }
                 case RecordTypeInts.FGGA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.AsymmetricGeometry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.AsymmetricGeometry, translationParams)) return ParseResult.Stop;
                     _AsymmetricGeometryLocation = (stream.Position - offset);
                     return (int)FaceGenData_FieldIndex.AsymmetricGeometry;
                 }
                 case RecordTypeInts.FGTS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FaceGenData_FieldIndex.SymmetricTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SymmetricTexture, translationParams)) return ParseResult.Stop;
                     _SymmetricTextureLocation = (stream.Position - offset);
                     return (int)FaceGenData_FieldIndex.SymmetricTexture;
                 }
@@ -1361,12 +1354,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceGenDataMixIn.ToString(
+            FaceGenDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

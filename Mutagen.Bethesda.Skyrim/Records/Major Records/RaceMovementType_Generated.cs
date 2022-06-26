@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +75,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMovementTypeMixIn.ToString(
+            RaceMovementTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -200,34 +202,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(RaceMovementType.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(RaceMovementType.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RaceMovementType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, RaceMovementType.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(RaceMovementType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RaceMovementType.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.MovementType ?? true)
                     {
-                        fg.AppendItem(MovementType, "MovementType");
+                        sb.AppendItem(MovementType, "MovementType");
                     }
                     if (printMask?.Overrides?.Overall ?? true)
                     {
-                        Overrides?.ToString(fg);
+                        Overrides?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -312,37 +309,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(MovementType, "MovementType");
-                Overrides?.ToString(fg);
+                {
+                    sb.AppendItem(MovementType, "MovementType");
+                }
+                Overrides?.Print(sb);
             }
             #endregion
 
@@ -416,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceMovementTypeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceMovementTypeCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceMovementTypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -427,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceMovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -437,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static RaceMovementType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RaceMovementType();
             ((RaceMovementTypeSetterCommon)((IRaceMovementTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -452,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RaceMovementType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -462,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -526,26 +516,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRaceMovementTypeGetter item,
             string? name = null,
             RaceMovementType.Mask<bool>? printMask = null)
         {
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)item).CommonInstance()!).ToString(
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRaceMovementTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceMovementType.Mask<bool>? printMask = null)
         {
-            ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)item).CommonInstance()!).ToString(
+            ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -651,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceMovementType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceMovementTypeSetterCommon)((IRaceMovementTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -666,10 +656,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum RaceMovementType_FieldIndex
+    internal enum RaceMovementType_FieldIndex
     {
         MovementType = 0,
         Overrides = 1,
@@ -677,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class RaceMovementType_Registration : ILoquiRegistration
+    internal partial class RaceMovementType_Registration : ILoquiRegistration
     {
         public static readonly RaceMovementType_Registration Instance = new RaceMovementType_Registration();
 
@@ -718,17 +708,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.MTYP,
-                        RecordTypes.SPED
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.MTYP,
+                RecordTypes.SPED);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RaceMovementTypeBinaryWriteTranslation);
         #region Interface
@@ -763,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RaceMovementTypeSetterCommon
+    internal partial class RaceMovementTypeSetterCommon
     {
         public static readonly RaceMovementTypeSetterCommon Instance = new RaceMovementTypeSetterCommon();
 
@@ -788,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IRaceMovementType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -801,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceMovementTypeCommon
+    internal partial class RaceMovementTypeCommon
     {
         public static readonly RaceMovementTypeCommon Instance = new RaceMovementTypeCommon();
 
@@ -825,7 +811,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceMovementType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.MovementType = item.MovementType.Equals(rhs.MovementType);
             ret.Overrides = EqualsMaskHelper.EqualsHelper(
                 item.Overrides,
@@ -834,58 +819,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IRaceMovementTypeGetter item,
             string? name = null,
             RaceMovementType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRaceMovementTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceMovementType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RaceMovementType =>");
+                sb.AppendLine($"RaceMovementType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RaceMovementType) =>");
+                sb.AppendLine($"{name} (RaceMovementType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceMovementTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RaceMovementType.Mask<bool>? printMask = null)
         {
             if (printMask?.MovementType ?? true)
             {
-                fg.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
+                sb.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
             }
             if ((printMask?.Overrides?.Overall ?? true)
                 && item.Overrides is {} OverridesItem)
             {
-                OverridesItem?.ToString(fg, "Overrides");
+                OverridesItem?.Print(sb, "Overrides");
             }
         }
         
@@ -931,11 +914,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceMovementTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceMovementTypeGetter obj)
         {
-            if (obj.MovementType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MovementType, out var MovementTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MovementType);
+                yield return MovementTypeInfo;
             }
             yield break;
         }
@@ -943,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceMovementTypeSetterTranslationCommon
+    internal partial class RaceMovementTypeSetterTranslationCommon
     {
         public static readonly RaceMovementTypeSetterTranslationCommon Instance = new RaceMovementTypeSetterTranslationCommon();
 
@@ -1047,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceMovementType_Registration.Instance;
-        public static RaceMovementType_Registration StaticRegistration => RaceMovementType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceMovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceMovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1071,16 +1054,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RaceMovementTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RaceMovementTypeBinaryWriteTranslation Instance = new RaceMovementTypeBinaryWriteTranslation();
+        public static readonly RaceMovementTypeBinaryWriteTranslation Instance = new RaceMovementTypeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRaceMovementTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1098,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IRaceMovementTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1109,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceMovementTypeGetter)item,
@@ -1119,9 +1102,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RaceMovementTypeBinaryCreateTranslation
+    internal partial class RaceMovementTypeBinaryCreateTranslation
     {
-        public readonly static RaceMovementTypeBinaryCreateTranslation Instance = new RaceMovementTypeBinaryCreateTranslation();
+        public static readonly RaceMovementTypeBinaryCreateTranslation Instance = new RaceMovementTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRaceMovementType item,
@@ -1136,21 +1119,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MTYP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.MovementType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MovementType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)RaceMovementType_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.Overrides) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.Overrides, translationParams)) return ParseResult.Stop;
                     item.Overrides = Mutagen.Bethesda.Skyrim.SpeedOverrides.CreateFromBinary(frame: frame);
                     return (int)RaceMovementType_FieldIndex.Overrides;
                 }
@@ -1170,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IRaceMovementTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceMovementTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1183,16 +1166,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RaceMovementTypeBinaryOverlay :
+    internal partial class RaceMovementTypeBinaryOverlay :
         PluginBinaryOverlay,
         IRaceMovementTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceMovementType_Registration.Instance;
-        public static RaceMovementType_Registration StaticRegistration => RaceMovementType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceMovementType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceMovementTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1206,16 +1189,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceMovementTypeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceMovementTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceMovementTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceMovementTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1225,11 +1208,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;
-        public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new OverlayStream(_data.Slice(_OverridesLocation!.Value.Min), _package), _package) : default;
+        public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(_recordData.Slice(_OverridesLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1238,42 +1221,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected RaceMovementTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RaceMovementTypeBinaryOverlay RaceMovementTypeFactory(
+        public static IRaceMovementTypeGetter RaceMovementTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RaceMovementTypeBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RaceMovementTypeBinaryOverlay RaceMovementTypeFactory(
+        public static IRaceMovementTypeGetter RaceMovementTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceMovementTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1283,20 +1272,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MTYP:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.MovementType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     _MovementTypeLocation = (stream.Position - offset);
                     return (int)RaceMovementType_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)RaceMovementType_FieldIndex.Overrides) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)RaceMovementType_FieldIndex.Overrides, translationParams)) return ParseResult.Stop;
                     _OverridesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)RaceMovementType_FieldIndex.Overrides;
                 }
@@ -1306,12 +1295,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMovementTypeMixIn.ToString(
+            RaceMovementTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

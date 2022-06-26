@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -88,12 +89,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LogEntryMixIn.ToString(
+            LogEntryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -254,9 +256,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -268,61 +270,52 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LogEntry.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LogEntry.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LogEntry.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LogEntry.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LogEntry.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LogEntry.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Entry ?? true)
                     {
-                        fg.AppendItem(Entry, "Entry");
+                        sb.AppendItem(Entry, "Entry");
                     }
                     if (printMask?.ResultScript?.Overall ?? true)
                     {
-                        ResultScript?.ToString(fg);
+                        ResultScript?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -427,60 +420,51 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Entry, "Entry");
-                ResultScript?.ToString(fg);
+                {
+                    sb.AppendItem(Entry, "Entry");
+                }
+                ResultScript?.Print(sb);
             }
             #endregion
 
@@ -561,7 +545,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LogEntryCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LogEntryCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LogEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -572,7 +556,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -582,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LogEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LogEntry();
             ((LogEntrySetterCommon)((ILogEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -597,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LogEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -607,7 +591,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -675,26 +659,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILogEntryGetter item,
             string? name = null,
             LogEntry.Mask<bool>? printMask = null)
         {
-            return ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).ToString(
+            return ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILogEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LogEntry.Mask<bool>? printMask = null)
         {
-            ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).ToString(
+            ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -800,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILogEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LogEntrySetterCommon)((ILogEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -815,10 +799,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LogEntry_FieldIndex
+    internal enum LogEntry_FieldIndex
     {
         Flags = 0,
         Conditions = 1,
@@ -828,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LogEntry_Registration : ILoquiRegistration
+    internal partial class LogEntry_Registration : ILoquiRegistration
     {
         public static readonly LogEntry_Registration Instance = new LogEntry_Registration();
 
@@ -869,21 +853,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.QSDT,
-                        RecordTypes.CTDA,
-                        RecordTypes.CTDT,
-                        RecordTypes.CNAM,
-                        RecordTypes.SCHD,
-                        RecordTypes.SCHR
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.QSDT,
+                RecordTypes.CTDA,
+                RecordTypes.CTDT,
+                RecordTypes.CNAM,
+                RecordTypes.SCHD,
+                RecordTypes.SCHR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LogEntryBinaryWriteTranslation);
         #region Interface
@@ -918,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LogEntrySetterCommon
+    internal partial class LogEntrySetterCommon
     {
         public static readonly LogEntrySetterCommon Instance = new LogEntrySetterCommon();
 
@@ -945,7 +925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILogEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -958,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LogEntryCommon
+    internal partial class LogEntryCommon
     {
         public static readonly LogEntryCommon Instance = new LogEntryCommon();
 
@@ -982,7 +962,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LogEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -996,82 +975,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             ILogEntryGetter item,
             string? name = null,
             LogEntry.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILogEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LogEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LogEntry =>");
+                sb.AppendLine($"LogEntry =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LogEntry) =>");
+                sb.AppendLine($"{name} (LogEntry) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILogEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LogEntry.Mask<bool>? printMask = null)
         {
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Entry ?? true)
                 && item.Entry is {} EntryItem)
             {
-                fg.AppendItem(EntryItem, "Entry");
+                sb.AppendItem(EntryItem, "Entry");
             }
             if ((printMask?.ResultScript?.Overall ?? true)
                 && item.ResultScript is {} ResultScriptItem)
             {
-                ResultScriptItem?.ToString(fg, "ResultScript");
+                ResultScriptItem?.Print(sb, "ResultScript");
             }
         }
         
@@ -1088,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LogEntry_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
             {
@@ -1133,11 +1106,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILogEntryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILogEntryGetter obj)
         {
             if (obj.ResultScript is IFormLinkContainerGetter ResultScriptlinkCont)
             {
-                foreach (var item in ResultScriptlinkCont.ContainedFormLinks)
+                foreach (var item in ResultScriptlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1148,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LogEntrySetterTranslationCommon
+    internal partial class LogEntrySetterTranslationCommon
     {
         public static readonly LogEntrySetterTranslationCommon Instance = new LogEntrySetterTranslationCommon();
 
@@ -1280,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
-        public static LogEntry_Registration StaticRegistration => LogEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LogEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LogEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1304,16 +1277,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LogEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
+        public static readonly LogEntryBinaryWriteTranslation Instance = new LogEntryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILogEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<LogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1323,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1348,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILogEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1359,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILogEntryGetter)item,
@@ -1369,9 +1342,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LogEntryBinaryCreateTranslation
+    internal partial class LogEntryBinaryCreateTranslation
     {
-        public readonly static LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
+        public static readonly LogEntryBinaryCreateTranslation Instance = new LogEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILogEntry item,
@@ -1386,14 +1359,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LogEntry.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1403,18 +1376,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)LogEntry_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Entry = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1424,10 +1397,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.ResultScript) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.ResultScript, translationParams)) return ParseResult.Stop;
                     item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:
@@ -1446,7 +1419,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILogEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LogEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1459,16 +1432,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LogEntryBinaryOverlay :
+    internal partial class LogEntryBinaryOverlay :
         PluginBinaryOverlay,
         ILogEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LogEntry_Registration.Instance;
-        public static LogEntry_Registration StaticRegistration => LogEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LogEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LogEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1482,16 +1455,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LogEntryCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LogEntryCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LogEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LogEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1501,12 +1474,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Flags
         private int? _FlagsLocation;
-        public LogEntry.Flag? Flags => _FlagsLocation.HasValue ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LogEntry.Flag?);
+        public LogEntry.Flag? Flags => _FlagsLocation.HasValue ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LogEntry.Flag?);
         #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Entry
         private int? _EntryLocation;
-        public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EntryLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IScriptFieldsGetter? ResultScript { get; private set; }
         partial void CustomFactoryEnd(
@@ -1516,42 +1489,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected LogEntryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LogEntryBinaryOverlay LogEntryFactory(
+        public static ILogEntryGetter LogEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LogEntryBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LogEntryBinaryOverlay LogEntryFactory(
+        public static ILogEntryGetter LogEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LogEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1561,47 +1540,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.QSDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
                     return (int)LogEntry_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)LogEntry_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.Entry) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.Entry, translationParams)) return ParseResult.Stop;
                     _EntryLocation = (stream.Position - offset);
                     return (int)LogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)LogEntry_FieldIndex.ResultScript) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)LogEntry_FieldIndex.ResultScript, translationParams)) return ParseResult.Stop;
                     this.ResultScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)LogEntry_FieldIndex.ResultScript;
                 }
                 default:
@@ -1610,12 +1590,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LogEntryMixIn.ToString(
+            LogEntryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

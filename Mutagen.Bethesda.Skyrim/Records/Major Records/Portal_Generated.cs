@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -72,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PortalMixIn.ToString(
+            PortalMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -190,34 +192,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Portal.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Portal.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Portal.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Portal.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Portal.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Portal.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Origin ?? true)
                     {
-                        fg.AppendItem(Origin, "Origin");
+                        sb.AppendItem(Origin, "Origin");
                     }
                     if (printMask?.Destination ?? true)
                     {
-                        fg.AppendItem(Destination, "Destination");
+                        sb.AppendItem(Destination, "Destination");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -302,37 +299,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Origin, "Origin");
-                fg.AppendItem(Destination, "Destination");
+                {
+                    sb.AppendItem(Origin, "Origin");
+                }
+                {
+                    sb.AppendItem(Destination, "Destination");
+                }
             }
             #endregion
 
@@ -407,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PortalCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PortalSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -418,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PortalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -428,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Portal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Portal();
             ((PortalSetterCommon)((IPortalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -443,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Portal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -453,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -517,26 +509,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPortalGetter item,
             string? name = null,
             Portal.Mask<bool>? printMask = null)
         {
-            return ((PortalCommon)((IPortalGetter)item).CommonInstance()!).ToString(
+            return ((PortalCommon)((IPortalGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPortalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Portal.Mask<bool>? printMask = null)
         {
-            ((PortalCommon)((IPortalGetter)item).CommonInstance()!).ToString(
+            ((PortalCommon)((IPortalGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -642,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPortal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PortalSetterCommon)((IPortalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -657,10 +649,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Portal_FieldIndex
+    internal enum Portal_FieldIndex
     {
         Origin = 0,
         Destination = 1,
@@ -668,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Portal_Registration : ILoquiRegistration
+    internal partial class Portal_Registration : ILoquiRegistration
     {
         public static readonly Portal_Registration Instance = new Portal_Registration();
 
@@ -742,7 +734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PortalSetterCommon
+    internal partial class PortalSetterCommon
     {
         public static readonly PortalSetterCommon Instance = new PortalSetterCommon();
 
@@ -768,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPortal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -780,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PortalCommon
+    internal partial class PortalCommon
     {
         public static readonly PortalCommon Instance = new PortalCommon();
 
@@ -804,62 +796,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Portal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Origin = item.Origin.Equals(rhs.Origin);
             ret.Destination = item.Destination.Equals(rhs.Destination);
         }
         
-        public string ToString(
+        public string Print(
             IPortalGetter item,
             string? name = null,
             Portal.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPortalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Portal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Portal =>");
+                sb.AppendLine($"Portal =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Portal) =>");
+                sb.AppendLine($"{name} (Portal) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPortalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Portal.Mask<bool>? printMask = null)
         {
             if (printMask?.Origin ?? true)
             {
-                fg.AppendItem(item.Origin.FormKey, "Origin");
+                sb.AppendItem(item.Origin.FormKey, "Origin");
             }
             if (printMask?.Destination ?? true)
             {
-                fg.AppendItem(item.Destination.FormKey, "Destination");
+                sb.AppendItem(item.Destination.FormKey, "Destination");
             }
         }
         
@@ -898,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPortalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPortalGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Origin);
             yield return FormLinkInformation.Factory(obj.Destination);
@@ -908,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PortalSetterTranslationCommon
+    internal partial class PortalSetterTranslationCommon
     {
         public static readonly PortalSetterTranslationCommon Instance = new PortalSetterTranslationCommon();
 
@@ -990,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Portal_Registration.Instance;
-        public static Portal_Registration StaticRegistration => Portal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Portal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PortalCommon.Instance;
         [DebuggerStepThrough]
@@ -1014,11 +1003,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PortalBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PortalBinaryWriteTranslation Instance = new PortalBinaryWriteTranslation();
+        public static readonly PortalBinaryWriteTranslation Instance = new PortalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPortalGetter item,
@@ -1035,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPortalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1045,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPortalGetter)item,
@@ -1055,9 +1044,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PortalBinaryCreateTranslation
+    internal partial class PortalBinaryCreateTranslation
     {
-        public readonly static PortalBinaryCreateTranslation Instance = new PortalBinaryCreateTranslation();
+        public static readonly PortalBinaryCreateTranslation Instance = new PortalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPortal item,
@@ -1078,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPortalGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PortalBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1091,16 +1080,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PortalBinaryOverlay :
+    internal partial class PortalBinaryOverlay :
         PluginBinaryOverlay,
         IPortalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Portal_Registration.Instance;
-        public static Portal_Registration StaticRegistration => Portal_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Portal_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PortalCommon.Instance;
         [DebuggerStepThrough]
@@ -1114,16 +1103,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PortalCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PortalBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PortalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1131,8 +1120,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedObjectGetter> Origin => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IPlacedObjectGetter> Destination => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Origin => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Destination => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1140,24 +1129,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PortalBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PortalBinaryOverlay PortalFactory(
+        public static IPortalGetter PortalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PortalBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1166,25 +1161,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PortalBinaryOverlay PortalFactory(
+        public static IPortalGetter PortalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PortalFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PortalMixIn.ToString(
+            PortalMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

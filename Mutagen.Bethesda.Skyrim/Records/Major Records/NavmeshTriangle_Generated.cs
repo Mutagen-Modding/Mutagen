@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshTriangleMixIn.ToString(
+            NavmeshTriangleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -234,54 +237,49 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NavmeshTriangle.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NavmeshTriangle.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavmeshTriangle.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NavmeshTriangle.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NavmeshTriangle.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavmeshTriangle.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Vertices ?? true)
                     {
-                        fg.AppendItem(Vertices, "Vertices");
+                        sb.AppendItem(Vertices, "Vertices");
                     }
                     if (printMask?.EdgeLink_0_1 ?? true)
                     {
-                        fg.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
+                        sb.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
                     }
                     if (printMask?.EdgeLink_1_2 ?? true)
                     {
-                        fg.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
+                        sb.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
                     }
                     if (printMask?.EdgeLink_2_0 ?? true)
                     {
-                        fg.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
+                        sb.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.CoverFlags ?? true)
                     {
-                        fg.AppendItem(CoverFlags, "CoverFlags");
+                        sb.AppendItem(CoverFlags, "CoverFlags");
                     }
                     if (printMask?.IsCover ?? true)
                     {
-                        fg.AppendItem(IsCover, "IsCover");
+                        sb.AppendItem(IsCover, "IsCover");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -416,42 +414,47 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Vertices, "Vertices");
-                fg.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
-                fg.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
-                fg.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(CoverFlags, "CoverFlags");
-                fg.AppendItem(IsCover, "IsCover");
+                {
+                    sb.AppendItem(Vertices, "Vertices");
+                }
+                {
+                    sb.AppendItem(EdgeLink_0_1, "EdgeLink_0_1");
+                }
+                {
+                    sb.AppendItem(EdgeLink_1_2, "EdgeLink_1_2");
+                }
+                {
+                    sb.AppendItem(EdgeLink_2_0, "EdgeLink_2_0");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(CoverFlags, "CoverFlags");
+                }
+                {
+                    sb.AppendItem(IsCover, "IsCover");
+                }
             }
             #endregion
 
@@ -552,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshTriangleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -562,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NavmeshTriangle CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavmeshTriangle();
             ((NavmeshTriangleSetterCommon)((INavmeshTriangleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -577,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavmeshTriangle item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -587,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -659,26 +662,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavmeshTriangleGetter item,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).ToString(
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavmeshTriangleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
-            ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).ToString(
+            ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -784,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavmeshTriangle item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavmeshTriangleSetterCommon)((INavmeshTriangleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -799,10 +802,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavmeshTriangle_FieldIndex
+    internal enum NavmeshTriangle_FieldIndex
     {
         Vertices = 0,
         EdgeLink_0_1 = 1,
@@ -815,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NavmeshTriangle_Registration : ILoquiRegistration
+    internal partial class NavmeshTriangle_Registration : ILoquiRegistration
     {
         public static readonly NavmeshTriangle_Registration Instance = new NavmeshTriangle_Registration();
 
@@ -889,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavmeshTriangleSetterCommon
+    internal partial class NavmeshTriangleSetterCommon
     {
         public static readonly NavmeshTriangleSetterCommon Instance = new NavmeshTriangleSetterCommon();
 
@@ -918,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INavmeshTriangle item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -930,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshTriangleCommon
+    internal partial class NavmeshTriangleCommon
     {
         public static readonly NavmeshTriangleCommon Instance = new NavmeshTriangleCommon();
 
@@ -954,7 +957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NavmeshTriangle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Vertices = item.Vertices.Equals(rhs.Vertices);
             ret.EdgeLink_0_1 = item.EdgeLink_0_1 == rhs.EdgeLink_0_1;
             ret.EdgeLink_1_2 = item.EdgeLink_1_2 == rhs.EdgeLink_1_2;
@@ -964,77 +966,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.IsCover = item.IsCover == rhs.IsCover;
         }
         
-        public string ToString(
+        public string Print(
             INavmeshTriangleGetter item,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavmeshTriangleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavmeshTriangle =>");
+                sb.AppendLine($"NavmeshTriangle =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavmeshTriangle) =>");
+                sb.AppendLine($"{name} (NavmeshTriangle) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavmeshTriangleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavmeshTriangle.Mask<bool>? printMask = null)
         {
             if (printMask?.Vertices ?? true)
             {
-                fg.AppendItem(item.Vertices, "Vertices");
+                sb.AppendItem(item.Vertices, "Vertices");
             }
             if (printMask?.EdgeLink_0_1 ?? true)
             {
-                fg.AppendItem(item.EdgeLink_0_1, "EdgeLink_0_1");
+                sb.AppendItem(item.EdgeLink_0_1, "EdgeLink_0_1");
             }
             if (printMask?.EdgeLink_1_2 ?? true)
             {
-                fg.AppendItem(item.EdgeLink_1_2, "EdgeLink_1_2");
+                sb.AppendItem(item.EdgeLink_1_2, "EdgeLink_1_2");
             }
             if (printMask?.EdgeLink_2_0 ?? true)
             {
-                fg.AppendItem(item.EdgeLink_2_0, "EdgeLink_2_0");
+                sb.AppendItem(item.EdgeLink_2_0, "EdgeLink_2_0");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.CoverFlags ?? true)
             {
-                fg.AppendItem(item.CoverFlags, "CoverFlags");
+                sb.AppendItem(item.CoverFlags, "CoverFlags");
             }
             if (printMask?.IsCover ?? true)
             {
-                fg.AppendItem(item.IsCover, "IsCover");
+                sb.AppendItem(item.IsCover, "IsCover");
             }
         }
         
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavmeshTriangleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshTriangleGetter obj)
         {
             yield break;
         }
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshTriangleSetterTranslationCommon
+    internal partial class NavmeshTriangleSetterTranslationCommon
     {
         public static readonly NavmeshTriangleSetterTranslationCommon Instance = new NavmeshTriangleSetterTranslationCommon();
 
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshTriangle_Registration.Instance;
-        public static NavmeshTriangle_Registration StaticRegistration => NavmeshTriangle_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshTriangleCommon.Instance;
         [DebuggerStepThrough]
@@ -1232,11 +1232,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshTriangleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavmeshTriangleBinaryWriteTranslation Instance = new NavmeshTriangleBinaryWriteTranslation();
+        public static readonly NavmeshTriangleBinaryWriteTranslation Instance = new NavmeshTriangleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavmeshTriangleGetter item,
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INavmeshTriangleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavmeshTriangleGetter)item,
@@ -1278,9 +1278,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavmeshTriangleBinaryCreateTranslation
+    internal partial class NavmeshTriangleBinaryCreateTranslation
     {
-        public readonly static NavmeshTriangleBinaryCreateTranslation Instance = new NavmeshTriangleBinaryCreateTranslation();
+        public static readonly NavmeshTriangleBinaryCreateTranslation Instance = new NavmeshTriangleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavmeshTriangle item,
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INavmeshTriangleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshTriangleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1320,16 +1320,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavmeshTriangleBinaryOverlay :
+    internal partial class NavmeshTriangleBinaryOverlay :
         PluginBinaryOverlay,
         INavmeshTriangleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshTriangle_Registration.Instance;
-        public static NavmeshTriangle_Registration StaticRegistration => NavmeshTriangle_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshTriangle_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshTriangleCommon.Instance;
         [DebuggerStepThrough]
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshTriangleBinaryWriteTranslation.Instance;
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshTriangleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1359,12 +1359,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public P3Int16 Vertices => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x6));
-        public Int16 EdgeLink_0_1 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Int16 EdgeLink_1_2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public Int16 EdgeLink_2_0 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0xC, 0x2));
-        public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
+        public P3Int16 Vertices => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x6));
+        public Int16 EdgeLink_0_1 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public Int16 EdgeLink_1_2 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public Int16 EdgeLink_2_0 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0xC, 0x2));
+        public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1372,24 +1372,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NavmeshTriangleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
+        public static INavmeshTriangleGetter NavmeshTriangleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NavmeshTriangleBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1398,25 +1404,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
+        public static INavmeshTriangleGetter NavmeshTriangleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavmeshTriangleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshTriangleMixIn.ToString(
+            NavmeshTriangleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

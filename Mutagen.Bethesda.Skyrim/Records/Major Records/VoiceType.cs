@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class VoiceType
 {
-    public partial class VoiceType
+    [Flags]
+    public enum Flag
     {
-        public enum Flag
-        {
-            AllowDefaultDialog = 0x01,
-            Female = 0x02,
-        }
+        AllowDefaultDialog = 0x01,
+        Female = 0x02,
     }
 }

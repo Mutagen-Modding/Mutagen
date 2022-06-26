@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -99,12 +100,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AttackDataMixIn.ToString(
+            AttackDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -298,70 +300,65 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AttackData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AttackData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AttackData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AttackData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AttackData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AttackData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.DamageMult ?? true)
                     {
-                        fg.AppendItem(DamageMult, "DamageMult");
+                        sb.AppendItem(DamageMult, "DamageMult");
                     }
                     if (printMask?.Chance ?? true)
                     {
-                        fg.AppendItem(Chance, "Chance");
+                        sb.AppendItem(Chance, "Chance");
                     }
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AttackAngle ?? true)
                     {
-                        fg.AppendItem(AttackAngle, "AttackAngle");
+                        sb.AppendItem(AttackAngle, "AttackAngle");
                     }
                     if (printMask?.StrikeAngle ?? true)
                     {
-                        fg.AppendItem(StrikeAngle, "StrikeAngle");
+                        sb.AppendItem(StrikeAngle, "StrikeAngle");
                     }
                     if (printMask?.Stagger ?? true)
                     {
-                        fg.AppendItem(Stagger, "Stagger");
+                        sb.AppendItem(Stagger, "Stagger");
                     }
                     if (printMask?.AttackType ?? true)
                     {
-                        fg.AppendItem(AttackType, "AttackType");
+                        sb.AppendItem(AttackType, "AttackType");
                     }
                     if (printMask?.Knockdown ?? true)
                     {
-                        fg.AppendItem(Knockdown, "Knockdown");
+                        sb.AppendItem(Knockdown, "Knockdown");
                     }
                     if (printMask?.RecoveryTime ?? true)
                     {
-                        fg.AppendItem(RecoveryTime, "RecoveryTime");
+                        sb.AppendItem(RecoveryTime, "RecoveryTime");
                     }
                     if (printMask?.StaminaMult ?? true)
                     {
-                        fg.AppendItem(StaminaMult, "StaminaMult");
+                        sb.AppendItem(StaminaMult, "StaminaMult");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -536,46 +533,59 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(DamageMult, "DamageMult");
-                fg.AppendItem(Chance, "Chance");
-                fg.AppendItem(Spell, "Spell");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AttackAngle, "AttackAngle");
-                fg.AppendItem(StrikeAngle, "StrikeAngle");
-                fg.AppendItem(Stagger, "Stagger");
-                fg.AppendItem(AttackType, "AttackType");
-                fg.AppendItem(Knockdown, "Knockdown");
-                fg.AppendItem(RecoveryTime, "RecoveryTime");
-                fg.AppendItem(StaminaMult, "StaminaMult");
+                {
+                    sb.AppendItem(DamageMult, "DamageMult");
+                }
+                {
+                    sb.AppendItem(Chance, "Chance");
+                }
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AttackAngle, "AttackAngle");
+                }
+                {
+                    sb.AppendItem(StrikeAngle, "StrikeAngle");
+                }
+                {
+                    sb.AppendItem(Stagger, "Stagger");
+                }
+                {
+                    sb.AppendItem(AttackType, "AttackType");
+                }
+                {
+                    sb.AppendItem(Knockdown, "Knockdown");
+                }
+                {
+                    sb.AppendItem(RecoveryTime, "RecoveryTime");
+                }
+                {
+                    sb.AppendItem(StaminaMult, "StaminaMult");
+                }
             }
             #endregion
 
@@ -686,8 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = AttackData_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => AttackDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AttackDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AttackDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -698,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -708,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AttackData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AttackData();
             ((AttackDataSetterCommon)((IAttackDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -723,7 +732,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AttackData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -733,7 +742,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -815,26 +824,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAttackDataGetter item,
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).ToString(
+            return ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAttackDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
-            ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).ToString(
+            ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -940,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAttackData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AttackDataSetterCommon)((IAttackDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -955,10 +964,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AttackData_FieldIndex
+    internal enum AttackData_FieldIndex
     {
         DamageMult = 0,
         Chance = 1,
@@ -975,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AttackData_Registration : ILoquiRegistration
+    internal partial class AttackData_Registration : ILoquiRegistration
     {
         public static readonly AttackData_Registration Instance = new AttackData_Registration();
 
@@ -1017,6 +1026,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ATKD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.ATKD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AttackDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1050,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AttackDataSetterCommon
+    internal partial class AttackDataSetterCommon
     {
         public static readonly AttackDataSetterCommon Instance = new AttackDataSetterCommon();
 
@@ -1085,12 +1100,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAttackData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ATKD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1101,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AttackDataCommon
+    internal partial class AttackDataCommon
     {
         public static readonly AttackDataCommon Instance = new AttackDataCommon();
 
@@ -1125,7 +1140,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AttackData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DamageMult = item.DamageMult.EqualsWithin(rhs.DamageMult);
             ret.Chance = item.Chance.EqualsWithin(rhs.Chance);
             ret.Spell = item.Spell.Equals(rhs.Spell);
@@ -1139,93 +1153,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.StaminaMult = item.StaminaMult.EqualsWithin(rhs.StaminaMult);
         }
         
-        public string ToString(
+        public string Print(
             IAttackDataGetter item,
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAttackDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AttackData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AttackData =>");
+                sb.AppendLine($"AttackData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AttackData) =>");
+                sb.AppendLine($"{name} (AttackData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAttackDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AttackData.Mask<bool>? printMask = null)
         {
             if (printMask?.DamageMult ?? true)
             {
-                fg.AppendItem(item.DamageMult, "DamageMult");
+                sb.AppendItem(item.DamageMult, "DamageMult");
             }
             if (printMask?.Chance ?? true)
             {
-                fg.AppendItem(item.Chance, "Chance");
+                sb.AppendItem(item.Chance, "Chance");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKey, "Spell");
+                sb.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.AttackAngle ?? true)
             {
-                fg.AppendItem(item.AttackAngle, "AttackAngle");
+                sb.AppendItem(item.AttackAngle, "AttackAngle");
             }
             if (printMask?.StrikeAngle ?? true)
             {
-                fg.AppendItem(item.StrikeAngle, "StrikeAngle");
+                sb.AppendItem(item.StrikeAngle, "StrikeAngle");
             }
             if (printMask?.Stagger ?? true)
             {
-                fg.AppendItem(item.Stagger, "Stagger");
+                sb.AppendItem(item.Stagger, "Stagger");
             }
             if (printMask?.AttackType ?? true)
             {
-                fg.AppendItem(item.AttackType.FormKey, "AttackType");
+                sb.AppendItem(item.AttackType.FormKey, "AttackType");
             }
             if (printMask?.Knockdown ?? true)
             {
-                fg.AppendItem(item.Knockdown, "Knockdown");
+                sb.AppendItem(item.Knockdown, "Knockdown");
             }
             if (printMask?.RecoveryTime ?? true)
             {
-                fg.AppendItem(item.RecoveryTime, "RecoveryTime");
+                sb.AppendItem(item.RecoveryTime, "RecoveryTime");
             }
             if (printMask?.StaminaMult ?? true)
             {
-                fg.AppendItem(item.StaminaMult, "StaminaMult");
+                sb.AppendItem(item.StaminaMult, "StaminaMult");
             }
         }
         
@@ -1309,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAttackDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAttackDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Spell);
             yield return FormLinkInformation.Factory(obj.AttackType);
@@ -1319,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AttackDataSetterTranslationCommon
+    internal partial class AttackDataSetterTranslationCommon
     {
         public static readonly AttackDataSetterTranslationCommon Instance = new AttackDataSetterTranslationCommon();
 
@@ -1437,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttackData_Registration.Instance;
-        public static AttackData_Registration StaticRegistration => AttackData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AttackData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1461,11 +1473,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AttackDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AttackDataBinaryWriteTranslation Instance = new AttackDataBinaryWriteTranslation();
+        public static readonly AttackDataBinaryWriteTranslation Instance = new AttackDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAttackDataGetter item,
@@ -1510,12 +1522,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAttackDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ATKD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1527,7 +1539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAttackDataGetter)item,
@@ -1537,9 +1549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AttackDataBinaryCreateTranslation
+    internal partial class AttackDataBinaryCreateTranslation
     {
-        public readonly static AttackDataBinaryCreateTranslation Instance = new AttackDataBinaryCreateTranslation();
+        public static readonly AttackDataBinaryCreateTranslation Instance = new AttackDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAttackData item,
@@ -1571,7 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAttackDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1584,16 +1596,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AttackDataBinaryOverlay :
+    internal partial class AttackDataBinaryOverlay :
         PluginBinaryOverlay,
         IAttackDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttackData_Registration.Instance;
-        public static AttackData_Registration StaticRegistration => AttackData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AttackData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AttackDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1607,16 +1619,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => AttackDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AttackDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AttackDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttackDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1624,17 +1636,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single DamageMult => _data.Slice(0x0, 0x4).Float();
-        public Single Chance => _data.Slice(0x4, 0x4).Float();
-        public IFormLinkGetter<ISpellRecordGetter> Spell => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Single AttackAngle => _data.Slice(0x10, 0x4).Float();
-        public Single StrikeAngle => _data.Slice(0x14, 0x4).Float();
-        public Single Stagger => _data.Slice(0x18, 0x4).Float();
-        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
-        public Single Knockdown => _data.Slice(0x20, 0x4).Float();
-        public Single RecoveryTime => _data.Slice(0x24, 0x4).Float();
-        public Single StaminaMult => _data.Slice(0x28, 0x4).Float();
+        public Single DamageMult => _structData.Slice(0x0, 0x4).Float();
+        public Single Chance => _structData.Slice(0x4, 0x4).Float();
+        public IFormLinkGetter<ISpellRecordGetter> Spell => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public Single AttackAngle => _structData.Slice(0x10, 0x4).Float();
+        public Single StrikeAngle => _structData.Slice(0x14, 0x4).Float();
+        public Single Stagger => _structData.Slice(0x18, 0x4).Float();
+        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4))));
+        public Single Knockdown => _structData.Slice(0x20, 0x4).Float();
+        public Single RecoveryTime => _structData.Slice(0x24, 0x4).Float();
+        public Single StaminaMult => _structData.Slice(0x28, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1642,25 +1654,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AttackDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AttackDataBinaryOverlay AttackDataFactory(
+        public static IAttackDataGetter AttackDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x2C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AttackDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x2C + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1669,25 +1686,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static AttackDataBinaryOverlay AttackDataFactory(
+        public static IAttackDataGetter AttackDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AttackDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AttackDataMixIn.ToString(
+            AttackDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

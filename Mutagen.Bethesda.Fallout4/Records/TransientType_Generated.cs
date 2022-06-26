@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -69,12 +70,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TransientTypeMixIn.ToString(
+            TransientTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -209,9 +211,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Links.Specific = l;
-                        foreach (var item in Links.Specific.WithIndex())
+                        foreach (var item in Links.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -220,53 +222,46 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(TransientType.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(TransientType.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TransientType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, TransientType.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(TransientType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TransientType.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FormType ?? true)
                     {
-                        fg.AppendItem(FormType, "FormType");
+                        sb.AppendItem(FormType, "FormType");
                     }
                     if ((printMask?.Links?.Overall ?? true)
                         && Links is {} LinksItem)
                     {
-                        fg.AppendLine("Links =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Links =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LinksItem.Overall);
+                            sb.AppendItem(LinksItem.Overall);
                             if (LinksItem.Specific != null)
                             {
                                 foreach (var subItem in LinksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -351,57 +346,48 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(FormType, "FormType");
+                {
+                    sb.AppendItem(FormType, "FormType");
+                }
                 if (Links is {} LinksItem)
                 {
-                    fg.AppendLine("Links =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Links =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LinksItem.Overall);
+                        sb.AppendItem(LinksItem.Overall);
                         if (LinksItem.Specific != null)
                         {
                             foreach (var subItem in LinksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -477,8 +463,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = TransientType_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TransientTypeCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TransientTypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -489,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransientTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -499,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static TransientType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TransientType();
             ((TransientTypeSetterCommon)((ITransientTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -514,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TransientType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -524,7 +509,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -588,26 +573,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITransientTypeGetter item,
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
-            return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).ToString(
+            return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITransientTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
-            ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).ToString(
+            ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -713,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITransientType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TransientTypeSetterCommon)((ITransientTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -728,10 +713,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum TransientType_FieldIndex
+    internal enum TransientType_FieldIndex
     {
         FormType = 0,
         Links = 1,
@@ -739,7 +724,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class TransientType_Registration : ILoquiRegistration
+    internal partial class TransientType_Registration : ILoquiRegistration
     {
         public static readonly TransientType_Registration Instance = new TransientType_Registration();
 
@@ -781,6 +766,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.TNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TransientTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -814,7 +805,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TransientTypeSetterCommon
+    internal partial class TransientTypeSetterCommon
     {
         public static readonly TransientTypeSetterCommon Instance = new TransientTypeSetterCommon();
 
@@ -839,12 +830,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ITransientType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.TNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -855,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TransientTypeCommon
+    internal partial class TransientTypeCommon
     {
         public static readonly TransientTypeCommon Instance = new TransientTypeCommon();
 
@@ -879,7 +870,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TransientType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FormType = item.FormType == rhs.FormType;
             ret.Links = item.Links.CollectionEqualsHelper(
                 rhs.Links,
@@ -887,71 +877,65 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             ITransientTypeGetter item,
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITransientTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TransientType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TransientType =>");
+                sb.AppendLine($"TransientType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TransientType) =>");
+                sb.AppendLine($"{name} (TransientType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITransientTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TransientType.Mask<bool>? printMask = null)
         {
             if (printMask?.FormType ?? true)
             {
-                fg.AppendItem(item.FormType, "FormType");
+                sb.AppendItem(item.FormType, "FormType");
             }
             if (printMask?.Links?.Overall ?? true)
             {
-                fg.AppendLine("Links =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Links =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Links)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -990,7 +974,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITransientTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITransientTypeGetter obj)
         {
             foreach (var item in obj.Links)
             {
@@ -1002,7 +986,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TransientTypeSetterTranslationCommon
+    internal partial class TransientTypeSetterTranslationCommon
     {
         public static readonly TransientTypeSetterTranslationCommon Instance = new TransientTypeSetterTranslationCommon();
 
@@ -1099,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
-        public static TransientType_Registration StaticRegistration => TransientType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1123,11 +1107,11 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TransientTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TransientTypeBinaryWriteTranslation Instance = new TransientTypeBinaryWriteTranslation();
+        public static readonly TransientTypeBinaryWriteTranslation Instance = new TransientTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITransientTypeGetter item,
@@ -1137,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Links,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1148,12 +1132,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             ITransientTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1165,7 +1149,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITransientTypeGetter)item,
@@ -1175,9 +1159,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TransientTypeBinaryCreateTranslation
+    internal partial class TransientTypeBinaryCreateTranslation
     {
-        public readonly static TransientTypeBinaryCreateTranslation Instance = new TransientTypeBinaryCreateTranslation();
+        public static readonly TransientTypeBinaryCreateTranslation Instance = new TransientTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITransientType item,
@@ -1201,7 +1185,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ITransientTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransientTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1214,16 +1198,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TransientTypeBinaryOverlay :
+    internal partial class TransientTypeBinaryOverlay :
         PluginBinaryOverlay,
         ITransientTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
-        public static TransientType_Registration StaticRegistration => TransientType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1237,16 +1221,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TransientTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TransientTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransientTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1254,9 +1238,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         #region Links
-        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_data.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int LinksEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1266,26 +1250,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected TransientTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TransientTypeBinaryOverlay TransientTypeFactory(
+        public static ITransientTypeGetter TransientTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TransientTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.LinksEndingPos = ret._data.Length;
+            ret.LinksEndingPos = ret._structData.Length;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1293,25 +1282,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static TransientTypeBinaryOverlay TransientTypeFactory(
+        public static ITransientTypeGetter TransientTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TransientTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TransientTypeMixIn.ToString(
+            TransientTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Impact" objType="Record" recordType="IPCT" baseClass="Fallout4MajorRecord" GUID="047c6db4-4783-40f6-8168-73fe2fde61ab" ID="614">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <Data>
+        <Fields>
+          <Float name="Duration" />
+          <Enum name="Orientation" enumName="Impact.OrientationType" byteLength="4" />
+          <Float name="AngleThreshold" />
+          <Float name="PlacementRadius" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Bool name="NoDecalData" byteLength="1" />
+          <Enum name="Result" enumName="Impact.ResultType" byteLength="1" />
+          <Int16 name="Unknown" />
+        </Fields>
+      </Data>
+      <RefDirect name="Decal" refName="Decal" />
+      <FormLink name="TextureSet" refName="TextureSet" recordType="DNAM" />
+      <FormLink name="SecondaryTextureSet" refName="TextureSet" recordType="ENAM" />
+      <FormLink name="Sound1" recordType="SNAM">
+        <Interface>ISound</Interface>
+      </FormLink>
+      <FormLink name="Sound2" recordType="NAM1">
+        <Interface>ISound</Interface>
+      </FormLink>
+      <FormLink name="FootstepExplosion" recordType="NAM3" refName="Explosion" />
+      <FormLink name="Hazard" recordType="NAM2" refName="Hazard" />
+      <Float name="FootstepParticleMaxDist" recordType="FNAM" />
+    </Fields>
+  </Object>
+</Loqui>

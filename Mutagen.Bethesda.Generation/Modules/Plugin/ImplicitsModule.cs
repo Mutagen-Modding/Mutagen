@@ -1,85 +1,84 @@
-using Loqui;
 using Loqui.Generation;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Noggog.IO;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
-namespace Mutagen.Bethesda.Generation.Modules.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin;
+
+public class ImplicitsModule : GenerationModule
 {
-    public class ImplicitsModule : GenerationModule
+    public override async Task FinalizeGeneration(ProtocolGeneration proto)
     {
-        public override async Task FinalizeGeneration(ProtocolGeneration proto)
+        if (proto.Protocol.Namespace.Equals("Bethesda")) return;
+
+        var objData = proto.ObjectGenerationsByID.Values.FirstOrDefault()?.GetObjectData();
+        if (objData == null) return;
+
+        var relString = objData.HasMultipleReleases ? "release.ToGameRelease()" : $"{nameof(GameRelease)}.{proto.Protocol.Namespace}";
+
+        StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine($"using Mutagen.Bethesda.Plugins;");
+        sb.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
+        sb.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
+        sb.AppendLine();
+        using (var n = sb.Namespace("Mutagen.Bethesda", fileScoped: false))
         {
-            if (proto.Protocol.Namespace.Equals("Bethesda")) return;
-
-            var objData = proto.ObjectGenerationsByID.Values.FirstOrDefault()?.GetObjectData();
-            if (objData == null) return;
-
-            var relString = objData.HasMultipleReleases ? "release.ToGameRelease()" : $"{nameof(GameRelease)}.{proto.Protocol.Namespace}";
-
-            FileGeneration fg = new FileGeneration();
-            fg.AppendLine("using System.Collections.Generic;");
-            fg.AppendLine($"using Mutagen.Bethesda.Plugins;");
-            fg.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
-            fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
-            fg.AppendLine();
-            using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda", fileScoped: false))
+            using (var c = sb.Class("ImplicitsMixIn"))
             {
-                using (var c = new ClassWrapper(fg, "ImplicitsMixIn"))
+                c.Static = true;
+            }
+            using (sb.CurlyBrace())
+            {
+                using (var args = sb.Function(
+                           $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
                 {
-                    c.Static = true;
+                    args.Add($"this ImplicitBaseMasters _");
+                    if (objData.HasMultipleReleases)
+                    {
+                        args.Add($"{objData.GameCategory}Release release");
+                    }
                 }
-                using (new BraceWrapper(fg))
+                using (sb.CurlyBrace())
                 {
-                    using (var args = new FunctionWrapper(fg,
-                        $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
-                    {
-                        args.Add($"this ImplicitBaseMasters _");
-                        if (objData.HasMultipleReleases)
-                        {
-                            args.Add($"{objData.GameCategory}Release release");
-                        }
-                    }
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return Implicits.Get({relString}).BaseMasters;");
-                    }
-                    fg.AppendLine();
+                    sb.AppendLine($"return Implicits.Get({relString}).BaseMasters;");
+                }
+                sb.AppendLine();
 
-                    using (var args = new FunctionWrapper(fg,
-                        $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
+                using (var args = sb.Function(
+                           $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
+                {
+                    args.Add($"this ImplicitListings _");
+                    if (objData.HasMultipleReleases)
                     {
-                        args.Add($"this ImplicitListings _");
-                        if (objData.HasMultipleReleases)
-                        {
-                            args.Add($"{objData.GameCategory}Release release");
-                        }
+                        args.Add($"{objData.GameCategory}Release release");
                     }
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return Implicits.Get({relString}).Listings;");
-                    }
-                    fg.AppendLine();
+                }
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine($"return Implicits.Get({relString}).Listings;");
+                }
+                sb.AppendLine();
 
-                    using (var args = new FunctionWrapper(fg,
-                        $"public static IReadOnlyCollection<FormKey> {proto.Protocol.Namespace}"))
+                using (var args = sb.Function(
+                           $"public static IReadOnlyCollection<FormKey> {proto.Protocol.Namespace}"))
+                {
+                    args.Add($"this ImplicitRecordFormKeys _");
+                    if (objData.HasMultipleReleases)
                     {
-                        args.Add($"this ImplicitRecordFormKeys _");
-                        if (objData.HasMultipleReleases)
-                        {
-                            args.Add($"{objData.GameCategory}Release release");
-                        }
+                        args.Add($"{objData.GameCategory}Release release");
                     }
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"return Implicits.Get({relString}).RecordFormKeys;");
-                    }
+                }
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine($"return Implicits.Get({relString}).RecordFormKeys;");
                 }
             }
-
-            var path = Path.Combine(proto.DefFileLocation.FullName, $"../ImplicitsMixIn{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
-            fg.Generate(path);
-            proto.GeneratedFiles.Add(path, ProjItemType.Compile);
         }
+
+        var path = Path.Combine(proto.DefFileLocation.FullName, $"../ImplicitsMixIn{Loqui.Generation.Constants.AutogeneratedMarkerString}.cs");
+        ExportStringToFile exportStringToFile = new();
+        exportStringToFile.ExportToFile(path, sb.GetString());
+        proto.GeneratedFiles.Add(path, ProjItemType.Compile);
     }
 }

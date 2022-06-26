@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            KeyFrameMixIn.ToString(
+            KeyFrameMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,34 +177,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(KeyFrame.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(KeyFrame.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, KeyFrame.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, KeyFrame.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(KeyFrame.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(KeyFrame.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Time ?? true)
                     {
-                        fg.AppendItem(Time, "Time");
+                        sb.AppendItem(Time, "Time");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -286,37 +284,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Time, "Time");
-                fg.AppendItem(Value, "Value");
+                {
+                    sb.AppendItem(Time, "Time");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
             }
             #endregion
 
@@ -397,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((KeyFrameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -407,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static KeyFrame CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new KeyFrame();
             ((KeyFrameSetterCommon)((IKeyFrameGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -422,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out KeyFrame item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -432,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -494,26 +487,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IKeyFrameGetter item,
             string? name = null,
             KeyFrame.Mask<bool>? printMask = null)
         {
-            return ((KeyFrameCommon)((IKeyFrameGetter)item).CommonInstance()!).ToString(
+            return ((KeyFrameCommon)((IKeyFrameGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IKeyFrameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             KeyFrame.Mask<bool>? printMask = null)
         {
-            ((KeyFrameCommon)((IKeyFrameGetter)item).CommonInstance()!).ToString(
+            ((KeyFrameCommon)((IKeyFrameGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -619,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IKeyFrame item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((KeyFrameSetterCommon)((IKeyFrameGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -634,10 +627,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum KeyFrame_FieldIndex
+    internal enum KeyFrame_FieldIndex
     {
         Time = 0,
         Value = 1,
@@ -645,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class KeyFrame_Registration : ILoquiRegistration
+    internal partial class KeyFrame_Registration : ILoquiRegistration
     {
         public static readonly KeyFrame_Registration Instance = new KeyFrame_Registration();
 
@@ -719,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class KeyFrameSetterCommon
+    internal partial class KeyFrameSetterCommon
     {
         public static readonly KeyFrameSetterCommon Instance = new KeyFrameSetterCommon();
 
@@ -743,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IKeyFrame item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -755,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeyFrameCommon
+    internal partial class KeyFrameCommon
     {
         public static readonly KeyFrameCommon Instance = new KeyFrameCommon();
 
@@ -779,62 +772,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             KeyFrame.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Time = item.Time.EqualsWithin(rhs.Time);
             ret.Value = item.Value.EqualsWithin(rhs.Value);
         }
         
-        public string ToString(
+        public string Print(
             IKeyFrameGetter item,
             string? name = null,
             KeyFrame.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IKeyFrameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             KeyFrame.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"KeyFrame =>");
+                sb.AppendLine($"KeyFrame =>");
             }
             else
             {
-                fg.AppendLine($"{name} (KeyFrame) =>");
+                sb.AppendLine($"{name} (KeyFrame) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IKeyFrameGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             KeyFrame.Mask<bool>? printMask = null)
         {
             if (printMask?.Time ?? true)
             {
-                fg.AppendItem(item.Time, "Time");
+                sb.AppendItem(item.Time, "Time");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
         }
         
@@ -873,7 +863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IKeyFrameGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IKeyFrameGetter obj)
         {
             yield break;
         }
@@ -881,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class KeyFrameSetterTranslationCommon
+    internal partial class KeyFrameSetterTranslationCommon
     {
         public static readonly KeyFrameSetterTranslationCommon Instance = new KeyFrameSetterTranslationCommon();
 
@@ -963,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyFrame_Registration.Instance;
-        public static KeyFrame_Registration StaticRegistration => KeyFrame_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => KeyFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyFrameCommon.Instance;
         [DebuggerStepThrough]
@@ -987,11 +977,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class KeyFrameBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static KeyFrameBinaryWriteTranslation Instance = new KeyFrameBinaryWriteTranslation();
+        public static readonly KeyFrameBinaryWriteTranslation Instance = new KeyFrameBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IKeyFrameGetter item,
@@ -1008,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IKeyFrameGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1018,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IKeyFrameGetter)item,
@@ -1028,9 +1018,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class KeyFrameBinaryCreateTranslation
+    internal partial class KeyFrameBinaryCreateTranslation
     {
-        public readonly static KeyFrameBinaryCreateTranslation Instance = new KeyFrameBinaryCreateTranslation();
+        public static readonly KeyFrameBinaryCreateTranslation Instance = new KeyFrameBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IKeyFrame item,
@@ -1051,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IKeyFrameGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((KeyFrameBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1064,16 +1054,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class KeyFrameBinaryOverlay :
+    internal partial class KeyFrameBinaryOverlay :
         PluginBinaryOverlay,
         IKeyFrameGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => KeyFrame_Registration.Instance;
-        public static KeyFrame_Registration StaticRegistration => KeyFrame_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => KeyFrame_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => KeyFrameCommon.Instance;
         [DebuggerStepThrough]
@@ -1087,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => KeyFrameBinaryWriteTranslation.Instance;
@@ -1095,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((KeyFrameBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1103,8 +1093,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single Time => _data.Slice(0x0, 0x4).Float();
-        public Single Value => _data.Slice(0x4, 0x4).Float();
+        public Single Time => _structData.Slice(0x0, 0x4).Float();
+        public Single Value => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1112,24 +1102,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected KeyFrameBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static KeyFrameBinaryOverlay KeyFrameFactory(
+        public static IKeyFrameGetter KeyFrameFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new KeyFrameBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1138,25 +1134,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static KeyFrameBinaryOverlay KeyFrameFactory(
+        public static IKeyFrameGetter KeyFrameFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return KeyFrameFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            KeyFrameMixIn.ToString(
+            KeyFrameMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

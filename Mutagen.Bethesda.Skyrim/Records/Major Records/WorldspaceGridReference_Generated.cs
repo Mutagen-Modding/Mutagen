@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -70,12 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceGridReferenceMixIn.ToString(
+            WorldspaceGridReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -212,9 +214,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WorldspaceReference.Mask<R>?>>();
                         obj.References.Specific = l;
-                        foreach (var item in References.Specific.WithIndex())
+                        foreach (var item in References.Specific)
                         {
-                            MaskItemIndexed<R, WorldspaceReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WorldspaceReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WorldspaceReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WorldspaceReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -224,53 +226,44 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WorldspaceGridReference.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WorldspaceGridReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceGridReference.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WorldspaceGridReference.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WorldspaceGridReference.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WorldspaceGridReference.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.GridPosition ?? true)
                     {
-                        fg.AppendItem(GridPosition, "GridPosition");
+                        sb.AppendItem(GridPosition, "GridPosition");
                     }
                     if ((printMask?.References?.Overall ?? true)
                         && References is {} ReferencesItem)
                     {
-                        fg.AppendLine("References =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("References =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ReferencesItem.Overall);
+                            sb.AppendItem(ReferencesItem.Overall);
                             if (ReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in ReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -355,57 +348,46 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(GridPosition, "GridPosition");
+                {
+                    sb.AppendItem(GridPosition, "GridPosition");
+                }
                 if (References is {} ReferencesItem)
                 {
-                    fg.AppendLine("References =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("References =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ReferencesItem.Overall);
+                        sb.AppendItem(ReferencesItem.Overall);
                         if (ReferencesItem.Specific != null)
                         {
                             foreach (var subItem in ReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -480,8 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WorldspaceGridReference_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceGridReferenceCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -492,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceGridReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -502,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceGridReference CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceGridReference();
             ((WorldspaceGridReferenceSetterCommon)((IWorldspaceGridReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -517,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceGridReference item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -527,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -591,26 +572,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWorldspaceGridReferenceGetter item,
             string? name = null,
             WorldspaceGridReference.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWorldspaceGridReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceGridReference.Mask<bool>? printMask = null)
         {
-            ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -716,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceGridReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceGridReferenceSetterCommon)((IWorldspaceGridReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -731,10 +712,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceGridReference_FieldIndex
+    internal enum WorldspaceGridReference_FieldIndex
     {
         GridPosition = 0,
         References = 1,
@@ -742,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceGridReference_Registration : ILoquiRegistration
+    internal partial class WorldspaceGridReference_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceGridReference_Registration Instance = new WorldspaceGridReference_Registration();
 
@@ -784,6 +765,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.RNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceGridReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -817,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceGridReferenceSetterCommon
+    internal partial class WorldspaceGridReferenceSetterCommon
     {
         public static readonly WorldspaceGridReferenceSetterCommon Instance = new WorldspaceGridReferenceSetterCommon();
 
@@ -842,12 +829,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWorldspaceGridReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.RNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -858,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceGridReferenceCommon
+    internal partial class WorldspaceGridReferenceCommon
     {
         public static readonly WorldspaceGridReferenceCommon Instance = new WorldspaceGridReferenceCommon();
 
@@ -882,7 +869,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceGridReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.GridPosition = item.GridPosition.Equals(rhs.GridPosition);
             ret.References = item.References.CollectionEqualsHelper(
                 rhs.References,
@@ -890,71 +876,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IWorldspaceGridReferenceGetter item,
             string? name = null,
             WorldspaceGridReference.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWorldspaceGridReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceGridReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceGridReference =>");
+                sb.AppendLine($"WorldspaceGridReference =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceGridReference) =>");
+                sb.AppendLine($"{name} (WorldspaceGridReference) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceGridReferenceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WorldspaceGridReference.Mask<bool>? printMask = null)
         {
             if (printMask?.GridPosition ?? true)
             {
-                fg.AppendItem(item.GridPosition, "GridPosition");
+                sb.AppendItem(item.GridPosition, "GridPosition");
             }
             if (printMask?.References?.Overall ?? true)
             {
-                fg.AppendLine("References =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("References =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.References)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -971,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.References) ?? true))
             {
-                if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+                if (!lhs.References.SequenceEqual(rhs.References, (l, r) => ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)WorldspaceGridReference_FieldIndex.References)))) return false;
             }
             return true;
         }
@@ -993,9 +973,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceGridReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceGridReferenceGetter obj)
         {
-            foreach (var item in obj.References.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.References.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1005,7 +985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceGridReferenceSetterTranslationCommon
+    internal partial class WorldspaceGridReferenceSetterTranslationCommon
     {
         public static readonly WorldspaceGridReferenceSetterTranslationCommon Instance = new WorldspaceGridReferenceSetterTranslationCommon();
 
@@ -1107,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1131,11 +1111,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceGridReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceGridReferenceBinaryWriteTranslation Instance = new WorldspaceGridReferenceBinaryWriteTranslation();
+        public static readonly WorldspaceGridReferenceBinaryWriteTranslation Instance = new WorldspaceGridReferenceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceGridReferenceGetter item,
@@ -1148,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.References,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IWorldspaceReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWorldspaceReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WorldspaceReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1161,12 +1141,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceGridReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.RNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1178,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceGridReferenceGetter)item,
@@ -1188,9 +1168,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceGridReferenceBinaryCreateTranslation
+    internal partial class WorldspaceGridReferenceBinaryCreateTranslation
     {
-        public readonly static WorldspaceGridReferenceBinaryCreateTranslation Instance = new WorldspaceGridReferenceBinaryCreateTranslation();
+        public static readonly WorldspaceGridReferenceBinaryCreateTranslation Instance = new WorldspaceGridReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceGridReference item,
@@ -1215,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceGridReferenceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceGridReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1228,16 +1208,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceGridReferenceBinaryOverlay :
+    internal partial class WorldspaceGridReferenceBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceGridReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceGridReference_Registration.Instance;
-        public static WorldspaceGridReference_Registration StaticRegistration => WorldspaceGridReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceGridReference_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceGridReferenceCommon.Instance;
         [DebuggerStepThrough]
@@ -1251,16 +1231,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceGridReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceGridReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceGridReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1268,9 +1248,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
+        public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x4));
         #region References
-        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<WorldspaceReferenceBinaryOverlay>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
+        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<IWorldspaceReferenceGetter>(_structData.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1280,26 +1260,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WorldspaceGridReferenceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WorldspaceGridReferenceBinaryOverlay WorldspaceGridReferenceFactory(
+        public static IWorldspaceGridReferenceGetter WorldspaceGridReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceGridReferenceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x4)) * 8 + 4;
+            ret.ReferencesEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 8 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1307,25 +1292,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WorldspaceGridReferenceBinaryOverlay WorldspaceGridReferenceFactory(
+        public static IWorldspaceGridReferenceGetter WorldspaceGridReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceGridReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceGridReferenceMixIn.ToString(
+            WorldspaceGridReferenceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

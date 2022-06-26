@@ -1,12 +1,8 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Utility;
-using Noggog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 using Mutagen.Bethesda.Plugins.Analysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 
@@ -28,15 +24,15 @@ public static class ModDecompressor
     {
         using var inputStream = streamCreator();
         using var inputStreamJumpback = streamCreator();
-        using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
+        using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
         long runningDiff = 0;
         var fileLocs = RecordLocator.GetLocations(
             inputStream,
             interest: interest,
-            additionalCriteria: (stream, recType, len) =>
+            additionalCriteria: (_, majorRecord) =>
             {
-                return stream.GetMajorRecord().IsCompressed;
+                return majorRecord.IsCompressed;
             });
 
         // Construct group length container for later use
@@ -62,7 +58,7 @@ public static class ModDecompressor
 
             // If complete overall, return
             if (inputStream.Complete) break;
-            var majorMeta = inputStream.ReadMajorRecord(readSafe: true);
+            var majorMeta = inputStream.ReadMajorRecordHeader(readSafe: true);
             var len = majorMeta.ContentLength;
             using var frame = MutagenFrame.ByLength(
                 reader: inputStream,
@@ -75,7 +71,7 @@ public static class ModDecompressor
             var majorMetaSpan = majorMeta.HeaderData.ToArray();
 
             // Write major Meta
-            var writableMajorMeta = inputStream.MetaData.Constants.MajorRecordWritable(majorMetaSpan.AsSpan());
+            var writableMajorMeta = inputStream.MetaData.Constants.MajorRecordHeaderWritable(majorMetaSpan.AsSpan());
             writableMajorMeta.IsCompressed = false;
             writableMajorMeta.ContentLength = (uint)(len + lengthDiff);
             writer.Write(majorMetaSpan);

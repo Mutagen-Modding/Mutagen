@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -148,12 +150,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeaponDataMixIn.ToString(
+            WeaponDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -482,130 +485,125 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeaponData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeaponData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeaponData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeaponData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeaponData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeaponData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.AnimationType ?? true)
                     {
-                        fg.AppendItem(AnimationType, "AnimationType");
+                        sb.AppendItem(AnimationType, "AnimationType");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Reach ?? true)
                     {
-                        fg.AppendItem(Reach, "Reach");
+                        sb.AppendItem(Reach, "Reach");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unused2 ?? true)
                     {
-                        fg.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                     if (printMask?.SightFOV ?? true)
                     {
-                        fg.AppendItem(SightFOV, "SightFOV");
+                        sb.AppendItem(SightFOV, "SightFOV");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.BaseVATStoHitChance ?? true)
                     {
-                        fg.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
+                        sb.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
                     }
                     if (printMask?.AttackAnimation ?? true)
                     {
-                        fg.AppendItem(AttackAnimation, "AttackAnimation");
+                        sb.AppendItem(AttackAnimation, "AttackAnimation");
                     }
                     if (printMask?.NumProjectiles ?? true)
                     {
-                        fg.AppendItem(NumProjectiles, "NumProjectiles");
+                        sb.AppendItem(NumProjectiles, "NumProjectiles");
                     }
                     if (printMask?.EmbeddedWeaponAV ?? true)
                     {
-                        fg.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
+                        sb.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
                     }
                     if (printMask?.RangeMin ?? true)
                     {
-                        fg.AppendItem(RangeMin, "RangeMin");
+                        sb.AppendItem(RangeMin, "RangeMin");
                     }
                     if (printMask?.RangeMax ?? true)
                     {
-                        fg.AppendItem(RangeMax, "RangeMax");
+                        sb.AppendItem(RangeMax, "RangeMax");
                     }
                     if (printMask?.OnHit ?? true)
                     {
-                        fg.AppendItem(OnHit, "OnHit");
+                        sb.AppendItem(OnHit, "OnHit");
                     }
                     if (printMask?.AnimationAttackMult ?? true)
                     {
-                        fg.AppendItem(AnimationAttackMult, "AnimationAttackMult");
+                        sb.AppendItem(AnimationAttackMult, "AnimationAttackMult");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.RumbleLeftMotorStrength ?? true)
                     {
-                        fg.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                        sb.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
                     }
                     if (printMask?.RumbleRightMotorStrength ?? true)
                     {
-                        fg.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                        sb.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
                     }
                     if (printMask?.RumbleDuration ?? true)
                     {
-                        fg.AppendItem(RumbleDuration, "RumbleDuration");
+                        sb.AppendItem(RumbleDuration, "RumbleDuration");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.Skill ?? true)
                     {
-                        fg.AppendItem(Skill, "Skill");
+                        sb.AppendItem(Skill, "Skill");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(Unknown4, "Unknown4");
                     }
                     if (printMask?.Resist ?? true)
                     {
-                        fg.AppendItem(Resist, "Resist");
+                        sb.AppendItem(Resist, "Resist");
                     }
                     if (printMask?.Unknown5 ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        sb.AppendItem(Unknown5, "Unknown5");
                     }
                     if (printMask?.Stagger ?? true)
                     {
-                        fg.AppendItem(Stagger, "Stagger");
+                        sb.AppendItem(Stagger, "Stagger");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -930,61 +928,104 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(AnimationType, "AnimationType");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Reach, "Reach");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unused2, "Unused2");
-                fg.AppendItem(SightFOV, "SightFOV");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
-                fg.AppendItem(AttackAnimation, "AttackAnimation");
-                fg.AppendItem(NumProjectiles, "NumProjectiles");
-                fg.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
-                fg.AppendItem(RangeMin, "RangeMin");
-                fg.AppendItem(RangeMax, "RangeMax");
-                fg.AppendItem(OnHit, "OnHit");
-                fg.AppendItem(AnimationAttackMult, "AnimationAttackMult");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
-                fg.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
-                fg.AppendItem(RumbleDuration, "RumbleDuration");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Skill, "Skill");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(Resist, "Resist");
-                fg.AppendItem(Unknown5, "Unknown5");
-                fg.AppendItem(Stagger, "Stagger");
+                {
+                    sb.AppendItem(AnimationType, "AnimationType");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Reach, "Reach");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                {
+                    sb.AppendItem(SightFOV, "SightFOV");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(BaseVATStoHitChance, "BaseVATStoHitChance");
+                }
+                {
+                    sb.AppendItem(AttackAnimation, "AttackAnimation");
+                }
+                {
+                    sb.AppendItem(NumProjectiles, "NumProjectiles");
+                }
+                {
+                    sb.AppendItem(EmbeddedWeaponAV, "EmbeddedWeaponAV");
+                }
+                {
+                    sb.AppendItem(RangeMin, "RangeMin");
+                }
+                {
+                    sb.AppendItem(RangeMax, "RangeMax");
+                }
+                {
+                    sb.AppendItem(OnHit, "OnHit");
+                }
+                {
+                    sb.AppendItem(AnimationAttackMult, "AnimationAttackMult");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                }
+                {
+                    sb.AppendItem(RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                }
+                {
+                    sb.AppendItem(RumbleDuration, "RumbleDuration");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(Skill, "Skill");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(Resist, "Resist");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(Stagger, "Stagger");
+                }
             }
             #endregion
 
@@ -1154,10 +1195,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = WeaponData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;
@@ -1165,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1175,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeaponData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeaponData();
             ((WeaponDataSetterCommon)((IWeaponDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1190,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeaponData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1200,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1310,26 +1347,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeaponDataGetter item,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).ToString(
+            return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).ToString(
+            ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1435,7 +1472,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeaponData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeaponDataSetterCommon)((IWeaponDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1450,10 +1487,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeaponData_FieldIndex
+    internal enum WeaponData_FieldIndex
     {
         AnimationType = 0,
         Unused = 1,
@@ -1485,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeaponData_Registration : ILoquiRegistration
+    internal partial class WeaponData_Registration : ILoquiRegistration
     {
         public static readonly WeaponData_Registration Instance = new WeaponData_Registration();
 
@@ -1527,6 +1564,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1560,7 +1603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeaponDataSetterCommon
+    internal partial class WeaponDataSetterCommon
     {
         public static readonly WeaponDataSetterCommon Instance = new WeaponDataSetterCommon();
 
@@ -1608,12 +1651,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeaponData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1624,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeaponDataCommon
+    internal partial class WeaponDataCommon
     {
         public static readonly WeaponDataCommon Instance = new WeaponDataCommon();
 
@@ -1648,7 +1691,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeaponData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AnimationType = item.AnimationType == rhs.AnimationType;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Speed = item.Speed.EqualsWithin(rhs.Speed);
@@ -1677,154 +1719,152 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Stagger = item.Stagger.EqualsWithin(rhs.Stagger);
         }
         
-        public string ToString(
+        public string Print(
             IWeaponDataGetter item,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeaponData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeaponData =>");
+                sb.AppendLine($"WeaponData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeaponData) =>");
+                sb.AppendLine($"{name} (WeaponData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeaponDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeaponData.Mask<bool>? printMask = null)
         {
             if (printMask?.AnimationType ?? true)
             {
-                fg.AppendItem(item.AnimationType, "AnimationType");
+                sb.AppendItem(item.AnimationType, "AnimationType");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Reach ?? true)
             {
-                fg.AppendItem(item.Reach, "Reach");
+                sb.AppendItem(item.Reach, "Reach");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unused2 ?? true)
             {
-                fg.AppendItem(item.Unused2, "Unused2");
+                sb.AppendItem(item.Unused2, "Unused2");
             }
             if (printMask?.SightFOV ?? true)
             {
-                fg.AppendItem(item.SightFOV, "SightFOV");
+                sb.AppendItem(item.SightFOV, "SightFOV");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.BaseVATStoHitChance ?? true)
             {
-                fg.AppendItem(item.BaseVATStoHitChance, "BaseVATStoHitChance");
+                sb.AppendItem(item.BaseVATStoHitChance, "BaseVATStoHitChance");
             }
             if (printMask?.AttackAnimation ?? true)
             {
-                fg.AppendItem(item.AttackAnimation, "AttackAnimation");
+                sb.AppendItem(item.AttackAnimation, "AttackAnimation");
             }
             if (printMask?.NumProjectiles ?? true)
             {
-                fg.AppendItem(item.NumProjectiles, "NumProjectiles");
+                sb.AppendItem(item.NumProjectiles, "NumProjectiles");
             }
             if (printMask?.EmbeddedWeaponAV ?? true)
             {
-                fg.AppendItem(item.EmbeddedWeaponAV, "EmbeddedWeaponAV");
+                sb.AppendItem(item.EmbeddedWeaponAV, "EmbeddedWeaponAV");
             }
             if (printMask?.RangeMin ?? true)
             {
-                fg.AppendItem(item.RangeMin, "RangeMin");
+                sb.AppendItem(item.RangeMin, "RangeMin");
             }
             if (printMask?.RangeMax ?? true)
             {
-                fg.AppendItem(item.RangeMax, "RangeMax");
+                sb.AppendItem(item.RangeMax, "RangeMax");
             }
             if (printMask?.OnHit ?? true)
             {
-                fg.AppendItem(item.OnHit, "OnHit");
+                sb.AppendItem(item.OnHit, "OnHit");
             }
             if (printMask?.AnimationAttackMult ?? true)
             {
-                fg.AppendItem(item.AnimationAttackMult, "AnimationAttackMult");
+                sb.AppendItem(item.AnimationAttackMult, "AnimationAttackMult");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.RumbleLeftMotorStrength ?? true)
             {
-                fg.AppendItem(item.RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
+                sb.AppendItem(item.RumbleLeftMotorStrength, "RumbleLeftMotorStrength");
             }
             if (printMask?.RumbleRightMotorStrength ?? true)
             {
-                fg.AppendItem(item.RumbleRightMotorStrength, "RumbleRightMotorStrength");
+                sb.AppendItem(item.RumbleRightMotorStrength, "RumbleRightMotorStrength");
             }
             if (printMask?.RumbleDuration ?? true)
             {
-                fg.AppendItem(item.RumbleDuration, "RumbleDuration");
+                sb.AppendItem(item.RumbleDuration, "RumbleDuration");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if ((printMask?.Skill ?? true)
                 && item.Skill is {} SkillItem)
             {
-                fg.AppendItem(SkillItem, "Skill");
+                sb.AppendItem(SkillItem, "Skill");
             }
             if (printMask?.Unknown4 ?? true)
             {
-                fg.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.Unknown4, "Unknown4");
             }
             if (printMask?.Resist ?? true)
             {
-                fg.AppendItem(item.Resist, "Resist");
+                sb.AppendItem(item.Resist, "Resist");
             }
             if (printMask?.Unknown5 ?? true)
             {
-                fg.AppendItem(item.Unknown5, "Unknown5");
+                sb.AppendItem(item.Unknown5, "Unknown5");
             }
             if (printMask?.Stagger ?? true)
             {
-                fg.AppendItem(item.Stagger, "Stagger");
+                sb.AppendItem(item.Stagger, "Stagger");
             }
         }
         
@@ -1986,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponDataGetter obj)
         {
             yield break;
         }
@@ -1994,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeaponDataSetterTranslationCommon
+    internal partial class WeaponDataSetterTranslationCommon
     {
         public static readonly WeaponDataSetterTranslationCommon Instance = new WeaponDataSetterTranslationCommon();
 
@@ -2172,7 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponData_Registration.Instance;
-        public static WeaponData_Registration StaticRegistration => WeaponData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2196,11 +2236,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeaponDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
+        public static readonly WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeaponDataGetter item,
@@ -2307,12 +2347,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeaponDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2324,7 +2364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeaponDataGetter)item,
@@ -2334,9 +2374,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeaponDataBinaryCreateTranslation
+    internal partial class WeaponDataBinaryCreateTranslation
     {
-        public readonly static WeaponDataBinaryCreateTranslation Instance = new WeaponDataBinaryCreateTranslation();
+        public static readonly WeaponDataBinaryCreateTranslation Instance = new WeaponDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeaponData item,
@@ -2405,7 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeaponDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2418,16 +2458,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeaponDataBinaryOverlay :
+    internal partial class WeaponDataBinaryOverlay :
         PluginBinaryOverlay,
         IWeaponDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeaponData_Registration.Instance;
-        public static WeaponData_Registration StaticRegistration => WeaponData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeaponDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2441,7 +2481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeaponDataBinaryWriteTranslation.Instance;
@@ -2449,7 +2489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeaponDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2457,47 +2497,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public WeaponAnimationType AnimationType => (WeaponAnimationType)_data.Span.Slice(0x0, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public Single Speed => _data.Slice(0x4, 0x4).Float();
-        public Single Reach => _data.Slice(0x8, 0x4).Float();
+        public WeaponAnimationType AnimationType => (WeaponAnimationType)_structData.Span.Slice(0x0, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x1, 0x3).ToArray();
+        public Single Speed => _structData.Slice(0x4, 0x4).Float();
+        public Single Reach => _structData.Slice(0x8, 0x4).Float();
+        #region Flags
+        public partial WeaponData.Flag GetFlagsCustom(int location);
         public WeaponData.Flag Flags => GetFlagsCustom(location: 0xC);
-        public Int16 Unused2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xE, 0x2));
-        public Single SightFOV => _data.Slice(0x10, 0x4).Float();
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Byte BaseVATStoHitChance => _data.Span[0x18];
-        public WeaponData.AttackAnimationType AttackAnimation => (WeaponData.AttackAnimationType)_data.Span.Slice(0x19, 0x1)[0];
-        public Byte NumProjectiles => _data.Span[0x1A];
-        public Byte EmbeddedWeaponAV => _data.Span[0x1B];
-        public Single RangeMin => _data.Slice(0x1C, 0x4).Float();
-        public Single RangeMax => _data.Slice(0x20, 0x4).Float();
-        public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x24, 0x4));
+        #endregion
+        public Int16 Unused2 => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xE, 0x2));
+        public Single SightFOV => _structData.Slice(0x10, 0x4).Float();
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Byte BaseVATStoHitChance => _structData.Span[0x18];
+        public WeaponData.AttackAnimationType AttackAnimation => (WeaponData.AttackAnimationType)_structData.Span.Slice(0x19, 0x1)[0];
+        public Byte NumProjectiles => _structData.Span[0x1A];
+        public Byte EmbeddedWeaponAV => _structData.Span[0x1B];
+        public Single RangeMin => _structData.Slice(0x1C, 0x4).Float();
+        public Single RangeMax => _structData.Slice(0x20, 0x4).Float();
+        public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x24, 0x4));
         #region Flags2
-         partial void Flags2CustomParse(
+        partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public Single AnimationAttackMult => _data.Slice(0x2C, 0x4).Float();
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x30, 0x4));
-        public Single RumbleLeftMotorStrength => _data.Slice(0x34, 0x4).Float();
-        public Single RumbleRightMotorStrength => _data.Slice(0x38, 0x4).Float();
-        public Single RumbleDuration => _data.Slice(0x3C, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _data.Span.Slice(0x40, 0xC).ToArray();
+        public Single AnimationAttackMult => _structData.Slice(0x2C, 0x4).Float();
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x30, 0x4));
+        public Single RumbleLeftMotorStrength => _structData.Slice(0x34, 0x4).Float();
+        public Single RumbleRightMotorStrength => _structData.Slice(0x38, 0x4).Float();
+        public Single RumbleDuration => _structData.Slice(0x3C, 0x4).Float();
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _structData.Span.Slice(0x40, 0xC).ToArray();
         #region Skill
         public Skill? Skill
         {
             get
             {
-                var val = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4C, 0x4));
+                var val = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4C, 0x4));
                 if (((int)val) == -1) return null;
                 return val;
             }
         }
         #endregion
-        public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_data.Slice(0x50, 0x8));
-        public ActorValue Resist => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
-        public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));
-        public Single Stagger => _data.Slice(0x60, 0x4).Float();
+        public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_structData.Slice(0x50, 0x8));
+        public ActorValue Resist => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x58, 0x4));
+        public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x5C, 0x4));
+        public Single Stagger => _structData.Slice(0x60, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2505,25 +2548,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeaponDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeaponDataBinaryOverlay WeaponDataFactory(
+        public static IWeaponDataGetter WeaponDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x64,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeaponDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x64 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2532,25 +2580,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeaponDataBinaryOverlay WeaponDataFactory(
+        public static IWeaponDataGetter WeaponDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeaponDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeaponDataMixIn.ToString(
+            WeaponDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

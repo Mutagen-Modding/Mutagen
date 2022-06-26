@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -53,22 +54,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region File
-        public String File { get; set; } = string.Empty;
+        public String? File { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISimpleModelGetter.File => this.File;
         #endregion
         #region ColorRemappingIndex
         public Single? ColorRemappingIndex { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ISimpleModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
-        #endregion
-        #region MaterialSwap
-        private readonly IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
-        public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
-        {
-            get => _MaterialSwap;
-            set => _MaterialSwap.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,15 +74,26 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? ISimpleModelGetter.Data => this.Data;
         #endregion
+        #region MaterialSwap
+        private readonly IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
+        public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
+        {
+            get => _MaterialSwap;
+            set => _MaterialSwap.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
+        #endregion
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.ToString(
+            SimpleModelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -121,20 +125,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.File = initialValue;
                 this.ColorRemappingIndex = initialValue;
-                this.MaterialSwap = initialValue;
                 this.Data = initialValue;
+                this.MaterialSwap = initialValue;
             }
 
             public Mask(
                 TItem File,
                 TItem ColorRemappingIndex,
-                TItem MaterialSwap,
-                TItem Data)
+                TItem Data,
+                TItem MaterialSwap)
             {
                 this.File = File;
                 this.ColorRemappingIndex = ColorRemappingIndex;
-                this.MaterialSwap = MaterialSwap;
                 this.Data = Data;
+                this.MaterialSwap = MaterialSwap;
             }
 
             #pragma warning disable CS8618
@@ -148,8 +152,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public TItem File;
             public TItem ColorRemappingIndex;
-            public TItem MaterialSwap;
             public TItem Data;
+            public TItem MaterialSwap;
             #endregion
 
             #region Equals
@@ -164,8 +168,8 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!object.Equals(this.File, rhs.File)) return false;
                 if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
-                if (!object.Equals(this.MaterialSwap, rhs.MaterialSwap)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.MaterialSwap, rhs.MaterialSwap)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -173,8 +177,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.File);
                 hash.Add(this.ColorRemappingIndex);
-                hash.Add(this.MaterialSwap);
                 hash.Add(this.Data);
+                hash.Add(this.MaterialSwap);
                 return hash.ToHashCode();
             }
 
@@ -185,8 +189,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!eval(this.File)) return false;
                 if (!eval(this.ColorRemappingIndex)) return false;
-                if (!eval(this.MaterialSwap)) return false;
                 if (!eval(this.Data)) return false;
+                if (!eval(this.MaterialSwap)) return false;
                 return true;
             }
             #endregion
@@ -196,8 +200,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (eval(this.File)) return true;
                 if (eval(this.ColorRemappingIndex)) return true;
-                if (eval(this.MaterialSwap)) return true;
                 if (eval(this.Data)) return true;
+                if (eval(this.MaterialSwap)) return true;
                 return false;
             }
             #endregion
@@ -214,48 +218,43 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 obj.File = eval(this.File);
                 obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
-                obj.MaterialSwap = eval(this.MaterialSwap);
                 obj.Data = eval(this.Data);
+                obj.MaterialSwap = eval(this.MaterialSwap);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SimpleModel.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SimpleModel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SimpleModel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SimpleModel.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.File ?? true)
                     {
-                        fg.AppendItem(File, "File");
+                        sb.AppendItem(File, "File");
                     }
                     if (printMask?.ColorRemappingIndex ?? true)
                     {
-                        fg.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
-                    }
-                    if (printMask?.MaterialSwap ?? true)
-                    {
-                        fg.AppendItem(MaterialSwap, "MaterialSwap");
+                        sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                     }
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
+                    }
+                    if (printMask?.MaterialSwap ?? true)
+                    {
+                        sb.AppendItem(MaterialSwap, "MaterialSwap");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -281,8 +280,8 @@ namespace Mutagen.Bethesda.Fallout4
             }
             public Exception? File;
             public Exception? ColorRemappingIndex;
-            public Exception? MaterialSwap;
             public Exception? Data;
+            public Exception? MaterialSwap;
             #endregion
 
             #region IErrorMask
@@ -295,10 +294,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return File;
                     case SimpleModel_FieldIndex.ColorRemappingIndex:
                         return ColorRemappingIndex;
-                    case SimpleModel_FieldIndex.MaterialSwap:
-                        return MaterialSwap;
                     case SimpleModel_FieldIndex.Data:
                         return Data;
+                    case SimpleModel_FieldIndex.MaterialSwap:
+                        return MaterialSwap;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -315,11 +314,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case SimpleModel_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = ex;
                         break;
-                    case SimpleModel_FieldIndex.MaterialSwap:
-                        this.MaterialSwap = ex;
-                        break;
                     case SimpleModel_FieldIndex.Data:
                         this.Data = ex;
+                        break;
+                    case SimpleModel_FieldIndex.MaterialSwap:
+                        this.MaterialSwap = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -337,11 +336,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case SimpleModel_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = (Exception?)obj;
                         break;
-                    case SimpleModel_FieldIndex.MaterialSwap:
-                        this.MaterialSwap = (Exception?)obj;
-                        break;
                     case SimpleModel_FieldIndex.Data:
                         this.Data = (Exception?)obj;
+                        break;
+                    case SimpleModel_FieldIndex.MaterialSwap:
+                        this.MaterialSwap = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -353,46 +352,45 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (File != null) return true;
                 if (ColorRemappingIndex != null) return true;
-                if (MaterialSwap != null) return true;
                 if (Data != null) return true;
+                if (MaterialSwap != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(File, "File");
-                fg.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
-                fg.AppendItem(MaterialSwap, "MaterialSwap");
-                fg.AppendItem(Data, "Data");
+                {
+                    sb.AppendItem(File, "File");
+                }
+                {
+                    sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
+                }
+                {
+                    sb.AppendItem(Data, "Data");
+                }
+                {
+                    sb.AppendItem(MaterialSwap, "MaterialSwap");
+                }
             }
             #endregion
 
@@ -403,8 +401,8 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.File = this.File.Combine(rhs.File);
                 ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
-                ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
                 ret.Data = this.Data.Combine(rhs.Data);
+                ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -430,8 +428,8 @@ namespace Mutagen.Bethesda.Fallout4
             public bool OnOverall;
             public bool File;
             public bool ColorRemappingIndex;
-            public bool MaterialSwap;
             public bool Data;
+            public bool MaterialSwap;
             #endregion
 
             #region Ctors
@@ -443,8 +441,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnOverall = onOverall;
                 this.File = defaultOn;
                 this.ColorRemappingIndex = defaultOn;
-                this.MaterialSwap = defaultOn;
                 this.Data = defaultOn;
+                this.MaterialSwap = defaultOn;
             }
 
             #endregion
@@ -462,8 +460,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ret.Add((File, null));
                 ret.Add((ColorRemappingIndex, null));
-                ret.Add((MaterialSwap, null));
                 ret.Add((Data, null));
+                ret.Add((MaterialSwap, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -475,9 +473,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = SimpleModel_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
+        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -487,7 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -497,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SimpleModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SimpleModel();
             ((SimpleModelSetterCommon)((ISimpleModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -512,7 +509,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SimpleModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -522,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -546,10 +543,10 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ISimpleModel>,
         ISimpleModelGetter
     {
-        new String File { get; set; }
+        new String? File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
-        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
+        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
     }
 
     /// <summary>
@@ -568,10 +565,10 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
-        String File { get; }
+        String? File { get; }
         Single? ColorRemappingIndex { get; }
-        IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
+        IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
 
     }
 
@@ -596,26 +593,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISimpleModelGetter item,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
+            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).ToString(
+            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -721,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SimpleModelSetterCommon)((ISimpleModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,20 +733,20 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum SimpleModel_FieldIndex
+    internal enum SimpleModel_FieldIndex
     {
         File = 0,
         ColorRemappingIndex = 1,
-        MaterialSwap = 2,
-        Data = 3,
+        Data = 2,
+        MaterialSwap = 3,
     }
     #endregion
 
     #region Registration
-    public partial class SimpleModel_Registration : ILoquiRegistration
+    internal partial class SimpleModel_Registration : ILoquiRegistration
     {
         public static readonly SimpleModel_Registration Instance = new SimpleModel_Registration();
 
@@ -790,7 +787,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(
+                RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SimpleModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -824,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SimpleModelSetterCommon
+    internal partial class SimpleModelSetterCommon
     {
         public static readonly SimpleModelSetterCommon Instance = new SimpleModelSetterCommon();
 
@@ -833,10 +839,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void Clear(ISimpleModel item)
         {
             ClearPartial();
-            item.File = string.Empty;
+            item.File = default;
             item.ColorRemappingIndex = default;
-            item.MaterialSwap.Clear();
             item.Data = default;
+            item.MaterialSwap.Clear();
         }
         
         #region Mutagen
@@ -851,7 +857,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ISimpleModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -864,7 +870,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SimpleModelCommon
+    internal partial class SimpleModelCommon
     {
         public static readonly SimpleModelCommon Instance = new SimpleModelCommon();
 
@@ -888,74 +894,72 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             SimpleModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.File = string.Equals(item.File, rhs.File);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
-            ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
             ret.Data = MemorySliceExt.Equal(item.Data, rhs.Data);
+            ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
         }
         
-        public string ToString(
+        public string Print(
             ISimpleModelGetter item,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SimpleModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SimpleModel =>");
+                sb.AppendLine($"SimpleModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SimpleModel) =>");
+                sb.AppendLine($"{name} (SimpleModel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISimpleModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SimpleModel.Mask<bool>? printMask = null)
         {
-            if (printMask?.File ?? true)
+            if ((printMask?.File ?? true)
+                && item.File is {} FileItem)
             {
-                fg.AppendItem(item.File, "File");
+                sb.AppendItem(FileItem, "File");
             }
             if ((printMask?.ColorRemappingIndex ?? true)
                 && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
             {
-                fg.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
-            }
-            if (printMask?.MaterialSwap ?? true)
-            {
-                fg.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
+                sb.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
             {
-                fg.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
+                sb.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
+            }
+            if (printMask?.MaterialSwap ?? true)
+            {
+                sb.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
             }
         }
         
@@ -974,13 +978,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
-            {
-                if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
                 if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
+            {
+                if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
             }
             return true;
         }
@@ -988,16 +992,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(ISimpleModelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.File);
+            if (item.File is {} Fileitem)
+            {
+                hash.Add(Fileitem);
+            }
             if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
             }
-            hash.Add(item.MaterialSwap);
             if (item.Data is {} DataItem)
             {
                 hash.Add(DataItem);
             }
+            hash.Add(item.MaterialSwap);
             return hash.ToHashCode();
         }
         
@@ -1010,11 +1017,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISimpleModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISimpleModelGetter obj)
         {
-            if (obj.MaterialSwap.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MaterialSwap, out var MaterialSwapInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MaterialSwap);
+                yield return MaterialSwapInfo;
             }
             yield break;
         }
@@ -1022,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SimpleModelSetterTranslationCommon
+    internal partial class SimpleModelSetterTranslationCommon
     {
         public static readonly SimpleModelSetterTranslationCommon Instance = new SimpleModelSetterTranslationCommon();
 
@@ -1042,10 +1049,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
-            {
-                item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
-            }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
                 if(rhs.Data is {} Datarhs)
@@ -1056,6 +1059,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.Data = default;
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
+            {
+                item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
             }
         }
         
@@ -1119,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static SimpleModel_Registration StaticRegistration => SimpleModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SimpleModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1143,18 +1150,18 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SimpleModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
+        public static readonly SimpleModelBinaryWriteTranslation Instance = new SimpleModelBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISimpleModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.File,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
@@ -1163,20 +1170,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.ColorRemappingIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.MODC));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MaterialSwap,
-                header: translationParams.ConvertToCustom(RecordTypes.MODS));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Data,
                 header: translationParams.ConvertToCustom(RecordTypes.MODT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaterialSwap,
+                header: translationParams.ConvertToCustom(RecordTypes.MODS));
         }
 
         public virtual void Write(
             MutagenWriter writer,
             ISimpleModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1187,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISimpleModelGetter)item,
@@ -1197,9 +1204,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SimpleModelBinaryCreateTranslation
+    internal partial class SimpleModelBinaryCreateTranslation
     {
-        public readonly static SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
+        public static readonly SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISimpleModel item,
@@ -1214,14 +1221,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1230,21 +1237,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.MODC:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
-                case RecordTypeInts.MODS:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)SimpleModel_FieldIndex.MaterialSwap;
-                }
                 case RecordTypeInts.MODT:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.Data;
+                }
+                case RecordTypeInts.MODS:
+                {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1262,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISimpleModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1275,16 +1285,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SimpleModelBinaryOverlay :
+    internal partial class SimpleModelBinaryOverlay :
         PluginBinaryOverlay,
         ISimpleModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static SimpleModel_Registration StaticRegistration => SimpleModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => SimpleModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1298,16 +1308,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SimpleModelCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SimpleModelCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1317,19 +1327,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region File
         private int? _FileLocation;
-        public String File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;
-        public Single? ColorRemappingIndex => _ColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region MaterialSwap
-        private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<IMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialSwapGetter>.Null;
+        public Single? ColorRemappingIndex => _ColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Data
         private int? _DataLocation;
-        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region MaterialSwap
+        private int? _MaterialSwapLocation;
+        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<IMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialSwapGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1338,42 +1348,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected SimpleModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SimpleModelBinaryOverlay SimpleModelFactory(
+        public static ISimpleModelGetter SimpleModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SimpleModelBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static SimpleModelBinaryOverlay SimpleModelFactory(
+        public static ISimpleModelGetter SimpleModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SimpleModelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public virtual ParseResult FillRecordType(
@@ -1383,31 +1399,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)SimpleModel_FieldIndex.File) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     _FileLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.File;
                 }
                 case RecordTypeInts.MODC:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     _ColorRemappingIndexLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
-                case RecordTypeInts.MODS:
-                {
-                    _MaterialSwapLocation = (stream.Position - offset);
-                    return (int)SimpleModel_FieldIndex.MaterialSwap;
-                }
                 case RecordTypeInts.MODT:
                 {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = (stream.Position - offset);
                     return (int)SimpleModel_FieldIndex.Data;
+                }
+                case RecordTypeInts.MODS:
+                {
+                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
+                    _MaterialSwapLocation = (stream.Position - offset);
+                    return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1415,12 +1434,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.ToString(
+            SimpleModelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

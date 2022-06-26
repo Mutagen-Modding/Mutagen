@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -86,12 +88,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GrassDataMixIn.ToString(
+            GrassDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -294,74 +297,69 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(GrassData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(GrassData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, GrassData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, GrassData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(GrassData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(GrassData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Density ?? true)
                     {
-                        fg.AppendItem(Density, "Density");
+                        sb.AppendItem(Density, "Density");
                     }
                     if (printMask?.MinSlope ?? true)
                     {
-                        fg.AppendItem(MinSlope, "MinSlope");
+                        sb.AppendItem(MinSlope, "MinSlope");
                     }
                     if (printMask?.MaxSlope ?? true)
                     {
-                        fg.AppendItem(MaxSlope, "MaxSlope");
+                        sb.AppendItem(MaxSlope, "MaxSlope");
                     }
                     if (printMask?.Fluff1 ?? true)
                     {
-                        fg.AppendItem(Fluff1, "Fluff1");
+                        sb.AppendItem(Fluff1, "Fluff1");
                     }
                     if (printMask?.UnitFromWaterAmount ?? true)
                     {
-                        fg.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
+                        sb.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
                     }
                     if (printMask?.Fluff2 ?? true)
                     {
-                        fg.AppendItem(Fluff2, "Fluff2");
+                        sb.AppendItem(Fluff2, "Fluff2");
                     }
                     if (printMask?.UnitFromWaterMode ?? true)
                     {
-                        fg.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
+                        sb.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
                     }
                     if (printMask?.PositionRange ?? true)
                     {
-                        fg.AppendItem(PositionRange, "PositionRange");
+                        sb.AppendItem(PositionRange, "PositionRange");
                     }
                     if (printMask?.HeightRange ?? true)
                     {
-                        fg.AppendItem(HeightRange, "HeightRange");
+                        sb.AppendItem(HeightRange, "HeightRange");
                     }
                     if (printMask?.ColorRange ?? true)
                     {
-                        fg.AppendItem(ColorRange, "ColorRange");
+                        sb.AppendItem(ColorRange, "ColorRange");
                     }
                     if (printMask?.WavePeriod ?? true)
                     {
-                        fg.AppendItem(WavePeriod, "WavePeriod");
+                        sb.AppendItem(WavePeriod, "WavePeriod");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -546,47 +544,62 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Density, "Density");
-                fg.AppendItem(MinSlope, "MinSlope");
-                fg.AppendItem(MaxSlope, "MaxSlope");
-                fg.AppendItem(Fluff1, "Fluff1");
-                fg.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
-                fg.AppendItem(Fluff2, "Fluff2");
-                fg.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
-                fg.AppendItem(PositionRange, "PositionRange");
-                fg.AppendItem(HeightRange, "HeightRange");
-                fg.AppendItem(ColorRange, "ColorRange");
-                fg.AppendItem(WavePeriod, "WavePeriod");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Density, "Density");
+                }
+                {
+                    sb.AppendItem(MinSlope, "MinSlope");
+                }
+                {
+                    sb.AppendItem(MaxSlope, "MaxSlope");
+                }
+                {
+                    sb.AppendItem(Fluff1, "Fluff1");
+                }
+                {
+                    sb.AppendItem(UnitFromWaterAmount, "UnitFromWaterAmount");
+                }
+                {
+                    sb.AppendItem(Fluff2, "Fluff2");
+                }
+                {
+                    sb.AppendItem(UnitFromWaterMode, "UnitFromWaterMode");
+                }
+                {
+                    sb.AppendItem(PositionRange, "PositionRange");
+                }
+                {
+                    sb.AppendItem(HeightRange, "HeightRange");
+                }
+                {
+                    sb.AppendItem(ColorRange, "ColorRange");
+                }
+                {
+                    sb.AppendItem(WavePeriod, "WavePeriod");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -700,10 +713,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = GrassData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => GrassDataBinaryWriteTranslation.Instance;
@@ -711,7 +720,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -721,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static GrassData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GrassData();
             ((GrassDataSetterCommon)((IGrassDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -736,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GrassData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -746,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -828,26 +837,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IGrassDataGetter item,
             string? name = null,
             GrassData.Mask<bool>? printMask = null)
         {
-            return ((GrassDataCommon)((IGrassDataGetter)item).CommonInstance()!).ToString(
+            return ((GrassDataCommon)((IGrassDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IGrassDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GrassData.Mask<bool>? printMask = null)
         {
-            ((GrassDataCommon)((IGrassDataGetter)item).CommonInstance()!).ToString(
+            ((GrassDataCommon)((IGrassDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -953,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IGrassData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GrassDataSetterCommon)((IGrassDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -968,10 +977,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum GrassData_FieldIndex
+    internal enum GrassData_FieldIndex
     {
         Density = 0,
         MinSlope = 1,
@@ -989,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class GrassData_Registration : ILoquiRegistration
+    internal partial class GrassData_Registration : ILoquiRegistration
     {
         public static readonly GrassData_Registration Instance = new GrassData_Registration();
 
@@ -1031,6 +1040,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(GrassDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1064,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class GrassDataSetterCommon
+    internal partial class GrassDataSetterCommon
     {
         public static readonly GrassDataSetterCommon Instance = new GrassDataSetterCommon();
 
@@ -1098,12 +1113,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IGrassData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1114,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GrassDataCommon
+    internal partial class GrassDataCommon
     {
         public static readonly GrassDataCommon Instance = new GrassDataCommon();
 
@@ -1138,7 +1153,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GrassData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Density = item.Density == rhs.Density;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
             ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
@@ -1153,97 +1167,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IGrassDataGetter item,
             string? name = null,
             GrassData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IGrassDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GrassData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"GrassData =>");
+                sb.AppendLine($"GrassData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (GrassData) =>");
+                sb.AppendLine($"{name} (GrassData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IGrassDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             GrassData.Mask<bool>? printMask = null)
         {
             if (printMask?.Density ?? true)
             {
-                fg.AppendItem(item.Density, "Density");
+                sb.AppendItem(item.Density, "Density");
             }
             if (printMask?.MinSlope ?? true)
             {
-                fg.AppendItem(item.MinSlope, "MinSlope");
+                sb.AppendItem(item.MinSlope, "MinSlope");
             }
             if (printMask?.MaxSlope ?? true)
             {
-                fg.AppendItem(item.MaxSlope, "MaxSlope");
+                sb.AppendItem(item.MaxSlope, "MaxSlope");
             }
             if (printMask?.Fluff1 ?? true)
             {
-                fg.AppendItem(item.Fluff1, "Fluff1");
+                sb.AppendItem(item.Fluff1, "Fluff1");
             }
             if (printMask?.UnitFromWaterAmount ?? true)
             {
-                fg.AppendItem(item.UnitFromWaterAmount, "UnitFromWaterAmount");
+                sb.AppendItem(item.UnitFromWaterAmount, "UnitFromWaterAmount");
             }
             if (printMask?.Fluff2 ?? true)
             {
-                fg.AppendItem(item.Fluff2, "Fluff2");
+                sb.AppendItem(item.Fluff2, "Fluff2");
             }
             if (printMask?.UnitFromWaterMode ?? true)
             {
-                fg.AppendItem(item.UnitFromWaterMode, "UnitFromWaterMode");
+                sb.AppendItem(item.UnitFromWaterMode, "UnitFromWaterMode");
             }
             if (printMask?.PositionRange ?? true)
             {
-                fg.AppendItem(item.PositionRange, "PositionRange");
+                sb.AppendItem(item.PositionRange, "PositionRange");
             }
             if (printMask?.HeightRange ?? true)
             {
-                fg.AppendItem(item.HeightRange, "HeightRange");
+                sb.AppendItem(item.HeightRange, "HeightRange");
             }
             if (printMask?.ColorRange ?? true)
             {
-                fg.AppendItem(item.ColorRange, "ColorRange");
+                sb.AppendItem(item.ColorRange, "ColorRange");
             }
             if (printMask?.WavePeriod ?? true)
             {
-                fg.AppendItem(item.WavePeriod, "WavePeriod");
+                sb.AppendItem(item.WavePeriod, "WavePeriod");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1332,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGrassDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGrassDataGetter obj)
         {
             yield break;
         }
@@ -1340,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class GrassDataSetterTranslationCommon
+    internal partial class GrassDataSetterTranslationCommon
     {
         public static readonly GrassDataSetterTranslationCommon Instance = new GrassDataSetterTranslationCommon();
 
@@ -1462,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GrassData_Registration.Instance;
-        public static GrassData_Registration StaticRegistration => GrassData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => GrassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => GrassDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1486,11 +1498,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class GrassDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static GrassDataBinaryWriteTranslation Instance = new GrassDataBinaryWriteTranslation();
+        public static readonly GrassDataBinaryWriteTranslation Instance = new GrassDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IGrassDataGetter item,
@@ -1527,12 +1539,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IGrassDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1544,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGrassDataGetter)item,
@@ -1554,9 +1566,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class GrassDataBinaryCreateTranslation
+    internal partial class GrassDataBinaryCreateTranslation
     {
-        public readonly static GrassDataBinaryCreateTranslation Instance = new GrassDataBinaryCreateTranslation();
+        public static readonly GrassDataBinaryCreateTranslation Instance = new GrassDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IGrassData item,
@@ -1591,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IGrassDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1604,16 +1616,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class GrassDataBinaryOverlay :
+    internal partial class GrassDataBinaryOverlay :
         PluginBinaryOverlay,
         IGrassDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GrassData_Registration.Instance;
-        public static GrassData_Registration StaticRegistration => GrassData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => GrassData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => GrassDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1627,7 +1639,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => GrassDataBinaryWriteTranslation.Instance;
@@ -1635,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GrassDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1643,18 +1655,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Byte Density => _data.Span[0x0];
-        public Byte MinSlope => _data.Span[0x1];
-        public Byte MaxSlope => _data.Span[0x2];
-        public Byte Fluff1 => _data.Span[0x3];
-        public UInt16 UnitFromWaterAmount => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public UInt16 Fluff2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Grass.UnitFromWaterType UnitFromWaterMode => (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
-        public Single PositionRange => _data.Slice(0xC, 0x4).Float();
-        public Single HeightRange => _data.Slice(0x10, 0x4).Float();
-        public Single ColorRange => _data.Slice(0x14, 0x4).Float();
-        public Single WavePeriod => _data.Slice(0x18, 0x4).Float();
-        public Grass.GrassFlag Flags => (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
+        public Byte Density => _structData.Span[0x0];
+        public Byte MinSlope => _structData.Span[0x1];
+        public Byte MaxSlope => _structData.Span[0x2];
+        public Byte Fluff1 => _structData.Span[0x3];
+        public UInt16 UnitFromWaterAmount => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
+        public UInt16 Fluff2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public Grass.UnitFromWaterType UnitFromWaterMode => (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public Single PositionRange => _structData.Slice(0xC, 0x4).Float();
+        public Single HeightRange => _structData.Slice(0x10, 0x4).Float();
+        public Single ColorRange => _structData.Slice(0x14, 0x4).Float();
+        public Single WavePeriod => _structData.Slice(0x18, 0x4).Float();
+        public Grass.GrassFlag Flags => (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1662,25 +1674,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected GrassDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static GrassDataBinaryOverlay GrassDataFactory(
+        public static IGrassDataGetter GrassDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new GrassDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1689,25 +1706,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static GrassDataBinaryOverlay GrassDataFactory(
+        public static IGrassDataGetter GrassDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return GrassDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GrassDataMixIn.ToString(
+            GrassDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

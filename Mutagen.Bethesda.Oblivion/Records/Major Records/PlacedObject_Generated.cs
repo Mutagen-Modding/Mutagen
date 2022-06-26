@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,20 +20,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -258,12 +259,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedObjectMixIn.ToString(
+            PlacedObjectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -624,122 +626,117 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PlacedObject.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PlacedObject.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PlacedObject.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Base ?? true)
                     {
-                        fg.AppendItem(Base, "Base");
+                        sb.AppendItem(Base, "Base");
                     }
                     if (printMask?.XPCIFluff ?? true)
                     {
-                        fg.AppendItem(XPCIFluff, "XPCIFluff");
+                        sb.AppendItem(XPCIFluff, "XPCIFluff");
                     }
                     if (printMask?.FULLFluff ?? true)
                     {
-                        fg.AppendItem(FULLFluff, "FULLFluff");
+                        sb.AppendItem(FULLFluff, "FULLFluff");
                     }
                     if (printMask?.TeleportDestination?.Overall ?? true)
                     {
-                        TeleportDestination?.ToString(fg);
+                        TeleportDestination?.Print(sb);
                     }
                     if (printMask?.Lock?.Overall ?? true)
                     {
-                        Lock?.ToString(fg);
+                        Lock?.Print(sb);
                     }
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendItem(Owner, "Owner");
+                        sb.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.FactionRank ?? true)
                     {
-                        fg.AppendItem(FactionRank, "FactionRank");
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.GlobalVariable ?? true)
                     {
-                        fg.AppendItem(GlobalVariable, "GlobalVariable");
+                        sb.AppendItem(GlobalVariable, "GlobalVariable");
                     }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
-                        EnableParent?.ToString(fg);
+                        EnableParent?.Print(sb);
                     }
                     if (printMask?.Target ?? true)
                     {
-                        fg.AppendItem(Target, "Target");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.SpeedTreeSeed ?? true)
                     {
-                        fg.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
+                        sb.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
                     }
                     if (printMask?.DistantLODData?.Overall ?? true)
                     {
-                        DistantLODData?.ToString(fg);
+                        DistantLODData?.Print(sb);
                     }
                     if (printMask?.Charge ?? true)
                     {
-                        fg.AppendItem(Charge, "Charge");
+                        sb.AppendItem(Charge, "Charge");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.LevelModifier ?? true)
                     {
-                        fg.AppendItem(LevelModifier, "LevelModifier");
+                        sb.AppendItem(LevelModifier, "LevelModifier");
                     }
                     if (printMask?.XRTM ?? true)
                     {
-                        fg.AppendItem(XRTM, "XRTM");
+                        sb.AppendItem(XRTM, "XRTM");
                     }
                     if (printMask?.ActionFlags ?? true)
                     {
-                        fg.AppendItem(ActionFlags, "ActionFlags");
+                        sb.AppendItem(ActionFlags, "ActionFlags");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendItem(Count, "Count");
+                        sb.AppendItem(Count, "Count");
                     }
                     if (printMask?.MapMarker?.Overall ?? true)
                     {
-                        MapMarker?.ToString(fg);
+                        MapMarker?.Print(sb);
                     }
                     if (printMask?.OpenByDefault ?? true)
                     {
-                        fg.AppendItem(OpenByDefault, "OpenByDefault");
+                        sb.AppendItem(OpenByDefault, "OpenByDefault");
                     }
                     if (printMask?.RagdollData ?? true)
                     {
-                        fg.AppendItem(RagdollData, "RagdollData");
+                        sb.AppendItem(RagdollData, "RagdollData");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.ContainedSoul ?? true)
                     {
-                        fg.AppendItem(ContainedSoul, "ContainedSoul");
+                        sb.AppendItem(ContainedSoul, "ContainedSoul");
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(fg);
+                        Location?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1033,60 +1030,87 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Base, "Base");
-                fg.AppendItem(XPCIFluff, "XPCIFluff");
-                fg.AppendItem(FULLFluff, "FULLFluff");
-                TeleportDestination?.ToString(fg);
-                Lock?.ToString(fg);
-                fg.AppendItem(Owner, "Owner");
-                fg.AppendItem(FactionRank, "FactionRank");
-                fg.AppendItem(GlobalVariable, "GlobalVariable");
-                EnableParent?.ToString(fg);
-                fg.AppendItem(Target, "Target");
-                fg.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
-                DistantLODData?.ToString(fg);
-                fg.AppendItem(Charge, "Charge");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(LevelModifier, "LevelModifier");
-                fg.AppendItem(XRTM, "XRTM");
-                fg.AppendItem(ActionFlags, "ActionFlags");
-                fg.AppendItem(Count, "Count");
-                MapMarker?.ToString(fg);
-                fg.AppendItem(OpenByDefault, "OpenByDefault");
-                fg.AppendItem(RagdollData, "RagdollData");
-                fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(ContainedSoul, "ContainedSoul");
-                Location?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
+                {
+                    sb.AppendItem(XPCIFluff, "XPCIFluff");
+                }
+                {
+                    sb.AppendItem(FULLFluff, "FULLFluff");
+                }
+                TeleportDestination?.Print(sb);
+                Lock?.Print(sb);
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(GlobalVariable, "GlobalVariable");
+                }
+                EnableParent?.Print(sb);
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(SpeedTreeSeed, "SpeedTreeSeed");
+                }
+                DistantLODData?.Print(sb);
+                {
+                    sb.AppendItem(Charge, "Charge");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(LevelModifier, "LevelModifier");
+                }
+                {
+                    sb.AppendItem(XRTM, "XRTM");
+                }
+                {
+                    sb.AppendItem(ActionFlags, "ActionFlags");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
+                MapMarker?.Print(sb);
+                {
+                    sb.AppendItem(OpenByDefault, "OpenByDefault");
+                }
+                {
+                    sb.AppendItem(RagdollData, "RagdollData");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(ContainedSoul, "ContainedSoul");
+                }
+                Location?.Print(sb);
             }
             #endregion
 
@@ -1234,7 +1258,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
         {
@@ -1295,7 +1319,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1305,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static PlacedObject CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedObject();
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1320,7 +1344,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedObject item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1330,7 +1354,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1444,26 +1468,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedObjectGetter item,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).ToString(
+            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1558,7 +1582,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPlacedObjectInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1573,10 +1597,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PlacedObject_FieldIndex
+    internal enum PlacedObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1611,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedObject_Registration : ILoquiRegistration
+    internal partial class PlacedObject_Registration : ILoquiRegistration
     {
         public static readonly PlacedObject_Registration Instance = new PlacedObject_Registration();
 
@@ -1653,6 +1677,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REFR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.REFR);
+            var all = RecordCollection.Factory(
+                RecordTypes.REFR,
+                RecordTypes.NAME,
+                RecordTypes.XPCI,
+                RecordTypes.FULL,
+                RecordTypes.XTEL,
+                RecordTypes.XLOC,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XGLB,
+                RecordTypes.XESP,
+                RecordTypes.XTRG,
+                RecordTypes.XSED,
+                RecordTypes.XLOD,
+                RecordTypes.XCHG,
+                RecordTypes.XHLT,
+                RecordTypes.XLCM,
+                RecordTypes.XRTM,
+                RecordTypes.XACT,
+                RecordTypes.XCNT,
+                RecordTypes.XMRK,
+                RecordTypes.ONAM,
+                RecordTypes.XRGD,
+                RecordTypes.XSCL,
+                RecordTypes.XSOL,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1686,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PlacedObjectSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class PlacedObjectSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly PlacedObjectSetterCommon Instance = new PlacedObjectSetterCommon();
 
@@ -1753,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IPlacedObjectInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
@@ -1766,7 +1822,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedObject)item,
@@ -1777,7 +1833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PlacedObject)item,
@@ -1788,7 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PlacedObjectCommon : OblivionMajorRecordCommon
+    internal partial class PlacedObjectCommon : OblivionMajorRecordCommon
     {
         public new static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
 
@@ -1812,7 +1868,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PlacedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Base = item.Base.Equals(rhs.Base);
             ret.XPCIFluff = MemorySliceExt.Equal(item.XPCIFluff, rhs.XPCIFluff);
             ret.FULLFluff = MemorySliceExt.Equal(item.FULLFluff, rhs.FULLFluff);
@@ -1864,166 +1919,164 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPlacedObjectGetter item,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedObject =>");
+                sb.AppendLine($"PlacedObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedObject) =>");
+                sb.AppendLine($"{name} (PlacedObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedObject.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Base ?? true)
             {
-                fg.AppendItem(item.Base.FormKeyNullable, "Base");
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
             }
             if ((printMask?.XPCIFluff ?? true)
                 && item.XPCIFluff is {} XPCIFluffItem)
             {
-                fg.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
+                sb.AppendLine($"XPCIFluff => {SpanExt.ToHexString(XPCIFluffItem)}");
             }
             if ((printMask?.FULLFluff ?? true)
                 && item.FULLFluff is {} FULLFluffItem)
             {
-                fg.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
+                sb.AppendLine($"FULLFluff => {SpanExt.ToHexString(FULLFluffItem)}");
             }
             if ((printMask?.TeleportDestination?.Overall ?? true)
                 && item.TeleportDestination is {} TeleportDestinationItem)
             {
-                TeleportDestinationItem?.ToString(fg, "TeleportDestination");
+                TeleportDestinationItem?.Print(sb, "TeleportDestination");
             }
             if ((printMask?.Lock?.Overall ?? true)
                 && item.Lock is {} LockItem)
             {
-                LockItem?.ToString(fg, "Lock");
+                LockItem?.Print(sb, "Lock");
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank is {} FactionRankItem)
             {
-                fg.AppendItem(FactionRankItem, "FactionRank");
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
+                sb.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
             {
-                EnableParentItem?.ToString(fg, "EnableParent");
+                EnableParentItem?.Print(sb, "EnableParent");
             }
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target.FormKeyNullable, "Target");
+                sb.AppendItem(item.Target.FormKeyNullable, "Target");
             }
             if ((printMask?.SpeedTreeSeed ?? true)
                 && item.SpeedTreeSeed is {} SpeedTreeSeedItem)
             {
-                fg.AppendItem(SpeedTreeSeedItem, "SpeedTreeSeed");
+                sb.AppendItem(SpeedTreeSeedItem, "SpeedTreeSeed");
             }
             if ((printMask?.DistantLODData?.Overall ?? true)
                 && item.DistantLODData is {} DistantLODDataItem)
             {
-                DistantLODDataItem?.ToString(fg, "DistantLODData");
+                DistantLODDataItem?.Print(sb, "DistantLODData");
             }
             if ((printMask?.Charge ?? true)
                 && item.Charge is {} ChargeItem)
             {
-                fg.AppendItem(ChargeItem, "Charge");
+                sb.AppendItem(ChargeItem, "Charge");
             }
             if ((printMask?.Health ?? true)
                 && item.Health is {} HealthItem)
             {
-                fg.AppendItem(HealthItem, "Health");
+                sb.AppendItem(HealthItem, "Health");
             }
             if ((printMask?.LevelModifier ?? true)
                 && item.LevelModifier is {} LevelModifierItem)
             {
-                fg.AppendItem(LevelModifierItem, "LevelModifier");
+                sb.AppendItem(LevelModifierItem, "LevelModifier");
             }
             if (printMask?.XRTM ?? true)
             {
-                fg.AppendItem(item.XRTM.FormKeyNullable, "XRTM");
+                sb.AppendItem(item.XRTM.FormKeyNullable, "XRTM");
             }
             if ((printMask?.ActionFlags ?? true)
                 && item.ActionFlags is {} ActionFlagsItem)
             {
-                fg.AppendItem(ActionFlagsItem, "ActionFlags");
+                sb.AppendItem(ActionFlagsItem, "ActionFlags");
             }
             if ((printMask?.Count ?? true)
                 && item.Count is {} CountItem)
             {
-                fg.AppendItem(CountItem, "Count");
+                sb.AppendItem(CountItem, "Count");
             }
             if ((printMask?.MapMarker?.Overall ?? true)
                 && item.MapMarker is {} MapMarkerItem)
             {
-                MapMarkerItem?.ToString(fg, "MapMarker");
+                MapMarkerItem?.Print(sb, "MapMarker");
             }
             if (printMask?.OpenByDefault ?? true)
             {
-                fg.AppendItem(item.OpenByDefault, "OpenByDefault");
+                sb.AppendItem(item.OpenByDefault, "OpenByDefault");
             }
             if ((printMask?.RagdollData ?? true)
                 && item.RagdollData is {} RagdollDataItem)
             {
-                fg.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
+                sb.AppendLine($"RagdollData => {SpanExt.ToHexString(RagdollDataItem)}");
             }
             if ((printMask?.Scale ?? true)
                 && item.Scale is {} ScaleItem)
             {
-                fg.AppendItem(ScaleItem, "Scale");
+                sb.AppendItem(ScaleItem, "Scale");
             }
             if (printMask?.ContainedSoul ?? true)
             {
-                fg.AppendItem(item.ContainedSoul.FormKeyNullable, "ContainedSoul");
+                sb.AppendItem(item.ContainedSoul.FormKeyNullable, "ContainedSoul");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(fg, "Location");
+                LocationItem?.Print(sb, "Location");
             }
         }
         
@@ -2317,56 +2370,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Base.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Base);
+                yield return BaseInfo;
             }
             if (obj.TeleportDestination is {} TeleportDestinationItems)
             {
-                foreach (var item in TeleportDestinationItems.ContainedFormLinks)
+                foreach (var item in TeleportDestinationItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Lock is {} LockItems)
             {
-                foreach (var item in LockItems.ContainedFormLinks)
+                foreach (var item in LockItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.Owner.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Owner);
+                yield return OwnerInfo;
             }
-            if (obj.GlobalVariable.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GlobalVariable, out var GlobalVariableInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GlobalVariable);
+                yield return GlobalVariableInfo;
             }
             if (obj.EnableParent is {} EnableParentItems)
             {
-                foreach (var item in EnableParentItems.ContainedFormLinks)
+                foreach (var item in EnableParentItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.Target.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Target, out var TargetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Target);
+                yield return TargetInfo;
             }
-            if (obj.XRTM.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.XRTM, out var XRTMInfo))
             {
-                yield return FormLinkInformation.Factory(obj.XRTM);
+                yield return XRTMInfo;
             }
-            if (obj.ContainedSoul.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ContainedSoul, out var ContainedSoulInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ContainedSoul);
+                yield return ContainedSoulInfo;
             }
             yield break;
         }
@@ -2409,7 +2462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PlacedObjectSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class PlacedObjectSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly PlacedObjectSetterTranslationCommon Instance = new PlacedObjectSetterTranslationCommon();
 
@@ -2813,7 +2866,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -2831,18 +2884,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PlacedObjectBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
+        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPlacedObjectGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2984,7 +3037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IPlacedObjectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2995,12 +3048,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -3012,7 +3068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedObjectGetter)item,
@@ -3023,7 +3079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedObjectGetter)item,
@@ -3034,7 +3090,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPlacedObjectGetter)item,
@@ -3044,9 +3100,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PlacedObjectBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class PlacedObjectBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
+        public new static readonly PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REFR;
         public static void FillBinaryStructs(
@@ -3065,7 +3121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3181,7 +3237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.MapMarker = Mutagen.Bethesda.Oblivion.MapMarker.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.ONAM:
@@ -3222,7 +3278,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -3243,16 +3300,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PlacedObjectBinaryOverlay :
+    internal partial class PlacedObjectBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         IPlacedObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
-        public new static PlacedObject_Registration StaticRegistration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
@@ -3260,14 +3317,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PlacedObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3279,75 +3336,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Base
         private int? _BaseLocation;
-        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base => _BaseLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
         #endregion
         #region XPCIFluff
         private int? _XPCIFluffLocation;
-        public ReadOnlyMemorySlice<Byte>? XPCIFluff => _XPCIFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XPCIFluffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? XPCIFluff => _XPCIFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XPCIFluffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region FULLFluff
         private int? _FULLFluffLocation;
-        public ReadOnlyMemorySlice<Byte>? FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FULLFluffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FULLFluff => _FULLFluffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FULLFluffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region TeleportDestination
         private RangeInt32? _TeleportDestinationLocation;
-        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new OverlayStream(_data.Slice(_TeleportDestinationLocation!.Value.Min), _package), _package) : default;
+        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(_recordData.Slice(_TeleportDestinationLocation!.Value.Min), _package) : default;
         #endregion
         #region Lock
         private RangeInt32? _LockLocation;
-        public ILockInformationGetter? Lock => _LockLocation.HasValue ? LockInformationBinaryOverlay.LockInformationFactory(new OverlayStream(_data.Slice(_LockLocation!.Value.Min), _package), _package) : default;
+        public ILockInformationGetter? Lock => _LockLocation.HasValue ? LockInformationBinaryOverlay.LockInformationFactory(_recordData.Slice(_LockLocation!.Value.Min), _package) : default;
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOwnerGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
-        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(_recordData.Slice(_EnableParentLocation!.Value.Min), _package) : default;
         #endregion
         #region Target
         private int? _TargetLocation;
-        public IFormLinkNullableGetter<IPlacedGetter> Target => _TargetLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TargetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedGetter> Target => _TargetLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TargetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
         #endregion
         #region SpeedTreeSeed
         private int? _SpeedTreeSeedLocation;
-        public Byte? SpeedTreeSeed => _SpeedTreeSeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SpeedTreeSeedLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? SpeedTreeSeed => _SpeedTreeSeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeedTreeSeedLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
-        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new OverlayStream(_data.Slice(_DistantLODDataLocation!.Value.Min), _package), _package) : default;
+        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(_recordData.Slice(_DistantLODDataLocation!.Value.Min), _package) : default;
         #endregion
         #region Charge
         private int? _ChargeLocation;
-        public Single? Charge => _ChargeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ChargeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Charge => _ChargeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChargeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Health
         private int? _HealthLocation;
-        public Int32? Health => _HealthLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HealthLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? Health => _HealthLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HealthLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
-        public Int32? LevelModifier => _LevelModifierLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LevelModifierLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? LevelModifier => _LevelModifierLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LevelModifierLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region XRTM
         private int? _XRTMLocation;
-        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> XRTM => _XRTMLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _XRTMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IOblivionMajorRecordGetter> XRTM => _XRTMLocation.HasValue ? new FormLinkNullable<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XRTMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOblivionMajorRecordGetter>.Null;
         #endregion
         #region ActionFlags
         private int? _ActionFlagsLocation;
-        public PlacedObject.ActionFlag? ActionFlags => _ActionFlagsLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ActionFlagsLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
+        public PlacedObject.ActionFlag? ActionFlags => _ActionFlagsLocation.HasValue ? (PlacedObject.ActionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActionFlagsLocation!.Value, _package.MetaData.Constants)) : default(PlacedObject.ActionFlag?);
         #endregion
         #region Count
         private int? _CountLocation;
-        public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         public IMapMarkerGetter? MapMarker { get; private set; }
         #region OpenByDefault
@@ -3355,19 +3412,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Boolean GetOpenByDefaultCustom();
         public Boolean OpenByDefault => GetOpenByDefaultCustom();
         #endregion
         #region RagdollData
         private int? _RagdollDataLocation;
-        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? RagdollData => _RagdollDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RagdollDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Scale
         private int? _ScaleLocation;
-        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public IFormLinkNullableGetter<ISoulGemGetter> ContainedSoul => _ContainedSoulLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ContainedSoulLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoulGemGetter>.Null;
+        public IFormLinkNullableGetter<ISoulGemGetter> ContainedSoul => _ContainedSoulLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContainedSoulLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoulGemGetter>.Null;
         #endregion
         public ILocationGetter? Location { get; private set; }
         partial void CustomFactoryEnd(
@@ -3377,28 +3435,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected PlacedObjectBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PlacedObjectBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -3408,20 +3469,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PlacedObjectBinaryOverlay PlacedObjectFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3431,9 +3492,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.NAME:
@@ -3532,7 +3593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.MapMarker = MapMarkerBinaryOverlay.MapMarkerFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.ONAM:
@@ -3564,7 +3625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Location = LocationBinaryOverlay.LocationFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.Location;
                 }
                 default:
@@ -3574,17 +3635,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedObjectMixIn.ToString(
+            PlacedObjectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

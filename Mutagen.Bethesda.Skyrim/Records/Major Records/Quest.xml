@@ -17,7 +17,7 @@
       <List name="TextDisplayGlobals">
         <FormLink recordType="QTGL" refName="Global" />
       </List>
-      <String name="ObjectWindowFilter" recordType="FLTR" />
+      <String name="Filter" recordType="FLTR" />
       <RefList name="DialogConditions" refName="Condition" binary="Custom" />
       <CustomLogic name="UnusedConditionsLogic" recordType="NEXT" />
       <RefList name="UnusedConditions" refName="Condition" binary="NoGeneration" />
@@ -31,7 +31,7 @@
   <Object name="QuestAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="9b79d88c-6b07-459c-959e-f6c5d1318ea8" ID="360">
     <Fields>
       <Break />
-      <UInt8 name="Unknown" />
+      <UInt8 name="ExtraBindDataVersion" default="2" />
       <CustomLogic name="FragmentCount" byteLength="2" />
       <String name="FileName" binaryType="PrependLengthUShort" binary="Custom" />
       <RefList name="Fragments" refName="QuestScriptFragment" binary="Custom" />
@@ -71,7 +71,7 @@
   <Object name="QuestLogEntry" objType="Subrecord" GUID="300fef8b-f34a-4baa-b6de-5859d503d5b7" ID="364">
     <Fields>
       <Enum name="Flags" enumName="QuestLogEntry.Flag" byteLength="1" recordType="QSDT" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <String name="Entry" recordType="CNAM" translated="DL" />
       <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
       <ByteArray name="SCHR" recordType="SCHR" />
@@ -91,14 +91,14 @@
     <Fields>
       <Data recordType="QSTA">
         <Fields>
-          <Int32 name="AliasIndex" />
+          <Int32 name="AliasID" />
           <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
         </Fields>
       </Data>
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
-  <Object name="QuestAlias" objType="Subrecord" GUID="68186d42-9951-43a6-9668-f21dc08c463c" ID="367">
+  <Object name="QuestAlias" objType="Subrecord" endMarkerType="ALED" GUID="68186d42-9951-43a6-9668-f21dc08c463c" ID="367">
     <Fields>
       <CustomLogic name="IDParse">
         <RecordType>ALST</RecordType>
@@ -108,7 +108,7 @@
       <Enum name="Type" enumName="QuestAlias.TypeEnum" binary="NoGeneration" />
       <String name="Name" recordType="ALID" />
       <Enum name="Flags" enumName="QuestAlias.Flag" byteLength="4" recordType="FNAM" />
-      <Int32 name="AliasIndexToForceIntoWhenFilled" recordType="ALFI" />
+      <Int32 name="AliasIDToForceIntoWhenFilled" recordType="ALFI" />
       <FormLink name="SpecificLocation" refName="Location" recordType="ALFL" />
       <FormLink name="ForcedReference" recordType="ALFR">
         <Interface>IPlaced</Interface>
@@ -119,7 +119,7 @@
       <RefDirect name="CreateReferenceToObject" refName="CreateReferenceToObject" />
       <RefDirect name="FindMatchingRefNearAlias" refName="FindMatchingRefNearAlias" />
       <RefDirect name="FindMatchingRefFromEvent" refName="FindMatchingRefFromEvent" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
@@ -141,12 +141,11 @@
       <FormLink name="VoiceTypes" recordType="VTCK" >
         <Interface>IAliasVoiceType</Interface>
       </FormLink>
-      <CustomLogic name="End" recordType="ALED" />
     </Fields>
   </Object>
   <Object name="LocationAliasReference" objType="Subrecord" GUID="f2506ee5-0e90-44a0-a252-ef13849c1e03" ID="368">
     <Fields>
-      <Int32 name="AliasIndex" recordType="ALFA" />
+      <Int32 name="AliasID" recordType="ALFA" />
       <FormLink name="Keyword" refName="Keyword" recordType="KNAM" />
       <FormLink name="RefType" refName="LocationReferenceType" recordType="ALRT" />
     </Fields>
@@ -154,7 +153,7 @@
   <Object name="ExternalAliasReference" objType="Subrecord" GUID="3e3c80ae-76fb-4c4a-bbd6-3ebbc337a6d7" ID="369">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="ALEQ" />
-      <Int32 name="AliasIndex" recordType="ALEA" />
+      <Int32 name="AliasID" recordType="ALEA" />
     </Fields>
   </Object>
   <Object name="CreateReferenceToObject" objType="Subrecord" GUID="e41a23e7-3945-4c1a-b550-a51f7d5de2ba" ID="370">
@@ -162,7 +161,7 @@
       <FormLink name="Object" refName="SkyrimMajorRecord" recordType="ALCO" nullable="False" />
       <Data recordType="ALCA">
         <Fields>
-          <Int16 name="AliasIndex" />
+          <Int16 name="AliasID" />
           <Enum name="Create" enumName="CreateReferenceToObject.CreateEnum" byteLength="2" />
         </Fields>
       </Data>
@@ -171,7 +170,7 @@
   </Object>
   <Object name="FindMatchingRefNearAlias" objType="Subrecord" GUID="f5e4d3aa-8dc5-4459-a604-a180731efc42" ID="371">
     <Fields>
-      <Int16 name="AliasIndex" recordType="ALNA" binary="Custom" />
+      <Int16 name="AliasID" recordType="ALNA" binary="Custom" />
       <Enum name="Type" enumName="FindMatchingRefNearAlias.TypeEnum" byteLength="4" recordType="ALNT" />
     </Fields>
   </Object>
@@ -191,7 +190,7 @@
           <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
         </Fields>
       </Data>
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AddonNode" recordType="ADDN" objType="Record" baseClass="Fallout4MajorRecord" GUID="532676e2-896e-4295-b298-076f1cbe69cc" ID="593">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <Int32 name="NodeIndex" recordType="DATA" nullable="False" />
+      <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="Light" refName="Light" recordType="LNAM" />
+      <Data recordType="DNAM">
+        <Fields>
+          <UInt16 name="MasterParticleSystemCap" />
+          <Enum name="Flags" enumName="AddonNode.Flag" byteLength="2" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

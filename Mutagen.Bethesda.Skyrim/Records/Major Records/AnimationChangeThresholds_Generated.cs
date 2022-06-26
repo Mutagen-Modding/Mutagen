@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,12 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AnimationChangeThresholdsMixIn.ToString(
+            AnimationChangeThresholdsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -186,38 +189,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AnimationChangeThresholds.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AnimationChangeThresholds.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AnimationChangeThresholds.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AnimationChangeThresholds.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AnimationChangeThresholds.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AnimationChangeThresholds.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Directional ?? true)
                     {
-                        fg.AppendItem(Directional, "Directional");
+                        sb.AppendItem(Directional, "Directional");
                     }
                     if (printMask?.MovementSpeed ?? true)
                     {
-                        fg.AppendItem(MovementSpeed, "MovementSpeed");
+                        sb.AppendItem(MovementSpeed, "MovementSpeed");
                     }
                     if (printMask?.RotationSpeed ?? true)
                     {
-                        fg.AppendItem(RotationSpeed, "RotationSpeed");
+                        sb.AppendItem(RotationSpeed, "RotationSpeed");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -312,38 +310,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Directional, "Directional");
-                fg.AppendItem(MovementSpeed, "MovementSpeed");
-                fg.AppendItem(RotationSpeed, "RotationSpeed");
+                {
+                    sb.AppendItem(Directional, "Directional");
+                }
+                {
+                    sb.AppendItem(MovementSpeed, "MovementSpeed");
+                }
+                {
+                    sb.AppendItem(RotationSpeed, "RotationSpeed");
+                }
             }
             #endregion
 
@@ -421,10 +416,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = AnimationChangeThresholds_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AnimationChangeThresholdsBinaryWriteTranslation.Instance;
@@ -432,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AnimationChangeThresholdsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -442,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AnimationChangeThresholds CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AnimationChangeThresholds();
             ((AnimationChangeThresholdsSetterCommon)((IAnimationChangeThresholdsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -457,7 +448,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AnimationChangeThresholds item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -467,7 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -531,26 +522,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAnimationChangeThresholdsGetter item,
             string? name = null,
             AnimationChangeThresholds.Mask<bool>? printMask = null)
         {
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)item).CommonInstance()!).ToString(
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAnimationChangeThresholdsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AnimationChangeThresholds.Mask<bool>? printMask = null)
         {
-            ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)item).CommonInstance()!).ToString(
+            ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -656,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAnimationChangeThresholds item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AnimationChangeThresholdsSetterCommon)((IAnimationChangeThresholdsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -671,10 +662,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AnimationChangeThresholds_FieldIndex
+    internal enum AnimationChangeThresholds_FieldIndex
     {
         Directional = 0,
         MovementSpeed = 1,
@@ -683,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AnimationChangeThresholds_Registration : ILoquiRegistration
+    internal partial class AnimationChangeThresholds_Registration : ILoquiRegistration
     {
         public static readonly AnimationChangeThresholds_Registration Instance = new AnimationChangeThresholds_Registration();
 
@@ -725,6 +716,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.INAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AnimationChangeThresholdsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -758,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AnimationChangeThresholdsSetterCommon
+    internal partial class AnimationChangeThresholdsSetterCommon
     {
         public static readonly AnimationChangeThresholdsSetterCommon Instance = new AnimationChangeThresholdsSetterCommon();
 
@@ -783,12 +780,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAnimationChangeThresholds item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.INAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AnimationChangeThresholdsCommon
+    internal partial class AnimationChangeThresholdsCommon
     {
         public static readonly AnimationChangeThresholdsCommon Instance = new AnimationChangeThresholdsCommon();
 
@@ -823,67 +820,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AnimationChangeThresholds.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Directional = item.Directional.EqualsWithin(rhs.Directional);
             ret.MovementSpeed = item.MovementSpeed.EqualsWithin(rhs.MovementSpeed);
             ret.RotationSpeed = item.RotationSpeed.EqualsWithin(rhs.RotationSpeed);
         }
         
-        public string ToString(
+        public string Print(
             IAnimationChangeThresholdsGetter item,
             string? name = null,
             AnimationChangeThresholds.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAnimationChangeThresholdsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AnimationChangeThresholds.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AnimationChangeThresholds =>");
+                sb.AppendLine($"AnimationChangeThresholds =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AnimationChangeThresholds) =>");
+                sb.AppendLine($"{name} (AnimationChangeThresholds) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAnimationChangeThresholdsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AnimationChangeThresholds.Mask<bool>? printMask = null)
         {
             if (printMask?.Directional ?? true)
             {
-                fg.AppendItem(item.Directional, "Directional");
+                sb.AppendItem(item.Directional, "Directional");
             }
             if (printMask?.MovementSpeed ?? true)
             {
-                fg.AppendItem(item.MovementSpeed, "MovementSpeed");
+                sb.AppendItem(item.MovementSpeed, "MovementSpeed");
             }
             if (printMask?.RotationSpeed ?? true)
             {
-                fg.AppendItem(item.RotationSpeed, "RotationSpeed");
+                sb.AppendItem(item.RotationSpeed, "RotationSpeed");
             }
         }
         
@@ -927,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAnimationChangeThresholdsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationChangeThresholdsGetter obj)
         {
             yield break;
         }
@@ -935,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AnimationChangeThresholdsSetterTranslationCommon
+    internal partial class AnimationChangeThresholdsSetterTranslationCommon
     {
         public static readonly AnimationChangeThresholdsSetterTranslationCommon Instance = new AnimationChangeThresholdsSetterTranslationCommon();
 
@@ -1021,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationChangeThresholds_Registration.Instance;
-        public static AnimationChangeThresholds_Registration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AnimationChangeThresholdsCommon.Instance;
         [DebuggerStepThrough]
@@ -1045,11 +1039,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AnimationChangeThresholdsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AnimationChangeThresholdsBinaryWriteTranslation Instance = new AnimationChangeThresholdsBinaryWriteTranslation();
+        public static readonly AnimationChangeThresholdsBinaryWriteTranslation Instance = new AnimationChangeThresholdsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAnimationChangeThresholdsGetter item,
@@ -1069,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAnimationChangeThresholdsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.INAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1086,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAnimationChangeThresholdsGetter)item,
@@ -1096,9 +1090,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AnimationChangeThresholdsBinaryCreateTranslation
+    internal partial class AnimationChangeThresholdsBinaryCreateTranslation
     {
-        public readonly static AnimationChangeThresholdsBinaryCreateTranslation Instance = new AnimationChangeThresholdsBinaryCreateTranslation();
+        public static readonly AnimationChangeThresholdsBinaryCreateTranslation Instance = new AnimationChangeThresholdsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAnimationChangeThresholds item,
@@ -1120,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAnimationChangeThresholdsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AnimationChangeThresholdsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1133,16 +1127,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AnimationChangeThresholdsBinaryOverlay :
+    internal partial class AnimationChangeThresholdsBinaryOverlay :
         PluginBinaryOverlay,
         IAnimationChangeThresholdsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AnimationChangeThresholds_Registration.Instance;
-        public static AnimationChangeThresholds_Registration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AnimationChangeThresholds_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AnimationChangeThresholdsCommon.Instance;
         [DebuggerStepThrough]
@@ -1156,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AnimationChangeThresholdsBinaryWriteTranslation.Instance;
@@ -1164,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AnimationChangeThresholdsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1172,9 +1166,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single Directional => _data.Slice(0x0, 0x4).Float();
-        public Single MovementSpeed => _data.Slice(0x4, 0x4).Float();
-        public Single RotationSpeed => _data.Slice(0x8, 0x4).Float();
+        public Single Directional => _structData.Slice(0x0, 0x4).Float();
+        public Single MovementSpeed => _structData.Slice(0x4, 0x4).Float();
+        public Single RotationSpeed => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1182,25 +1176,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AnimationChangeThresholdsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AnimationChangeThresholdsBinaryOverlay AnimationChangeThresholdsFactory(
+        public static IAnimationChangeThresholdsGetter AnimationChangeThresholdsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AnimationChangeThresholdsBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1209,25 +1208,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static AnimationChangeThresholdsBinaryOverlay AnimationChangeThresholdsFactory(
+        public static IAnimationChangeThresholdsGetter AnimationChangeThresholdsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AnimationChangeThresholdsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AnimationChangeThresholdsMixIn.ToString(
+            AnimationChangeThresholdsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

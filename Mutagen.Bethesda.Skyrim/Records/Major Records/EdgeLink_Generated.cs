@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -53,14 +54,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Mesh
-        private readonly IFormLink<IANavigationMeshGetter> _Mesh = new FormLink<IANavigationMeshGetter>();
-        public IFormLink<IANavigationMeshGetter> Mesh
+        private readonly IFormLink<INavigationMeshGetter> _Mesh = new FormLink<INavigationMeshGetter>();
+        public IFormLink<INavigationMeshGetter> Mesh
         {
             get => _Mesh;
             set => _Mesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
+        IFormLinkGetter<INavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
         #endregion
         #region TriangleIndex
         public Int16 TriangleIndex { get; set; } = default;
@@ -68,12 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EdgeLinkMixIn.ToString(
+            EdgeLinkMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -195,38 +197,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(EdgeLink.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(EdgeLink.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EdgeLink.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, EdgeLink.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(EdgeLink.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(EdgeLink.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Mesh ?? true)
                     {
-                        fg.AppendItem(Mesh, "Mesh");
+                        sb.AppendItem(Mesh, "Mesh");
                     }
                     if (printMask?.TriangleIndex ?? true)
                     {
-                        fg.AppendItem(TriangleIndex, "TriangleIndex");
+                        sb.AppendItem(TriangleIndex, "TriangleIndex");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -321,38 +318,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Mesh, "Mesh");
-                fg.AppendItem(TriangleIndex, "TriangleIndex");
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Mesh, "Mesh");
+                }
+                {
+                    sb.AppendItem(TriangleIndex, "TriangleIndex");
+                }
             }
             #endregion
 
@@ -431,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EdgeLinkCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EdgeLinkSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -442,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -452,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static EdgeLink CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new EdgeLink();
             ((EdgeLinkSetterCommon)((IEdgeLinkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -467,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out EdgeLink item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -477,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -499,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEdgeLink>
     {
         new Int32 Unknown { get; set; }
-        new IFormLink<IANavigationMeshGetter> Mesh { get; set; }
+        new IFormLink<INavigationMeshGetter> Mesh { get; set; }
         new Int16 TriangleIndex { get; set; }
     }
 
@@ -517,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
         Int32 Unknown { get; }
-        IFormLinkGetter<IANavigationMeshGetter> Mesh { get; }
+        IFormLinkGetter<INavigationMeshGetter> Mesh { get; }
         Int16 TriangleIndex { get; }
 
     }
@@ -543,26 +537,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IEdgeLinkGetter item,
             string? name = null,
             EdgeLink.Mask<bool>? printMask = null)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).ToString(
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IEdgeLinkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EdgeLink.Mask<bool>? printMask = null)
         {
-            ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).ToString(
+            ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -668,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IEdgeLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((EdgeLinkSetterCommon)((IEdgeLinkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -683,10 +677,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum EdgeLink_FieldIndex
+    internal enum EdgeLink_FieldIndex
     {
         Unknown = 0,
         Mesh = 1,
@@ -695,7 +689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class EdgeLink_Registration : ILoquiRegistration
+    internal partial class EdgeLink_Registration : ILoquiRegistration
     {
         public static readonly EdgeLink_Registration Instance = new EdgeLink_Registration();
 
@@ -769,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EdgeLinkSetterCommon
+    internal partial class EdgeLinkSetterCommon
     {
         public static readonly EdgeLinkSetterCommon Instance = new EdgeLinkSetterCommon();
 
@@ -795,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IEdgeLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -807,7 +801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EdgeLinkCommon
+    internal partial class EdgeLinkCommon
     {
         public static readonly EdgeLinkCommon Instance = new EdgeLinkCommon();
 
@@ -831,67 +825,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EdgeLink.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Mesh = item.Mesh.Equals(rhs.Mesh);
             ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
         }
         
-        public string ToString(
+        public string Print(
             IEdgeLinkGetter item,
             string? name = null,
             EdgeLink.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IEdgeLinkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             EdgeLink.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EdgeLink =>");
+                sb.AppendLine($"EdgeLink =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EdgeLink) =>");
+                sb.AppendLine($"{name} (EdgeLink) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IEdgeLinkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             EdgeLink.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Mesh ?? true)
             {
-                fg.AppendItem(item.Mesh.FormKey, "Mesh");
+                sb.AppendItem(item.Mesh.FormKey, "Mesh");
             }
             if (printMask?.TriangleIndex ?? true)
             {
-                fg.AppendItem(item.TriangleIndex, "TriangleIndex");
+                sb.AppendItem(item.TriangleIndex, "TriangleIndex");
             }
         }
         
@@ -935,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEdgeLinkGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEdgeLinkGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Mesh);
             yield break;
@@ -944,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EdgeLinkSetterTranslationCommon
+    internal partial class EdgeLinkSetterTranslationCommon
     {
         public static readonly EdgeLinkSetterTranslationCommon Instance = new EdgeLinkSetterTranslationCommon();
 
@@ -1030,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static EdgeLink_Registration StaticRegistration => EdgeLink_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EdgeLinkCommon.Instance;
         [DebuggerStepThrough]
@@ -1054,11 +1045,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class EdgeLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
+        public static readonly EdgeLinkBinaryWriteTranslation Instance = new EdgeLinkBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IEdgeLinkGetter item,
@@ -1074,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IEdgeLinkGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1084,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IEdgeLinkGetter)item,
@@ -1094,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EdgeLinkBinaryCreateTranslation
+    internal partial class EdgeLinkBinaryCreateTranslation
     {
-        public readonly static EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
+        public static readonly EdgeLinkBinaryCreateTranslation Instance = new EdgeLinkBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IEdgeLink item,
@@ -1118,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IEdgeLinkGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EdgeLinkBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1131,16 +1122,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EdgeLinkBinaryOverlay :
+    internal partial class EdgeLinkBinaryOverlay :
         PluginBinaryOverlay,
         IEdgeLinkGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EdgeLink_Registration.Instance;
-        public static EdgeLink_Registration StaticRegistration => EdgeLink_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EdgeLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => EdgeLinkCommon.Instance;
         [DebuggerStepThrough]
@@ -1154,16 +1145,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EdgeLinkCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EdgeLinkCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EdgeLinkBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((EdgeLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,9 +1162,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IFormLinkGetter<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1181,24 +1172,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected EdgeLinkBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static EdgeLinkBinaryOverlay EdgeLinkFactory(
+        public static IEdgeLinkGetter EdgeLinkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xA,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new EdgeLinkBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0xA),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0xA;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1207,25 +1204,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static EdgeLinkBinaryOverlay EdgeLinkFactory(
+        public static IEdgeLinkGetter EdgeLinkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return EdgeLinkFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            EdgeLinkMixIn.ToString(
+            EdgeLinkMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

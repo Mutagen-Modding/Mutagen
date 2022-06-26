@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,20 +21,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,16 +58,34 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFactionGetter.Name => this.Name;
+        ITranslatedStringGetter? IFactionGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -233,12 +253,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FactionMixIn.ToString(
+            FactionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -559,9 +580,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, Relation.Mask<R>?>>();
                         obj.Relations.Specific = l;
-                        foreach (var item in Relations.Specific.WithIndex())
+                        foreach (var item in Relations.Specific)
                         {
-                            MaskItemIndexed<R, Relation.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Relation.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Relation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Relation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -582,9 +603,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
                         obj.Ranks.Specific = l;
-                        foreach (var item in Ranks.Specific.WithIndex())
+                        foreach (var item in Ranks.Specific)
                         {
-                            MaskItemIndexed<R, Rank.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Rank.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Rank.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Rank.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -601,9 +622,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -613,147 +634,130 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Faction.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Faction.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Faction.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Faction.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Faction.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Faction.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Relations?.Overall ?? true)
                         && Relations is {} RelationsItem)
                     {
-                        fg.AppendLine("Relations =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Relations =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RelationsItem.Overall);
+                            sb.AppendItem(RelationsItem.Overall);
                             if (RelationsItem.Specific != null)
                             {
                                 foreach (var subItem in RelationsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ExteriorJailMarker ?? true)
                     {
-                        fg.AppendItem(ExteriorJailMarker, "ExteriorJailMarker");
+                        sb.AppendItem(ExteriorJailMarker, "ExteriorJailMarker");
                     }
                     if (printMask?.FollowerWaitMarker ?? true)
                     {
-                        fg.AppendItem(FollowerWaitMarker, "FollowerWaitMarker");
+                        sb.AppendItem(FollowerWaitMarker, "FollowerWaitMarker");
                     }
                     if (printMask?.StolenGoodsContainer ?? true)
                     {
-                        fg.AppendItem(StolenGoodsContainer, "StolenGoodsContainer");
+                        sb.AppendItem(StolenGoodsContainer, "StolenGoodsContainer");
                     }
                     if (printMask?.PlayerInventoryContainer ?? true)
                     {
-                        fg.AppendItem(PlayerInventoryContainer, "PlayerInventoryContainer");
+                        sb.AppendItem(PlayerInventoryContainer, "PlayerInventoryContainer");
                     }
                     if (printMask?.SharedCrimeFactionList ?? true)
                     {
-                        fg.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
+                        sb.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
                     }
                     if (printMask?.JailOutfit ?? true)
                     {
-                        fg.AppendItem(JailOutfit, "JailOutfit");
+                        sb.AppendItem(JailOutfit, "JailOutfit");
                     }
                     if (printMask?.CrimeValues?.Overall ?? true)
                     {
-                        CrimeValues?.ToString(fg);
+                        CrimeValues?.Print(sb);
                     }
                     if ((printMask?.Ranks?.Overall ?? true)
                         && Ranks is {} RanksItem)
                     {
-                        fg.AppendLine("Ranks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Ranks =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RanksItem.Overall);
+                            sb.AppendItem(RanksItem.Overall);
                             if (RanksItem.Specific != null)
                             {
                                 foreach (var subItem in RanksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.VendorBuySellList ?? true)
                     {
-                        fg.AppendItem(VendorBuySellList, "VendorBuySellList");
+                        sb.AppendItem(VendorBuySellList, "VendorBuySellList");
                     }
                     if (printMask?.MerchantContainer ?? true)
                     {
-                        fg.AppendItem(MerchantContainer, "MerchantContainer");
+                        sb.AppendItem(MerchantContainer, "MerchantContainer");
                     }
                     if (printMask?.VendorValues?.Overall ?? true)
                     {
-                        VendorValues?.ToString(fg);
+                        VendorValues?.Print(sb);
                     }
                     if (printMask?.VendorLocation?.Overall ?? true)
                     {
-                        VendorLocation?.ToString(fg);
+                        VendorLocation?.Print(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -967,114 +971,113 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (Relations is {} RelationsItem)
                 {
-                    fg.AppendLine("Relations =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Relations =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RelationsItem.Overall);
+                        sb.AppendItem(RelationsItem.Overall);
                         if (RelationsItem.Specific != null)
                         {
                             foreach (var subItem in RelationsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(ExteriorJailMarker, "ExteriorJailMarker");
-                fg.AppendItem(FollowerWaitMarker, "FollowerWaitMarker");
-                fg.AppendItem(StolenGoodsContainer, "StolenGoodsContainer");
-                fg.AppendItem(PlayerInventoryContainer, "PlayerInventoryContainer");
-                fg.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
-                fg.AppendItem(JailOutfit, "JailOutfit");
-                CrimeValues?.ToString(fg);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(ExteriorJailMarker, "ExteriorJailMarker");
+                }
+                {
+                    sb.AppendItem(FollowerWaitMarker, "FollowerWaitMarker");
+                }
+                {
+                    sb.AppendItem(StolenGoodsContainer, "StolenGoodsContainer");
+                }
+                {
+                    sb.AppendItem(PlayerInventoryContainer, "PlayerInventoryContainer");
+                }
+                {
+                    sb.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
+                }
+                {
+                    sb.AppendItem(JailOutfit, "JailOutfit");
+                }
+                CrimeValues?.Print(sb);
                 if (Ranks is {} RanksItem)
                 {
-                    fg.AppendLine("Ranks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Ranks =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RanksItem.Overall);
+                        sb.AppendItem(RanksItem.Overall);
                         if (RanksItem.Specific != null)
                         {
                             foreach (var subItem in RanksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(VendorBuySellList, "VendorBuySellList");
-                fg.AppendItem(MerchantContainer, "MerchantContainer");
-                VendorValues?.ToString(fg);
-                VendorLocation?.ToString(fg);
+                {
+                    sb.AppendItem(VendorBuySellList, "VendorBuySellList");
+                }
+                {
+                    sb.AppendItem(MerchantContainer, "MerchantContainer");
+                }
+                VendorValues?.Print(sb);
+                VendorLocation?.Print(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -1191,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionSetterCommon.Instance.RemapLinks(this, mapping);
         public Faction(FormKey formKey)
         {
@@ -1262,7 +1265,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1272,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Faction CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Faction();
             ((FactionSetterCommon)((IFactionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1287,7 +1290,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Faction item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1297,7 +1300,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1314,6 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFaction :
+        IAliasVoiceType,
         IFactionGetter,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1322,12 +1326,14 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequired,
         IObjectId,
         IOwner,
-        IRelatable
+        IRelatable,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; }
@@ -1355,6 +1361,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.FACT)]
     public partial interface IFactionGetter :
         IFallout4MajorRecordGetter,
+        IAliasVoiceTypeGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFactionGetter>,
@@ -1363,14 +1370,16 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter,
         IObjectIdGetter,
         IOwnerGetter,
-        IRelatableGetter
+        IRelatableGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag Flags { get; }
@@ -1411,26 +1420,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFactionGetter item,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
-            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
+            return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFactionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
-            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).ToString(
+            ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1525,7 +1534,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFactionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FactionSetterCommon)((IFactionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1540,10 +1549,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Faction_FieldIndex
+    internal enum Faction_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1571,7 +1580,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Faction_Registration : ILoquiRegistration
+    internal partial class Faction_Registration : ILoquiRegistration
     {
         public static readonly Faction_Registration Instance = new Faction_Registration();
 
@@ -1613,6 +1622,36 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.FACT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.FACT);
+            var all = RecordCollection.Factory(
+                RecordTypes.FACT,
+                RecordTypes.FULL,
+                RecordTypes.XNAM,
+                RecordTypes.DATA,
+                RecordTypes.JAIL,
+                RecordTypes.WAIT,
+                RecordTypes.STOL,
+                RecordTypes.PLCN,
+                RecordTypes.CRGR,
+                RecordTypes.JOUT,
+                RecordTypes.CRVA,
+                RecordTypes.RNAM,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.INAM,
+                RecordTypes.VEND,
+                RecordTypes.VENC,
+                RecordTypes.VENV,
+                RecordTypes.PLVD,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1646,7 +1685,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class FactionSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class FactionSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly FactionSetterCommon Instance = new FactionSetterCommon();
 
@@ -1707,7 +1746,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IFactionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IFactionInternal>(
                 record: item,
@@ -1720,7 +1759,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Faction)item,
@@ -1731,7 +1770,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Faction)item,
@@ -1742,7 +1781,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FactionCommon : Fallout4MajorRecordCommon
+    internal partial class FactionCommon : Fallout4MajorRecordCommon
     {
         public new static readonly FactionCommon Instance = new FactionCommon();
 
@@ -1766,8 +1805,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Faction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Relations = item.Relations.CollectionEqualsHelper(
                 rhs.Relations,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1807,164 +1845,150 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFactionGetter item,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFactionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Faction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Faction =>");
+                sb.AppendLine($"Faction =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Faction) =>");
+                sb.AppendLine($"{name} (Faction) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFactionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Faction.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Relations?.Overall ?? true)
             {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Relations =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Relations)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.ExteriorJailMarker ?? true)
             {
-                fg.AppendItem(item.ExteriorJailMarker.FormKeyNullable, "ExteriorJailMarker");
+                sb.AppendItem(item.ExteriorJailMarker.FormKeyNullable, "ExteriorJailMarker");
             }
             if (printMask?.FollowerWaitMarker ?? true)
             {
-                fg.AppendItem(item.FollowerWaitMarker.FormKeyNullable, "FollowerWaitMarker");
+                sb.AppendItem(item.FollowerWaitMarker.FormKeyNullable, "FollowerWaitMarker");
             }
             if (printMask?.StolenGoodsContainer ?? true)
             {
-                fg.AppendItem(item.StolenGoodsContainer.FormKeyNullable, "StolenGoodsContainer");
+                sb.AppendItem(item.StolenGoodsContainer.FormKeyNullable, "StolenGoodsContainer");
             }
             if (printMask?.PlayerInventoryContainer ?? true)
             {
-                fg.AppendItem(item.PlayerInventoryContainer.FormKeyNullable, "PlayerInventoryContainer");
+                sb.AppendItem(item.PlayerInventoryContainer.FormKeyNullable, "PlayerInventoryContainer");
             }
             if (printMask?.SharedCrimeFactionList ?? true)
             {
-                fg.AppendItem(item.SharedCrimeFactionList.FormKeyNullable, "SharedCrimeFactionList");
+                sb.AppendItem(item.SharedCrimeFactionList.FormKeyNullable, "SharedCrimeFactionList");
             }
             if (printMask?.JailOutfit ?? true)
             {
-                fg.AppendItem(item.JailOutfit.FormKeyNullable, "JailOutfit");
+                sb.AppendItem(item.JailOutfit.FormKeyNullable, "JailOutfit");
             }
             if ((printMask?.CrimeValues?.Overall ?? true)
                 && item.CrimeValues is {} CrimeValuesItem)
             {
-                CrimeValuesItem?.ToString(fg, "CrimeValues");
+                CrimeValuesItem?.Print(sb, "CrimeValues");
             }
             if (printMask?.Ranks?.Overall ?? true)
             {
-                fg.AppendLine("Ranks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Ranks =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Ranks)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.VendorBuySellList ?? true)
             {
-                fg.AppendItem(item.VendorBuySellList.FormKeyNullable, "VendorBuySellList");
+                sb.AppendItem(item.VendorBuySellList.FormKeyNullable, "VendorBuySellList");
             }
             if (printMask?.MerchantContainer ?? true)
             {
-                fg.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
+                sb.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.VendorValues?.Overall ?? true)
                 && item.VendorValues is {} VendorValuesItem)
             {
-                VendorValuesItem?.ToString(fg, "VendorValues");
+                VendorValuesItem?.Print(sb, "VendorValues");
             }
             if ((printMask?.VendorLocation?.Overall ?? true)
                 && item.VendorLocation is {} VendorLocationItem)
             {
-                VendorLocationItem?.ToString(fg, "VendorLocation");
+                VendorLocationItem?.Print(sb, "VendorLocation");
             }
             if ((printMask?.Conditions?.Overall ?? true)
                 && item.Conditions is {} ConditionsItem)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ConditionsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -2016,11 +2040,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
-                if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
+                if (!lhs.Relations.SequenceEqual(rhs.Relations, (l, r) => ((RelationCommon)((IRelationGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Relations)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
@@ -2060,7 +2084,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
-                if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
@@ -2088,7 +2112,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Faction_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -2169,51 +2193,51 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFactionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFactionGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Relations.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ExteriorJailMarker.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ExteriorJailMarker, out var ExteriorJailMarkerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ExteriorJailMarker);
+                yield return ExteriorJailMarkerInfo;
             }
-            if (obj.FollowerWaitMarker.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.FollowerWaitMarker, out var FollowerWaitMarkerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.FollowerWaitMarker);
+                yield return FollowerWaitMarkerInfo;
             }
-            if (obj.StolenGoodsContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.StolenGoodsContainer, out var StolenGoodsContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.StolenGoodsContainer);
+                yield return StolenGoodsContainerInfo;
             }
-            if (obj.PlayerInventoryContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.PlayerInventoryContainer, out var PlayerInventoryContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.PlayerInventoryContainer);
+                yield return PlayerInventoryContainerInfo;
             }
-            if (obj.SharedCrimeFactionList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SharedCrimeFactionList, out var SharedCrimeFactionListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SharedCrimeFactionList);
+                yield return SharedCrimeFactionListInfo;
             }
-            if (obj.JailOutfit.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.JailOutfit, out var JailOutfitInfo))
             {
-                yield return FormLinkInformation.Factory(obj.JailOutfit);
+                yield return JailOutfitInfo;
             }
-            if (obj.VendorBuySellList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.VendorBuySellList, out var VendorBuySellListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.VendorBuySellList);
+                yield return VendorBuySellListInfo;
             }
-            if (obj.MerchantContainer.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MerchantContainer, out var MerchantContainerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MerchantContainer);
+                yield return MerchantContainerInfo;
             }
             if (obj.VendorLocation is IFormLinkContainerGetter VendorLocationlinkCont)
             {
-                foreach (var item in VendorLocationlinkCont.ContainedFormLinks)
+                foreach (var item in VendorLocationlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2221,7 +2245,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             if (obj.Conditions is {} ConditionsItem)
             {
                 foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2267,7 +2291,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FactionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class FactionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly FactionSetterTranslationCommon Instance = new FactionSetterTranslationCommon();
 
@@ -2302,7 +2326,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
             {
@@ -2620,7 +2644,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -2638,18 +2662,18 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FactionBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FactionBinaryWriteTranslation Instance = new FactionBinaryWriteTranslation();
+        public new static readonly FactionBinaryWriteTranslation Instance = new FactionBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2659,11 +2683,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRelationGetter>.Instance.Write(
                 writer: writer,
                 items: item.Relations,
-                transl: (MutagenWriter subWriter, IRelationGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRelationGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2710,7 +2735,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankGetter>.Instance.Write(
                 writer: writer,
                 items: item.Ranks,
-                transl: (MutagenWriter subWriter, IRankGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRankGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RankBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2748,7 +2773,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2761,7 +2786,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IFactionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2772,12 +2797,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2789,7 +2817,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -2800,7 +2828,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -2811,7 +2839,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFactionGetter)item,
@@ -2821,9 +2849,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class FactionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class FactionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
+        public new static readonly FactionBinaryCreateTranslation Instance = new FactionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FACT;
         public static void FillBinaryStructs(
@@ -2842,7 +2870,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2852,6 +2880,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Faction_FieldIndex.Name;
                 }
@@ -2860,7 +2889,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Relation>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.XNAM,
+                            triggeringRecord: Relation_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Relation.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Relations;
@@ -2922,7 +2951,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.Ranks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Rank_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Rank_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Rank.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Ranks;
@@ -2958,7 +2987,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary)
                         .CastExtendedList<Condition>();
@@ -2971,7 +3000,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2988,16 +3018,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class FactionBinaryOverlay :
+    internal partial class FactionBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IFactionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
-        public new static Faction_Registration StaticRegistration => Faction_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FactionCommon.Instance;
         [DebuggerStepThrough]
@@ -3005,14 +3035,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FactionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FactionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FactionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FactionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3024,67 +3054,64 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
+        public IReadOnlyList<IRelationGetter> Relations { get; private set; } = Array.Empty<IRelationGetter>();
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
+        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Faction.FactionFlag);
         #endregion
         #region ExteriorJailMarker
         private int? _ExteriorJailMarkerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region StolenGoodsContainer
         private int? _StolenGoodsContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region PlayerInventoryContainer
         private int? _PlayerInventoryContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
-        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
-        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new OverlayStream(_data.Slice(_CrimeValuesLocation!.Value.Min), _package), _package) : default;
+        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(_recordData.Slice(_CrimeValuesLocation!.Value.Min), _package) : default;
         #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
-        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new OverlayStream(_data.Slice(_VendorValuesLocation!.Value.Min), _package), _package) : default;
+        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(_recordData.Slice(_VendorValuesLocation!.Value.Min), _package) : default;
         #endregion
         public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3092,28 +3119,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected FactionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FactionBinaryOverlay FactionFactory(
+        public static IFactionGetter FactionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FactionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -3123,20 +3153,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static FactionBinaryOverlay FactionFactory(
+        public static IFactionGetter FactionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FactionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -3146,9 +3176,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -3158,14 +3188,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList.FactoryByArray<RelationBinaryOverlay>(
+                    this.Relations = BinaryOverlayList.FactoryByArray<IRelationGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: Relation_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Faction_FieldIndex.Relations;
@@ -3215,10 +3246,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.FNAM:
                 case RecordTypeInts.INAM:
                 {
-                    this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
+                    this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: Rank_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: Rank_Registration.TriggerSpecs,
                         factory: RankBinaryOverlay.RankFactory);
                     return (int)Faction_FieldIndex.Ranks;
                 }
@@ -3243,18 +3274,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     this.VendorLocation = LocationTargetRadiusBinaryOverlay.LocationTargetRadiusFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        finalPos: finalPos,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Faction_FieldIndex.VendorLocation;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    ConditionsCustomParse(
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
                         stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
                     return (int)Faction_FieldIndex.Conditions;
                 }
                 default:
@@ -3264,17 +3299,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FactionMixIn.ToString(
+            FactionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

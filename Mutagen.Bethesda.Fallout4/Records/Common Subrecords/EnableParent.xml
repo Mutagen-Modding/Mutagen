@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EnableParent" objType="Subrecord" recordType="XESP" GUID="9d4ea708-9dc6-499a-b801-f2136f9bd331" ID="470">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <Break />
+      <Enum name="Flags" enumName="EnableParent.Flag" byteLength="1" />
+      <ByteArray name="Unknown" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

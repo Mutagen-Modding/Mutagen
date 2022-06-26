@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellGridMixIn.ToString(
+            CellGridMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,34 +177,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CellGrid.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CellGrid.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CellGrid.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CellGrid.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CellGrid.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CellGrid.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -286,37 +284,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Point, "Point");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -390,10 +383,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = CellGrid_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellGridBinaryWriteTranslation.Instance;
@@ -401,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -411,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CellGrid CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellGrid();
             ((CellGridSetterCommon)((ICellGridGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -426,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CellGrid item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -436,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -498,26 +487,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellGridGetter item,
             string? name = null,
             CellGrid.Mask<bool>? printMask = null)
         {
-            return ((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).ToString(
+            return ((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellGridGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellGrid.Mask<bool>? printMask = null)
         {
-            ((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).ToString(
+            ((CellGridCommon)((ICellGridGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -623,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICellGrid item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellGridSetterCommon)((ICellGridGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -638,10 +627,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CellGrid_FieldIndex
+    internal enum CellGrid_FieldIndex
     {
         Point = 0,
         Flags = 1,
@@ -649,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CellGrid_Registration : ILoquiRegistration
+    internal partial class CellGrid_Registration : ILoquiRegistration
     {
         public static readonly CellGrid_Registration Instance = new CellGrid_Registration();
 
@@ -691,6 +680,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XCLC;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XCLC);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CellGridBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -724,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CellGridSetterCommon
+    internal partial class CellGridSetterCommon
     {
         public static readonly CellGridSetterCommon Instance = new CellGridSetterCommon();
 
@@ -748,12 +743,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ICellGrid item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XCLC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -764,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellGridCommon
+    internal partial class CellGridCommon
     {
         public static readonly CellGridCommon Instance = new CellGridCommon();
 
@@ -788,62 +783,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CellGrid.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             ICellGridGetter item,
             string? name = null,
             CellGrid.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellGridGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellGrid.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CellGrid =>");
+                sb.AppendLine($"CellGrid =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CellGrid) =>");
+                sb.AppendLine($"{name} (CellGrid) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellGridGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CellGrid.Mask<bool>? printMask = null)
         {
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -882,7 +874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellGridGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellGridGetter obj)
         {
             yield break;
         }
@@ -890,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CellGridSetterTranslationCommon
+    internal partial class CellGridSetterTranslationCommon
     {
         public static readonly CellGridSetterTranslationCommon Instance = new CellGridSetterTranslationCommon();
 
@@ -972,7 +964,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellGrid_Registration.Instance;
-        public static CellGrid_Registration StaticRegistration => CellGrid_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellGridCommon.Instance;
         [DebuggerStepThrough]
@@ -996,11 +988,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CellGridBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellGridBinaryWriteTranslation Instance = new CellGridBinaryWriteTranslation();
+        public static readonly CellGridBinaryWriteTranslation Instance = new CellGridBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICellGridGetter item,
@@ -1018,12 +1010,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ICellGridGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XCLC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1035,7 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellGridGetter)item,
@@ -1045,9 +1037,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CellGridBinaryCreateTranslation
+    internal partial class CellGridBinaryCreateTranslation
     {
-        public readonly static CellGridBinaryCreateTranslation Instance = new CellGridBinaryCreateTranslation();
+        public static readonly CellGridBinaryCreateTranslation Instance = new CellGridBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICellGrid item,
@@ -1070,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICellGridGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellGridBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1083,16 +1075,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CellGridBinaryOverlay :
+    internal partial class CellGridBinaryOverlay :
         PluginBinaryOverlay,
         ICellGridGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellGrid_Registration.Instance;
-        public static CellGrid_Registration StaticRegistration => CellGrid_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellGrid_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellGridCommon.Instance;
         [DebuggerStepThrough]
@@ -1106,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CellGridBinaryWriteTranslation.Instance;
@@ -1114,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellGridBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1122,8 +1114,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public P2Int Point => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
-        public CellGrid.Flag Flags => (CellGrid.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        public P2Int Point => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x8));
+        public CellGrid.Flag Flags => (CellGrid.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1131,25 +1123,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected CellGridBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CellGridBinaryOverlay CellGridFactory(
+        public static ICellGridGetter CellGridFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CellGridBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1158,25 +1155,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static CellGridBinaryOverlay CellGridFactory(
+        public static ICellGridGetter CellGridFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellGridFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellGridMixIn.ToString(
+            CellGridMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

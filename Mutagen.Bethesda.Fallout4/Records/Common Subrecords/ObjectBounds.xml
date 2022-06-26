@@ -6,4 +6,10 @@
       <P3Int16 name="Second" />
     </Fields>
   </Object>
+  <Object name="ObjectBoundsFloat" objType="Subrecord" GUID="86cc3bcc-d956-434b-bfb7-a50f9a311c0a" ID="678">
+    <Fields>
+      <P3Float name="First" />
+      <P3Float name="Second" />
+    </Fields>
+  </Object>
 </Loqui>

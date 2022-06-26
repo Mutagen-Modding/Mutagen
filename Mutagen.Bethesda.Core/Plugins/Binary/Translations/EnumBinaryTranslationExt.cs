@@ -1,71 +1,73 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
-using System;
+using Mutagen.Bethesda.Plugins.Meta;
 
-namespace Mutagen.Bethesda.Plugins.Binary.Translations
+namespace Mutagen.Bethesda.Plugins.Binary.Translations;
+
+public static class EnumBinaryTranslationExt
 {
-    public static class EnumBinaryTranslationExt
+    public static bool Parse<TEnum, TReader>(
+        this EnumBinaryTranslation<TEnum, TReader, MutagenWriter> transl,
+        TReader reader,
+        out TEnum item)
+        where TEnum : struct, Enum, IConvertible
+        where TReader : IMutagenReadStream
     {
-        public static bool Parse<TEnum>(
-            this EnumBinaryTranslation<TEnum, MutagenFrame, MutagenWriter> transl,
-            MutagenFrame reader,
-            out TEnum item)
-            where TEnum : struct, Enum, IConvertible
-        {
-            return transl.Parse(reader, checked((int)reader.Remaining), out item);
-        }
+        return transl.Parse(reader, checked((int)reader.Remaining), out item);
+    }
 
-        public static TEnum Parse<TEnum>(
-            this EnumBinaryTranslation<TEnum, MutagenFrame, MutagenWriter> transl,
-            MutagenFrame reader)
-            where TEnum : struct, Enum, IConvertible
-        {
-            return transl.Parse(reader, checked((int)reader.Remaining));
-        }
+    public static TEnum Parse<TEnum, TReader>(
+        this EnumBinaryTranslation<TEnum, TReader, MutagenWriter> transl,
+        TReader reader)
+        where TEnum : struct, Enum, IConvertible
+        where TReader : IMutagenReadStream
+    {
+        return transl.Parse(reader, checked((int)reader.Remaining));
+    }
 
-        public static void Write<TEnum>(
-            this EnumBinaryTranslation<TEnum, MutagenFrame, MutagenWriter> transl,
-            MutagenWriter writer,
-            TEnum item,
-            RecordType header,
-            long length)
-            where TEnum : struct, Enum, IConvertible
+    public static void Write<TEnum, TReader>(
+        this EnumBinaryTranslation<TEnum, TReader, MutagenWriter> transl,
+        MutagenWriter writer,
+        TEnum item,
+        RecordType header,
+        long length)
+        where TEnum : struct, Enum, IConvertible
+        where TReader : IMutagenReadStream
+    {
+        try
         {
-            try
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
-                {
-                    transl.WriteValue(writer, item, length);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Factory(ex, header);
+                transl.WriteValue(writer, item, length);
             }
         }
-
-        public static void WriteNullable<TEnum>(
-            this EnumBinaryTranslation<TEnum, MutagenFrame, MutagenWriter> transl,
-            MutagenWriter writer,
-            TEnum? item,
-            RecordType header,
-            long length)
-            where TEnum : struct, Enum, IConvertible
+        catch (Exception ex)
         {
-            try
+            throw SubrecordException.Enrich(ex, header);
+        }
+    }
+
+    public static void WriteNullable<TEnum, TReader>(
+        this EnumBinaryTranslation<TEnum, TReader, MutagenWriter> transl,
+        MutagenWriter writer,
+        TEnum? item,
+        RecordType header,
+        long length)
+        where TEnum : struct, Enum, IConvertible
+        where TReader : IMutagenReadStream
+    {
+        try
+        {
+            if (!item.HasValue) return;
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                if (!item.HasValue) return;
-                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
-                {
-                    transl.WriteValue(writer, item.Value, length);
-                }
+                transl.WriteValue(writer, item.Value, length);
             }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Factory(ex, header);
-            }
+        }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
         }
     }
 }

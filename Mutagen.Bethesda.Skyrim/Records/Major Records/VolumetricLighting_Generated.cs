@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,22 +17,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -119,12 +120,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            VolumetricLightingMixIn.ToString(
+            VolumetricLightingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -331,74 +333,69 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(VolumetricLighting.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(VolumetricLighting.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, VolumetricLighting.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, VolumetricLighting.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(VolumetricLighting.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(VolumetricLighting.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Intensity ?? true)
                     {
-                        fg.AppendItem(Intensity, "Intensity");
+                        sb.AppendItem(Intensity, "Intensity");
                     }
                     if (printMask?.CustomColorContribution ?? true)
                     {
-                        fg.AppendItem(CustomColorContribution, "CustomColorContribution");
+                        sb.AppendItem(CustomColorContribution, "CustomColorContribution");
                     }
                     if (printMask?.ColorR ?? true)
                     {
-                        fg.AppendItem(ColorR, "ColorR");
+                        sb.AppendItem(ColorR, "ColorR");
                     }
                     if (printMask?.ColorG ?? true)
                     {
-                        fg.AppendItem(ColorG, "ColorG");
+                        sb.AppendItem(ColorG, "ColorG");
                     }
                     if (printMask?.ColorB ?? true)
                     {
-                        fg.AppendItem(ColorB, "ColorB");
+                        sb.AppendItem(ColorB, "ColorB");
                     }
                     if (printMask?.DensityContribution ?? true)
                     {
-                        fg.AppendItem(DensityContribution, "DensityContribution");
+                        sb.AppendItem(DensityContribution, "DensityContribution");
                     }
                     if (printMask?.DensitySize ?? true)
                     {
-                        fg.AppendItem(DensitySize, "DensitySize");
+                        sb.AppendItem(DensitySize, "DensitySize");
                     }
                     if (printMask?.DensityWindSpeed ?? true)
                     {
-                        fg.AppendItem(DensityWindSpeed, "DensityWindSpeed");
+                        sb.AppendItem(DensityWindSpeed, "DensityWindSpeed");
                     }
                     if (printMask?.DensityFallingSpeed ?? true)
                     {
-                        fg.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
+                        sb.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
                     }
                     if (printMask?.PhaseFunctionContribution ?? true)
                     {
-                        fg.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
+                        sb.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
                     }
                     if (printMask?.PhaseFunctionScattering ?? true)
                     {
-                        fg.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
+                        sb.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
                     }
                     if (printMask?.SamplingRepartitionRangeFactor ?? true)
                     {
-                        fg.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                        sb.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -572,48 +569,63 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Intensity, "Intensity");
-                fg.AppendItem(CustomColorContribution, "CustomColorContribution");
-                fg.AppendItem(ColorR, "ColorR");
-                fg.AppendItem(ColorG, "ColorG");
-                fg.AppendItem(ColorB, "ColorB");
-                fg.AppendItem(DensityContribution, "DensityContribution");
-                fg.AppendItem(DensitySize, "DensitySize");
-                fg.AppendItem(DensityWindSpeed, "DensityWindSpeed");
-                fg.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
-                fg.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
-                fg.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
-                fg.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Intensity, "Intensity");
+                }
+                {
+                    sb.AppendItem(CustomColorContribution, "CustomColorContribution");
+                }
+                {
+                    sb.AppendItem(ColorR, "ColorR");
+                }
+                {
+                    sb.AppendItem(ColorG, "ColorG");
+                }
+                {
+                    sb.AppendItem(ColorB, "ColorB");
+                }
+                {
+                    sb.AppendItem(DensityContribution, "DensityContribution");
+                }
+                {
+                    sb.AppendItem(DensitySize, "DensitySize");
+                }
+                {
+                    sb.AppendItem(DensityWindSpeed, "DensityWindSpeed");
+                }
+                {
+                    sb.AppendItem(DensityFallingSpeed, "DensityFallingSpeed");
+                }
+                {
+                    sb.AppendItem(PhaseFunctionContribution, "PhaseFunctionContribution");
+                }
+                {
+                    sb.AppendItem(PhaseFunctionScattering, "PhaseFunctionScattering");
+                }
+                {
+                    sb.AppendItem(SamplingRepartitionRangeFactor, "SamplingRepartitionRangeFactor");
+                }
             }
             #endregion
 
@@ -795,7 +807,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => VolumetricLightingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -805,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static VolumetricLighting CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VolumetricLighting();
             ((VolumetricLightingSetterCommon)((IVolumetricLightingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -820,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out VolumetricLighting item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -830,7 +842,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -916,26 +928,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IVolumetricLightingGetter item,
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
-            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).ToString(
+            return ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
-            ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).ToString(
+            ((VolumetricLightingCommon)((IVolumetricLightingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1030,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IVolumetricLightingInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((VolumetricLightingSetterCommon)((IVolumetricLightingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1045,10 +1057,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum VolumetricLighting_FieldIndex
+    internal enum VolumetricLighting_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1072,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class VolumetricLighting_Registration : ILoquiRegistration
+    internal partial class VolumetricLighting_Registration : ILoquiRegistration
     {
         public static readonly VolumetricLighting_Registration Instance = new VolumetricLighting_Registration();
 
@@ -1114,6 +1126,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VOLI;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.VOLI);
+            var all = RecordCollection.Factory(
+                RecordTypes.VOLI,
+                RecordTypes.CNAM,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.FNAM,
+                RecordTypes.GNAM,
+                RecordTypes.HNAM,
+                RecordTypes.INAM,
+                RecordTypes.JNAM,
+                RecordTypes.KNAM,
+                RecordTypes.LNAM,
+                RecordTypes.MNAM,
+                RecordTypes.NNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(VolumetricLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1147,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VolumetricLightingSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class VolumetricLightingSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly VolumetricLightingSetterCommon Instance = new VolumetricLightingSetterCommon();
 
@@ -1193,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IVolumetricLightingInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IVolumetricLightingInternal>(
                 record: item,
@@ -1206,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (VolumetricLighting)item,
@@ -1217,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (VolumetricLighting)item,
@@ -1228,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VolumetricLightingCommon : SkyrimMajorRecordCommon
+    internal partial class VolumetricLightingCommon : SkyrimMajorRecordCommon
     {
         public new static readonly VolumetricLightingCommon Instance = new VolumetricLightingCommon();
 
@@ -1252,7 +1284,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VolumetricLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Intensity = item.Intensity.EqualsWithin(rhs.Intensity);
             ret.CustomColorContribution = item.CustomColorContribution.EqualsWithin(rhs.CustomColorContribution);
             ret.ColorR = item.ColorR.EqualsWithin(rhs.ColorR);
@@ -1268,113 +1299,111 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IVolumetricLightingGetter item,
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VolumetricLighting =>");
+                sb.AppendLine($"VolumetricLighting =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VolumetricLighting) =>");
+                sb.AppendLine($"{name} (VolumetricLighting) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             VolumetricLighting.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Intensity ?? true)
                 && item.Intensity is {} IntensityItem)
             {
-                fg.AppendItem(IntensityItem, "Intensity");
+                sb.AppendItem(IntensityItem, "Intensity");
             }
             if ((printMask?.CustomColorContribution ?? true)
                 && item.CustomColorContribution is {} CustomColorContributionItem)
             {
-                fg.AppendItem(CustomColorContributionItem, "CustomColorContribution");
+                sb.AppendItem(CustomColorContributionItem, "CustomColorContribution");
             }
             if ((printMask?.ColorR ?? true)
                 && item.ColorR is {} ColorRItem)
             {
-                fg.AppendItem(ColorRItem, "ColorR");
+                sb.AppendItem(ColorRItem, "ColorR");
             }
             if ((printMask?.ColorG ?? true)
                 && item.ColorG is {} ColorGItem)
             {
-                fg.AppendItem(ColorGItem, "ColorG");
+                sb.AppendItem(ColorGItem, "ColorG");
             }
             if ((printMask?.ColorB ?? true)
                 && item.ColorB is {} ColorBItem)
             {
-                fg.AppendItem(ColorBItem, "ColorB");
+                sb.AppendItem(ColorBItem, "ColorB");
             }
             if ((printMask?.DensityContribution ?? true)
                 && item.DensityContribution is {} DensityContributionItem)
             {
-                fg.AppendItem(DensityContributionItem, "DensityContribution");
+                sb.AppendItem(DensityContributionItem, "DensityContribution");
             }
             if ((printMask?.DensitySize ?? true)
                 && item.DensitySize is {} DensitySizeItem)
             {
-                fg.AppendItem(DensitySizeItem, "DensitySize");
+                sb.AppendItem(DensitySizeItem, "DensitySize");
             }
             if ((printMask?.DensityWindSpeed ?? true)
                 && item.DensityWindSpeed is {} DensityWindSpeedItem)
             {
-                fg.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
+                sb.AppendItem(DensityWindSpeedItem, "DensityWindSpeed");
             }
             if ((printMask?.DensityFallingSpeed ?? true)
                 && item.DensityFallingSpeed is {} DensityFallingSpeedItem)
             {
-                fg.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
+                sb.AppendItem(DensityFallingSpeedItem, "DensityFallingSpeed");
             }
             if ((printMask?.PhaseFunctionContribution ?? true)
                 && item.PhaseFunctionContribution is {} PhaseFunctionContributionItem)
             {
-                fg.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
+                sb.AppendItem(PhaseFunctionContributionItem, "PhaseFunctionContribution");
             }
             if ((printMask?.PhaseFunctionScattering ?? true)
                 && item.PhaseFunctionScattering is {} PhaseFunctionScatteringItem)
             {
-                fg.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
+                sb.AppendItem(PhaseFunctionScatteringItem, "PhaseFunctionScattering");
             }
             if ((printMask?.SamplingRepartitionRangeFactor ?? true)
                 && item.SamplingRepartitionRangeFactor is {} SamplingRepartitionRangeFactorItem)
             {
-                fg.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
+                sb.AppendItem(SamplingRepartitionRangeFactorItem, "SamplingRepartitionRangeFactor");
             }
         }
         
@@ -1571,9 +1600,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVolumetricLightingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVolumetricLightingGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1618,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VolumetricLightingSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class VolumetricLightingSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly VolumetricLightingSetterTranslationCommon Instance = new VolumetricLightingSetterTranslationCommon();
 
@@ -1821,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1839,18 +1868,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class VolumetricLightingBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static VolumetricLightingBinaryWriteTranslation Instance = new VolumetricLightingBinaryWriteTranslation();
+        public new static readonly VolumetricLightingBinaryWriteTranslation Instance = new VolumetricLightingBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IVolumetricLightingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1909,7 +1938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IVolumetricLightingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1920,12 +1949,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1937,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IVolumetricLightingGetter)item,
@@ -1948,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IVolumetricLightingGetter)item,
@@ -1959,7 +1991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IVolumetricLightingGetter)item,
@@ -1969,9 +2001,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class VolumetricLightingBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class VolumetricLightingBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static VolumetricLightingBinaryCreateTranslation Instance = new VolumetricLightingBinaryCreateTranslation();
+        public new static readonly VolumetricLightingBinaryCreateTranslation Instance = new VolumetricLightingBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.VOLI;
         public static void FillBinaryStructs(
@@ -1990,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2074,7 +2106,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2091,16 +2124,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VolumetricLightingBinaryOverlay :
+    internal partial class VolumetricLightingBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IVolumetricLightingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VolumetricLighting_Registration.Instance;
-        public new static VolumetricLighting_Registration StaticRegistration => VolumetricLighting_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -2108,13 +2141,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VolumetricLightingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2126,51 +2159,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Intensity
         private int? _IntensityLocation;
-        public Single? Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region CustomColorContribution
         private int? _CustomColorContributionLocation;
-        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CustomColorContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CustomColorContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorR
         private int? _ColorRLocation;
-        public Single? ColorR => _ColorRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorR => _ColorRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorG
         private int? _ColorGLocation;
-        public Single? ColorG => _ColorGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorGLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorG => _ColorGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorGLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorB
         private int? _ColorBLocation;
-        public Single? ColorB => _ColorBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? ColorB => _ColorBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityContribution
         private int? _DensityContributionLocation;
-        public Single? DensityContribution => _DensityContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensityContribution => _DensityContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensityContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensitySize
         private int? _DensitySizeLocation;
-        public Single? DensitySize => _DensitySizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensitySizeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensitySize => _DensitySizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensitySizeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityWindSpeed
         private int? _DensityWindSpeedLocation;
-        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityWindSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensityWindSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityFallingSpeed
         private int? _DensityFallingSpeedLocation;
-        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region PhaseFunctionContribution
         private int? _PhaseFunctionContributionLocation;
-        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region PhaseFunctionScattering
         private int? _PhaseFunctionScatteringLocation;
-        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region SamplingRepartitionRangeFactor
         private int? _SamplingRepartitionRangeFactorLocation;
-        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2179,28 +2212,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected VolumetricLightingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static VolumetricLightingBinaryOverlay VolumetricLightingFactory(
+        public static IVolumetricLightingGetter VolumetricLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new VolumetricLightingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2210,20 +2246,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static VolumetricLightingBinaryOverlay VolumetricLightingFactory(
+        public static IVolumetricLightingGetter VolumetricLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return VolumetricLightingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2233,9 +2269,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CNAM:
@@ -2305,17 +2341,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            VolumetricLightingMixIn.ToString(
+            VolumetricLightingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using Xunit;
 using Stream = System.IO.Stream;
 using MemoryStream = System.IO.MemoryStream;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary.Streams;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Streams;
 
-public class CompositeStream_Tests
+public class CompositeStreamTests
 {
     const int TotalLength = 32;
     IEnumerable<Stream> TypicalStreams()

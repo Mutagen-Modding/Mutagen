@@ -6,7 +6,7 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <RefDirect name="Icons" refName="Icons" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
       <Data>
         <Fields>
           <Bool name="Trait" />
@@ -54,6 +54,13 @@
     <Fields>
       <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
       <Float name="Value" recordType="EPFD" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointModifyValues" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="713d5cb2-a407-4929-aff0-7c321a2a99be" ID="485">
+    <Fields>
+      <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
+      <Float name="Value" nullable="True" />
+      <Float name="Value2" nullable="True" />
     </Fields>
   </Object>
   <Object name="PerkEntryPointAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="a626d85f-ad59-47fc-b686-15e424b8ec6f" ID="418">
@@ -104,7 +111,7 @@
   <Object name="PerkCondition" objType="Subrecord" GUID="7285d8f7-190a-41a1-886f-476554337e90" ID="416">
     <Fields>
       <UInt8 name="RunOnTabIndex" nullable="False" recordType="PRKC" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
   <Object name="PerkScriptFlag" objType="Subrecord" recordType="EPF3" GUID="2eef81ee-00f4-466e-9b42-aab9ab42b981" ID="426">
@@ -120,7 +127,7 @@
   </Object>
   <Object name="PerkScriptFragments" objType="Subrecord" GUID="111c1431-8ddc-44ab-83e1-8acac57ea4f2" ID="430">
     <Fields>
-      <Int8 name="Unknown" />
+      <UInt8 name="ExtraBindDataVersion" default="2" />
       <String name="FileName" binaryType="PrependLengthUShort" />
       <RefList name="Fragments" refName="IndexedScriptFragment" counterLength="2" binaryOverlay="Custom" />
     </Fields>

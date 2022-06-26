@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +75,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LayerHeaderMixIn.ToString(
+            LayerHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -201,38 +203,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LayerHeader.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LayerHeader.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LayerHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LayerHeader.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LayerHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LayerHeader.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendItem(Texture, "Texture");
+                        sb.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.Quadrant ?? true)
                     {
-                        fg.AppendItem(Quadrant, "Quadrant");
+                        sb.AppendItem(Quadrant, "Quadrant");
                     }
                     if (printMask?.LayerNumber ?? true)
                     {
-                        fg.AppendItem(LayerNumber, "LayerNumber");
+                        sb.AppendItem(LayerNumber, "LayerNumber");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -327,38 +324,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Texture, "Texture");
-                fg.AppendItem(Quadrant, "Quadrant");
-                fg.AppendItem(LayerNumber, "LayerNumber");
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
+                {
+                    sb.AppendItem(Quadrant, "Quadrant");
+                }
+                {
+                    sb.AppendItem(LayerNumber, "LayerNumber");
+                }
             }
             #endregion
 
@@ -437,8 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LayerHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerHeaderCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -449,7 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -459,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LayerHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LayerHeader();
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -474,7 +467,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LayerHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -484,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -556,26 +549,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILayerHeaderGetter item,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).ToString(
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).ToString(
+            ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -681,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILayerHeaderInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -696,10 +689,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LayerHeader_FieldIndex
+    internal enum LayerHeader_FieldIndex
     {
         Texture = 0,
         Quadrant = 1,
@@ -708,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LayerHeader_Registration : ILoquiRegistration
+    internal partial class LayerHeader_Registration : ILoquiRegistration
     {
         public static readonly LayerHeader_Registration Instance = new LayerHeader_Registration();
 
@@ -750,6 +743,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.BTXT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.BTXT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LayerHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -783,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LayerHeaderSetterCommon
+    internal partial class LayerHeaderSetterCommon
     {
         public static readonly LayerHeaderSetterCommon Instance = new LayerHeaderSetterCommon();
 
@@ -808,12 +807,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILayerHeaderInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.BTXT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -824,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LayerHeaderCommon
+    internal partial class LayerHeaderCommon
     {
         public static readonly LayerHeaderCommon Instance = new LayerHeaderCommon();
 
@@ -848,67 +847,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LayerHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Texture = item.Texture.Equals(rhs.Texture);
             ret.Quadrant = item.Quadrant == rhs.Quadrant;
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
         }
         
-        public string ToString(
+        public string Print(
             ILayerHeaderGetter item,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LayerHeader =>");
+                sb.AppendLine($"LayerHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LayerHeader) =>");
+                sb.AppendLine($"{name} (LayerHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LayerHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture.FormKey, "Texture");
+                sb.AppendItem(item.Texture.FormKey, "Texture");
             }
             if (printMask?.Quadrant ?? true)
             {
-                fg.AppendItem(item.Quadrant, "Quadrant");
+                sb.AppendItem(item.Quadrant, "Quadrant");
             }
             if (printMask?.LayerNumber ?? true)
             {
-                fg.AppendItem(item.LayerNumber, "LayerNumber");
+                sb.AppendItem(item.LayerNumber, "LayerNumber");
             }
         }
         
@@ -952,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILayerHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILayerHeaderGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Texture);
             yield break;
@@ -961,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LayerHeaderSetterTranslationCommon
+    internal partial class LayerHeaderSetterTranslationCommon
     {
         public static readonly LayerHeaderSetterTranslationCommon Instance = new LayerHeaderSetterTranslationCommon();
 
@@ -1062,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1086,11 +1082,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LayerHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
+        public static readonly LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILayerHeaderGetter item,
@@ -1109,12 +1105,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILayerHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.BTXT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1126,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILayerHeaderGetter)item,
@@ -1136,9 +1132,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LayerHeaderBinaryCreateTranslation
+    internal partial class LayerHeaderBinaryCreateTranslation
     {
-        public readonly static LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
+        public static readonly LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILayerHeaderInternal item,
@@ -1162,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILayerHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1175,16 +1171,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LayerHeaderBinaryOverlay :
+    internal partial class LayerHeaderBinaryOverlay :
         PluginBinaryOverlay,
         ILayerHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1198,16 +1194,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerHeaderCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LayerHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1215,9 +1211,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
-        public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public IFormLinkGetter<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x4, 0x2));
+        public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1225,25 +1221,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected LayerHeaderBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LayerHeaderBinaryOverlay LayerHeaderFactory(
+        public static ILayerHeaderGetter LayerHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LayerHeaderBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1252,25 +1253,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static LayerHeaderBinaryOverlay LayerHeaderFactory(
+        public static ILayerHeaderGetter LayerHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LayerHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LayerHeaderMixIn.ToString(
+            LayerHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

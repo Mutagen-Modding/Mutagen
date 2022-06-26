@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,22 +18,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -54,9 +55,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public StoryManagerQuestNode.QuestFlag? Flags { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        StoryManagerQuestNode.QuestFlag? IStoryManagerQuestNodeGetter.Flags => this.Flags;
+        public AStoryManagerNode.Flag Flags { get; set; } = default;
+        #endregion
+        #region QuestFlags
+        public StoryManagerQuestNode.QuestFlag QuestFlags { get; set; } = default;
         #endregion
         #region MaxConcurrentQuests
         public UInt32? MaxConcurrentQuests { get; set; }
@@ -82,15 +84,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+        #region DNAMDataTypeState
+        public StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            StoryManagerQuestNodeMixIn.ToString(
+            StoryManagerQuestNodeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -107,9 +113,11 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Flags = initialValue;
+                this.QuestFlags = initialValue;
                 this.MaxConcurrentQuests = initialValue;
                 this.MaxNumQuestsToRun = initialValue;
                 this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -123,9 +131,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PreviousSibling,
                 TItem Conditions,
                 TItem Flags,
+                TItem QuestFlags,
                 TItem MaxConcurrentQuests,
                 TItem MaxNumQuestsToRun,
-                TItem Quests)
+                TItem Quests,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -138,9 +148,11 @@ namespace Mutagen.Bethesda.Skyrim
                 Conditions: Conditions)
             {
                 this.Flags = Flags;
+                this.QuestFlags = QuestFlags;
                 this.MaxConcurrentQuests = MaxConcurrentQuests;
                 this.MaxNumQuestsToRun = MaxNumQuestsToRun;
                 this.Quests = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>(Quests, Enumerable.Empty<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>());
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -153,9 +165,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Flags;
+            public TItem QuestFlags;
             public TItem MaxConcurrentQuests;
             public TItem MaxNumQuestsToRun;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, StoryManagerQuest.Mask<TItem>?>>?>? Quests;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -170,18 +184,22 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.QuestFlags, rhs.QuestFlags)) return false;
                 if (!object.Equals(this.MaxConcurrentQuests, rhs.MaxConcurrentQuests)) return false;
                 if (!object.Equals(this.MaxNumQuestsToRun, rhs.MaxNumQuestsToRun)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Flags);
+                hash.Add(this.QuestFlags);
                 hash.Add(this.MaxConcurrentQuests);
                 hash.Add(this.MaxNumQuestsToRun);
                 hash.Add(this.Quests);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -193,6 +211,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Flags)) return false;
+                if (!eval(this.QuestFlags)) return false;
                 if (!eval(this.MaxConcurrentQuests)) return false;
                 if (!eval(this.MaxNumQuestsToRun)) return false;
                 if (this.Quests != null)
@@ -207,6 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -216,6 +236,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Flags)) return true;
+                if (eval(this.QuestFlags)) return true;
                 if (eval(this.MaxConcurrentQuests)) return true;
                 if (eval(this.MaxNumQuestsToRun)) return true;
                 if (this.Quests != null)
@@ -230,6 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -246,6 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Flags = eval(this.Flags);
+                obj.QuestFlags = eval(this.QuestFlags);
                 obj.MaxConcurrentQuests = eval(this.MaxConcurrentQuests);
                 obj.MaxNumQuestsToRun = eval(this.MaxNumQuestsToRun);
                 if (Quests != null)
@@ -255,73 +278,73 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>>();
                         obj.Quests.Specific = l;
-                        foreach (var item in Quests.Specific.WithIndex())
+                        foreach (var item in Quests.Specific)
                         {
-                            MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, StoryManagerQuest.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(StoryManagerQuestNode.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(StoryManagerQuestNode.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, StoryManagerQuestNode.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, StoryManagerQuestNode.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(StoryManagerQuestNode.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(StoryManagerQuestNode.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.QuestFlags ?? true)
+                    {
+                        sb.AppendItem(QuestFlags, "QuestFlags");
                     }
                     if (printMask?.MaxConcurrentQuests ?? true)
                     {
-                        fg.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
+                        sb.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
                     }
                     if (printMask?.MaxNumQuestsToRun ?? true)
                     {
-                        fg.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
+                        sb.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
                     }
                     if ((printMask?.Quests?.Overall ?? true)
                         && Quests is {} QuestsItem)
                     {
-                        fg.AppendLine("Quests =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Quests =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(QuestsItem.Overall);
+                            sb.AppendItem(QuestsItem.Overall);
                             if (QuestsItem.Specific != null)
                             {
                                 foreach (var subItem in QuestsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -333,9 +356,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? Flags;
+            public Exception? QuestFlags;
             public Exception? MaxConcurrentQuests;
             public Exception? MaxNumQuestsToRun;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>? Quests;
+            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -346,12 +371,16 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case StoryManagerQuestNode_FieldIndex.Flags:
                         return Flags;
+                    case StoryManagerQuestNode_FieldIndex.QuestFlags:
+                        return QuestFlags;
                     case StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests:
                         return MaxConcurrentQuests;
                     case StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun:
                         return MaxNumQuestsToRun;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         return Quests;
+                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -365,6 +394,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case StoryManagerQuestNode_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
+                    case StoryManagerQuestNode_FieldIndex.QuestFlags:
+                        this.QuestFlags = ex;
+                        break;
                     case StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests:
                         this.MaxConcurrentQuests = ex;
                         break;
@@ -373,6 +405,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         this.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ex, null);
+                        break;
+                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -388,6 +423,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case StoryManagerQuestNode_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
+                    case StoryManagerQuestNode_FieldIndex.QuestFlags:
+                        this.QuestFlags = (Exception?)obj;
+                        break;
                     case StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests:
                         this.MaxConcurrentQuests = (Exception?)obj;
                         break;
@@ -396,6 +434,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case StoryManagerQuestNode_FieldIndex.Quests:
                         this.Quests = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>)obj;
+                        break;
+                    case StoryManagerQuestNode_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -407,68 +448,69 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Flags != null) return true;
+                if (QuestFlags != null) return true;
                 if (MaxConcurrentQuests != null) return true;
                 if (MaxNumQuestsToRun != null) return true;
                 if (Quests != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
-                fg.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(QuestFlags, "QuestFlags");
+                }
+                {
+                    sb.AppendItem(MaxConcurrentQuests, "MaxConcurrentQuests");
+                }
+                {
+                    sb.AppendItem(MaxNumQuestsToRun, "MaxNumQuestsToRun");
+                }
                 if (Quests is {} QuestsItem)
                 {
-                    fg.AppendLine("Quests =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Quests =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(QuestsItem.Overall);
+                        sb.AppendItem(QuestsItem.Overall);
                         if (QuestsItem.Specific != null)
                         {
                             foreach (var subItem in QuestsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                 }
             }
             #endregion
@@ -479,9 +521,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.QuestFlags = this.QuestFlags.Combine(rhs.QuestFlags);
                 ret.MaxConcurrentQuests = this.MaxConcurrentQuests.Combine(rhs.MaxConcurrentQuests);
                 ret.MaxNumQuestsToRun = this.MaxNumQuestsToRun.Combine(rhs.MaxNumQuestsToRun);
                 ret.Quests = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, StoryManagerQuest.ErrorMask?>>?>(ExceptionExt.Combine(this.Quests?.Overall, rhs.Quests?.Overall), ExceptionExt.Combine(this.Quests?.Specific, rhs.Quests?.Specific));
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -505,9 +549,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Flags;
+            public bool QuestFlags;
             public bool MaxConcurrentQuests;
             public bool MaxNumQuestsToRun;
             public StoryManagerQuest.TranslationMask? Quests;
+            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -517,8 +563,10 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.Flags = defaultOn;
+                this.QuestFlags = defaultOn;
                 this.MaxConcurrentQuests = defaultOn;
                 this.MaxNumQuestsToRun = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -527,9 +575,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Flags, null));
+                ret.Add((QuestFlags, null));
                 ret.Add((MaxConcurrentQuests, null));
                 ret.Add((MaxNumQuestsToRun, null));
                 ret.Add((Quests == null ? DefaultOn : !Quests.GetCrystal().CopyNothing, Quests?.GetCrystal()));
+                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -542,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = StoryManagerQuestNode_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StoryManagerQuestNodeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StoryManagerQuestNodeCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public StoryManagerQuestNode(
             FormKey formKey,
@@ -593,6 +643,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         protected override Type LinkType => typeof(IStoryManagerQuestNode);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -620,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => StoryManagerQuestNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StoryManagerQuestNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -630,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static StoryManagerQuestNode CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new StoryManagerQuestNode();
             ((StoryManagerQuestNodeSetterCommon)((IStoryManagerQuestNodeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -645,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out StoryManagerQuestNode item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -655,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -677,10 +731,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IStoryManagerQuestNodeInternal>,
         IStoryManagerQuestNodeGetter
     {
-        new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
+        new AStoryManagerNode.Flag Flags { get; set; }
+        new StoryManagerQuestNode.QuestFlag QuestFlags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
         new UInt32? MaxNumQuestsToRun { get; set; }
         new ExtendedList<StoryManagerQuest> Quests { get; }
+        new StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IStoryManagerQuestNodeInternal :
@@ -699,10 +755,12 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IStoryManagerQuestNodeGetter>
     {
         static new ILoquiRegistration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
-        StoryManagerQuestNode.QuestFlag? Flags { get; }
+        AStoryManagerNode.Flag Flags { get; }
+        StoryManagerQuestNode.QuestFlag QuestFlags { get; }
         UInt32? MaxConcurrentQuests { get; }
         UInt32? MaxNumQuestsToRun { get; }
         IReadOnlyList<IStoryManagerQuestGetter> Quests { get; }
+        StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -727,26 +785,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IStoryManagerQuestNodeGetter item,
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
-            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).ToString(
+            return ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IStoryManagerQuestNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
-            ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).ToString(
+            ((StoryManagerQuestNodeCommon)((IStoryManagerQuestNodeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -841,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IStoryManagerQuestNodeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((StoryManagerQuestNodeSetterCommon)((IStoryManagerQuestNodeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -856,10 +914,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum StoryManagerQuestNode_FieldIndex
+    internal enum StoryManagerQuestNode_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -871,14 +929,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         PreviousSibling = 7,
         Conditions = 8,
         Flags = 9,
-        MaxConcurrentQuests = 10,
-        MaxNumQuestsToRun = 11,
-        Quests = 12,
+        QuestFlags = 10,
+        MaxConcurrentQuests = 11,
+        MaxNumQuestsToRun = 12,
+        Quests = 13,
+        DNAMDataTypeState = 14,
     }
     #endregion
 
     #region Registration
-    public partial class StoryManagerQuestNode_Registration : ILoquiRegistration
+    internal partial class StoryManagerQuestNode_Registration : ILoquiRegistration
     {
         public static readonly StoryManagerQuestNode_Registration Instance = new StoryManagerQuestNode_Registration();
 
@@ -891,9 +951,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "2f1031e5-dcff-4f22-aad3-7472e3300692";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(StoryManagerQuestNode.Mask<>);
 
@@ -920,6 +980,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SMQN;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.SMQN);
+            var all = RecordCollection.Factory(
+                RecordTypes.SMQN,
+                RecordTypes.DNAM,
+                RecordTypes.XNAM,
+                RecordTypes.MNAM,
+                RecordTypes.NNAM,
+                RecordTypes.FNAM,
+                RecordTypes.RNAM,
+                RecordTypes.QNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(StoryManagerQuestNodeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -953,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class StoryManagerQuestNodeSetterCommon : AStoryManagerNodeSetterCommon
+    internal partial class StoryManagerQuestNodeSetterCommon : AStoryManagerNodeSetterCommon
     {
         public new static readonly StoryManagerQuestNodeSetterCommon Instance = new StoryManagerQuestNodeSetterCommon();
 
@@ -963,9 +1038,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Flags = default;
+            item.QuestFlags = default;
             item.MaxConcurrentQuests = default;
             item.MaxNumQuestsToRun = default;
             item.Quests.Clear();
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -997,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IStoryManagerQuestNodeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IStoryManagerQuestNodeInternal>(
                 record: item,
@@ -1010,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAStoryManagerNodeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (StoryManagerQuestNode)item,
@@ -1021,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (StoryManagerQuestNode)item,
@@ -1032,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (StoryManagerQuestNode)item,
@@ -1043,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerQuestNodeCommon : AStoryManagerNodeCommon
+    internal partial class StoryManagerQuestNodeCommon : AStoryManagerNodeCommon
     {
         public new static readonly StoryManagerQuestNodeCommon Instance = new StoryManagerQuestNodeCommon();
 
@@ -1067,97 +1144,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             StoryManagerQuestNode.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
+            ret.QuestFlags = item.QuestFlags == rhs.QuestFlags;
             ret.MaxConcurrentQuests = item.MaxConcurrentQuests == rhs.MaxConcurrentQuests;
             ret.MaxNumQuestsToRun = item.MaxNumQuestsToRun == rhs.MaxNumQuestsToRun;
             ret.Quests = item.Quests.CollectionEqualsHelper(
                 rhs.Quests,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IStoryManagerQuestNodeGetter item,
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IStoryManagerQuestNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"StoryManagerQuestNode =>");
+                sb.AppendLine($"StoryManagerQuestNode =>");
             }
             else
             {
-                fg.AppendLine($"{name} (StoryManagerQuestNode) =>");
+                sb.AppendLine($"{name} (StoryManagerQuestNode) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IStoryManagerQuestNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             StoryManagerQuestNode.Mask<bool>? printMask = null)
         {
             AStoryManagerNodeCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
-            if ((printMask?.Flags ?? true)
-                && item.Flags is {} FlagsItem)
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.QuestFlags ?? true)
+            {
+                sb.AppendItem(item.QuestFlags, "QuestFlags");
             }
             if ((printMask?.MaxConcurrentQuests ?? true)
                 && item.MaxConcurrentQuests is {} MaxConcurrentQuestsItem)
             {
-                fg.AppendItem(MaxConcurrentQuestsItem, "MaxConcurrentQuests");
+                sb.AppendItem(MaxConcurrentQuestsItem, "MaxConcurrentQuests");
             }
             if ((printMask?.MaxNumQuestsToRun ?? true)
                 && item.MaxNumQuestsToRun is {} MaxNumQuestsToRunItem)
             {
-                fg.AppendItem(MaxNumQuestsToRunItem, "MaxNumQuestsToRun");
+                sb.AppendItem(MaxNumQuestsToRunItem, "MaxNumQuestsToRun");
             }
             if (printMask?.Quests?.Overall ?? true)
             {
-                fg.AppendLine("Quests =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Quests =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Quests)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1238,6 +1317,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.QuestFlags) ?? true))
+            {
+                if (lhs.QuestFlags != rhs.QuestFlags) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests) ?? true))
             {
                 if (lhs.MaxConcurrentQuests != rhs.MaxConcurrentQuests) return false;
@@ -1248,7 +1331,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Quests) ?? true))
             {
-                if (!lhs.Quests.SequenceEqualNullable(rhs.Quests)) return false;
+                if (!lhs.Quests.SequenceEqual(rhs.Quests, (l, r) => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)StoryManagerQuestNode_FieldIndex.Quests)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             }
             return true;
         }
@@ -1289,10 +1376,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IStoryManagerQuestNodeGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags is {} Flagsitem)
-            {
-                hash.Add(Flagsitem);
-            }
+            hash.Add(item.Flags);
+            hash.Add(item.QuestFlags);
             if (item.MaxConcurrentQuests is {} MaxConcurrentQuestsitem)
             {
                 hash.Add(MaxConcurrentQuestsitem);
@@ -1302,6 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(MaxNumQuestsToRunitem);
             }
             hash.Add(item.Quests);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1330,13 +1416,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IStoryManagerQuestNodeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IStoryManagerQuestNodeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Quests.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Quests.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1392,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerQuestNodeSetterTranslationCommon : AStoryManagerNodeSetterTranslationCommon
+    internal partial class StoryManagerQuestNodeSetterTranslationCommon : AStoryManagerNodeSetterTranslationCommon
     {
         public new static readonly StoryManagerQuestNodeSetterTranslationCommon Instance = new StoryManagerQuestNodeSetterTranslationCommon();
 
@@ -1429,6 +1515,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
+            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.QuestFlags) ?? true))
+            {
+                item.QuestFlags = rhs.QuestFlags;
+            }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests) ?? true))
             {
                 item.MaxConcurrentQuests = rhs.MaxConcurrentQuests;
@@ -1460,6 +1550,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -1613,7 +1707,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuestNode_Registration.Instance;
-        public new static StoryManagerQuestNode_Registration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerQuestNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1631,28 +1725,43 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class StoryManagerQuestNodeBinaryWriteTranslation :
         AStoryManagerNodeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static StoryManagerQuestNodeBinaryWriteTranslation Instance = new StoryManagerQuestNodeBinaryWriteTranslation();
+        public new static readonly StoryManagerQuestNodeBinaryWriteTranslation Instance = new StoryManagerQuestNodeBinaryWriteTranslation();
+
+        public static void WriteEmbedded(
+            IStoryManagerQuestNodeGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public static void WriteRecordTypes(
             IStoryManagerQuestNodeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             AStoryManagerNodeBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer,
-                item.Flags,
-                length: 4,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                EnumBinaryTranslation<AStoryManagerNode.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 2);
+                EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.QuestFlags,
+                    length: 2);
+            }
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaxConcurrentQuests,
@@ -1666,7 +1775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Quests,
                 counterType: RecordTypes.QNAM,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IStoryManagerQuestGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IStoryManagerQuestGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((StoryManagerQuestBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1679,7 +1788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IStoryManagerQuestNodeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1687,15 +1796,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 try
                 {
-                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1707,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IStoryManagerQuestNodeGetter)item,
@@ -1718,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAStoryManagerNodeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IStoryManagerQuestNodeGetter)item,
@@ -1729,7 +1841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IStoryManagerQuestNodeGetter)item,
@@ -1740,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IStoryManagerQuestNodeGetter)item,
@@ -1750,9 +1862,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class StoryManagerQuestNodeBinaryCreateTranslation : AStoryManagerNodeBinaryCreateTranslation
+    internal partial class StoryManagerQuestNodeBinaryCreateTranslation : AStoryManagerNodeBinaryCreateTranslation
     {
-        public new readonly static StoryManagerQuestNodeBinaryCreateTranslation Instance = new StoryManagerQuestNodeBinaryCreateTranslation();
+        public new static readonly StoryManagerQuestNodeBinaryCreateTranslation Instance = new StoryManagerQuestNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SMQN;
         public static void FillBinaryStructs(
@@ -1771,7 +1883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1779,10 +1891,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)StoryManagerQuestNode_FieldIndex.Flags;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Flags = EnumBinaryTranslation<AStoryManagerNode.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    item.QuestFlags = EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    return (int)StoryManagerQuestNode_FieldIndex.QuestFlags;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -1806,7 +1922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.QNAM,
-                            triggeringRecord: StoryManagerQuest_Registration.TriggeringRecordTypes,
+                            triggeringRecord: StoryManagerQuest_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: StoryManagerQuest.TryCreateFromBinary));
                     return (int)StoryManagerQuestNode_FieldIndex.Quests;
@@ -1818,7 +1934,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1835,16 +1952,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class StoryManagerQuestNodeBinaryOverlay :
+    internal partial class StoryManagerQuestNodeBinaryOverlay :
         AStoryManagerNodeBinaryOverlay,
         IStoryManagerQuestNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => StoryManagerQuestNode_Registration.Instance;
-        public new static StoryManagerQuestNode_Registration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => StoryManagerQuestNode_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => StoryManagerQuestNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1852,14 +1969,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => StoryManagerQuestNodeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StoryManagerQuestNodeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => StoryManagerQuestNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((StoryManagerQuestNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1869,19 +1986,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override Type LinkType => typeof(IStoryManagerQuestNode);
 
 
+        private RangeInt32? _DNAMLocation;
+        public StoryManagerQuestNode.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Flags
-        private int? _FlagsLocation;
-        public StoryManagerQuestNode.QuestFlag? Flags => _FlagsLocation.HasValue ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(StoryManagerQuestNode.QuestFlag?);
+        private int _FlagsLocation => _DNAMLocation!.Value.Min;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public AStoryManagerNode.Flag Flags => _Flags_IsSet ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        #endregion
+        #region QuestFlags
+        private int _QuestFlagsLocation => _DNAMLocation!.Value.Min + 0x2;
+        private bool _QuestFlags_IsSet => _DNAMLocation.HasValue;
+        public StoryManagerQuestNode.QuestFlag QuestFlags => _QuestFlags_IsSet ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_QuestFlagsLocation, 0x2)) : default;
         #endregion
         #region MaxConcurrentQuests
         private int? _MaxConcurrentQuestsLocation;
-        public UInt32? MaxConcurrentQuests => _MaxConcurrentQuestsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaxConcurrentQuestsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? MaxConcurrentQuests => _MaxConcurrentQuestsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxConcurrentQuestsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region MaxNumQuestsToRun
         private int? _MaxNumQuestsToRunLocation;
-        public UInt32? MaxNumQuestsToRun => _MaxNumQuestsToRunLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaxNumQuestsToRunLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? MaxNumQuestsToRun => _MaxNumQuestsToRunLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxNumQuestsToRunLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = ListExt.Empty<StoryManagerQuestBinaryOverlay>();
+        public IReadOnlyList<IStoryManagerQuestGetter> Quests { get; private set; } = Array.Empty<IStoryManagerQuestGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1889,28 +2014,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected StoryManagerQuestNodeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static StoryManagerQuestNodeBinaryOverlay StoryManagerQuestNodeFactory(
+        public static IStoryManagerQuestNodeGetter StoryManagerQuestNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new StoryManagerQuestNodeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1920,20 +2048,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static StoryManagerQuestNodeBinaryOverlay StoryManagerQuestNodeFactory(
+        public static IStoryManagerQuestNodeGetter StoryManagerQuestNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return StoryManagerQuestNodeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1943,15 +2071,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DNAM:
                 {
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)StoryManagerQuestNode_FieldIndex.Flags;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)StoryManagerQuestNode_FieldIndex.QuestFlags;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -1968,13 +2096,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.QNAM:
                 {
-                    this.Quests = BinaryOverlayList.FactoryByCountPerItem<StoryManagerQuestBinaryOverlay>(
+                    this.Quests = BinaryOverlayList.FactoryByCountPerItem<IStoryManagerQuestGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: StoryManagerQuest_Registration.TriggeringRecordTypes,
+                        trigger: StoryManagerQuest_Registration.TriggerSpecs,
                         countType: RecordTypes.QNAM,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => StoryManagerQuestBinaryOverlay.StoryManagerQuestFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)StoryManagerQuestNode_FieldIndex.Quests;
@@ -1986,17 +2114,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            StoryManagerQuestNodeMixIn.ToString(
+            StoryManagerQuestNodeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,31 +5,33 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageDataFloatMixIn.ToString(
+            PackageDataFloatMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -177,30 +180,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PackageDataFloat.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PackageDataFloat.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PackageDataFloat.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PackageDataFloat.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PackageDataFloat.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PackageDataFloat.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -264,37 +262,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Data, "Data");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -359,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PackageDataFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageDataFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -369,7 +360,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PackageDataFloat CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageDataFloat();
             ((PackageDataFloatSetterCommon)((IPackageDataFloatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -384,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageDataFloat item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -394,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -453,26 +444,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPackageDataFloatGetter item,
             string? name = null,
             PackageDataFloat.Mask<bool>? printMask = null)
         {
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).ToString(
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPackageDataFloatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageDataFloat.Mask<bool>? printMask = null)
         {
-            ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).ToString(
+            ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -553,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPackageDataFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageDataFloatSetterCommon)((IPackageDataFloatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -568,10 +559,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageDataFloat_FieldIndex
+    internal enum PackageDataFloat_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -580,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageDataFloat_Registration : ILoquiRegistration
+    internal partial class PackageDataFloat_Registration : ILoquiRegistration
     {
         public static readonly PackageDataFloat_Registration Instance = new PackageDataFloat_Registration();
 
@@ -621,17 +612,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.BNAM,
-                        RecordTypes.PNAM
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.BNAM,
+                RecordTypes.PNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PackageDataFloatBinaryWriteTranslation);
         #region Interface
@@ -666,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageDataFloatSetterCommon : APackageDataSetterCommon
+    internal partial class PackageDataFloatSetterCommon : APackageDataSetterCommon
     {
         public new static readonly PackageDataFloatSetterCommon Instance = new PackageDataFloatSetterCommon();
 
@@ -696,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPackageDataFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -709,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPackageData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PackageDataFloat)item,
@@ -720,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataFloatCommon : APackageDataCommon
+    internal partial class PackageDataFloatCommon : APackageDataCommon
     {
         public new static readonly PackageDataFloatCommon Instance = new PackageDataFloatCommon();
 
@@ -744,62 +731,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageDataFloat.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data.EqualsWithin(rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPackageDataFloatGetter item,
             string? name = null,
             PackageDataFloat.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPackageDataFloatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageDataFloat.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PackageDataFloat =>");
+                sb.AppendLine($"PackageDataFloat =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PackageDataFloat) =>");
+                sb.AppendLine($"{name} (PackageDataFloat) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPackageDataFloatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PackageDataFloat.Mask<bool>? printMask = null)
         {
             APackageDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Data ?? true)
             {
-                fg.AppendItem(item.Data, "Data");
+                sb.AppendItem(item.Data, "Data");
             }
         }
         
@@ -864,9 +848,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageDataFloatGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageDataFloatGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -876,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageDataFloatSetterTranslationCommon : APackageDataSetterTranslationCommon
+    internal partial class PackageDataFloatSetterTranslationCommon : APackageDataSetterTranslationCommon
     {
         public new static readonly PackageDataFloatSetterTranslationCommon Instance = new PackageDataFloatSetterTranslationCommon();
 
@@ -976,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataFloat_Registration.Instance;
-        public new static PackageDataFloat_Registration StaticRegistration => PackageDataFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -994,13 +978,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageDataFloatBinaryWriteTranslation :
         APackageDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PackageDataFloatBinaryWriteTranslation Instance = new PackageDataFloatBinaryWriteTranslation();
+        public new static readonly PackageDataFloatBinaryWriteTranslation Instance = new PackageDataFloatBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageDataFloatGetter item,
@@ -1011,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPackageDataFloatGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1025,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageDataFloatGetter)item,
@@ -1036,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPackageDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPackageDataFloatGetter)item,
@@ -1046,9 +1030,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageDataFloatBinaryCreateTranslation : APackageDataBinaryCreateTranslation
+    internal partial class PackageDataFloatBinaryCreateTranslation : APackageDataBinaryCreateTranslation
     {
-        public new readonly static PackageDataFloatBinaryCreateTranslation Instance = new PackageDataFloatBinaryCreateTranslation();
+        public new static readonly PackageDataFloatBinaryCreateTranslation Instance = new PackageDataFloatBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageDataFloat item,
@@ -1069,16 +1053,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageDataFloatBinaryOverlay :
+    internal partial class PackageDataFloatBinaryOverlay :
         APackageDataBinaryOverlay,
         IPackageDataFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageDataFloat_Registration.Instance;
-        public new static PackageDataFloat_Registration StaticRegistration => PackageDataFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PackageDataFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PackageDataFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1086,13 +1070,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PackageDataFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageDataFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1107,52 +1091,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PackageDataFloatBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PackageDataFloatBinaryOverlay PackageDataFloatFactory(
+        public static IPackageDataFloatGetter PackageDataFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PackageDataFloatBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PackageDataFloatBinaryOverlay PackageDataFloatFactory(
+        public static IPackageDataFloatGetter PackageDataFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageDataFloatFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageDataFloatMixIn.ToString(
+            PackageDataFloatMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

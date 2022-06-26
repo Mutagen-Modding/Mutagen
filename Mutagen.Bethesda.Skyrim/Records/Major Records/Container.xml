@@ -18,5 +18,7 @@
       <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

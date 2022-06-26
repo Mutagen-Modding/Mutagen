@@ -1,32 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class Impact
 {
-    public partial class Impact
+    public enum ResultType
     {
-        [Flags]
-        public enum Flag
-        {
-            NoDecalData = 0x01
-        }
+        Default,
+        Destroy,
+        Bounce,
+        Impale,
+        Stick
+    }
 
-        public enum ResultType
-        {
-            Default,
-            Destroy,
-            Bounce,
-            Impale,
-            Stick
-        }
-
-        public enum OrientationType
-        {
-            SurfaceNormal,
-            ProjectileVector,
-            ProjectileReflection,
-        }
+    public enum OrientationType
+    {
+        SurfaceNormal,
+        ProjectileVector,
+        ProjectileReflection,
     }
 }

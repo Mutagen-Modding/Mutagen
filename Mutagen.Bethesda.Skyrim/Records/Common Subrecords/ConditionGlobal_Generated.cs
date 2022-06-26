@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionGlobalMixIn.ToString(
+            ConditionGlobalMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -204,34 +206,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ConditionGlobal.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ConditionGlobal.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ConditionGlobal.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ConditionGlobal.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ConditionGlobal.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ConditionGlobal.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ComparisonValue ?? true)
                     {
-                        fg.AppendItem(ComparisonValue, "ComparisonValue");
+                        sb.AppendItem(ComparisonValue, "ComparisonValue");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -305,38 +302,31 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(ComparisonValue, "ComparisonValue");
-                Data?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ComparisonValue, "ComparisonValue");
+                }
+                Data?.Print(sb);
             }
             #endregion
 
@@ -400,8 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionGlobalCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -410,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionGlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -420,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ConditionGlobal CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConditionGlobal();
             ((ConditionGlobalSetterCommon)((IConditionGlobalGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -435,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ConditionGlobal item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -445,7 +434,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -504,26 +493,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IConditionGlobalGetter item,
             string? name = null,
             ConditionGlobal.Mask<bool>? printMask = null)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).ToString(
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IConditionGlobalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ConditionGlobal.Mask<bool>? printMask = null)
         {
-            ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).ToString(
+            ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -604,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IConditionGlobal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConditionGlobalSetterCommon)((IConditionGlobalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -619,10 +608,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ConditionGlobal_FieldIndex
+    internal enum ConditionGlobal_FieldIndex
     {
         CompareOperator = 0,
         Flags = 1,
@@ -633,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ConditionGlobal_Registration : ILoquiRegistration
+    internal partial class ConditionGlobal_Registration : ILoquiRegistration
     {
         public static readonly ConditionGlobal_Registration Instance = new ConditionGlobal_Registration();
 
@@ -675,6 +664,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CTDA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CTDA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ConditionGlobalBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -708,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ConditionGlobalSetterCommon : ConditionSetterCommon
+    internal partial class ConditionGlobalSetterCommon : ConditionSetterCommon
     {
         public new static readonly ConditionGlobalSetterCommon Instance = new ConditionGlobalSetterCommon();
 
@@ -741,12 +736,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IConditionGlobal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CTDA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -760,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ConditionGlobal)item,
@@ -771,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConditionGlobalCommon : ConditionCommon
+    internal partial class ConditionGlobalCommon : ConditionCommon
     {
         public new static readonly ConditionGlobalCommon Instance = new ConditionGlobalCommon();
 
@@ -795,67 +790,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionGlobal.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ComparisonValue = item.ComparisonValue.Equals(rhs.ComparisonValue);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IConditionGlobalGetter item,
             string? name = null,
             ConditionGlobal.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IConditionGlobalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ConditionGlobal.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ConditionGlobal =>");
+                sb.AppendLine($"ConditionGlobal =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ConditionGlobal) =>");
+                sb.AppendLine($"{name} (ConditionGlobal) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IConditionGlobalGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ConditionGlobal.Mask<bool>? printMask = null)
         {
             ConditionCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ComparisonValue ?? true)
             {
-                fg.AppendItem(item.ComparisonValue.FormKey, "ComparisonValue");
+                sb.AppendItem(item.ComparisonValue.FormKey, "ComparisonValue");
             }
             if (printMask?.Data?.Overall ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                item.Data?.Print(sb, "Data");
             }
         }
         
@@ -931,14 +923,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionGlobalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionGlobalGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.ComparisonValue);
-            foreach (var item in obj.Data.ContainedFormLinks)
+            foreach (var item in obj.Data.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -948,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ConditionGlobalSetterTranslationCommon : ConditionSetterTranslationCommon
+    internal partial class ConditionGlobalSetterTranslationCommon : ConditionSetterTranslationCommon
     {
         public new static readonly ConditionGlobalSetterTranslationCommon Instance = new ConditionGlobalSetterTranslationCommon();
 
@@ -1070,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionGlobal_Registration.Instance;
-        public new static ConditionGlobal_Registration StaticRegistration => ConditionGlobal_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionGlobal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionGlobalCommon.Instance;
         [DebuggerStepThrough]
@@ -1088,13 +1080,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ConditionGlobalBinaryWriteTranslation :
         ConditionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
+        public new static readonly ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConditionGlobalGetter item,
@@ -1138,12 +1130,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IConditionGlobalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CTDA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1158,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConditionGlobalGetter)item,
@@ -1169,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IConditionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IConditionGlobalGetter)item,
@@ -1179,9 +1171,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ConditionGlobalBinaryCreateTranslation : ConditionBinaryCreateTranslation
+    internal partial class ConditionGlobalBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
-        public new readonly static ConditionGlobalBinaryCreateTranslation Instance = new ConditionGlobalBinaryCreateTranslation();
+        public new static readonly ConditionGlobalBinaryCreateTranslation Instance = new ConditionGlobalBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IConditionGlobal item,
@@ -1224,16 +1216,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ConditionGlobalBinaryOverlay :
+    internal partial class ConditionGlobalBinaryOverlay :
         ConditionBinaryOverlay,
         IConditionGlobalGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionGlobal_Registration.Instance;
-        public new static ConditionGlobal_Registration StaticRegistration => ConditionGlobal_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionGlobal_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionGlobalCommon.Instance;
         [DebuggerStepThrough]
@@ -1241,14 +1233,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionGlobalCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionGlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1256,8 +1248,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         #region Data
+        public partial IConditionDataGetter GetDataCustom(int location);
         public override IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
         partial void CustomDataEndPos();
@@ -1273,25 +1266,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ConditionGlobalBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ConditionGlobalBinaryOverlay ConditionGlobalFactory(
+        public static IConditionGlobalGetter ConditionGlobalFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ConditionGlobalBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomDataEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1304,25 +1302,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ConditionGlobalBinaryOverlay ConditionGlobalFactory(
+        public static IConditionGlobalGetter ConditionGlobalFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ConditionGlobalFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionGlobalMixIn.ToString(
+            ConditionGlobalMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

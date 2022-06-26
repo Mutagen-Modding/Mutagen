@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Debris" recordType="DEBR" objType="Record" baseClass="Fallout4MajorRecord" GUID="bfd9ff53-a114-428f-b3c3-9a63a3a7348b" ID="89">
+    <Fields>
+      <RefList name="Models" refName="DebrisModel" />
+    </Fields>
+  </Object>
+  <Object name="DebrisModel" objType="Subrecord" GUID="f629536a-c5dd-4cdf-8abc-ca18d8b15dc4" ID="594">
+    <Fields>
+      <Data>
+        <Fields>
+          <UInt8 name="Percentage" />
+          <String name="ModelFilename" binaryType="NullTerminate" />
+          <Break />
+          <Enum name="Flags" enumName="DebrisModel.Flag" byteLength="1" />
+        </Fields>
+      </Data>
+      <ByteArray name="TextureFileHashes" recordType="MODT" />
+    </Fields>
   </Object>
 </Loqui>

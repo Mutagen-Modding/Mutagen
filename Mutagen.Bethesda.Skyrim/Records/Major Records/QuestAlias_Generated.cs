@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -80,10 +81,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         QuestAlias.Flag? IQuestAliasGetter.Flags => this.Flags;
         #endregion
-        #region AliasIndexToForceIntoWhenFilled
-        public Int32? AliasIndexToForceIntoWhenFilled { get; set; }
+        #region AliasIDToForceIntoWhenFilled
+        public Int32? AliasIDToForceIntoWhenFilled { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IQuestAliasGetter.AliasIndexToForceIntoWhenFilled => this.AliasIndexToForceIntoWhenFilled;
+        Int32? IQuestAliasGetter.AliasIDToForceIntoWhenFilled => this.AliasIDToForceIntoWhenFilled;
         #endregion
         #region SpecificLocation
         private readonly IFormLinkNullable<ILocationGetter> _SpecificLocation = new FormLinkNullable<ILocationGetter>();
@@ -324,12 +325,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestAliasMixIn.ToString(
+            QuestAliasMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -363,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = initialValue;
                 this.Name = initialValue;
                 this.Flags = initialValue;
-                this.AliasIndexToForceIntoWhenFilled = initialValue;
+                this.AliasIDToForceIntoWhenFilled = initialValue;
                 this.SpecificLocation = initialValue;
                 this.ForcedReference = initialValue;
                 this.UniqueActor = initialValue;
@@ -391,7 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Type,
                 TItem Name,
                 TItem Flags,
-                TItem AliasIndexToForceIntoWhenFilled,
+                TItem AliasIDToForceIntoWhenFilled,
                 TItem SpecificLocation,
                 TItem ForcedReference,
                 TItem UniqueActor,
@@ -417,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = Type;
                 this.Name = Name;
                 this.Flags = Flags;
-                this.AliasIndexToForceIntoWhenFilled = AliasIndexToForceIntoWhenFilled;
+                this.AliasIDToForceIntoWhenFilled = AliasIDToForceIntoWhenFilled;
                 this.SpecificLocation = SpecificLocation;
                 this.ForcedReference = ForcedReference;
                 this.UniqueActor = UniqueActor;
@@ -453,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Type;
             public TItem Name;
             public TItem Flags;
-            public TItem AliasIndexToForceIntoWhenFilled;
+            public TItem AliasIDToForceIntoWhenFilled;
             public TItem SpecificLocation;
             public TItem ForcedReference;
             public TItem UniqueActor;
@@ -490,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.AliasIndexToForceIntoWhenFilled, rhs.AliasIndexToForceIntoWhenFilled)) return false;
+                if (!object.Equals(this.AliasIDToForceIntoWhenFilled, rhs.AliasIDToForceIntoWhenFilled)) return false;
                 if (!object.Equals(this.SpecificLocation, rhs.SpecificLocation)) return false;
                 if (!object.Equals(this.ForcedReference, rhs.ForcedReference)) return false;
                 if (!object.Equals(this.UniqueActor, rhs.UniqueActor)) return false;
@@ -520,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Type);
                 hash.Add(this.Name);
                 hash.Add(this.Flags);
-                hash.Add(this.AliasIndexToForceIntoWhenFilled);
+                hash.Add(this.AliasIDToForceIntoWhenFilled);
                 hash.Add(this.SpecificLocation);
                 hash.Add(this.ForcedReference);
                 hash.Add(this.UniqueActor);
@@ -553,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Type)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.AliasIndexToForceIntoWhenFilled)) return false;
+                if (!eval(this.AliasIDToForceIntoWhenFilled)) return false;
                 if (!eval(this.SpecificLocation)) return false;
                 if (!eval(this.ForcedReference)) return false;
                 if (!eval(this.UniqueActor)) return false;
@@ -667,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Type)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.AliasIndexToForceIntoWhenFilled)) return true;
+                if (eval(this.AliasIDToForceIntoWhenFilled)) return true;
                 if (eval(this.SpecificLocation)) return true;
                 if (eval(this.ForcedReference)) return true;
                 if (eval(this.UniqueActor)) return true;
@@ -788,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Type = eval(this.Type);
                 obj.Name = eval(this.Name);
                 obj.Flags = eval(this.Flags);
-                obj.AliasIndexToForceIntoWhenFilled = eval(this.AliasIndexToForceIntoWhenFilled);
+                obj.AliasIDToForceIntoWhenFilled = eval(this.AliasIDToForceIntoWhenFilled);
                 obj.SpecificLocation = eval(this.SpecificLocation);
                 obj.ForcedReference = eval(this.ForcedReference);
                 obj.UniqueActor = eval(this.UniqueActor);
@@ -804,9 +806,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
                         obj.Conditions.Specific = l;
-                        foreach (var item in Conditions.Specific.WithIndex())
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -819,9 +821,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -833,9 +835,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
                         obj.Items.Specific = l;
-                        foreach (var item in Items.Specific.WithIndex())
+                        foreach (var item in Items.Specific)
                         {
-                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -853,9 +855,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Spells.Specific = l;
-                        foreach (var item in Spells.Specific.WithIndex())
+                        foreach (var item in Spells.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -867,9 +869,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Factions.Specific = l;
-                        foreach (var item in Factions.Specific.WithIndex())
+                        foreach (var item in Factions.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -881,9 +883,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.PackageData.Specific = l;
-                        foreach (var item in PackageData.Specific.WithIndex())
+                        foreach (var item in PackageData.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -893,240 +895,219 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(QuestAlias.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(QuestAlias.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, QuestAlias.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, QuestAlias.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(QuestAlias.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(QuestAlias.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ID ?? true)
                     {
-                        fg.AppendItem(ID, "ID");
+                        sb.AppendItem(ID, "ID");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.AliasIndexToForceIntoWhenFilled ?? true)
+                    if (printMask?.AliasIDToForceIntoWhenFilled ?? true)
                     {
-                        fg.AppendItem(AliasIndexToForceIntoWhenFilled, "AliasIndexToForceIntoWhenFilled");
+                        sb.AppendItem(AliasIDToForceIntoWhenFilled, "AliasIDToForceIntoWhenFilled");
                     }
                     if (printMask?.SpecificLocation ?? true)
                     {
-                        fg.AppendItem(SpecificLocation, "SpecificLocation");
+                        sb.AppendItem(SpecificLocation, "SpecificLocation");
                     }
                     if (printMask?.ForcedReference ?? true)
                     {
-                        fg.AppendItem(ForcedReference, "ForcedReference");
+                        sb.AppendItem(ForcedReference, "ForcedReference");
                     }
                     if (printMask?.UniqueActor ?? true)
                     {
-                        fg.AppendItem(UniqueActor, "UniqueActor");
+                        sb.AppendItem(UniqueActor, "UniqueActor");
                     }
                     if (printMask?.Location?.Overall ?? true)
                     {
-                        Location?.ToString(fg);
+                        Location?.Print(sb);
                     }
                     if (printMask?.External?.Overall ?? true)
                     {
-                        External?.ToString(fg);
+                        External?.Print(sb);
                     }
                     if (printMask?.CreateReferenceToObject?.Overall ?? true)
                     {
-                        CreateReferenceToObject?.ToString(fg);
+                        CreateReferenceToObject?.Print(sb);
                     }
                     if (printMask?.FindMatchingRefNearAlias?.Overall ?? true)
                     {
-                        FindMatchingRefNearAlias?.ToString(fg);
+                        FindMatchingRefNearAlias?.Print(sb);
                     }
                     if (printMask?.FindMatchingRefFromEvent?.Overall ?? true)
                     {
-                        FindMatchingRefFromEvent?.ToString(fg);
+                        FindMatchingRefFromEvent?.Print(sb);
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
                     {
-                        fg.AppendLine("Conditions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConditionsItem.Overall);
+                            sb.AppendItem(ConditionsItem.Overall);
                             if (ConditionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConditionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Items?.Overall ?? true)
                         && Items is {} ItemsItem)
                     {
-                        fg.AppendLine("Items =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ItemsItem.Overall);
+                            sb.AppendItem(ItemsItem.Overall);
                             if (ItemsItem.Specific != null)
                             {
                                 foreach (var subItem in ItemsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.SpectatorOverridePackageList ?? true)
                     {
-                        fg.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
+                        sb.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
                     }
                     if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
                     {
-                        fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
+                        sb.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
                     }
                     if (printMask?.GuardWarnOverridePackageList ?? true)
                     {
-                        fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
+                        sb.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
                     }
                     if (printMask?.CombatOverridePackageList ?? true)
                     {
-                        fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                        sb.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
                     }
                     if (printMask?.DisplayName ?? true)
                     {
-                        fg.AppendItem(DisplayName, "DisplayName");
+                        sb.AppendItem(DisplayName, "DisplayName");
                     }
                     if ((printMask?.Spells?.Overall ?? true)
                         && Spells is {} SpellsItem)
                     {
-                        fg.AppendLine("Spells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Spells =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(SpellsItem.Overall);
+                            sb.AppendItem(SpellsItem.Overall);
                             if (SpellsItem.Specific != null)
                             {
                                 foreach (var subItem in SpellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Factions?.Overall ?? true)
                         && Factions is {} FactionsItem)
                     {
-                        fg.AppendLine("Factions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Factions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FactionsItem.Overall);
+                            sb.AppendItem(FactionsItem.Overall);
                             if (FactionsItem.Specific != null)
                             {
                                 foreach (var subItem in FactionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.PackageData?.Overall ?? true)
                         && PackageData is {} PackageDataItem)
                     {
-                        fg.AppendLine("PackageData =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PackageData =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PackageDataItem.Overall);
+                            sb.AppendItem(PackageDataItem.Overall);
                             if (PackageDataItem.Specific != null)
                             {
                                 foreach (var subItem in PackageDataItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.VoiceTypes ?? true)
                     {
-                        fg.AppendItem(VoiceTypes, "VoiceTypes");
+                        sb.AppendItem(VoiceTypes, "VoiceTypes");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1154,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Type;
             public Exception? Name;
             public Exception? Flags;
-            public Exception? AliasIndexToForceIntoWhenFilled;
+            public Exception? AliasIDToForceIntoWhenFilled;
             public Exception? SpecificLocation;
             public Exception? ForcedReference;
             public Exception? UniqueActor;
@@ -1191,8 +1172,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Name;
                     case QuestAlias_FieldIndex.Flags:
                         return Flags;
-                    case QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled:
-                        return AliasIndexToForceIntoWhenFilled;
+                    case QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled:
+                        return AliasIDToForceIntoWhenFilled;
                     case QuestAlias_FieldIndex.SpecificLocation:
                         return SpecificLocation;
                     case QuestAlias_FieldIndex.ForcedReference:
@@ -1255,8 +1236,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAlias_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled:
-                        this.AliasIndexToForceIntoWhenFilled = ex;
+                    case QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled:
+                        this.AliasIDToForceIntoWhenFilled = ex;
                         break;
                     case QuestAlias_FieldIndex.SpecificLocation:
                         this.SpecificLocation = ex;
@@ -1340,8 +1321,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAlias_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled:
-                        this.AliasIndexToForceIntoWhenFilled = (Exception?)obj;
+                    case QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled:
+                        this.AliasIDToForceIntoWhenFilled = (Exception?)obj;
                         break;
                     case QuestAlias_FieldIndex.SpecificLocation:
                         this.SpecificLocation = (Exception?)obj;
@@ -1415,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Type != null) return true;
                 if (Name != null) return true;
                 if (Flags != null) return true;
-                if (AliasIndexToForceIntoWhenFilled != null) return true;
+                if (AliasIDToForceIntoWhenFilled != null) return true;
                 if (SpecificLocation != null) return true;
                 if (ForcedReference != null) return true;
                 if (UniqueActor != null) return true;
@@ -1441,186 +1422,189 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ID, "ID");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(AliasIndexToForceIntoWhenFilled, "AliasIndexToForceIntoWhenFilled");
-                fg.AppendItem(SpecificLocation, "SpecificLocation");
-                fg.AppendItem(ForcedReference, "ForcedReference");
-                fg.AppendItem(UniqueActor, "UniqueActor");
-                Location?.ToString(fg);
-                External?.ToString(fg);
-                CreateReferenceToObject?.ToString(fg);
-                FindMatchingRefNearAlias?.ToString(fg);
-                FindMatchingRefFromEvent?.ToString(fg);
+                {
+                    sb.AppendItem(ID, "ID");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(AliasIDToForceIntoWhenFilled, "AliasIDToForceIntoWhenFilled");
+                }
+                {
+                    sb.AppendItem(SpecificLocation, "SpecificLocation");
+                }
+                {
+                    sb.AppendItem(ForcedReference, "ForcedReference");
+                }
+                {
+                    sb.AppendItem(UniqueActor, "UniqueActor");
+                }
+                Location?.Print(sb);
+                External?.Print(sb);
+                CreateReferenceToObject?.Print(sb);
+                FindMatchingRefNearAlias?.Print(sb);
+                FindMatchingRefFromEvent?.Print(sb);
                 if (Conditions is {} ConditionsItem)
                 {
-                    fg.AppendLine("Conditions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConditionsItem.Overall);
+                        sb.AppendItem(ConditionsItem.Overall);
                         if (ConditionsItem.Specific != null)
                         {
                             foreach (var subItem in ConditionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Items is {} ItemsItem)
                 {
-                    fg.AppendLine("Items =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ItemsItem.Overall);
+                        sb.AppendItem(ItemsItem.Overall);
                         if (ItemsItem.Specific != null)
                         {
                             foreach (var subItem in ItemsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
-                fg.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
-                fg.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
-                fg.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
-                fg.AppendItem(DisplayName, "DisplayName");
+                {
+                    sb.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
+                }
+                {
+                    sb.AppendItem(ObserveDeadBodyOverridePackageList, "ObserveDeadBodyOverridePackageList");
+                }
+                {
+                    sb.AppendItem(GuardWarnOverridePackageList, "GuardWarnOverridePackageList");
+                }
+                {
+                    sb.AppendItem(CombatOverridePackageList, "CombatOverridePackageList");
+                }
+                {
+                    sb.AppendItem(DisplayName, "DisplayName");
+                }
                 if (Spells is {} SpellsItem)
                 {
-                    fg.AppendLine("Spells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Spells =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(SpellsItem.Overall);
+                        sb.AppendItem(SpellsItem.Overall);
                         if (SpellsItem.Specific != null)
                         {
                             foreach (var subItem in SpellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Factions is {} FactionsItem)
                 {
-                    fg.AppendLine("Factions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Factions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FactionsItem.Overall);
+                        sb.AppendItem(FactionsItem.Overall);
                         if (FactionsItem.Specific != null)
                         {
                             foreach (var subItem in FactionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (PackageData is {} PackageDataItem)
                 {
-                    fg.AppendLine("PackageData =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PackageData =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PackageDataItem.Overall);
+                        sb.AppendItem(PackageDataItem.Overall);
                         if (PackageDataItem.Specific != null)
                         {
                             foreach (var subItem in PackageDataItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(VoiceTypes, "VoiceTypes");
+                {
+                    sb.AppendItem(VoiceTypes, "VoiceTypes");
+                }
             }
             #endregion
 
@@ -1633,7 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.AliasIndexToForceIntoWhenFilled = this.AliasIndexToForceIntoWhenFilled.Combine(rhs.AliasIndexToForceIntoWhenFilled);
+                ret.AliasIDToForceIntoWhenFilled = this.AliasIDToForceIntoWhenFilled.Combine(rhs.AliasIDToForceIntoWhenFilled);
                 ret.SpecificLocation = this.SpecificLocation.Combine(rhs.SpecificLocation);
                 ret.ForcedReference = this.ForcedReference.Combine(rhs.ForcedReference);
                 ret.UniqueActor = this.UniqueActor.Combine(rhs.UniqueActor);
@@ -1681,7 +1665,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Type;
             public bool Name;
             public bool Flags;
-            public bool AliasIndexToForceIntoWhenFilled;
+            public bool AliasIDToForceIntoWhenFilled;
             public bool SpecificLocation;
             public bool ForcedReference;
             public bool UniqueActor;
@@ -1715,7 +1699,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Type = defaultOn;
                 this.Name = defaultOn;
                 this.Flags = defaultOn;
-                this.AliasIndexToForceIntoWhenFilled = defaultOn;
+                this.AliasIDToForceIntoWhenFilled = defaultOn;
                 this.SpecificLocation = defaultOn;
                 this.ForcedReference = defaultOn;
                 this.UniqueActor = defaultOn;
@@ -1748,7 +1732,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Type, null));
                 ret.Add((Name, null));
                 ret.Add((Flags, null));
-                ret.Add((AliasIndexToForceIntoWhenFilled, null));
+                ret.Add((AliasIDToForceIntoWhenFilled, null));
                 ret.Add((SpecificLocation, null));
                 ret.Add((ForcedReference, null));
                 ret.Add((UniqueActor, null));
@@ -1780,7 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAliasCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1791,7 +1775,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1801,7 +1785,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static QuestAlias CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestAlias();
             ((QuestAliasSetterCommon)((IQuestAliasGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1816,7 +1800,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestAlias item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1826,7 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1857,7 +1841,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new String? Name { get; set; }
         new QuestAlias.Flag? Flags { get; set; }
-        new Int32? AliasIndexToForceIntoWhenFilled { get; set; }
+        new Int32? AliasIDToForceIntoWhenFilled { get; set; }
         new IFormLinkNullable<ILocationGetter> SpecificLocation { get; set; }
         new IFormLinkNullable<IPlacedGetter> ForcedReference { get; set; }
         new IFormLinkNullable<INpcGetter> UniqueActor { get; set; }
@@ -1908,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         #endregion
         QuestAlias.Flag? Flags { get; }
-        Int32? AliasIndexToForceIntoWhenFilled { get; }
+        Int32? AliasIDToForceIntoWhenFilled { get; }
         IFormLinkNullableGetter<ILocationGetter> SpecificLocation { get; }
         IFormLinkNullableGetter<IPlacedGetter> ForcedReference { get; }
         IFormLinkNullableGetter<INpcGetter> UniqueActor { get; }
@@ -1958,26 +1942,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IQuestAliasGetter item,
             string? name = null,
             QuestAlias.Mask<bool>? printMask = null)
         {
-            return ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).ToString(
+            return ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IQuestAliasGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestAlias.Mask<bool>? printMask = null)
         {
-            ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).ToString(
+            ((QuestAliasCommon)((IQuestAliasGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2083,7 +2067,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IQuestAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestAliasSetterCommon)((IQuestAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2098,16 +2082,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestAlias_FieldIndex
+    internal enum QuestAlias_FieldIndex
     {
         ID = 0,
         Type = 1,
         Name = 2,
         Flags = 3,
-        AliasIndexToForceIntoWhenFilled = 4,
+        AliasIDToForceIntoWhenFilled = 4,
         SpecificLocation = 5,
         ForcedReference = 6,
         UniqueActor = 7,
@@ -2132,7 +2116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestAlias_Registration : ILoquiRegistration
+    internal partial class QuestAlias_Registration : ILoquiRegistration
     {
         public static readonly QuestAlias_Registration Instance = new QuestAlias_Registration();
 
@@ -2173,17 +2157,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.ALST,
-                        RecordTypes.ALLS
-                    })
-            );
+            var triggers = RecordCollection.Factory(
+                RecordTypes.ALST,
+                RecordTypes.ALLS);
+            var all = RecordCollection.Factory(
+                RecordTypes.ALST,
+                RecordTypes.ALLS,
+                RecordTypes.ALED,
+                RecordTypes.ALID,
+                RecordTypes.FNAM,
+                RecordTypes.ALFI,
+                RecordTypes.ALFL,
+                RecordTypes.ALFR,
+                RecordTypes.ALUA,
+                RecordTypes.ALFA,
+                RecordTypes.KNAM,
+                RecordTypes.ALRT,
+                RecordTypes.ALEQ,
+                RecordTypes.ALEA,
+                RecordTypes.ALCO,
+                RecordTypes.ALNA,
+                RecordTypes.ALNT,
+                RecordTypes.ALFE,
+                RecordTypes.ALFD,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.COED,
+                RecordTypes.SPOR,
+                RecordTypes.OCOR,
+                RecordTypes.GWOR,
+                RecordTypes.ECOR,
+                RecordTypes.ALDN,
+                RecordTypes.ALSP,
+                RecordTypes.ALFC,
+                RecordTypes.ALPC,
+                RecordTypes.VTCK);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestAliasBinaryWriteTranslation);
         #region Interface
@@ -2218,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestAliasSetterCommon
+    internal partial class QuestAliasSetterCommon
     {
         public static readonly QuestAliasSetterCommon Instance = new QuestAliasSetterCommon();
 
@@ -2231,7 +2248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Type = default;
             item.Name = default;
             item.Flags = default;
-            item.AliasIndexToForceIntoWhenFilled = default;
+            item.AliasIDToForceIntoWhenFilled = default;
             item.SpecificLocation.Clear();
             item.ForcedReference.Clear();
             item.UniqueActor.Clear();
@@ -2283,7 +2300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IQuestAlias item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -2296,7 +2313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAliasCommon
+    internal partial class QuestAliasCommon
     {
         public static readonly QuestAliasCommon Instance = new QuestAliasCommon();
 
@@ -2320,12 +2337,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ID = item.ID == rhs.ID;
             ret.Type = item.Type == rhs.Type;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.AliasIndexToForceIntoWhenFilled = item.AliasIndexToForceIntoWhenFilled == rhs.AliasIndexToForceIntoWhenFilled;
+            ret.AliasIDToForceIntoWhenFilled = item.AliasIDToForceIntoWhenFilled == rhs.AliasIDToForceIntoWhenFilled;
             ret.SpecificLocation = item.SpecificLocation.Equals(rhs.SpecificLocation);
             ret.ForcedReference = item.ForcedReference.Equals(rhs.ForcedReference);
             ret.UniqueActor = item.UniqueActor.Equals(rhs.UniqueActor);
@@ -2386,243 +2402,217 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.VoiceTypes = item.VoiceTypes.Equals(rhs.VoiceTypes);
         }
         
-        public string ToString(
+        public string Print(
             IQuestAliasGetter item,
             string? name = null,
             QuestAlias.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IQuestAliasGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestAlias.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"QuestAlias =>");
+                sb.AppendLine($"QuestAlias =>");
             }
             else
             {
-                fg.AppendLine($"{name} (QuestAlias) =>");
+                sb.AppendLine($"{name} (QuestAlias) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IQuestAliasGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             QuestAlias.Mask<bool>? printMask = null)
         {
             if (printMask?.ID ?? true)
             {
-                fg.AppendItem(item.ID, "ID");
+                sb.AppendItem(item.ID, "ID");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.AliasIndexToForceIntoWhenFilled ?? true)
-                && item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilledItem)
+            if ((printMask?.AliasIDToForceIntoWhenFilled ?? true)
+                && item.AliasIDToForceIntoWhenFilled is {} AliasIDToForceIntoWhenFilledItem)
             {
-                fg.AppendItem(AliasIndexToForceIntoWhenFilledItem, "AliasIndexToForceIntoWhenFilled");
+                sb.AppendItem(AliasIDToForceIntoWhenFilledItem, "AliasIDToForceIntoWhenFilled");
             }
             if (printMask?.SpecificLocation ?? true)
             {
-                fg.AppendItem(item.SpecificLocation.FormKeyNullable, "SpecificLocation");
+                sb.AppendItem(item.SpecificLocation.FormKeyNullable, "SpecificLocation");
             }
             if (printMask?.ForcedReference ?? true)
             {
-                fg.AppendItem(item.ForcedReference.FormKeyNullable, "ForcedReference");
+                sb.AppendItem(item.ForcedReference.FormKeyNullable, "ForcedReference");
             }
             if (printMask?.UniqueActor ?? true)
             {
-                fg.AppendItem(item.UniqueActor.FormKeyNullable, "UniqueActor");
+                sb.AppendItem(item.UniqueActor.FormKeyNullable, "UniqueActor");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
             {
-                LocationItem?.ToString(fg, "Location");
+                LocationItem?.Print(sb, "Location");
             }
             if ((printMask?.External?.Overall ?? true)
                 && item.External is {} ExternalItem)
             {
-                ExternalItem?.ToString(fg, "External");
+                ExternalItem?.Print(sb, "External");
             }
             if ((printMask?.CreateReferenceToObject?.Overall ?? true)
                 && item.CreateReferenceToObject is {} CreateReferenceToObjectItem)
             {
-                CreateReferenceToObjectItem?.ToString(fg, "CreateReferenceToObject");
+                CreateReferenceToObjectItem?.Print(sb, "CreateReferenceToObject");
             }
             if ((printMask?.FindMatchingRefNearAlias?.Overall ?? true)
                 && item.FindMatchingRefNearAlias is {} FindMatchingRefNearAliasItem)
             {
-                FindMatchingRefNearAliasItem?.ToString(fg, "FindMatchingRefNearAlias");
+                FindMatchingRefNearAliasItem?.Print(sb, "FindMatchingRefNearAlias");
             }
             if ((printMask?.FindMatchingRefFromEvent?.Overall ?? true)
                 && item.FindMatchingRefFromEvent is {} FindMatchingRefFromEventItem)
             {
-                FindMatchingRefFromEventItem?.ToString(fg, "FindMatchingRefFromEvent");
+                FindMatchingRefFromEventItem?.Print(sb, "FindMatchingRefFromEvent");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
-                fg.AppendLine("Conditions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Conditions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Items?.Overall ?? true)
                 && item.Items is {} ItemsItem)
             {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ItemsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.SpectatorOverridePackageList ?? true)
             {
-                fg.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
+                sb.AppendItem(item.SpectatorOverridePackageList.FormKeyNullable, "SpectatorOverridePackageList");
             }
             if (printMask?.ObserveDeadBodyOverridePackageList ?? true)
             {
-                fg.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
+                sb.AppendItem(item.ObserveDeadBodyOverridePackageList.FormKeyNullable, "ObserveDeadBodyOverridePackageList");
             }
             if (printMask?.GuardWarnOverridePackageList ?? true)
             {
-                fg.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
+                sb.AppendItem(item.GuardWarnOverridePackageList.FormKeyNullable, "GuardWarnOverridePackageList");
             }
             if (printMask?.CombatOverridePackageList ?? true)
             {
-                fg.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
+                sb.AppendItem(item.CombatOverridePackageList.FormKeyNullable, "CombatOverridePackageList");
             }
             if (printMask?.DisplayName ?? true)
             {
-                fg.AppendItem(item.DisplayName.FormKeyNullable, "DisplayName");
+                sb.AppendItem(item.DisplayName.FormKeyNullable, "DisplayName");
             }
             if (printMask?.Spells?.Overall ?? true)
             {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Spells =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Spells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
-                fg.AppendLine("Factions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Factions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Factions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.PackageData?.Overall ?? true)
             {
-                fg.AppendLine("PackageData =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PackageData =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PackageData)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.VoiceTypes ?? true)
             {
-                fg.AppendItem(item.VoiceTypes.FormKeyNullable, "VoiceTypes");
+                sb.AppendItem(item.VoiceTypes.FormKeyNullable, "VoiceTypes");
             }
         }
         
@@ -2649,9 +2639,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled) ?? true))
+            if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
             {
-                if (lhs.AliasIndexToForceIntoWhenFilled != rhs.AliasIndexToForceIntoWhenFilled) return false;
+                if (lhs.AliasIDToForceIntoWhenFilled != rhs.AliasIDToForceIntoWhenFilled) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
@@ -2707,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.Conditions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Keywords) ?? true))
             {
@@ -2715,7 +2705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.Items)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
@@ -2769,9 +2759,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Flagsitem);
             }
-            if (item.AliasIndexToForceIntoWhenFilled is {} AliasIndexToForceIntoWhenFilleditem)
+            if (item.AliasIDToForceIntoWhenFilled is {} AliasIDToForceIntoWhenFilleditem)
             {
-                hash.Add(AliasIndexToForceIntoWhenFilleditem);
+                hash.Add(AliasIDToForceIntoWhenFilleditem);
             }
             hash.Add(item.SpecificLocation);
             hash.Add(item.ForcedReference);
@@ -2820,43 +2810,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestAliasGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestAliasGetter obj)
         {
-            if (obj.SpecificLocation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpecificLocation, out var SpecificLocationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpecificLocation);
+                yield return SpecificLocationInfo;
             }
-            if (obj.ForcedReference.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ForcedReference, out var ForcedReferenceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ForcedReference);
+                yield return ForcedReferenceInfo;
             }
-            if (obj.UniqueActor.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UniqueActor, out var UniqueActorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UniqueActor);
+                yield return UniqueActorInfo;
             }
             if (obj.Location is {} LocationItems)
             {
-                foreach (var item in LocationItems.ContainedFormLinks)
+                foreach (var item in LocationItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.External is {} ExternalItems)
             {
-                foreach (var item in ExternalItems.ContainedFormLinks)
+                foreach (var item in ExternalItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.CreateReferenceToObject is {} CreateReferenceToObjectItems)
             {
-                foreach (var item in CreateReferenceToObjectItems.ContainedFormLinks)
+                foreach (var item in CreateReferenceToObjectItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2870,30 +2860,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Items is {} ItemsItem)
             {
                 foreach (var item in ItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.SpectatorOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpectatorOverridePackageList, out var SpectatorOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpectatorOverridePackageList);
+                yield return SpectatorOverridePackageListInfo;
             }
-            if (obj.ObserveDeadBodyOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ObserveDeadBodyOverridePackageList, out var ObserveDeadBodyOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ObserveDeadBodyOverridePackageList);
+                yield return ObserveDeadBodyOverridePackageListInfo;
             }
-            if (obj.GuardWarnOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GuardWarnOverridePackageList, out var GuardWarnOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GuardWarnOverridePackageList);
+                yield return GuardWarnOverridePackageListInfo;
             }
-            if (obj.CombatOverridePackageList.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CombatOverridePackageList, out var CombatOverridePackageListInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CombatOverridePackageList);
+                yield return CombatOverridePackageListInfo;
             }
-            if (obj.DisplayName.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DisplayName, out var DisplayNameInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DisplayName);
+                yield return DisplayNameInfo;
             }
             foreach (var item in obj.Spells)
             {
@@ -2907,9 +2897,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.VoiceTypes.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.VoiceTypes, out var VoiceTypesInfo))
             {
-                yield return FormLinkInformation.Factory(obj.VoiceTypes);
+                yield return VoiceTypesInfo;
             }
             yield break;
         }
@@ -2917,7 +2907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAliasSetterTranslationCommon
+    internal partial class QuestAliasSetterTranslationCommon
     {
         public static readonly QuestAliasSetterTranslationCommon Instance = new QuestAliasSetterTranslationCommon();
 
@@ -2945,9 +2935,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled) ?? true))
             {
-                item.AliasIndexToForceIntoWhenFilled = rhs.AliasIndexToForceIntoWhenFilled;
+                item.AliasIDToForceIntoWhenFilled = rhs.AliasIDToForceIntoWhenFilled;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAlias_FieldIndex.SpecificLocation) ?? true))
             {
@@ -3317,7 +3307,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAlias_Registration.Instance;
-        public static QuestAlias_Registration StaticRegistration => QuestAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -3341,11 +3331,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestAliasBinaryWriteTranslation Instance = new QuestAliasBinaryWriteTranslation();
+        public static readonly QuestAliasBinaryWriteTranslation Instance = new QuestAliasBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestAliasGetter item,
@@ -3356,7 +3346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IQuestAliasGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             QuestAliasBinaryWriteTranslation.WriteBinaryIDParse(
                 writer: writer,
@@ -3373,7 +3363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.AliasIndexToForceIntoWhenFilled,
+                item: item.AliasIDToForceIntoWhenFilled,
                 header: translationParams.ConvertToCustom(RecordTypes.ALFI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3425,7 +3415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3439,7 +3429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3450,7 +3440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Items,
                 counterType: RecordTypes.COCT,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -3481,7 +3471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3491,7 +3481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFactionGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Factions,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFactionGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFactionGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3501,7 +3491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PackageData,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3512,9 +3502,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.VoiceTypes,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            QuestAliasBinaryWriteTranslation.WriteBinaryEnd(
-                writer: writer,
-                item: item);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public static partial void WriteBinaryIDParseCustom(
@@ -3530,23 +3518,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        public static partial void WriteBinaryEndCustom(
-            MutagenWriter writer,
-            IQuestAliasGetter item);
-
-        public static void WriteBinaryEnd(
-            MutagenWriter writer,
-            IQuestAliasGetter item)
-        {
-            WriteBinaryEndCustom(
-                writer: writer,
-                item: item);
-        }
-
         public void Write(
             MutagenWriter writer,
             IQuestAliasGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -3560,7 +3535,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestAliasGetter)item,
@@ -3570,9 +3545,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestAliasBinaryCreateTranslation
+    internal partial class QuestAliasBinaryCreateTranslation
     {
-        public readonly static QuestAliasBinaryCreateTranslation Instance = new QuestAliasBinaryCreateTranslation();
+        public static readonly QuestAliasBinaryCreateTranslation Instance = new QuestAliasBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestAlias item,
@@ -3587,7 +3562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -3595,7 +3570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     return QuestAliasBinaryCreateTranslation.FillBinaryIDParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -3620,8 +3595,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIndexToForceIntoWhenFilled = frame.ReadInt32();
-                    return (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled;
+                    item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    return (int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
@@ -3647,7 +3622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Location = Mutagen.Bethesda.Skyrim.LocationAliasReference.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
@@ -3655,14 +3630,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.External = Mutagen.Bethesda.Skyrim.ExternalAliasReference.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
                 {
                     item.CreateReferenceToObject = Mutagen.Bethesda.Skyrim.CreateReferenceToObject.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
@@ -3670,7 +3645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.FindMatchingRefNearAlias = Mutagen.Bethesda.Skyrim.FindMatchingRefNearAlias.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
@@ -3678,7 +3653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.FindMatchingRefFromEvent = Mutagen.Bethesda.Skyrim.FindMatchingRefFromEvent.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:
@@ -3686,13 +3661,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)QuestAlias_FieldIndex.Conditions;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -3712,7 +3687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
-                            triggeringRecord: RecordTypes.CNTO,
+                            triggeringRecord: ContainerEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: ContainerEntry.TryCreateFromBinary)
                         .CastExtendedList<ContainerEntry>();
@@ -3781,12 +3756,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
-                case RecordTypeInts.ALED:
+                case RecordTypeInts.ALED: // End Marker
                 {
-                    return QuestAliasBinaryCreateTranslation.FillBinaryEndCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.ReadSubrecord();
+                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;
@@ -3794,11 +3767,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static partial ParseResult FillBinaryIDParseCustom(
-            MutagenFrame frame,
-            IQuestAlias item,
-            PreviousParse lastParsed);
-
-        public static partial ParseResult FillBinaryEndCustom(
             MutagenFrame frame,
             IQuestAlias item,
             PreviousParse lastParsed);
@@ -3814,7 +3782,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IQuestAliasGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -3827,16 +3795,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestAliasBinaryOverlay :
+    internal partial class QuestAliasBinaryOverlay :
         PluginBinaryOverlay,
         IQuestAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAlias_Registration.Instance;
-        public static QuestAlias_Registration StaticRegistration => QuestAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestAlias_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestAliasCommon.Instance;
         [DebuggerStepThrough]
@@ -3850,16 +3818,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAliasCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3875,7 +3843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -3883,37 +3851,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public QuestAlias.Flag? Flags => _FlagsLocation.HasValue ? (QuestAlias.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestAlias.Flag?);
+        public QuestAlias.Flag? Flags => _FlagsLocation.HasValue ? (QuestAlias.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestAlias.Flag?);
         #endregion
-        #region AliasIndexToForceIntoWhenFilled
-        private int? _AliasIndexToForceIntoWhenFilledLocation;
-        public Int32? AliasIndexToForceIntoWhenFilled => _AliasIndexToForceIntoWhenFilledLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AliasIndexToForceIntoWhenFilledLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region AliasIDToForceIntoWhenFilled
+        private int? _AliasIDToForceIntoWhenFilledLocation;
+        public Int32? AliasIDToForceIntoWhenFilled => _AliasIDToForceIntoWhenFilledLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AliasIDToForceIntoWhenFilledLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region SpecificLocation
         private int? _SpecificLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> SpecificLocation => _SpecificLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpecificLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region ForcedReference
         private int? _ForcedReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedGetter> ForcedReference => _ForcedReferenceLocation.HasValue ? new FormLinkNullable<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ForcedReferenceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedGetter>.Null;
         #endregion
         #region UniqueActor
         private int? _UniqueActorLocation;
-        public IFormLinkNullableGetter<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> UniqueActor => _UniqueActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UniqueActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         public ILocationAliasReferenceGetter? Location { get; private set; }
         public IExternalAliasReferenceGetter? External { get; private set; }
         public ICreateReferenceToObjectGetter? CreateReferenceToObject { get; private set; }
         public IFindMatchingRefNearAliasGetter? FindMatchingRefNearAlias { get; private set; }
         public IFindMatchingRefFromEventGetter? FindMatchingRefFromEvent { get; private set; }
-        #region Conditions
-        partial void ConditionsCustomParse(
-            OverlayStream stream,
-            long finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed);
-        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -3921,36 +3882,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => _SpectatorOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpectatorOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region ObserveDeadBodyOverridePackageList
         private int? _ObserveDeadBodyOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList => _ObserveDeadBodyOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObserveDeadBodyOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region GuardWarnOverridePackageList
         private int? _GuardWarnOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> GuardWarnOverridePackageList => _GuardWarnOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GuardWarnOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region CombatOverridePackageList
         private int? _CombatOverridePackageListLocation;
-        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList => _CombatOverridePackageListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatOverridePackageListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region DisplayName
         private int? _DisplayNameLocation;
-        public IFormLinkNullableGetter<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
+        public IFormLinkNullableGetter<IMessageGetter> DisplayName => _DisplayNameLocation.HasValue ? new FormLinkNullable<IMessageGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayNameLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMessageGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = ListExt.Empty<IFormLinkGetter<IFactionGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = ListExt.Empty<IFormLinkGetter<IPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = Array.Empty<IFormLinkGetter<ISpellGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IFactionGetter>> Factions { get; private set; } = Array.Empty<IFormLinkGetter<IFactionGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IPackageGetter>> PackageData { get; private set; } = Array.Empty<IFormLinkGetter<IPackageGetter>>();
         #region VoiceTypes
         private int? _VoiceTypesLocation;
-        public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
-        #endregion
-        #region End
-        public partial ParseResult EndCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
+        public IFormLinkNullableGetter<IAliasVoiceTypeGetter> VoiceTypes => _VoiceTypesLocation.HasValue ? new FormLinkNullable<IAliasVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoiceTypesLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAliasVoiceTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3959,42 +3914,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected QuestAliasBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static QuestAliasBinaryOverlay QuestAliasFactory(
+        public static IQuestAliasGetter QuestAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestAliasBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static QuestAliasBinaryOverlay QuestAliasFactory(
+        public static IQuestAliasGetter QuestAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestAliasFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -4004,15 +3965,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestAlias_FieldIndex.ID) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     return IDParseCustomParse(
                         stream,
                         offset,
@@ -4030,8 +3991,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ALFI:
                 {
-                    _AliasIndexToForceIntoWhenFilledLocation = (stream.Position - offset);
-                    return (int)QuestAlias_FieldIndex.AliasIndexToForceIntoWhenFilled;
+                    _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    return (int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
@@ -4055,7 +4016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Location = LocationAliasReferenceBinaryOverlay.LocationAliasReferenceFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.Location;
                 }
                 case RecordTypeInts.ALEQ:
@@ -4064,7 +4025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.External = ExternalAliasReferenceBinaryOverlay.ExternalAliasReferenceFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.External;
                 }
                 case RecordTypeInts.ALCO:
@@ -4072,7 +4033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.CreateReferenceToObject = CreateReferenceToObjectBinaryOverlay.CreateReferenceToObjectFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.CreateReferenceToObject;
                 }
                 case RecordTypeInts.ALNA:
@@ -4081,7 +4042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.FindMatchingRefNearAlias = FindMatchingRefNearAliasBinaryOverlay.FindMatchingRefNearAliasFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.FindMatchingRefNearAlias;
                 }
                 case RecordTypeInts.ALFE:
@@ -4090,21 +4051,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.FindMatchingRefFromEvent = FindMatchingRefFromEventBinaryOverlay.FindMatchingRefFromEventFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)QuestAlias_FieldIndex.FindMatchingRefFromEvent;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConditionsCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
                     return (int)QuestAlias_FieldIndex.Conditions;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
@@ -4112,20 +4078,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)QuestAlias_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        subrecordType: RecordTypes.CNTO,
+                        trigger: ContainerEntry_Registration.TriggerSpecs,
                         countType: RecordTypes.COCT,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)QuestAlias_FieldIndex.Items;
@@ -4166,7 +4132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Spells;
                 }
                 case RecordTypeInts.ALFC:
@@ -4180,7 +4146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.Factions;
                 }
                 case RecordTypeInts.ALPC:
@@ -4194,7 +4160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)QuestAlias_FieldIndex.PackageData;
                 }
                 case RecordTypeInts.VTCK:
@@ -4202,12 +4168,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _VoiceTypesLocation = (stream.Position - offset);
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
-                case RecordTypeInts.ALED:
+                case RecordTypeInts.ALED: // End Marker
                 {
-                    return EndCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    stream.ReadSubrecord();
+                    return ParseResult.Stop;
                 }
                 default:
                     return ParseResult.Stop;
@@ -4215,12 +4179,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestAliasMixIn.ToString(
+            QuestAliasMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

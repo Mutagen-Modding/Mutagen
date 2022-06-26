@@ -5,31 +5,33 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -82,12 +84,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LightDataMixIn.ToString(
+            LightDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -263,62 +266,57 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LightData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LightData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LightData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LightData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LightData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LightData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Time ?? true)
                     {
-                        fg.AppendItem(Time, "Time");
+                        sb.AppendItem(Time, "Time");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FalloffExponent ?? true)
                     {
-                        fg.AppendItem(FalloffExponent, "FalloffExponent");
+                        sb.AppendItem(FalloffExponent, "FalloffExponent");
                     }
                     if (printMask?.FOV ?? true)
                     {
-                        fg.AppendItem(FOV, "FOV");
+                        sb.AppendItem(FOV, "FOV");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -473,44 +471,53 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Time, "Time");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FalloffExponent, "FalloffExponent");
-                fg.AppendItem(FOV, "FOV");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Time, "Time");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FalloffExponent, "FalloffExponent");
+                }
+                {
+                    sb.AppendItem(FOV, "FOV");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
             }
             #endregion
 
@@ -613,7 +620,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LightData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -628,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -638,7 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LightData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LightData();
             ((LightDataSetterCommon)((ILightDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -653,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LightData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -663,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -741,26 +747,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILightDataGetter item,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            return ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).ToString(
+            return ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).ToString(
+            ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -866,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILightData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LightDataSetterCommon)((ILightDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -881,10 +887,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LightData_FieldIndex
+    internal enum LightData_FieldIndex
     {
         Versioning = 0,
         Time = 1,
@@ -899,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LightData_Registration : ILoquiRegistration
+    internal partial class LightData_Registration : ILoquiRegistration
     {
         public static readonly LightData_Registration Instance = new LightData_Registration();
 
@@ -941,6 +947,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LightDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -974,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LightDataSetterCommon
+    internal partial class LightDataSetterCommon
     {
         public static readonly LightDataSetterCommon Instance = new LightDataSetterCommon();
 
@@ -1005,12 +1017,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILightData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1021,7 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightDataCommon
+    internal partial class LightDataCommon
     {
         public static readonly LightDataCommon Instance = new LightDataCommon();
 
@@ -1045,7 +1057,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Time = item.Time == rhs.Time;
             ret.Radius = item.Radius == rhs.Radius;
@@ -1057,85 +1068,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
-        public string ToString(
+        public string Print(
             ILightDataGetter item,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LightData =>");
+                sb.AppendLine($"LightData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LightData) =>");
+                sb.AppendLine($"{name} (LightData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LightData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Time ?? true)
             {
-                fg.AppendItem(item.Time, "Time");
+                sb.AppendItem(item.Time, "Time");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.Color, "Color");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FalloffExponent ?? true)
             {
-                fg.AppendItem(item.FalloffExponent, "FalloffExponent");
+                sb.AppendItem(item.FalloffExponent, "FalloffExponent");
             }
             if (printMask?.FOV ?? true)
             {
-                fg.AppendItem(item.FOV, "FOV");
+                sb.AppendItem(item.FOV, "FOV");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
         }
         
@@ -1209,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILightDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILightDataGetter obj)
         {
             yield break;
         }
@@ -1217,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LightDataSetterTranslationCommon
+    internal partial class LightDataSetterTranslationCommon
     {
         public static readonly LightDataSetterTranslationCommon Instance = new LightDataSetterTranslationCommon();
 
@@ -1328,7 +1337,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightData_Registration.Instance;
-        public static LightData_Registration StaticRegistration => LightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LightDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1352,11 +1361,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
+        public static readonly LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILightDataGetter item,
@@ -1389,12 +1398,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILightDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1406,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILightDataGetter)item,
@@ -1416,9 +1425,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LightDataBinaryCreateTranslation
+    internal partial class LightDataBinaryCreateTranslation
     {
-        public readonly static LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
+        public static readonly LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILightData item,
@@ -1452,7 +1461,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILightDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1465,16 +1474,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LightDataBinaryOverlay :
+    internal partial class LightDataBinaryOverlay :
         PluginBinaryOverlay,
         ILightDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightData_Registration.Instance;
-        public static LightData_Registration StaticRegistration => LightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LightDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1488,7 +1497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LightDataBinaryWriteTranslation.Instance;
@@ -1496,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1505,14 +1514,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public LightData.VersioningBreaks Versioning { get; private set; }
-        public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Color Color => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Single FalloffExponent => _data.Slice(0x10, 0x4).Float();
-        public Single FOV => _data.Slice(0x14, 0x4).Float();
-        public UInt32 Value => _data.Length <= 0x18 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
-        public Single Weight => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
+        public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Color Color => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
+        public Single FalloffExponent => _structData.Slice(0x10, 0x4).Float();
+        public Single FOV => _structData.Slice(0x14, 0x4).Float();
+        public UInt32 Value => _structData.Length <= 0x18 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x18, 0x4));
+        public Single Weight => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1520,26 +1529,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected LightDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LightDataBinaryOverlay LightDataFactory(
+        public static ILightDataGetter LightDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LightDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x18)
+            if (ret._structData.Length <= 0x18)
             {
                 ret.Versioning |= LightData.VersioningBreaks.Break0;
             }
@@ -1550,25 +1564,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static LightDataBinaryOverlay LightDataFactory(
+        public static ILightDataGetter LightDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LightDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LightDataMixIn.ToString(
+            LightDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

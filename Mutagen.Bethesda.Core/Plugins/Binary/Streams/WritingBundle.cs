@@ -19,7 +19,7 @@ public record WritingBundle(GameConstants Constants)
     /// <summary>
     /// Optional master references for easy access during write operations
     /// </summary>
-    public IMasterReferenceReader? MasterReferences { get; set; }
+    public IReadOnlyMasterReferenceCollection? MasterReferences { get; set; }
 
     /// <summary>
     /// Optional strings writer for easy access during write operations
@@ -43,5 +43,5 @@ public record WritingBundle(GameConstants Constants)
     
     public Language? TargetLanguageOverride { get; set; }
 
-    public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
+    public EncodingBundle Encodings { get; set; } = new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._utf8);
 }

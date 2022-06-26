@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -100,12 +102,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceDataMixIn.ToString(
+            RaceDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -359,70 +362,65 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(RaceData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(RaceData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RaceData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, RaceData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(RaceData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RaceData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.SkillBoost0?.Overall ?? true)
                     {
-                        SkillBoost0?.ToString(fg);
+                        SkillBoost0?.Print(sb);
                     }
                     if (printMask?.SkillBoost1?.Overall ?? true)
                     {
-                        SkillBoost1?.ToString(fg);
+                        SkillBoost1?.Print(sb);
                     }
                     if (printMask?.SkillBoost2?.Overall ?? true)
                     {
-                        SkillBoost2?.ToString(fg);
+                        SkillBoost2?.Print(sb);
                     }
                     if (printMask?.SkillBoost3?.Overall ?? true)
                     {
-                        SkillBoost3?.ToString(fg);
+                        SkillBoost3?.Print(sb);
                     }
                     if (printMask?.SkillBoost4?.Overall ?? true)
                     {
-                        SkillBoost4?.ToString(fg);
+                        SkillBoost4?.Print(sb);
                     }
                     if (printMask?.SkillBoost5?.Overall ?? true)
                     {
-                        SkillBoost5?.ToString(fg);
+                        SkillBoost5?.Print(sb);
                     }
                     if (printMask?.SkillBoost6?.Overall ?? true)
                     {
-                        SkillBoost6?.ToString(fg);
+                        SkillBoost6?.Print(sb);
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Height => {Height}");
+                        sb.AppendLine($"Height => {Height}");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        sb.AppendLine($"Weight => {Weight}");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -597,46 +595,45 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                SkillBoost0?.ToString(fg);
-                SkillBoost1?.ToString(fg);
-                SkillBoost2?.ToString(fg);
-                SkillBoost3?.ToString(fg);
-                SkillBoost4?.ToString(fg);
-                SkillBoost5?.ToString(fg);
-                SkillBoost6?.ToString(fg);
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendLine($"Height => {Height}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendItem(Flags, "Flags");
+                SkillBoost0?.Print(sb);
+                SkillBoost1?.Print(sb);
+                SkillBoost2?.Print(sb);
+                SkillBoost3?.Print(sb);
+                SkillBoost4?.Print(sb);
+                SkillBoost5?.Print(sb);
+                SkillBoost6?.Print(sb);
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendLine($"Height => {Height}");
+                }
+                {
+                    sb.AppendLine($"Weight => {Weight}");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -737,10 +734,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = RaceData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceDataBinaryWriteTranslation.Instance;
@@ -748,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -758,7 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RaceData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RaceData();
             ((RaceDataSetterCommon)((IRaceDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -773,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RaceData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -783,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -863,26 +856,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRaceDataGetter item,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
-            return ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).ToString(
+            return ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRaceDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
-            ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).ToString(
+            ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -988,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRaceData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceDataSetterCommon)((IRaceDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1003,10 +996,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RaceData_FieldIndex
+    internal enum RaceData_FieldIndex
     {
         SkillBoost0 = 0,
         SkillBoost1 = 1,
@@ -1023,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RaceData_Registration : ILoquiRegistration
+    internal partial class RaceData_Registration : ILoquiRegistration
     {
         public static readonly RaceData_Registration Instance = new RaceData_Registration();
 
@@ -1065,6 +1058,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RaceDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1098,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RaceDataSetterCommon
+    internal partial class RaceDataSetterCommon
     {
         public static readonly RaceDataSetterCommon Instance = new RaceDataSetterCommon();
 
@@ -1133,12 +1132,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRaceData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1149,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceDataCommon
+    internal partial class RaceDataCommon
     {
         public static readonly RaceDataCommon Instance = new RaceDataCommon();
 
@@ -1173,7 +1172,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SkillBoost0 = MaskItemExt.Factory(item.SkillBoost0.GetEqualsMask(rhs.SkillBoost0, include), include);
             ret.SkillBoost1 = MaskItemExt.Factory(item.SkillBoost1.GetEqualsMask(rhs.SkillBoost1, include), include);
             ret.SkillBoost2 = MaskItemExt.Factory(item.SkillBoost2.GetEqualsMask(rhs.SkillBoost2, include), include);
@@ -1191,93 +1189,91 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IRaceDataGetter item,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRaceDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RaceData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RaceData =>");
+                sb.AppendLine($"RaceData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RaceData) =>");
+                sb.AppendLine($"{name} (RaceData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RaceData.Mask<bool>? printMask = null)
         {
             if (printMask?.SkillBoost0?.Overall ?? true)
             {
-                item.SkillBoost0?.ToString(fg, "SkillBoost0");
+                item.SkillBoost0?.Print(sb, "SkillBoost0");
             }
             if (printMask?.SkillBoost1?.Overall ?? true)
             {
-                item.SkillBoost1?.ToString(fg, "SkillBoost1");
+                item.SkillBoost1?.Print(sb, "SkillBoost1");
             }
             if (printMask?.SkillBoost2?.Overall ?? true)
             {
-                item.SkillBoost2?.ToString(fg, "SkillBoost2");
+                item.SkillBoost2?.Print(sb, "SkillBoost2");
             }
             if (printMask?.SkillBoost3?.Overall ?? true)
             {
-                item.SkillBoost3?.ToString(fg, "SkillBoost3");
+                item.SkillBoost3?.Print(sb, "SkillBoost3");
             }
             if (printMask?.SkillBoost4?.Overall ?? true)
             {
-                item.SkillBoost4?.ToString(fg, "SkillBoost4");
+                item.SkillBoost4?.Print(sb, "SkillBoost4");
             }
             if (printMask?.SkillBoost5?.Overall ?? true)
             {
-                item.SkillBoost5?.ToString(fg, "SkillBoost5");
+                item.SkillBoost5?.Print(sb, "SkillBoost5");
             }
             if (printMask?.SkillBoost6?.Overall ?? true)
             {
-                item.SkillBoost6?.ToString(fg, "SkillBoost6");
+                item.SkillBoost6?.Print(sb, "SkillBoost6");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (true)
             {
-                item.Height.ToString(fg, "Height");
+                item.Height.Print(sb, "Height");
             }
             if (true)
             {
-                item.Weight.ToString(fg, "Weight");
+                item.Weight.Print(sb, "Weight");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1389,7 +1385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceDataGetter obj)
         {
             yield break;
         }
@@ -1397,7 +1393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RaceDataSetterTranslationCommon
+    internal partial class RaceDataSetterTranslationCommon
     {
         public static readonly RaceDataSetterTranslationCommon Instance = new RaceDataSetterTranslationCommon();
 
@@ -1639,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceData_Registration.Instance;
-        public static RaceData_Registration StaticRegistration => RaceData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1663,11 +1659,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RaceDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RaceDataBinaryWriteTranslation Instance = new RaceDataBinaryWriteTranslation();
+        public static readonly RaceDataBinaryWriteTranslation Instance = new RaceDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRaceDataGetter item,
@@ -1719,12 +1715,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRaceDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1736,7 +1732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceDataGetter)item,
@@ -1746,9 +1742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RaceDataBinaryCreateTranslation
+    internal partial class RaceDataBinaryCreateTranslation
     {
-        public readonly static RaceDataBinaryCreateTranslation Instance = new RaceDataBinaryCreateTranslation();
+        public static readonly RaceDataBinaryCreateTranslation Instance = new RaceDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRaceData item,
@@ -1784,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRaceDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1797,16 +1793,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RaceDataBinaryOverlay :
+    internal partial class RaceDataBinaryOverlay :
         PluginBinaryOverlay,
         IRaceDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceData_Registration.Instance;
-        public static RaceData_Registration StaticRegistration => RaceData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RaceData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RaceDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1820,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RaceDataBinaryWriteTranslation.Instance;
@@ -1828,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1836,20 +1832,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x2), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x4), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost3 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x6), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0xA), _package), _package, default(TypedParseParams));
-        public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0xC), _package), _package, default(TypedParseParams));
-        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xE, 0x4));
+        public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData, _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x2), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x4), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost3 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x6), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0x8), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0xA), _package, default(TypedParseParams));
+        public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(_structData.Slice(0xC), _package, default(TypedParseParams));
+        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xE, 0x4));
         #region Height
         public IGenderedItemGetter<Single> Height
         {
             get
             {
-                var data = _data.Span.Slice(0x12, 8);
+                var data = _structData.Span.Slice(0x12, 8);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -1861,14 +1857,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             get
             {
-                var data = _data.Span.Slice(0x1A, 8);
+                var data = _structData.Span.Slice(0x1A, 8);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
             }
         }
         #endregion
-        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x22, 0x2));
+        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x22, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1876,25 +1872,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RaceDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RaceDataBinaryOverlay RaceDataFactory(
+        public static IRaceDataGetter RaceDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new RaceDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x24 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1903,25 +1904,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static RaceDataBinaryOverlay RaceDataFactory(
+        public static IRaceDataGetter RaceDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceDataMixIn.ToString(
+            RaceDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

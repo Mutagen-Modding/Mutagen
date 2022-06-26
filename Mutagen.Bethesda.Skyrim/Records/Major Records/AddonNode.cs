@@ -1,48 +1,43 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using System;
 using System.Buffers.Binary;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class AddonNodeBinaryCreateTranslation
 {
-    namespace Internals
+    public static partial void FillBinaryAlwaysLoadedCustom(MutagenFrame frame, IAddonNodeInternal item)
     {
-        public partial class AddonNodeBinaryCreateTranslation
+        var flags = frame.ReadUInt16();
+        item.AlwaysLoaded = flags switch 
         {
-            public static partial void FillBinaryAlwaysLoadedCustom(MutagenFrame frame, IAddonNodeInternal item)
-            {
-                var flags = frame.ReadUInt16();
-                item.AlwaysLoaded = flags switch 
-                {
-                    1 => false,
-                    3 => true,
-                    _ => throw new NotImplementedException()
-                };
-            }
-        }
+            1 => false,
+            3 => true,
+            _ => throw new NotImplementedException()
+        };
+    }
+}
 
-        public partial class AddonNodeBinaryWriteTranslation
+partial class AddonNodeBinaryWriteTranslation
+{
+    public static partial void WriteBinaryAlwaysLoadedCustom(MutagenWriter writer, IAddonNodeGetter item)
+    {
+        if (item.AlwaysLoaded)
         {
-            public static partial void WriteBinaryAlwaysLoadedCustom(MutagenWriter writer, IAddonNodeGetter item)
-            {
-                if (item.AlwaysLoaded)
-                {
-                    writer.Write((short)3);
-                }
-                else
-                {
-                    writer.Write((short)1);
-                }
-            }
+            writer.Write((short)3);
         }
-
-        public partial class AddonNodeBinaryOverlay
+        else
         {
-            public Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_AlwaysLoadedLocation)) switch
-            {
-                1 => false,
-                3 => true,
-                _ => throw new NotImplementedException()
-            };
+            writer.Write((short)1);
         }
     }
+}
+
+partial class AddonNodeBinaryOverlay
+{
+    public partial Boolean GetAlwaysLoadedCustom() => BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_AlwaysLoadedLocation)) switch
+    {
+        1 => false,
+        3 => true,
+        _ => throw new NotImplementedException()
+    };
 }

@@ -1,16 +1,14 @@
-﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Oblivion.Records;
 
@@ -26,7 +24,7 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
 
     #region IGroupGetter Forwarding
 
-    public IEnumerable<IFormLinkGetter> ContainedFormLinks => _groupMerge.ContainedFormLinks;
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => _groupMerge.EnumerateFormLinks();
 
     public IMod SourceMod => _groupMerge.SourceMod;
     
@@ -45,11 +43,15 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
     public IEnumerable<FormKey> FormKeys => _groupMerge.FormKeys;
 
     IEnumerable<IMajorRecordGetter> IGroupGetter.Records => ((IGroupGetter)_groupMerge).Records;
+    
+    public Type ContainedRecordType => typeof(TMajor);
 
     public bool ContainsKey(FormKey key)
     {
         return _groupMerge.ContainsKey(key);
     }
+
+    public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
 
     public IEnumerator<TMajor> GetEnumerator()
     {
@@ -90,8 +92,8 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
 
     public IReadOnlyCache<TMajor, FormKey> RecordCache => _groupMerge.RecordCache;
     
-    public GroupTypeEnum Type => _groupMerge.SubGroups[^1].Type;
     
+    public GroupTypeEnum Type => _groupMerge.SubGroups[^1].Type;
     public int LastModified => _groupMerge.SubGroups[^1].LastModified;
     
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -101,7 +103,7 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
     
     void IBinaryItem.WriteToBinary(
         MutagenWriter writer,
-        TypedWriteParams? translationParams = null)
+        TypedWriteParams translationParams = default)
     {
         ((OblivionGroupBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
             item: this,
@@ -109,9 +111,9 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
             translationParams: translationParams);
     }
 
-    public void ToString(FileGeneration fg, string? name = null)
+    public void Print(StructuredStringBuilder fg, string? name = null)
     {
-        OblivionGroupMixIn.ToString(
+        OblivionGroupMixIn.Print(
             item: this,
             name: name);
     }

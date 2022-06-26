@@ -5,33 +5,35 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +57,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SpellLeveledMixIn.ToString(
+            SpellLeveledMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -156,26 +159,21 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SpellLeveled.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SpellLeveled.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SpellLeveled.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SpellLeveled.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SpellLeveled.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SpellLeveled.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -226,36 +224,27 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
             }
             #endregion
 
@@ -364,7 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => SpellLeveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellLeveledBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -374,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static SpellLeveled CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SpellLeveled();
             ((SpellLeveledSetterCommon)((ISpellLeveledGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -389,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SpellLeveled item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -399,7 +388,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -465,26 +454,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISpellLeveledGetter item,
             string? name = null,
             SpellLeveled.Mask<bool>? printMask = null)
         {
-            return ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).ToString(
+            return ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISpellLeveledGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SpellLeveled.Mask<bool>? printMask = null)
         {
-            ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).ToString(
+            ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -579,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISpellLeveledInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SpellLeveledSetterCommon)((ISpellLeveledGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -594,10 +583,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SpellLeveled_FieldIndex
+    internal enum SpellLeveled_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -609,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SpellLeveled_Registration : ILoquiRegistration
+    internal partial class SpellLeveled_Registration : ILoquiRegistration
     {
         public static readonly SpellLeveled_Registration Instance = new SpellLeveled_Registration();
 
@@ -651,6 +640,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVSP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.LVSP);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SpellLeveledBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -684,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SpellLeveledSetterCommon : SpellSetterCommon
+    internal partial class SpellLeveledSetterCommon : SpellSetterCommon
     {
         public new static readonly SpellLeveledSetterCommon Instance = new SpellLeveledSetterCommon();
 
@@ -723,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ISpellLeveledInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISpellLeveledInternal>(
                 record: item,
@@ -736,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             ISpellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SpellLeveled)item,
@@ -747,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SpellLeveled)item,
@@ -758,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SpellLeveled)item,
@@ -769,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellLeveledCommon : SpellCommon
+    internal partial class SpellLeveledCommon : SpellCommon
     {
         public new static readonly SpellLeveledCommon Instance = new SpellLeveledCommon();
 
@@ -793,57 +788,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SpellLeveled.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISpellLeveledGetter item,
             string? name = null,
             SpellLeveled.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISpellLeveledGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SpellLeveled.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SpellLeveled =>");
+                sb.AppendLine($"SpellLeveled =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SpellLeveled) =>");
+                sb.AppendLine($"{name} (SpellLeveled) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISpellLeveledGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SpellLeveled.Mask<bool>? printMask = null)
         {
             SpellCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
         }
         
@@ -979,9 +971,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISpellLeveledGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpellLeveledGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1037,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SpellLeveledSetterTranslationCommon : SpellSetterTranslationCommon
+    internal partial class SpellLeveledSetterTranslationCommon : SpellSetterTranslationCommon
     {
         public new static readonly SpellLeveledSetterTranslationCommon Instance = new SpellLeveledSetterTranslationCommon();
 
@@ -1222,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellLeveled_Registration.Instance;
-        public new static SpellLeveled_Registration StaticRegistration => SpellLeveled_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SpellLeveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellLeveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1240,18 +1232,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SpellLeveledBinaryWriteTranslation :
         SpellBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SpellLeveledBinaryWriteTranslation Instance = new SpellLeveledBinaryWriteTranslation();
+        public new static readonly SpellLeveledBinaryWriteTranslation Instance = new SpellLeveledBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             ISpellLeveledGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1262,10 +1254,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    SpellBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        SpellBinaryWriteTranslation.WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1277,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1288,7 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             ISpellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1299,7 +1294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1310,7 +1305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISpellLeveledGetter)item,
@@ -1320,9 +1315,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SpellLeveledBinaryCreateTranslation : SpellBinaryCreateTranslation
+    internal partial class SpellLeveledBinaryCreateTranslation : SpellBinaryCreateTranslation
     {
-        public new readonly static SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
+        public new static readonly SpellLeveledBinaryCreateTranslation Instance = new SpellLeveledBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVSP;
         public static void FillBinaryStructs(
@@ -1347,16 +1342,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SpellLeveledBinaryOverlay :
+    internal partial class SpellLeveledBinaryOverlay :
         SpellBinaryOverlay,
         ISpellLeveledGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellLeveled_Registration.Instance;
-        public new static SpellLeveled_Registration StaticRegistration => SpellLeveled_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SpellLeveled_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SpellLeveledCommon.Instance;
         [DebuggerStepThrough]
@@ -1364,13 +1359,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SpellLeveledBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SpellLeveledBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1387,28 +1382,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected SpellLeveledBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SpellLeveledBinaryOverlay SpellLeveledFactory(
+        public static ISpellLeveledGetter SpellLeveledFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SpellLeveledBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1418,30 +1416,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static SpellLeveledBinaryOverlay SpellLeveledFactory(
+        public static ISpellLeveledGetter SpellLeveledFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SpellLeveledFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SpellLeveledMixIn.ToString(
+            SpellLeveledMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

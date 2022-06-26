@@ -5,32 +5,37 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +56,66 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IFormListGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> _Items = new ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> Items
+        {
+            get => this._Items;
+            init => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> IFormListGetter.Items => _Items;
+        #endregion
+
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FormListMixIn.ToString(
+            FormListMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +131,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -83,7 +141,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Items)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +152,8 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -100,6 +162,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Items;
             #endregion
 
             #region Equals
@@ -113,11 +180,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Items);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +199,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -136,6 +219,18 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -151,30 +246,65 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FormList.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FormList.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FormList.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FormList.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FormList.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FormList.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
+                    {
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +314,21 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Items;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Name:
+                        return Name;
+                    case FormList_FieldIndex.Items:
+                        return Items;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +339,12 @@ namespace Mutagen.Bethesda.Fallout4
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case FormList_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +356,12 @@ namespace Mutagen.Bethesda.Fallout4
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case FormList_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +371,57 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Items != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                if (Items is {} ItemsItem)
+                {
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -263,6 +430,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +453,29 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Items;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Items = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Items, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -304,6 +487,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = FormList_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FormListCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FormListSetterCommon.Instance.RemapLinks(this, mapping);
         public FormList(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -373,7 +558,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FormListBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +568,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static FormList CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FormList();
             ((FormListSetterCommon)((IFormListGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +583,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FormList item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +593,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -425,10 +610,23 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IFormList :
+        IAliasVoiceType,
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         IFormListGetter,
-        ILoquiObjectSetter<IFormListInternal>
+        ILockList,
+        ILoquiObjectSetter<IFormListInternal>,
+        INamed,
+        INamedRequired,
+        IObjectId,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> Items { get; }
     }
 
     public partial interface IFormListInternal :
@@ -441,11 +639,26 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.FLST)]
     public partial interface IFormListGetter :
         IFallout4MajorRecordGetter,
+        IAliasVoiceTypeGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        ILockListGetter,
         ILoquiObject<IFormListGetter>,
-        IMapsToGetter<IFormListGetter>
+        IMapsToGetter<IFormListGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Items { get; }
 
     }
 
@@ -470,26 +683,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFormListGetter item,
             string? name = null,
             FormList.Mask<bool>? printMask = null)
         {
-            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).ToString(
+            return ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFormListGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FormList.Mask<bool>? printMask = null)
         {
-            ((FormListCommon)((IFormListGetter)item).CommonInstance()!).ToString(
+            ((FormListCommon)((IFormListGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +797,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFormListInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FormListSetterCommon)((IFormListGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +812,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum FormList_FieldIndex
+    internal enum FormList_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +823,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Items = 7,
     }
     #endregion
 
     #region Registration
-    public partial class FormList_Registration : ILoquiRegistration
+    internal partial class FormList_Registration : ILoquiRegistration
     {
         public static readonly FormList_Registration Instance = new FormList_Registration();
 
@@ -627,9 +842,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "154ca65c-cc1a-44f3-9d52-4a27e29839bf";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(FormList.Mask<>);
 
@@ -656,6 +871,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.FLST;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.FLST);
+            var all = RecordCollection.Factory(
+                RecordTypes.FLST,
+                RecordTypes.FULL,
+                RecordTypes.LNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(FormListBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +914,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class FormListSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class FormListSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly FormListSetterCommon Instance = new FormListSetterCommon();
 
@@ -698,6 +923,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IFormListInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Items.Clear();
             base.Clear(item);
         }
         
@@ -715,6 +942,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IFormList obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Items.RemapLinks(mapping);
         }
         
         #endregion
@@ -723,7 +951,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IFormListInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IFormListInternal>(
                 record: item,
@@ -736,7 +964,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FormList)item,
@@ -747,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FormList)item,
@@ -758,7 +986,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FormListCommon : Fallout4MajorRecordCommon
+    internal partial class FormListCommon : Fallout4MajorRecordCommon
     {
         public new static readonly FormListCommon Instance = new FormListCommon();
 
@@ -782,58 +1010,79 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FormList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFormListGetter item,
             string? name = null,
             FormList.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFormListGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FormList.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FormList =>");
+                sb.AppendLine($"FormList =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FormList) =>");
+                sb.AppendLine($"{name} (FormList) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFormListGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FormList.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static FormList_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1131,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FormList_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FormList_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
             return true;
         }
         
@@ -910,6 +1167,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IFormListGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Items);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,11 +1195,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFormListGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFormListGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Items)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -980,7 +1246,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class FormListSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class FormListSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly FormListSetterTranslationCommon Instance = new FormListSetterTranslationCommon();
 
@@ -1013,6 +1279,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.Items) ?? true))
+            {
+                errorMask?.PushIndex((int)FormList_FieldIndex.Items);
+                try
+                {
+                    item.Items.SetTo(
+                        rhs.Items
+                        .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +1424,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +1442,45 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class FormListBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FormListBinaryWriteTranslation Instance = new FormListBinaryWriteTranslation();
+        public new static readonly FormListBinaryWriteTranslation Instance = new FormListBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IFormListGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Items,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+                });
+        }
 
         public void Write(
             MutagenWriter writer,
             IFormListGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1175,10 +1491,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +1511,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFormListGetter)item,
@@ -1201,7 +1522,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFormListGetter)item,
@@ -1212,7 +1533,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFormListGetter)item,
@@ -1222,9 +1543,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class FormListBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class FormListBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
+        public new static readonly FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLST;
         public static void FillBinaryStructs(
@@ -1234,6 +1555,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IFormListInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)FormList_FieldIndex.Name;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.LNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)FormList_FieldIndex.Items;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
         }
 
     }
@@ -1249,16 +1612,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class FormListBinaryOverlay :
+    internal partial class FormListBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IFormListGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FormList_Registration.Instance;
-        public new static FormList_Registration StaticRegistration => FormList_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FormListCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +1629,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FormListCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FormListBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1282,6 +1646,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IFormList);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Items { get; private set; } = Array.Empty<IFormLinkGetter<IFallout4MajorRecordGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +1666,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected FormListBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FormListBinaryOverlay FormListFactory(
+        public static IFormListGetter FormListFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FormListBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +1700,73 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static FormListBinaryOverlay FormListFactory(
+        public static IFormListGetter FormListFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FormListFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)FormList_FieldIndex.Name;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    this.Items = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IFallout4MajorRecordGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)FormList_FieldIndex.Items;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FormListMixIn.ToString(
+            FormListMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GodRays" recordType="GDRY" baseClass="Fallout4MajorRecord" objType="Record" GUID="92693d71-3760-4363-a089-ad858e092a57" ID="194">
+    <Fields>
+      <Data>
+        <Fields>
+          <Color name="BackColor" binaryType="NoAlphaFloat" />
+          <Color name="ForwardColor" binaryType="NoAlphaFloat" />
+          <Float name="Intensity" />
+          <Float name="AirColorScale" />
+          <Float name="BackColorScale" />
+          <Float name="ForwardColorScale" />
+          <Float name="BackPhase" />
+          <Color name="AirColor" binaryType="NoAlphaFloat" />
+          <Float name="ForwardPhase" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

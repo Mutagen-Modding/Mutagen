@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -84,12 +86,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            IslandDataMixIn.ToString(
+            IslandDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -261,9 +264,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Triangles.Specific = l;
-                        foreach (var item in Triangles.Specific.WithIndex())
+                        foreach (var item in Triangles.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -275,9 +278,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Vertices.Specific = l;
-                        foreach (var item in Vertices.Specific.WithIndex())
+                        foreach (var item in Vertices.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -286,80 +289,71 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(IslandData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(IslandData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, IslandData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, IslandData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(IslandData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(IslandData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Min ?? true)
                     {
-                        fg.AppendItem(Min, "Min");
+                        sb.AppendItem(Min, "Min");
                     }
                     if (printMask?.Max ?? true)
                     {
-                        fg.AppendItem(Max, "Max");
+                        sb.AppendItem(Max, "Max");
                     }
                     if ((printMask?.Triangles?.Overall ?? true)
                         && Triangles is {} TrianglesItem)
                     {
-                        fg.AppendLine("Triangles =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Triangles =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TrianglesItem.Overall);
+                            sb.AppendItem(TrianglesItem.Overall);
                             if (TrianglesItem.Specific != null)
                             {
                                 foreach (var subItem in TrianglesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Vertices?.Overall ?? true)
                         && Vertices is {} VerticesItem)
                     {
-                        fg.AppendLine("Vertices =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Vertices =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(VerticesItem.Overall);
+                            sb.AppendItem(VerticesItem.Overall);
                             if (VerticesItem.Specific != null)
                             {
                                 foreach (var subItem in VerticesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -464,80 +458,71 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Min, "Min");
-                fg.AppendItem(Max, "Max");
+                {
+                    sb.AppendItem(Min, "Min");
+                }
+                {
+                    sb.AppendItem(Max, "Max");
+                }
                 if (Triangles is {} TrianglesItem)
                 {
-                    fg.AppendLine("Triangles =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Triangles =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TrianglesItem.Overall);
+                        sb.AppendItem(TrianglesItem.Overall);
                         if (TrianglesItem.Specific != null)
                         {
                             foreach (var subItem in TrianglesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Vertices is {} VerticesItem)
                 {
-                    fg.AppendLine("Vertices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Vertices =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(VerticesItem.Overall);
+                        sb.AppendItem(VerticesItem.Overall);
                         if (VerticesItem.Specific != null)
                         {
                             foreach (var subItem in VerticesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -627,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IslandDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -637,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static IslandData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new IslandData();
             ((IslandDataSetterCommon)((IIslandDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -652,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out IslandData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -662,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -728,26 +713,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IIslandDataGetter item,
             string? name = null,
             IslandData.Mask<bool>? printMask = null)
         {
-            return ((IslandDataCommon)((IIslandDataGetter)item).CommonInstance()!).ToString(
+            return ((IslandDataCommon)((IIslandDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IIslandDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             IslandData.Mask<bool>? printMask = null)
         {
-            ((IslandDataCommon)((IIslandDataGetter)item).CommonInstance()!).ToString(
+            ((IslandDataCommon)((IIslandDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -853,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IIslandData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((IslandDataSetterCommon)((IIslandDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -868,10 +853,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum IslandData_FieldIndex
+    internal enum IslandData_FieldIndex
     {
         Min = 0,
         Max = 1,
@@ -881,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class IslandData_Registration : ILoquiRegistration
+    internal partial class IslandData_Registration : ILoquiRegistration
     {
         public static readonly IslandData_Registration Instance = new IslandData_Registration();
 
@@ -955,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IslandDataSetterCommon
+    internal partial class IslandDataSetterCommon
     {
         public static readonly IslandDataSetterCommon Instance = new IslandDataSetterCommon();
 
@@ -981,7 +966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IIslandData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -993,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IslandDataCommon
+    internal partial class IslandDataCommon
     {
         public static readonly IslandDataCommon Instance = new IslandDataCommon();
 
@@ -1017,7 +1002,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IslandData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min.Equals(rhs.Min);
             ret.Max = item.Max.Equals(rhs.Max);
             ret.Triangles = item.Triangles.CollectionEqualsHelper(
@@ -1030,93 +1014,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IIslandDataGetter item,
             string? name = null,
             IslandData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IIslandDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             IslandData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"IslandData =>");
+                sb.AppendLine($"IslandData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (IslandData) =>");
+                sb.AppendLine($"{name} (IslandData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IIslandDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             IslandData.Mask<bool>? printMask = null)
         {
             if (printMask?.Min ?? true)
             {
-                fg.AppendItem(item.Min, "Min");
+                sb.AppendItem(item.Min, "Min");
             }
             if (printMask?.Max ?? true)
             {
-                fg.AppendItem(item.Max, "Max");
+                sb.AppendItem(item.Max, "Max");
             }
             if (printMask?.Triangles?.Overall ?? true)
             {
-                fg.AppendLine("Triangles =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Triangles =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Triangles)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Vertices?.Overall ?? true)
             {
-                fg.AppendLine("Vertices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Vertices =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Vertices)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1165,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIslandDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IIslandDataGetter obj)
         {
             yield break;
         }
@@ -1173,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IslandDataSetterTranslationCommon
+    internal partial class IslandDataSetterTranslationCommon
     {
         public static readonly IslandDataSetterTranslationCommon Instance = new IslandDataSetterTranslationCommon();
 
@@ -1289,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IslandData_Registration.Instance;
-        public static IslandData_Registration StaticRegistration => IslandData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => IslandData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IslandDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1313,11 +1287,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IslandDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IslandDataBinaryWriteTranslation Instance = new IslandDataBinaryWriteTranslation();
+        public static readonly IslandDataBinaryWriteTranslation Instance = new IslandDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IIslandDataGetter item,
@@ -1344,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IIslandDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1354,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IIslandDataGetter)item,
@@ -1364,9 +1338,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IslandDataBinaryCreateTranslation
+    internal partial class IslandDataBinaryCreateTranslation
     {
-        public readonly static IslandDataBinaryCreateTranslation Instance = new IslandDataBinaryCreateTranslation();
+        public static readonly IslandDataBinaryCreateTranslation Instance = new IslandDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IIslandData item,
@@ -1397,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IIslandDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IslandDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1410,16 +1384,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IslandDataBinaryOverlay :
+    internal partial class IslandDataBinaryOverlay :
         PluginBinaryOverlay,
         IIslandDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => IslandData_Registration.Instance;
-        public static IslandData_Registration StaticRegistration => IslandData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => IslandData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => IslandDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1433,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => IslandDataBinaryWriteTranslation.Instance;
@@ -1441,7 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((IslandDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1449,14 +1423,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public P3Float Min => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public P3Float Max => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0xC));
+        public P3Float Min => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public P3Float Max => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0xC));
         #region Triangles
-        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList.FactoryByCountLength<P3Int16>(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
+        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList.FactoryByCountLength<P3Int16>(_structData.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int TrianglesEndingPos;
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_structData.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int VerticesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1466,26 +1440,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected IslandDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static IslandDataBinaryOverlay IslandDataFactory(
+        public static IIslandDataGetter IslandDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new IslandDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(0x18)) * 6 + 4;
-            ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.TrianglesEndingPos)) * 12 + 4;
+            ret.TrianglesEndingPos = 0x18 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x18)) * 6 + 4;
+            ret.VerticesEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 12 + 4;
             stream.Position += ret.VerticesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1494,25 +1474,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static IslandDataBinaryOverlay IslandDataFactory(
+        public static IIslandDataGetter IslandDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return IslandDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            IslandDataMixIn.ToString(
+            IslandDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

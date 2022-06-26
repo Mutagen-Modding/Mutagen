@@ -1,18 +1,17 @@
-﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters
+﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
+
+/// <summary>
+/// Flag to specify what logic to use to keep a mod's record count in sync
+/// </summary>
+public enum RecordCountOption
 {
     /// <summary>
-    /// Flag to specify what logic to use to keep a mod's record count in sync
+    /// Do no check
     /// </summary>
-    public enum RecordCountOption
-    {
-        /// <summary>
-        /// Do no check
-        /// </summary>
-        NoCheck,
+    NoCheck,
 
-        /// <summary>
-        /// Iterate source mod
-        /// </summary>
-        Iterate,
-    }
+    /// <summary>
+    /// Iterate source mod
+    /// </summary>
+    Iterate,
 }

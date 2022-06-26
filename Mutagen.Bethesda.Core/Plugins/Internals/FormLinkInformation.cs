@@ -1,55 +1,78 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
+using Loqui;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Internals
+namespace Mutagen.Bethesda.Plugins.Internals;
+
+public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
 {
-    public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
+    public FormKey? FormKeyNullable => FormKey;
+
+    public bool IsNull => FormKey.IsNull;
+
+    public override string ToString()
     {
-        public FormKey? FormKeyNullable => this.FormKey;
+        return $"<{GetTypeString()}>{FormKey}";
+    }
 
-        public bool IsNull => this.FormKey.IsNull;
-
-        public override string ToString()
+    private string GetTypeString()
+    {
+        if (LoquiRegistration.TryGetRegister(Type, out var regis))
         {
-            return $"({Type}) => {FormKey}";
+            return $"{regis.ProtocolKey.Namespace}.{Type.Name}";
         }
-
-        public static FormLinkInformation Factory<TMajorGetter>(IFormLinkGetter<TMajorGetter> link)
-            where TMajorGetter : class, IMajorRecordGetter
+        else
         {
-            return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
+            return Type.Name;
         }
+    }
 
-        public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link)
-            where TMajorGetter : class, IMajorRecordGetter
+    public static FormLinkInformation Factory<TMajorGetter>(IFormLinkGetter<TMajorGetter> link)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
+    }
+
+    public static bool TryFactory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link, [MaybeNullWhen(false)] out FormLinkInformation info)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        if (link.FormKeyNullable == null)
         {
-            return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
+            info = null;
+            return false;
         }
+        info = new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
+        return true;
+    }
 
-        public static FormLinkInformation Factory(IMajorRecordGetter majorRec)
-        {
-            return new FormLinkInformation(majorRec.FormKey, majorRec.Registration.GetterType);
-        }
+    public static FormLinkInformation Factory<TMajorGetter>(IFormLinkNullableGetter<TMajorGetter> link)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkInformation(link.FormKey, typeof(TMajorGetter));
+    }
 
-        public static IFormLinkGetter Factory(IFormLinkGetter rhs) => rhs;
+    public static FormLinkInformation Factory(IMajorRecordGetter majorRec)
+    {
+        return new FormLinkInformation(majorRec.FormKey, majorRec.Registration.GetterType);
+    }
 
-        public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
-        {
-            modKey = this.FormKey.ModKey;
-            return true;
-        }
+    public static IFormLinkGetter Factory(IFormLinkGetter rhs) => rhs;
 
-        public bool TryResolveFormKey(ILinkCache cache, out FormKey formKey)
-        {
-            formKey = this.FormKey;
-            return true;
-        }
+    public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+    {
+        modKey = FormKey.ModKey;
+        return true;
+    }
 
-        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord)
-        {
-            return cache.TryResolve<IMajorRecordGetter>(this.FormKey, out majorRecord);
-        }
+    public bool TryResolveFormKey(ILinkCache cache, out FormKey formKey)
+    {
+        formKey = FormKey;
+        return true;
+    }
+
+    public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord)
+    {
+        return cache.TryResolve<IMajorRecordGetter>(FormKey, out majorRecord);
     }
 }

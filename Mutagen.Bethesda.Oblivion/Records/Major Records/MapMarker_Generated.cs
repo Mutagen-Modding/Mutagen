@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -89,12 +90,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MapMarkerMixIn.ToString(
+            MapMarkerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -238,9 +240,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Types.Specific = l;
-                        foreach (var item in Types.Specific.WithIndex())
+                        foreach (var item in Types.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -249,57 +251,50 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MapMarker.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MapMarker.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MapMarker.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MapMarker.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MapMarker.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MapMarker.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.Types?.Overall ?? true)
                         && Types is {} TypesItem)
                     {
-                        fg.AppendLine("Types =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Types =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TypesItem.Overall);
+                            sb.AppendItem(TypesItem.Overall);
                             if (TypesItem.Specific != null)
                             {
                                 foreach (var subItem in TypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -394,58 +389,51 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Name, "Name");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (Types is {} TypesItem)
                 {
-                    fg.AppendLine("Types =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Types =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TypesItem.Overall);
+                        sb.AppendItem(TypesItem.Overall);
                         if (TypesItem.Specific != null)
                         {
                             foreach (var subItem in TypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -531,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -541,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static MapMarker CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MapMarker();
             ((MapMarkerSetterCommon)((IMapMarkerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -556,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MapMarker item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -566,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -642,26 +630,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMapMarkerGetter item,
             string? name = null,
             MapMarker.Mask<bool>? printMask = null)
         {
-            return ((MapMarkerCommon)((IMapMarkerGetter)item).CommonInstance()!).ToString(
+            return ((MapMarkerCommon)((IMapMarkerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMapMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MapMarker.Mask<bool>? printMask = null)
         {
-            ((MapMarkerCommon)((IMapMarkerGetter)item).CommonInstance()!).ToString(
+            ((MapMarkerCommon)((IMapMarkerGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -767,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IMapMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MapMarkerSetterCommon)((IMapMarkerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -782,10 +770,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum MapMarker_FieldIndex
+    internal enum MapMarker_FieldIndex
     {
         Flags = 0,
         Name = 1,
@@ -794,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class MapMarker_Registration : ILoquiRegistration
+    internal partial class MapMarker_Registration : ILoquiRegistration
     {
         public static readonly MapMarker_Registration Instance = new MapMarker_Registration();
 
@@ -835,18 +823,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.FNAM,
-                        RecordTypes.FULL,
-                        RecordTypes.TNAM
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.FNAM,
+                RecordTypes.FULL,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MapMarkerBinaryWriteTranslation);
         #region Interface
@@ -881,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class MapMarkerSetterCommon
+    internal partial class MapMarkerSetterCommon
     {
         public static readonly MapMarkerSetterCommon Instance = new MapMarkerSetterCommon();
 
@@ -906,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IMapMarker item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -919,7 +903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MapMarkerCommon
+    internal partial class MapMarkerCommon
     {
         public static readonly MapMarkerCommon Instance = new MapMarkerCommon();
 
@@ -943,7 +927,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MapMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Types = item.Types.CollectionEqualsHelper(
@@ -952,78 +935,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IMapMarkerGetter item,
             string? name = null,
             MapMarker.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMapMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MapMarker.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MapMarker =>");
+                sb.AppendLine($"MapMarker =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MapMarker) =>");
+                sb.AppendLine($"{name} (MapMarker) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMapMarkerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MapMarker.Mask<bool>? printMask = null)
         {
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Types?.Overall ?? true)
                 && item.Types is {} TypesItem)
             {
-                fg.AppendLine("Types =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Types =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in TypesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1073,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMapMarkerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMapMarkerGetter obj)
         {
             yield break;
         }
@@ -1081,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MapMarkerSetterTranslationCommon
+    internal partial class MapMarkerSetterTranslationCommon
     {
         public static readonly MapMarkerSetterTranslationCommon Instance = new MapMarkerSetterTranslationCommon();
 
@@ -1189,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1213,16 +1190,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MapMarkerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
+        public static readonly MapMarkerBinaryWriteTranslation Instance = new MapMarkerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IMapMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1250,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IMapMarkerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1261,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMapMarkerGetter)item,
@@ -1271,9 +1248,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class MapMarkerBinaryCreateTranslation
+    internal partial class MapMarkerBinaryCreateTranslation
     {
-        public readonly static MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
+        public static readonly MapMarkerBinaryCreateTranslation Instance = new MapMarkerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMapMarker item,
@@ -1288,14 +1265,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1304,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1313,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Types, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Types = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
@@ -1343,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IMapMarkerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapMarkerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1356,16 +1333,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class MapMarkerBinaryOverlay :
+    internal partial class MapMarkerBinaryOverlay :
         PluginBinaryOverlay,
         IMapMarkerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MapMarker_Registration.Instance;
-        public static MapMarker_Registration StaticRegistration => MapMarker_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MapMarkerCommon.Instance;
         [DebuggerStepThrough]
@@ -1379,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
@@ -1387,7 +1364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MapMarkerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1397,11 +1374,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Flags
         private int? _FlagsLocation;
-        public MapMarker.Flag? Flags => _FlagsLocation.HasValue ? (MapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(MapMarker.Flag?);
+        public MapMarker.Flag? Flags => _FlagsLocation.HasValue ? (MapMarker.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(MapMarker.Flag?);
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -1415,42 +1392,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected MapMarkerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MapMarkerBinaryOverlay MapMarkerFactory(
+        public static IMapMarkerGetter MapMarkerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MapMarkerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MapMarkerBinaryOverlay MapMarkerFactory(
+        public static IMapMarkerGetter MapMarkerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MapMarkerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1460,28 +1443,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
                     return (int)MapMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.FULL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)MapMarker_FieldIndex.Name;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Types, translationParams)) return ParseResult.Stop;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Types = BinaryOverlayList.FactoryByStartIndex<MapMarker.Type>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -1496,12 +1479,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MapMarkerMixIn.ToString(
+            MapMarkerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

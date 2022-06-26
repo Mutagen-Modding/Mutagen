@@ -42,5 +42,6 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlacedTrapTarget</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -60,12 +61,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalShortMixIn.ToString(
+            GlobalShortMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -173,30 +175,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(GlobalShort.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(GlobalShort.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, GlobalShort.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, GlobalShort.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(GlobalShort.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(GlobalShort.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -260,37 +257,30 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Data, "Data");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -421,7 +411,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GlobalShortBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -431,7 +421,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static GlobalShort CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GlobalShort();
             ((GlobalShortSetterCommon)((IGlobalShortGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -446,7 +436,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GlobalShort item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -456,7 +446,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -520,26 +510,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IGlobalShortGetter item,
             string? name = null,
             GlobalShort.Mask<bool>? printMask = null)
         {
-            return ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).ToString(
+            return ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IGlobalShortGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GlobalShort.Mask<bool>? printMask = null)
         {
-            ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).ToString(
+            ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -634,7 +624,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IGlobalShortInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GlobalShortSetterCommon)((IGlobalShortGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -649,10 +639,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum GlobalShort_FieldIndex
+    internal enum GlobalShort_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -665,7 +655,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class GlobalShort_Registration : ILoquiRegistration
+    internal partial class GlobalShort_Registration : ILoquiRegistration
     {
         public static readonly GlobalShort_Registration Instance = new GlobalShort_Registration();
 
@@ -707,6 +697,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.GLOB);
+            var all = RecordCollection.Factory(
+                RecordTypes.GLOB,
+                RecordTypes.FLTV);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(GlobalShortBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -740,7 +739,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class GlobalShortSetterCommon : GlobalSetterCommon
+    internal partial class GlobalShortSetterCommon : GlobalSetterCommon
     {
         public new static readonly GlobalShortSetterCommon Instance = new GlobalShortSetterCommon();
 
@@ -780,7 +779,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IGlobalShortInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IGlobalShortInternal>(
                 record: item,
@@ -793,7 +792,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IGlobalInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GlobalShort)item,
@@ -804,7 +803,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GlobalShort)item,
@@ -815,7 +814,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GlobalShort)item,
@@ -826,7 +825,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GlobalShortCommon : GlobalCommon
+    internal partial class GlobalShortCommon : GlobalCommon
     {
         public new static readonly GlobalShortCommon Instance = new GlobalShortCommon();
 
@@ -850,63 +849,60 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             GlobalShort.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IGlobalShortGetter item,
             string? name = null,
             GlobalShort.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IGlobalShortGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GlobalShort.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"GlobalShort =>");
+                sb.AppendLine($"GlobalShort =>");
             }
             else
             {
-                fg.AppendLine($"{name} (GlobalShort) =>");
+                sb.AppendLine($"{name} (GlobalShort) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IGlobalShortGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             GlobalShort.Mask<bool>? printMask = null)
         {
             GlobalCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
             {
-                fg.AppendItem(DataItem, "Data");
+                sb.AppendItem(DataItem, "Data");
             }
         }
         
@@ -1052,9 +1048,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGlobalShortGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGlobalShortGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1110,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class GlobalShortSetterTranslationCommon : GlobalSetterTranslationCommon
+    internal partial class GlobalShortSetterTranslationCommon : GlobalSetterTranslationCommon
     {
         public new static readonly GlobalShortSetterTranslationCommon Instance = new GlobalShortSetterTranslationCommon();
 
@@ -1299,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
-        public new static GlobalShort_Registration StaticRegistration => GlobalShort_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
         [DebuggerStepThrough]
@@ -1317,18 +1313,18 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class GlobalShortBinaryWriteTranslation :
         GlobalBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GlobalShortBinaryWriteTranslation Instance = new GlobalShortBinaryWriteTranslation();
+        public new static readonly GlobalShortBinaryWriteTranslation Instance = new GlobalShortBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IGlobalShortGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             GlobalBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1355,7 +1351,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IGlobalShortGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1366,12 +1362,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1383,7 +1382,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGlobalShortGetter)item,
@@ -1394,7 +1393,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IGlobalGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGlobalShortGetter)item,
@@ -1405,7 +1404,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGlobalShortGetter)item,
@@ -1416,7 +1415,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGlobalShortGetter)item,
@@ -1426,9 +1425,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class GlobalShortBinaryCreateTranslation : GlobalBinaryCreateTranslation
+    internal partial class GlobalShortBinaryCreateTranslation : GlobalBinaryCreateTranslation
     {
-        public new readonly static GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
+        public new static readonly GlobalShortBinaryCreateTranslation Instance = new GlobalShortBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.GLOB;
         public static void FillBinaryStructs(
@@ -1447,7 +1446,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1466,7 +1465,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1487,16 +1487,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class GlobalShortBinaryOverlay :
+    internal partial class GlobalShortBinaryOverlay :
         GlobalBinaryOverlay,
         IGlobalShortGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
-        public new static GlobalShort_Registration StaticRegistration => GlobalShort_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GlobalShort_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GlobalShortCommon.Instance;
         [DebuggerStepThrough]
@@ -1504,13 +1504,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GlobalShortBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GlobalShortBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1525,6 +1525,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial Int16? GetDataCustom();
         public Int16? Data => GetDataCustom();
         #endregion
         partial void CustomFactoryEnd(
@@ -1534,28 +1535,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected GlobalShortBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static GlobalShortBinaryOverlay GlobalShortFactory(
+        public static IGlobalShortGetter GlobalShortFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new GlobalShortBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1565,20 +1569,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static GlobalShortBinaryOverlay GlobalShortFactory(
+        public static IGlobalShortGetter GlobalShortFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return GlobalShortFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1588,9 +1592,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FLTV:
@@ -1608,17 +1612,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalShortMixIn.ToString(
+            GlobalShortMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

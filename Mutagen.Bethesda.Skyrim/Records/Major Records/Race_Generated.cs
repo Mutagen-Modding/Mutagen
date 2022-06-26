@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -583,12 +584,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.ToString(
+            RaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1596,9 +1598,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ActorEffect.Specific = l;
-                        foreach (var item in ActorEffect.Specific.WithIndex())
+                        foreach (var item in ActorEffect.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1612,9 +1614,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Keywords.Specific = l;
-                        foreach (var item in Keywords.Specific.WithIndex())
+                        foreach (var item in Keywords.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1688,9 +1690,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.MovementTypeNames.Specific = l;
-                        foreach (var item in MovementTypeNames.Specific.WithIndex())
+                        foreach (var item in MovementTypeNames.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1715,9 +1717,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
                         obj.Attacks.Specific = l;
-                        foreach (var item in Attacks.Specific.WithIndex())
+                        foreach (var item in Attacks.Specific)
                         {
-                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1734,9 +1736,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Hairs.Specific = l;
-                        foreach (var item in Hairs.Specific.WithIndex())
+                        foreach (var item in Hairs.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1748,9 +1750,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Eyes.Specific = l;
-                        foreach (var item in Eyes.Specific.WithIndex())
+                        foreach (var item in Eyes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1785,9 +1787,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, RaceMovementType.Mask<R>?>>();
                         obj.MovementTypes.Specific = l;
-                        foreach (var item in MovementTypes.Specific.WithIndex())
+                        foreach (var item in MovementTypes.Specific)
                         {
-                            MaskItemIndexed<R, RaceMovementType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, RaceMovementType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, RaceMovementType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RaceMovementType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1801,9 +1803,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.EquipmentSlots.Specific = l;
-                        foreach (var item in EquipmentSlots.Specific.WithIndex())
+                        foreach (var item in EquipmentSlots.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1827,575 +1829,550 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Race.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Race.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Race.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.ActorEffect?.Overall ?? true)
                         && ActorEffect is {} ActorEffectItem)
                     {
-                        fg.AppendLine("ActorEffect =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ActorEffect =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ActorEffectItem.Overall);
+                            sb.AppendItem(ActorEffectItem.Overall);
                             if (ActorEffectItem.Specific != null)
                             {
                                 foreach (var subItem in ActorEffectItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Skin ?? true)
                     {
-                        fg.AppendItem(Skin, "Skin");
+                        sb.AppendItem(Skin, "Skin");
                     }
                     if (printMask?.BodyTemplate?.Overall ?? true)
                     {
-                        BodyTemplate?.ToString(fg);
+                        BodyTemplate?.Print(sb);
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
-                        fg.AppendLine("Keywords =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(KeywordsItem.Overall);
+                            sb.AppendItem(KeywordsItem.Overall);
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.SkillBoost0?.Overall ?? true)
                     {
-                        SkillBoost0?.ToString(fg);
+                        SkillBoost0?.Print(sb);
                     }
                     if (printMask?.SkillBoost1?.Overall ?? true)
                     {
-                        SkillBoost1?.ToString(fg);
+                        SkillBoost1?.Print(sb);
                     }
                     if (printMask?.SkillBoost2?.Overall ?? true)
                     {
-                        SkillBoost2?.ToString(fg);
+                        SkillBoost2?.Print(sb);
                     }
                     if (printMask?.SkillBoost3?.Overall ?? true)
                     {
-                        SkillBoost3?.ToString(fg);
+                        SkillBoost3?.Print(sb);
                     }
                     if (printMask?.SkillBoost4?.Overall ?? true)
                     {
-                        SkillBoost4?.ToString(fg);
+                        SkillBoost4?.Print(sb);
                     }
                     if (printMask?.SkillBoost5?.Overall ?? true)
                     {
-                        SkillBoost5?.ToString(fg);
+                        SkillBoost5?.Print(sb);
                     }
                     if (printMask?.SkillBoost6?.Overall ?? true)
                     {
-                        SkillBoost6?.ToString(fg);
+                        SkillBoost6?.Print(sb);
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Height => {Height}");
+                        sb.AppendLine($"Height => {Height}");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Weight => {Weight}");
+                        sb.AppendLine($"Weight => {Weight}");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Starting?.Overall ?? true)
                     {
-                        fg.AppendLine("Starting =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Starting =>");
+                        using (sb.Brace())
                         {
                             if (Starting != null)
                             {
                                 if (Starting.Overall != null)
                                 {
-                                    fg.AppendLine(Starting.Overall.ToString());
+                                    sb.AppendLine(Starting.Overall.ToString());
                                 }
                                 if (Starting.Specific != null)
                                 {
                                     foreach (var subItem in Starting.Specific)
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
+                                        using (sb.Brace())
                                         {
-                                            fg.AppendLine("Key => [");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine("Key => [");
+                                            using (sb.IncreaseDepth())
                                             {
-                                                fg.AppendItem(subItem.Key);
+                                                {
+                                                    sb.AppendItem(subItem.Key);
+                                                }
                                             }
-                                            fg.AppendLine("]");
-                                            fg.AppendLine("Value => [");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine("]");
+                                            sb.AppendLine("Value => [");
+                                            using (sb.IncreaseDepth())
                                             {
-                                                fg.AppendItem(subItem.Value);
+                                                {
+                                                    sb.AppendItem(subItem.Value);
+                                                }
                                             }
-                                            fg.AppendLine("]");
+                                            sb.AppendLine("]");
                                         }
-                                        fg.AppendLine("]");
                                     }
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.BaseCarryWeight ?? true)
                     {
-                        fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
+                        sb.AppendItem(BaseCarryWeight, "BaseCarryWeight");
                     }
                     if (printMask?.BaseMass ?? true)
                     {
-                        fg.AppendItem(BaseMass, "BaseMass");
+                        sb.AppendItem(BaseMass, "BaseMass");
                     }
                     if (printMask?.AccelerationRate ?? true)
                     {
-                        fg.AppendItem(AccelerationRate, "AccelerationRate");
+                        sb.AppendItem(AccelerationRate, "AccelerationRate");
                     }
                     if (printMask?.DecelerationRate ?? true)
                     {
-                        fg.AppendItem(DecelerationRate, "DecelerationRate");
+                        sb.AppendItem(DecelerationRate, "DecelerationRate");
                     }
                     if (printMask?.Size ?? true)
                     {
-                        fg.AppendItem(Size, "Size");
+                        sb.AppendItem(Size, "Size");
                     }
                     if (printMask?.HeadBipedObject ?? true)
                     {
-                        fg.AppendItem(HeadBipedObject, "HeadBipedObject");
+                        sb.AppendItem(HeadBipedObject, "HeadBipedObject");
                     }
                     if (printMask?.HairBipedObject ?? true)
                     {
-                        fg.AppendItem(HairBipedObject, "HairBipedObject");
+                        sb.AppendItem(HairBipedObject, "HairBipedObject");
                     }
                     if (printMask?.InjuredHealthPercent ?? true)
                     {
-                        fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
+                        sb.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
                     }
                     if (printMask?.ShieldBipedObject ?? true)
                     {
-                        fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
+                        sb.AppendItem(ShieldBipedObject, "ShieldBipedObject");
                     }
                     if (printMask?.Regen?.Overall ?? true)
                     {
-                        fg.AppendLine("Regen =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Regen =>");
+                        using (sb.Brace())
                         {
                             if (Regen != null)
                             {
                                 if (Regen.Overall != null)
                                 {
-                                    fg.AppendLine(Regen.Overall.ToString());
+                                    sb.AppendLine(Regen.Overall.ToString());
                                 }
                                 if (Regen.Specific != null)
                                 {
                                     foreach (var subItem in Regen.Specific)
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
+                                        using (sb.Brace())
                                         {
-                                            fg.AppendLine("Key => [");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine("Key => [");
+                                            using (sb.IncreaseDepth())
                                             {
-                                                fg.AppendItem(subItem.Key);
+                                                {
+                                                    sb.AppendItem(subItem.Key);
+                                                }
                                             }
-                                            fg.AppendLine("]");
-                                            fg.AppendLine("Value => [");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine("]");
+                                            sb.AppendLine("Value => [");
+                                            using (sb.IncreaseDepth())
                                             {
-                                                fg.AppendItem(subItem.Value);
+                                                {
+                                                    sb.AppendItem(subItem.Value);
+                                                }
                                             }
-                                            fg.AppendLine("]");
+                                            sb.AppendLine("]");
                                         }
-                                        fg.AppendLine("]");
                                     }
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.UnarmedDamage ?? true)
                     {
-                        fg.AppendItem(UnarmedDamage, "UnarmedDamage");
+                        sb.AppendItem(UnarmedDamage, "UnarmedDamage");
                     }
                     if (printMask?.UnarmedReach ?? true)
                     {
-                        fg.AppendItem(UnarmedReach, "UnarmedReach");
+                        sb.AppendItem(UnarmedReach, "UnarmedReach");
                     }
                     if (printMask?.BodyBipedObject ?? true)
                     {
-                        fg.AppendItem(BodyBipedObject, "BodyBipedObject");
+                        sb.AppendItem(BodyBipedObject, "BodyBipedObject");
                     }
                     if (printMask?.AimAngleTolerance ?? true)
                     {
-                        fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
+                        sb.AppendItem(AimAngleTolerance, "AimAngleTolerance");
                     }
                     if (printMask?.FlightRadius ?? true)
                     {
-                        fg.AppendItem(FlightRadius, "FlightRadius");
+                        sb.AppendItem(FlightRadius, "FlightRadius");
                     }
                     if (printMask?.AngularAccelerationRate ?? true)
                     {
-                        fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
+                        sb.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
                     }
                     if (printMask?.AngularTolerance ?? true)
                     {
-                        fg.AppendItem(AngularTolerance, "AngularTolerance");
+                        sb.AppendItem(AngularTolerance, "AngularTolerance");
                     }
                     if (printMask?.MountData?.Overall ?? true)
                     {
-                        MountData?.ToString(fg);
+                        MountData?.Print(sb);
                     }
                     if (SkeletalModel != null
                         && (printMask?.SkeletalModel?.Overall ?? true))
                     {
-                        fg.AppendLine($"SkeletalModel => {SkeletalModel}");
+                        sb.AppendLine($"SkeletalModel => {SkeletalModel}");
                     }
                     if ((printMask?.MovementTypeNames?.Overall ?? true)
                         && MovementTypeNames is {} MovementTypeNamesItem)
                     {
-                        fg.AppendLine("MovementTypeNames =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MovementTypeNames =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MovementTypeNamesItem.Overall);
+                            sb.AppendItem(MovementTypeNamesItem.Overall);
                             if (MovementTypeNamesItem.Specific != null)
                             {
                                 foreach (var subItem in MovementTypeNamesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"Voices => {Voices}");
+                        sb.AppendLine($"Voices => {Voices}");
                     }
                     if (DecapitateArmors != null
                         && (printMask?.DecapitateArmors?.Overall ?? true))
                     {
-                        fg.AppendLine($"DecapitateArmors => {DecapitateArmors}");
+                        sb.AppendLine($"DecapitateArmors => {DecapitateArmors}");
                     }
                     if (DefaultHairColors != null
                         && (printMask?.DefaultHairColors?.Overall ?? true))
                     {
-                        fg.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                        sb.AppendLine($"DefaultHairColors => {DefaultHairColors}");
                     }
                     if (printMask?.NumberOfTintsInList ?? true)
                     {
-                        fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
+                        sb.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
                     }
                     if (printMask?.FacegenMainClamp ?? true)
                     {
-                        fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                        sb.AppendItem(FacegenMainClamp, "FacegenMainClamp");
                     }
                     if (printMask?.FacegenFaceClamp ?? true)
                     {
-                        fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                        sb.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
                     }
                     if (printMask?.AttackRace ?? true)
                     {
-                        fg.AppendItem(AttackRace, "AttackRace");
+                        sb.AppendItem(AttackRace, "AttackRace");
                     }
                     if ((printMask?.Attacks?.Overall ?? true)
                         && Attacks is {} AttacksItem)
                     {
-                        fg.AppendLine("Attacks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Attacks =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AttacksItem.Overall);
+                            sb.AppendItem(AttacksItem.Overall);
                             if (AttacksItem.Specific != null)
                             {
                                 foreach (var subItem in AttacksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"BodyData => {BodyData}");
+                        sb.AppendLine($"BodyData => {BodyData}");
                     }
                     if ((printMask?.Hairs?.Overall ?? true)
                         && Hairs is {} HairsItem)
                     {
-                        fg.AppendLine("Hairs =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Hairs =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HairsItem.Overall);
+                            sb.AppendItem(HairsItem.Overall);
                             if (HairsItem.Specific != null)
                             {
                                 foreach (var subItem in HairsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Eyes?.Overall ?? true)
                         && Eyes is {} EyesItem)
                     {
-                        fg.AppendLine("Eyes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Eyes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(EyesItem.Overall);
+                            sb.AppendItem(EyesItem.Overall);
                             if (EyesItem.Specific != null)
                             {
                                 foreach (var subItem in EyesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.BodyPartData ?? true)
                     {
-                        fg.AppendItem(BodyPartData, "BodyPartData");
+                        sb.AppendItem(BodyPartData, "BodyPartData");
                     }
                     if ((true))
                     {
-                        fg.AppendLine($"BehaviorGraph => {BehaviorGraph}");
+                        sb.AppendLine($"BehaviorGraph => {BehaviorGraph}");
                     }
                     if (printMask?.MaterialType ?? true)
                     {
-                        fg.AppendItem(MaterialType, "MaterialType");
+                        sb.AppendItem(MaterialType, "MaterialType");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.DecapitationFX ?? true)
                     {
-                        fg.AppendItem(DecapitationFX, "DecapitationFX");
+                        sb.AppendItem(DecapitationFX, "DecapitationFX");
                     }
                     if (printMask?.OpenLootSound ?? true)
                     {
-                        fg.AppendItem(OpenLootSound, "OpenLootSound");
+                        sb.AppendItem(OpenLootSound, "OpenLootSound");
                     }
                     if (printMask?.CloseLootSound ?? true)
                     {
-                        fg.AppendItem(CloseLootSound, "CloseLootSound");
+                        sb.AppendItem(CloseLootSound, "CloseLootSound");
                     }
                     if (printMask?.BipedObjectNames?.Overall ?? true)
                     {
-                        fg.AppendLine("BipedObjectNames =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("BipedObjectNames =>");
+                        using (sb.Brace())
                         {
                             if (BipedObjectNames != null)
                             {
                                 if (BipedObjectNames.Overall != null)
                                 {
-                                    fg.AppendLine(BipedObjectNames.Overall.ToString());
+                                    sb.AppendLine(BipedObjectNames.Overall.ToString());
                                 }
                                 if (BipedObjectNames.Specific != null)
                                 {
                                     foreach (var subItem in BipedObjectNames.Specific)
                                     {
-                                        fg.AppendLine("[");
-                                        using (new DepthWrapper(fg))
+                                        using (sb.Brace())
                                         {
-                                            fg.AppendLine("Key => [");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine("Key => [");
+                                            using (sb.IncreaseDepth())
                                             {
-                                                fg.AppendItem(subItem.Key);
+                                                {
+                                                    sb.AppendItem(subItem.Key);
+                                                }
                                             }
-                                            fg.AppendLine("]");
-                                            fg.AppendLine("Value => [");
-                                            using (new DepthWrapper(fg))
+                                            sb.AppendLine("]");
+                                            sb.AppendLine("Value => [");
+                                            using (sb.IncreaseDepth())
                                             {
-                                                fg.AppendItem(subItem.Value);
+                                                {
+                                                    sb.AppendItem(subItem.Value);
+                                                }
                                             }
-                                            fg.AppendLine("]");
+                                            sb.AppendLine("]");
                                         }
-                                        fg.AppendLine("]");
                                     }
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.MovementTypes?.Overall ?? true)
                         && MovementTypes is {} MovementTypesItem)
                     {
-                        fg.AppendLine("MovementTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MovementTypes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MovementTypesItem.Overall);
+                            sb.AppendItem(MovementTypesItem.Overall);
                             if (MovementTypesItem.Specific != null)
                             {
                                 foreach (var subItem in MovementTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.EquipmentFlags ?? true)
                     {
-                        fg.AppendItem(EquipmentFlags, "EquipmentFlags");
+                        sb.AppendItem(EquipmentFlags, "EquipmentFlags");
                     }
                     if ((printMask?.EquipmentSlots?.Overall ?? true)
                         && EquipmentSlots is {} EquipmentSlotsItem)
                     {
-                        fg.AppendLine("EquipmentSlots =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("EquipmentSlots =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(EquipmentSlotsItem.Overall);
+                            sb.AppendItem(EquipmentSlotsItem.Overall);
                             if (EquipmentSlotsItem.Specific != null)
                             {
                                 foreach (var subItem in EquipmentSlotsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.UnarmedEquipSlot ?? true)
                     {
-                        fg.AppendItem(UnarmedEquipSlot, "UnarmedEquipSlot");
+                        sb.AppendItem(UnarmedEquipSlot, "UnarmedEquipSlot");
                     }
                     if (printMask?.FaceFxPhonemes?.Overall ?? true)
                     {
-                        FaceFxPhonemes?.ToString(fg);
+                        FaceFxPhonemes?.Print(sb);
                     }
                     if (printMask?.BaseMovementDefaultWalk ?? true)
                     {
-                        fg.AppendItem(BaseMovementDefaultWalk, "BaseMovementDefaultWalk");
+                        sb.AppendItem(BaseMovementDefaultWalk, "BaseMovementDefaultWalk");
                     }
                     if (printMask?.BaseMovementDefaultRun ?? true)
                     {
-                        fg.AppendItem(BaseMovementDefaultRun, "BaseMovementDefaultRun");
+                        sb.AppendItem(BaseMovementDefaultRun, "BaseMovementDefaultRun");
                     }
                     if (printMask?.BaseMovementDefaultSwim ?? true)
                     {
-                        fg.AppendItem(BaseMovementDefaultSwim, "BaseMovementDefaultSwim");
+                        sb.AppendItem(BaseMovementDefaultSwim, "BaseMovementDefaultSwim");
                     }
                     if (printMask?.BaseMovementDefaultFly ?? true)
                     {
-                        fg.AppendItem(BaseMovementDefaultFly, "BaseMovementDefaultFly");
+                        sb.AppendItem(BaseMovementDefaultFly, "BaseMovementDefaultFly");
                     }
                     if (printMask?.BaseMovementDefaultSneak ?? true)
                     {
-                        fg.AppendItem(BaseMovementDefaultSneak, "BaseMovementDefaultSneak");
+                        sb.AppendItem(BaseMovementDefaultSneak, "BaseMovementDefaultSneak");
                     }
                     if (printMask?.BaseMovementDefaultSprint ?? true)
                     {
-                        fg.AppendItem(BaseMovementDefaultSprint, "BaseMovementDefaultSprint");
+                        sb.AppendItem(BaseMovementDefaultSprint, "BaseMovementDefaultSprint");
                     }
                     if (HeadData != null
                         && (printMask?.HeadData?.Overall ?? true))
                     {
-                        fg.AppendLine($"HeadData => {HeadData}");
+                        sb.AppendLine($"HeadData => {HeadData}");
                     }
                     if (printMask?.MorphRace ?? true)
                     {
-                        fg.AppendItem(MorphRace, "MorphRace");
+                        sb.AppendItem(MorphRace, "MorphRace");
                     }
                     if (printMask?.ArmorRace ?? true)
                     {
-                        fg.AppendItem(ArmorRace, "ArmorRace");
+                        sb.AppendItem(ArmorRace, "ArmorRace");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -3169,393 +3146,464 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Description, "Description");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (ActorEffect is {} ActorEffectItem)
                 {
-                    fg.AppendLine("ActorEffect =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ActorEffect =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ActorEffectItem.Overall);
+                        sb.AppendItem(ActorEffectItem.Overall);
                         if (ActorEffectItem.Specific != null)
                         {
                             foreach (var subItem in ActorEffectItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Skin, "Skin");
-                BodyTemplate?.ToString(fg);
+                {
+                    sb.AppendItem(Skin, "Skin");
+                }
+                BodyTemplate?.Print(sb);
                 if (Keywords is {} KeywordsItem)
                 {
-                    fg.AppendLine("Keywords =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(KeywordsItem.Overall);
+                        sb.AppendItem(KeywordsItem.Overall);
                         if (KeywordsItem.Specific != null)
                         {
                             foreach (var subItem in KeywordsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                SkillBoost0?.ToString(fg);
-                SkillBoost1?.ToString(fg);
-                SkillBoost2?.ToString(fg);
-                SkillBoost3?.ToString(fg);
-                SkillBoost4?.ToString(fg);
-                SkillBoost5?.ToString(fg);
-                SkillBoost6?.ToString(fg);
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendLine($"Height => {Height}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendLine("Starting =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                SkillBoost0?.Print(sb);
+                SkillBoost1?.Print(sb);
+                SkillBoost2?.Print(sb);
+                SkillBoost3?.Print(sb);
+                SkillBoost4?.Print(sb);
+                SkillBoost5?.Print(sb);
+                SkillBoost6?.Print(sb);
                 {
-                    if (Starting != null)
-                    {
-                        if (Starting.Overall != null)
-                        {
-                            fg.AppendLine(Starting.Overall.ToString());
-                        }
-                        if (Starting.Specific != null)
-                        {
-                            foreach (var subItem in Starting.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    fg.AppendLine("Key => [");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem.Key);
-                                    }
-                                    fg.AppendLine("]");
-                                    fg.AppendLine("Value => [");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem.Value);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
+                    sb.AppendItem(Unknown, "Unknown");
                 }
-                fg.AppendLine("]");
-                fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
-                fg.AppendItem(BaseMass, "BaseMass");
-                fg.AppendItem(AccelerationRate, "AccelerationRate");
-                fg.AppendItem(DecelerationRate, "DecelerationRate");
-                fg.AppendItem(Size, "Size");
-                fg.AppendItem(HeadBipedObject, "HeadBipedObject");
-                fg.AppendItem(HairBipedObject, "HairBipedObject");
-                fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
-                fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
-                fg.AppendLine("Regen =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
                 {
-                    if (Regen != null)
+                    sb.AppendLine($"Height => {Height}");
+                }
+                {
+                    sb.AppendLine($"Weight => {Weight}");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendLine("Starting =>");
+                    using (sb.Brace())
                     {
-                        if (Regen.Overall != null)
+                        if (Starting != null)
                         {
-                            fg.AppendLine(Regen.Overall.ToString());
-                        }
-                        if (Regen.Specific != null)
-                        {
-                            foreach (var subItem in Regen.Specific)
+                            if (Starting.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine(Starting.Overall.ToString());
+                            }
+                            if (Starting.Specific != null)
+                            {
+                                foreach (var subItem in Starting.Specific)
                                 {
-                                    fg.AppendLine("Key => [");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem.Key);
+                                        sb.AppendLine("Key => [");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            {
+                                                sb.AppendItem(subItem.Key);
+                                            }
+                                        }
+                                        sb.AppendLine("]");
+                                        sb.AppendLine("Value => [");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            {
+                                                sb.AppendItem(subItem.Value);
+                                            }
+                                        }
+                                        sb.AppendLine("]");
                                     }
-                                    fg.AppendLine("]");
-                                    fg.AppendLine("Value => [");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem.Value);
-                                    }
-                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
                 }
-                fg.AppendLine("]");
-                fg.AppendItem(UnarmedDamage, "UnarmedDamage");
-                fg.AppendItem(UnarmedReach, "UnarmedReach");
-                fg.AppendItem(BodyBipedObject, "BodyBipedObject");
-                fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
-                fg.AppendItem(FlightRadius, "FlightRadius");
-                fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
-                fg.AppendItem(AngularTolerance, "AngularTolerance");
-                MountData?.ToString(fg);
+                {
+                    sb.AppendItem(BaseCarryWeight, "BaseCarryWeight");
+                }
+                {
+                    sb.AppendItem(BaseMass, "BaseMass");
+                }
+                {
+                    sb.AppendItem(AccelerationRate, "AccelerationRate");
+                }
+                {
+                    sb.AppendItem(DecelerationRate, "DecelerationRate");
+                }
+                {
+                    sb.AppendItem(Size, "Size");
+                }
+                {
+                    sb.AppendItem(HeadBipedObject, "HeadBipedObject");
+                }
+                {
+                    sb.AppendItem(HairBipedObject, "HairBipedObject");
+                }
+                {
+                    sb.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
+                }
+                {
+                    sb.AppendItem(ShieldBipedObject, "ShieldBipedObject");
+                }
+                {
+                    sb.AppendLine("Regen =>");
+                    using (sb.Brace())
+                    {
+                        if (Regen != null)
+                        {
+                            if (Regen.Overall != null)
+                            {
+                                sb.AppendLine(Regen.Overall.ToString());
+                            }
+                            if (Regen.Specific != null)
+                            {
+                                foreach (var subItem in Regen.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        sb.AppendLine("Key => [");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            {
+                                                sb.AppendItem(subItem.Key);
+                                            }
+                                        }
+                                        sb.AppendLine("]");
+                                        sb.AppendLine("Value => [");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            {
+                                                sb.AppendItem(subItem.Value);
+                                            }
+                                        }
+                                        sb.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(UnarmedDamage, "UnarmedDamage");
+                }
+                {
+                    sb.AppendItem(UnarmedReach, "UnarmedReach");
+                }
+                {
+                    sb.AppendItem(BodyBipedObject, "BodyBipedObject");
+                }
+                {
+                    sb.AppendItem(AimAngleTolerance, "AimAngleTolerance");
+                }
+                {
+                    sb.AppendItem(FlightRadius, "FlightRadius");
+                }
+                {
+                    sb.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
+                }
+                {
+                    sb.AppendItem(AngularTolerance, "AngularTolerance");
+                }
+                MountData?.Print(sb);
                 if (SkeletalModel != null)
                 {
-                    fg.AppendLine($"SkeletalModel => {SkeletalModel}");
+                    sb.AppendLine($"SkeletalModel => {SkeletalModel}");
                 }
                 if (MovementTypeNames is {} MovementTypeNamesItem)
                 {
-                    fg.AppendLine("MovementTypeNames =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MovementTypeNames =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MovementTypeNamesItem.Overall);
+                        sb.AppendItem(MovementTypeNamesItem.Overall);
                         if (MovementTypeNamesItem.Specific != null)
                         {
                             foreach (var subItem in MovementTypeNamesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendLine($"Voices => {Voices}");
+                {
+                    sb.AppendLine($"Voices => {Voices}");
+                }
                 if (DecapitateArmors != null)
                 {
-                    fg.AppendLine($"DecapitateArmors => {DecapitateArmors}");
+                    sb.AppendLine($"DecapitateArmors => {DecapitateArmors}");
                 }
                 if (DefaultHairColors != null)
                 {
-                    fg.AppendLine($"DefaultHairColors => {DefaultHairColors}");
+                    sb.AppendLine($"DefaultHairColors => {DefaultHairColors}");
                 }
-                fg.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
-                fg.AppendItem(FacegenMainClamp, "FacegenMainClamp");
-                fg.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
-                fg.AppendItem(AttackRace, "AttackRace");
+                {
+                    sb.AppendItem(NumberOfTintsInList, "NumberOfTintsInList");
+                }
+                {
+                    sb.AppendItem(FacegenMainClamp, "FacegenMainClamp");
+                }
+                {
+                    sb.AppendItem(FacegenFaceClamp, "FacegenFaceClamp");
+                }
+                {
+                    sb.AppendItem(AttackRace, "AttackRace");
+                }
                 if (Attacks is {} AttacksItem)
                 {
-                    fg.AppendLine("Attacks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Attacks =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AttacksItem.Overall);
+                        sb.AppendItem(AttacksItem.Overall);
                         if (AttacksItem.Specific != null)
                         {
                             foreach (var subItem in AttacksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendLine($"BodyData => {BodyData}");
+                {
+                    sb.AppendLine($"BodyData => {BodyData}");
+                }
                 if (Hairs is {} HairsItem)
                 {
-                    fg.AppendLine("Hairs =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Hairs =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HairsItem.Overall);
+                        sb.AppendItem(HairsItem.Overall);
                         if (HairsItem.Specific != null)
                         {
                             foreach (var subItem in HairsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Eyes is {} EyesItem)
                 {
-                    fg.AppendLine("Eyes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Eyes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(EyesItem.Overall);
+                        sb.AppendItem(EyesItem.Overall);
                         if (EyesItem.Specific != null)
                         {
                             foreach (var subItem in EyesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(BodyPartData, "BodyPartData");
-                fg.AppendLine($"BehaviorGraph => {BehaviorGraph}");
-                fg.AppendItem(MaterialType, "MaterialType");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(DecapitationFX, "DecapitationFX");
-                fg.AppendItem(OpenLootSound, "OpenLootSound");
-                fg.AppendItem(CloseLootSound, "CloseLootSound");
-                fg.AppendLine("BipedObjectNames =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
                 {
-                    if (BipedObjectNames != null)
+                    sb.AppendItem(BodyPartData, "BodyPartData");
+                }
+                {
+                    sb.AppendLine($"BehaviorGraph => {BehaviorGraph}");
+                }
+                {
+                    sb.AppendItem(MaterialType, "MaterialType");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(DecapitationFX, "DecapitationFX");
+                }
+                {
+                    sb.AppendItem(OpenLootSound, "OpenLootSound");
+                }
+                {
+                    sb.AppendItem(CloseLootSound, "CloseLootSound");
+                }
+                {
+                    sb.AppendLine("BipedObjectNames =>");
+                    using (sb.Brace())
                     {
-                        if (BipedObjectNames.Overall != null)
+                        if (BipedObjectNames != null)
                         {
-                            fg.AppendLine(BipedObjectNames.Overall.ToString());
-                        }
-                        if (BipedObjectNames.Specific != null)
-                        {
-                            foreach (var subItem in BipedObjectNames.Specific)
+                            if (BipedObjectNames.Overall != null)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                sb.AppendLine(BipedObjectNames.Overall.ToString());
+                            }
+                            if (BipedObjectNames.Specific != null)
+                            {
+                                foreach (var subItem in BipedObjectNames.Specific)
                                 {
-                                    fg.AppendLine("Key => [");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem.Key);
+                                        sb.AppendLine("Key => [");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            {
+                                                sb.AppendItem(subItem.Key);
+                                            }
+                                        }
+                                        sb.AppendLine("]");
+                                        sb.AppendLine("Value => [");
+                                        using (sb.IncreaseDepth())
+                                        {
+                                            {
+                                                sb.AppendItem(subItem.Value);
+                                            }
+                                        }
+                                        sb.AppendLine("]");
                                     }
-                                    fg.AppendLine("]");
-                                    fg.AppendLine("Value => [");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem.Value);
-                                    }
-                                    fg.AppendLine("]");
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
                 }
-                fg.AppendLine("]");
                 if (MovementTypes is {} MovementTypesItem)
                 {
-                    fg.AppendLine("MovementTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MovementTypes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MovementTypesItem.Overall);
+                        sb.AppendItem(MovementTypesItem.Overall);
                         if (MovementTypesItem.Specific != null)
                         {
                             foreach (var subItem in MovementTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(EquipmentFlags, "EquipmentFlags");
+                {
+                    sb.AppendItem(EquipmentFlags, "EquipmentFlags");
+                }
                 if (EquipmentSlots is {} EquipmentSlotsItem)
                 {
-                    fg.AppendLine("EquipmentSlots =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("EquipmentSlots =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(EquipmentSlotsItem.Overall);
+                        sb.AppendItem(EquipmentSlotsItem.Overall);
                         if (EquipmentSlotsItem.Specific != null)
                         {
                             foreach (var subItem in EquipmentSlotsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(UnarmedEquipSlot, "UnarmedEquipSlot");
-                FaceFxPhonemes?.ToString(fg);
-                fg.AppendItem(BaseMovementDefaultWalk, "BaseMovementDefaultWalk");
-                fg.AppendItem(BaseMovementDefaultRun, "BaseMovementDefaultRun");
-                fg.AppendItem(BaseMovementDefaultSwim, "BaseMovementDefaultSwim");
-                fg.AppendItem(BaseMovementDefaultFly, "BaseMovementDefaultFly");
-                fg.AppendItem(BaseMovementDefaultSneak, "BaseMovementDefaultSneak");
-                fg.AppendItem(BaseMovementDefaultSprint, "BaseMovementDefaultSprint");
+                {
+                    sb.AppendItem(UnarmedEquipSlot, "UnarmedEquipSlot");
+                }
+                FaceFxPhonemes?.Print(sb);
+                {
+                    sb.AppendItem(BaseMovementDefaultWalk, "BaseMovementDefaultWalk");
+                }
+                {
+                    sb.AppendItem(BaseMovementDefaultRun, "BaseMovementDefaultRun");
+                }
+                {
+                    sb.AppendItem(BaseMovementDefaultSwim, "BaseMovementDefaultSwim");
+                }
+                {
+                    sb.AppendItem(BaseMovementDefaultFly, "BaseMovementDefaultFly");
+                }
+                {
+                    sb.AppendItem(BaseMovementDefaultSneak, "BaseMovementDefaultSneak");
+                }
+                {
+                    sb.AppendItem(BaseMovementDefaultSprint, "BaseMovementDefaultSprint");
+                }
                 if (HeadData != null)
                 {
-                    fg.AppendLine($"HeadData => {HeadData}");
+                    sb.AppendLine($"HeadData => {HeadData}");
                 }
-                fg.AppendItem(MorphRace, "MorphRace");
-                fg.AppendItem(ArmorRace, "ArmorRace");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(MorphRace, "MorphRace");
+                }
+                {
+                    sb.AppendItem(ArmorRace, "ArmorRace");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -3880,7 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Race(
             FormKey formKey,
@@ -3968,7 +4016,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3978,7 +4026,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Race CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Race();
             ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -3993,7 +4041,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Race item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -4003,7 +4051,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -4259,26 +4307,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRaceGetter item,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).ToString(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).ToString(
+            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -4373,7 +4421,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IRaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -4388,10 +4436,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Race_FieldIndex
+    internal enum Race_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -4475,7 +4523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Race_Registration : ILoquiRegistration
+    internal partial class Race_Registration : ILoquiRegistration
     {
         public static readonly Race_Registration Instance = new Race_Registration();
 
@@ -4517,24 +4565,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(
+                RecordTypes.RACE,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.SPLO,
+                RecordTypes.SPCT,
+                RecordTypes.WNAM,
+                RecordTypes.BODT,
+                RecordTypes.BOD2,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DATA,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.ANAM,
+                RecordTypes.MTNM,
+                RecordTypes.VTCK,
+                RecordTypes.DNAM,
+                RecordTypes.HCLF,
+                RecordTypes.TINL,
+                RecordTypes.PNAM,
+                RecordTypes.UNAM,
+                RecordTypes.ATKR,
+                RecordTypes.ATKD,
+                RecordTypes.ATKE,
+                RecordTypes.NAM1,
+                RecordTypes.HNAM,
+                RecordTypes.ENAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.NAM5,
+                RecordTypes.NAM7,
+                RecordTypes.ONAM,
+                RecordTypes.LNAM,
+                RecordTypes.NAME,
+                RecordTypes.MTYP,
+                RecordTypes.SPED,
+                RecordTypes.VNAM,
+                RecordTypes.QNAM,
+                RecordTypes.UNES,
+                RecordTypes.PHTN,
+                RecordTypes.PHWT,
+                RecordTypes.WKMV,
+                RecordTypes.RNMV,
+                RecordTypes.SWMV,
+                RecordTypes.FLMV,
+                RecordTypes.SNMV,
+                RecordTypes.SPMV,
+                RecordTypes.NAM0,
+                RecordTypes.RPRF,
+                RecordTypes.FTSF,
+                RecordTypes.AHCF,
+                RecordTypes.DFTF,
+                RecordTypes.NAM8,
+                RecordTypes.RNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static RecordTypeConverter SkeletalModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("ANAM")));
+                RecordTypes.MODL,
+                RecordTypes.ANAM));
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         public static RecordTypeConverter HeadDataFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("RPRM"),
-                new RecordType("RPRF")),
+                RecordTypes.RPRM,
+                RecordTypes.RPRF),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("FTSM"),
-                new RecordType("FTSF")),
+                RecordTypes.FTSM,
+                RecordTypes.FTSF),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("AHCM"),
-                new RecordType("AHCF")),
+                RecordTypes.AHCM,
+                RecordTypes.AHCF),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("DFTM"),
-                new RecordType("DFTF")));
+                RecordTypes.DFTM,
+                RecordTypes.DFTF));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4567,7 +4677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class RaceSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class RaceSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
 
@@ -4709,7 +4819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IRaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
@@ -4722,7 +4832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Race)item,
@@ -4733,7 +4843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Race)item,
@@ -4744,7 +4854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceCommon : SkyrimMajorRecordCommon
+    internal partial class RaceCommon : SkyrimMajorRecordCommon
     {
         public new static readonly RaceCommon Instance = new RaceCommon();
 
@@ -4768,7 +4878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Race.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.ActorEffect = item.ActorEffect.CollectionEqualsHelper(
@@ -4911,511 +5020,465 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IRaceGetter item,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Race.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Race =>");
+                sb.AppendLine($"Race =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Race) =>");
+                sb.AppendLine($"{name} (Race) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Race.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.Description ?? true)
             {
-                fg.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
                 && item.ActorEffect is {} ActorEffectItem)
             {
-                fg.AppendLine("ActorEffect =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ActorEffect =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in ActorEffectItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Skin ?? true)
             {
-                fg.AppendItem(item.Skin.FormKeyNullable, "Skin");
+                sb.AppendItem(item.Skin.FormKeyNullable, "Skin");
             }
             if ((printMask?.BodyTemplate?.Overall ?? true)
                 && item.BodyTemplate is {} BodyTemplateItem)
             {
-                BodyTemplateItem?.ToString(fg, "BodyTemplate");
+                BodyTemplateItem?.Print(sb, "BodyTemplate");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
-                fg.AppendLine("Keywords =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in KeywordsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.SkillBoost0?.Overall ?? true)
             {
-                item.SkillBoost0?.ToString(fg, "SkillBoost0");
+                item.SkillBoost0?.Print(sb, "SkillBoost0");
             }
             if (printMask?.SkillBoost1?.Overall ?? true)
             {
-                item.SkillBoost1?.ToString(fg, "SkillBoost1");
+                item.SkillBoost1?.Print(sb, "SkillBoost1");
             }
             if (printMask?.SkillBoost2?.Overall ?? true)
             {
-                item.SkillBoost2?.ToString(fg, "SkillBoost2");
+                item.SkillBoost2?.Print(sb, "SkillBoost2");
             }
             if (printMask?.SkillBoost3?.Overall ?? true)
             {
-                item.SkillBoost3?.ToString(fg, "SkillBoost3");
+                item.SkillBoost3?.Print(sb, "SkillBoost3");
             }
             if (printMask?.SkillBoost4?.Overall ?? true)
             {
-                item.SkillBoost4?.ToString(fg, "SkillBoost4");
+                item.SkillBoost4?.Print(sb, "SkillBoost4");
             }
             if (printMask?.SkillBoost5?.Overall ?? true)
             {
-                item.SkillBoost5?.ToString(fg, "SkillBoost5");
+                item.SkillBoost5?.Print(sb, "SkillBoost5");
             }
             if (printMask?.SkillBoost6?.Overall ?? true)
             {
-                item.SkillBoost6?.ToString(fg, "SkillBoost6");
+                item.SkillBoost6?.Print(sb, "SkillBoost6");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (true)
             {
-                item.Height.ToString(fg, "Height");
+                item.Height.Print(sb, "Height");
             }
             if (true)
             {
-                item.Weight.ToString(fg, "Weight");
+                item.Weight.Print(sb, "Weight");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Starting?.Overall ?? true)
             {
-                fg.AppendLine("Starting =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Starting =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Starting)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.Key);
-                            fg.AppendItem(subItem.Value);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.BaseCarryWeight ?? true)
             {
-                fg.AppendItem(item.BaseCarryWeight, "BaseCarryWeight");
+                sb.AppendItem(item.BaseCarryWeight, "BaseCarryWeight");
             }
             if (printMask?.BaseMass ?? true)
             {
-                fg.AppendItem(item.BaseMass, "BaseMass");
+                sb.AppendItem(item.BaseMass, "BaseMass");
             }
             if (printMask?.AccelerationRate ?? true)
             {
-                fg.AppendItem(item.AccelerationRate, "AccelerationRate");
+                sb.AppendItem(item.AccelerationRate, "AccelerationRate");
             }
             if (printMask?.DecelerationRate ?? true)
             {
-                fg.AppendItem(item.DecelerationRate, "DecelerationRate");
+                sb.AppendItem(item.DecelerationRate, "DecelerationRate");
             }
             if (printMask?.Size ?? true)
             {
-                fg.AppendItem(item.Size, "Size");
+                sb.AppendItem(item.Size, "Size");
             }
             if (printMask?.HeadBipedObject ?? true)
             {
-                fg.AppendItem(item.HeadBipedObject, "HeadBipedObject");
+                sb.AppendItem(item.HeadBipedObject, "HeadBipedObject");
             }
             if (printMask?.HairBipedObject ?? true)
             {
-                fg.AppendItem(item.HairBipedObject, "HairBipedObject");
+                sb.AppendItem(item.HairBipedObject, "HairBipedObject");
             }
             if (printMask?.InjuredHealthPercent ?? true)
             {
-                fg.AppendItem(item.InjuredHealthPercent, "InjuredHealthPercent");
+                sb.AppendItem(item.InjuredHealthPercent, "InjuredHealthPercent");
             }
             if (printMask?.ShieldBipedObject ?? true)
             {
-                fg.AppendItem(item.ShieldBipedObject, "ShieldBipedObject");
+                sb.AppendItem(item.ShieldBipedObject, "ShieldBipedObject");
             }
             if (printMask?.Regen?.Overall ?? true)
             {
-                fg.AppendLine("Regen =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Regen =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Regen)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.Key);
-                            fg.AppendItem(subItem.Value);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.UnarmedDamage ?? true)
             {
-                fg.AppendItem(item.UnarmedDamage, "UnarmedDamage");
+                sb.AppendItem(item.UnarmedDamage, "UnarmedDamage");
             }
             if (printMask?.UnarmedReach ?? true)
             {
-                fg.AppendItem(item.UnarmedReach, "UnarmedReach");
+                sb.AppendItem(item.UnarmedReach, "UnarmedReach");
             }
             if (printMask?.BodyBipedObject ?? true)
             {
-                fg.AppendItem(item.BodyBipedObject, "BodyBipedObject");
+                sb.AppendItem(item.BodyBipedObject, "BodyBipedObject");
             }
             if (printMask?.AimAngleTolerance ?? true)
             {
-                fg.AppendItem(item.AimAngleTolerance, "AimAngleTolerance");
+                sb.AppendItem(item.AimAngleTolerance, "AimAngleTolerance");
             }
             if (printMask?.FlightRadius ?? true)
             {
-                fg.AppendItem(item.FlightRadius, "FlightRadius");
+                sb.AppendItem(item.FlightRadius, "FlightRadius");
             }
             if (printMask?.AngularAccelerationRate ?? true)
             {
-                fg.AppendItem(item.AngularAccelerationRate, "AngularAccelerationRate");
+                sb.AppendItem(item.AngularAccelerationRate, "AngularAccelerationRate");
             }
             if (printMask?.AngularTolerance ?? true)
             {
-                fg.AppendItem(item.AngularTolerance, "AngularTolerance");
+                sb.AppendItem(item.AngularTolerance, "AngularTolerance");
             }
             if (printMask?.MountData?.Overall ?? true)
             {
-                item.MountData?.ToString(fg, "MountData");
+                item.MountData?.Print(sb, "MountData");
             }
             if ((printMask?.SkeletalModel?.Overall ?? true)
                 && item.SkeletalModel is {} SkeletalModelItem)
             {
-                SkeletalModelItem?.ToString(fg, "SkeletalModel");
+                SkeletalModelItem?.Print(sb, "SkeletalModel");
             }
             if (printMask?.MovementTypeNames?.Overall ?? true)
             {
-                fg.AppendLine("MovementTypeNames =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MovementTypeNames =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.MovementTypeNames)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (true)
             {
-                item.Voices.ToString(fg, "Voices");
+                item.Voices.Print(sb, "Voices");
             }
             if ((printMask?.DecapitateArmors?.Overall ?? true)
                 && item.DecapitateArmors is {} DecapitateArmorsItem)
             {
-                DecapitateArmorsItem?.ToString(fg, "DecapitateArmors");
+                DecapitateArmorsItem?.Print(sb, "DecapitateArmors");
             }
             if ((printMask?.DefaultHairColors?.Overall ?? true)
                 && item.DefaultHairColors is {} DefaultHairColorsItem)
             {
-                DefaultHairColorsItem?.ToString(fg, "DefaultHairColors");
+                DefaultHairColorsItem?.Print(sb, "DefaultHairColors");
             }
             if ((printMask?.NumberOfTintsInList ?? true)
                 && item.NumberOfTintsInList is {} NumberOfTintsInListItem)
             {
-                fg.AppendItem(NumberOfTintsInListItem, "NumberOfTintsInList");
+                sb.AppendItem(NumberOfTintsInListItem, "NumberOfTintsInList");
             }
             if (printMask?.FacegenMainClamp ?? true)
             {
-                fg.AppendItem(item.FacegenMainClamp, "FacegenMainClamp");
+                sb.AppendItem(item.FacegenMainClamp, "FacegenMainClamp");
             }
             if (printMask?.FacegenFaceClamp ?? true)
             {
-                fg.AppendItem(item.FacegenFaceClamp, "FacegenFaceClamp");
+                sb.AppendItem(item.FacegenFaceClamp, "FacegenFaceClamp");
             }
             if (printMask?.AttackRace ?? true)
             {
-                fg.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
+                sb.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
             }
             if (printMask?.Attacks?.Overall ?? true)
             {
-                fg.AppendLine("Attacks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Attacks =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Attacks)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (true)
             {
-                item.BodyData.ToString(fg, "BodyData");
+                item.BodyData.Print(sb, "BodyData");
             }
             if ((printMask?.Hairs?.Overall ?? true)
                 && item.Hairs is {} HairsItem)
             {
-                fg.AppendLine("Hairs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Hairs =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HairsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Eyes?.Overall ?? true)
                 && item.Eyes is {} EyesItem)
             {
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Eyes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in EyesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.BodyPartData ?? true)
             {
-                fg.AppendItem(item.BodyPartData.FormKeyNullable, "BodyPartData");
+                sb.AppendItem(item.BodyPartData.FormKeyNullable, "BodyPartData");
             }
             if (true)
             {
-                item.BehaviorGraph.ToString(fg, "BehaviorGraph");
+                item.BehaviorGraph.Print(sb, "BehaviorGraph");
             }
             if (printMask?.MaterialType ?? true)
             {
-                fg.AppendItem(item.MaterialType.FormKeyNullable, "MaterialType");
+                sb.AppendItem(item.MaterialType.FormKeyNullable, "MaterialType");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKeyNullable, "ImpactDataSet");
             }
             if (printMask?.DecapitationFX ?? true)
             {
-                fg.AppendItem(item.DecapitationFX.FormKeyNullable, "DecapitationFX");
+                sb.AppendItem(item.DecapitationFX.FormKeyNullable, "DecapitationFX");
             }
             if (printMask?.OpenLootSound ?? true)
             {
-                fg.AppendItem(item.OpenLootSound.FormKeyNullable, "OpenLootSound");
+                sb.AppendItem(item.OpenLootSound.FormKeyNullable, "OpenLootSound");
             }
             if (printMask?.CloseLootSound ?? true)
             {
-                fg.AppendItem(item.CloseLootSound.FormKeyNullable, "CloseLootSound");
+                sb.AppendItem(item.CloseLootSound.FormKeyNullable, "CloseLootSound");
             }
             if ((printMask?.BipedObjectNames?.Overall ?? true)
                 && item.BipedObjectNames is {} BipedObjectNamesItem)
             {
-                fg.AppendLine("BipedObjectNames =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("BipedObjectNames =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in BipedObjectNamesItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.Key);
-                            fg.AppendItem(subItem.Value);
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.MovementTypes?.Overall ?? true)
             {
-                fg.AppendLine("MovementTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MovementTypes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.MovementTypes)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.EquipmentFlags ?? true)
                 && item.EquipmentFlags is {} EquipmentFlagsItem)
             {
-                fg.AppendItem(EquipmentFlagsItem, "EquipmentFlags");
+                sb.AppendItem(EquipmentFlagsItem, "EquipmentFlags");
             }
             if (printMask?.EquipmentSlots?.Overall ?? true)
             {
-                fg.AppendLine("EquipmentSlots =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("EquipmentSlots =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.EquipmentSlots)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.UnarmedEquipSlot ?? true)
             {
-                fg.AppendItem(item.UnarmedEquipSlot.FormKeyNullable, "UnarmedEquipSlot");
+                sb.AppendItem(item.UnarmedEquipSlot.FormKeyNullable, "UnarmedEquipSlot");
             }
             if (printMask?.FaceFxPhonemes?.Overall ?? true)
             {
-                item.FaceFxPhonemes?.ToString(fg, "FaceFxPhonemes");
+                item.FaceFxPhonemes?.Print(sb, "FaceFxPhonemes");
             }
             if (printMask?.BaseMovementDefaultWalk ?? true)
             {
-                fg.AppendItem(item.BaseMovementDefaultWalk.FormKeyNullable, "BaseMovementDefaultWalk");
+                sb.AppendItem(item.BaseMovementDefaultWalk.FormKeyNullable, "BaseMovementDefaultWalk");
             }
             if (printMask?.BaseMovementDefaultRun ?? true)
             {
-                fg.AppendItem(item.BaseMovementDefaultRun.FormKeyNullable, "BaseMovementDefaultRun");
+                sb.AppendItem(item.BaseMovementDefaultRun.FormKeyNullable, "BaseMovementDefaultRun");
             }
             if (printMask?.BaseMovementDefaultSwim ?? true)
             {
-                fg.AppendItem(item.BaseMovementDefaultSwim.FormKeyNullable, "BaseMovementDefaultSwim");
+                sb.AppendItem(item.BaseMovementDefaultSwim.FormKeyNullable, "BaseMovementDefaultSwim");
             }
             if (printMask?.BaseMovementDefaultFly ?? true)
             {
-                fg.AppendItem(item.BaseMovementDefaultFly.FormKeyNullable, "BaseMovementDefaultFly");
+                sb.AppendItem(item.BaseMovementDefaultFly.FormKeyNullable, "BaseMovementDefaultFly");
             }
             if (printMask?.BaseMovementDefaultSneak ?? true)
             {
-                fg.AppendItem(item.BaseMovementDefaultSneak.FormKeyNullable, "BaseMovementDefaultSneak");
+                sb.AppendItem(item.BaseMovementDefaultSneak.FormKeyNullable, "BaseMovementDefaultSneak");
             }
             if (printMask?.BaseMovementDefaultSprint ?? true)
             {
-                fg.AppendItem(item.BaseMovementDefaultSprint.FormKeyNullable, "BaseMovementDefaultSprint");
+                sb.AppendItem(item.BaseMovementDefaultSprint.FormKeyNullable, "BaseMovementDefaultSprint");
             }
             if ((printMask?.HeadData?.Overall ?? true)
                 && item.HeadData is {} HeadDataItem)
             {
-                HeadDataItem?.ToString(fg, "HeadData");
+                HeadDataItem?.Print(sb, "HeadData");
             }
             if (printMask?.MorphRace ?? true)
             {
-                fg.AppendItem(item.MorphRace.FormKeyNullable, "MorphRace");
+                sb.AppendItem(item.MorphRace.FormKeyNullable, "MorphRace");
             }
             if (printMask?.ArmorRace ?? true)
             {
-                fg.AppendItem(item.ArmorRace.FormKeyNullable, "ArmorRace");
+                sb.AppendItem(item.ArmorRace.FormKeyNullable, "ArmorRace");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -5683,7 +5746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
             {
-                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.Attacks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
@@ -5731,7 +5794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
             {
-                if (!lhs.MovementTypes.SequenceEqualNullable(rhs.MovementTypes)) return false;
+                if (!lhs.MovementTypes.SequenceEqual(rhs.MovementTypes, (l, r) => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Race_FieldIndex.MovementTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
             {
@@ -5940,9 +6003,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -5953,9 +6016,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Skin.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Skin, out var SkinInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Skin);
+                yield return SkinInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -5967,7 +6030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
                 foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.ContainedFormLinks))
+                    .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5990,15 +6053,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.AttackRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttackRace);
+                yield return AttackRaceInfo;
             }
-            foreach (var item in obj.Attacks.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Attacks.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6016,35 +6079,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.BodyPartData.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BodyPartData, out var BodyPartDataInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BodyPartData);
+                yield return BodyPartDataInfo;
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.MaterialType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MaterialType, out var MaterialTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MaterialType);
+                yield return MaterialTypeInfo;
             }
-            if (obj.ImpactDataSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImpactDataSet, out var ImpactDataSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImpactDataSet);
+                yield return ImpactDataSetInfo;
             }
-            if (obj.DecapitationFX.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DecapitationFX, out var DecapitationFXInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DecapitationFX);
+                yield return DecapitationFXInfo;
             }
-            if (obj.OpenLootSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenLootSound, out var OpenLootSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenLootSound);
+                yield return OpenLootSoundInfo;
             }
-            if (obj.CloseLootSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.CloseLootSound, out var CloseLootSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.CloseLootSound);
+                yield return CloseLootSoundInfo;
             }
-            foreach (var item in obj.MovementTypes.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.MovementTypes.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6052,48 +6115,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.UnarmedEquipSlot.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UnarmedEquipSlot, out var UnarmedEquipSlotInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UnarmedEquipSlot);
+                yield return UnarmedEquipSlotInfo;
             }
-            if (obj.BaseMovementDefaultWalk.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultWalk, out var BaseMovementDefaultWalkInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultWalk);
+                yield return BaseMovementDefaultWalkInfo;
             }
-            if (obj.BaseMovementDefaultRun.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultRun, out var BaseMovementDefaultRunInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultRun);
+                yield return BaseMovementDefaultRunInfo;
             }
-            if (obj.BaseMovementDefaultSwim.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSwim, out var BaseMovementDefaultSwimInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSwim);
+                yield return BaseMovementDefaultSwimInfo;
             }
-            if (obj.BaseMovementDefaultFly.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultFly, out var BaseMovementDefaultFlyInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultFly);
+                yield return BaseMovementDefaultFlyInfo;
             }
-            if (obj.BaseMovementDefaultSneak.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSneak, out var BaseMovementDefaultSneakInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSneak);
+                yield return BaseMovementDefaultSneakInfo;
             }
-            if (obj.BaseMovementDefaultSprint.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.BaseMovementDefaultSprint, out var BaseMovementDefaultSprintInfo))
             {
-                yield return FormLinkInformation.Factory(obj.BaseMovementDefaultSprint);
+                yield return BaseMovementDefaultSprintInfo;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.ContainedFormLinks))
+                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.MorphRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.MorphRace, out var MorphRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.MorphRace);
+                yield return MorphRaceInfo;
             }
-            if (obj.ArmorRace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ArmorRace, out var ArmorRaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ArmorRace);
+                yield return ArmorRaceInfo;
             }
             yield break;
         }
@@ -6136,7 +6199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class RaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class RaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
 
@@ -6958,7 +7021,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -6976,13 +7039,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class RaceBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
+        public new static readonly RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRaceGetter item,
@@ -6999,7 +7062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -7024,7 +7087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7043,7 +7106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7178,7 +7241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ISimpleModelGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7203,7 +7266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Voices,
                 recordType: RecordTypes.VTCK,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IVoiceTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7213,7 +7276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DecapitateArmors,
                 recordType: RecordTypes.DNAM,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7223,7 +7286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DefaultHairColors,
                 recordType: RecordTypes.HCLF,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7248,7 +7311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
                 writer: writer,
                 items: item.Attacks,
-                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -7263,7 +7326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IBodyDataGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7277,7 +7340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Hairs,
                 recordType: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7287,7 +7350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Eyes,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ENAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyesGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyesGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7304,7 +7367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7340,7 +7403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRaceMovementTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.MovementTypes,
-                transl: (MutagenWriter subWriter, IRaceMovementTypeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IRaceMovementTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((RaceMovementTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -7356,7 +7419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.EquipmentSlots,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -7405,7 +7468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
                 femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-                transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
@@ -7506,7 +7569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IRaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -7517,12 +7580,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -7534,7 +7600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -7545,7 +7611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -7556,7 +7622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRaceGetter)item,
@@ -7566,9 +7632,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class RaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class RaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
+        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.RACE;
         public static void FillBinaryStructs(
@@ -7590,7 +7656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -7640,8 +7706,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
@@ -7726,7 +7792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        parseParams: Race_Registration.SkeletalModelConverter,
+                        translationParams: Race_Registration.SkeletalModelConverter,
                         transl: SimpleModel.TryCreateFromBinary);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
@@ -7800,7 +7866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Attack_Registration.TriggeringRecordTypes,
+                            triggeringRecord: Attack_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Attack.TryCreateFromBinary));
                     return (int)Race_FieldIndex.Attacks;
@@ -7894,7 +7960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MovementTypes.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RaceMovementType>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
+                            triggeringRecord: RaceMovementType_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: RaceMovementType.TryCreateFromBinary));
                     return (int)Race_FieldIndex.MovementTypes;
@@ -8000,7 +8066,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -8041,16 +8108,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class RaceBinaryOverlay :
+    internal partial class RaceBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IRaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static Race_Registration StaticRegistration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
@@ -8058,14 +8125,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -8078,7 +8145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -8090,82 +8157,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region BodyTemplate
         partial void BodyTemplateCustomParse(
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IBodyTemplateGetter? GetBodyTemplateCustom();
         public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
         #region SkillBoost0
-        private int _SkillBoost0Location => _DATALocation!.Value;
+        private int _SkillBoost0Location => _DATALocation!.Value.Min;
         private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost0Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost0Location), _package) : default;
         public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
         #endregion
         #region SkillBoost1
-        private int _SkillBoost1Location => _DATALocation!.Value + 0x2;
+        private int _SkillBoost1Location => _DATALocation!.Value.Min + 0x2;
         private bool _SkillBoost1_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost1Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost1Location), _package) : default;
         public ISkillBoostGetter SkillBoost1 => _SkillBoost1 ?? new SkillBoost();
         #endregion
         #region SkillBoost2
-        private int _SkillBoost2Location => _DATALocation!.Value + 0x4;
+        private int _SkillBoost2Location => _DATALocation!.Value.Min + 0x4;
         private bool _SkillBoost2_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost2Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost2Location), _package) : default;
         public ISkillBoostGetter SkillBoost2 => _SkillBoost2 ?? new SkillBoost();
         #endregion
         #region SkillBoost3
-        private int _SkillBoost3Location => _DATALocation!.Value + 0x6;
+        private int _SkillBoost3Location => _DATALocation!.Value.Min + 0x6;
         private bool _SkillBoost3_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost3Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost3Location), _package) : default;
         public ISkillBoostGetter SkillBoost3 => _SkillBoost3 ?? new SkillBoost();
         #endregion
         #region SkillBoost4
-        private int _SkillBoost4Location => _DATALocation!.Value + 0x8;
+        private int _SkillBoost4Location => _DATALocation!.Value.Min + 0x8;
         private bool _SkillBoost4_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost4Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost4Location), _package) : default;
         public ISkillBoostGetter SkillBoost4 => _SkillBoost4 ?? new SkillBoost();
         #endregion
         #region SkillBoost5
-        private int _SkillBoost5Location => _DATALocation!.Value + 0xA;
+        private int _SkillBoost5Location => _DATALocation!.Value.Min + 0xA;
         private bool _SkillBoost5_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost5Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost5Location), _package) : default;
         public ISkillBoostGetter SkillBoost5 => _SkillBoost5 ?? new SkillBoost();
         #endregion
         #region SkillBoost6
-        private int _SkillBoost6Location => _DATALocation!.Value + 0xC;
+        private int _SkillBoost6Location => _DATALocation!.Value.Min + 0xC;
         private bool _SkillBoost6_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost6Location), _package), _package) : default;
+        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(_recordData.Slice(_SkillBoost6Location), _package) : default;
         public ISkillBoostGetter SkillBoost6 => _SkillBoost6 ?? new SkillBoost();
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0xE;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0xE;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region Height
-        private int _HeightLocation => _DATALocation!.Value + 0x10;
+        private int _HeightLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Height_IsSet => _DATALocation.HasValue;
         public IGenderedItemGetter<Single> Height
         {
             get
             {
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Slice(_HeightLocation);
+                var data = _recordData.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -8173,14 +8241,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x18;
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Weight_IsSet => _DATALocation.HasValue;
         public IGenderedItemGetter<Single> Weight
         {
             get
             {
                 if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Slice(_WeightLocation);
+                var data = _recordData.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
                     data.Float(),
                     data.Slice(4).Float());
@@ -8188,121 +8256,124 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x20;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x20;
+        public partial Race.Flag GetFlagsCustom();
         public Race.Flag Flags => GetFlagsCustom();
         #endregion
         #region Starting
-        private int _StartingLocation => _DATALocation!.Value + 0x24;
+        private int _StartingLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Starting_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StartingLocation), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_StartingLocation), _package.MetaData)),
             new Dictionary<BasicStat, Single>(),
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BaseCarryWeight
-        private int _BaseCarryWeightLocation => _DATALocation!.Value + 0x30;
+        private int _BaseCarryWeightLocation => _DATALocation!.Value.Min + 0x30;
         private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
-        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _data.Slice(_BaseCarryWeightLocation, 4).Float() : default;
+        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _recordData.Slice(_BaseCarryWeightLocation, 4).Float() : default;
         #endregion
         #region BaseMass
-        private int _BaseMassLocation => _DATALocation!.Value + 0x34;
+        private int _BaseMassLocation => _DATALocation!.Value.Min + 0x34;
         private bool _BaseMass_IsSet => _DATALocation.HasValue;
-        public Single BaseMass => _BaseMass_IsSet ? _data.Slice(_BaseMassLocation, 4).Float() : default;
+        public Single BaseMass => _BaseMass_IsSet ? _recordData.Slice(_BaseMassLocation, 4).Float() : default;
         #endregion
         #region AccelerationRate
-        private int _AccelerationRateLocation => _DATALocation!.Value + 0x38;
+        private int _AccelerationRateLocation => _DATALocation!.Value.Min + 0x38;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _recordData.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
-        private int _DecelerationRateLocation => _DATALocation!.Value + 0x3C;
+        private int _DecelerationRateLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _recordData.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
-        private int _SizeLocation => _DATALocation!.Value + 0x40;
+        private int _SizeLocation => _DATALocation!.Value.Min + 0x40;
         private bool _Size_IsSet => _DATALocation.HasValue;
-        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SizeLocation, 0x4)) : default;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default;
         #endregion
         #region HeadBipedObject
-        private int _HeadBipedObjectLocation => _DATALocation!.Value + 0x44;
+        private int _HeadBipedObjectLocation => _DATALocation!.Value.Min + 0x44;
         private bool _HeadBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject HeadBipedObject => _HeadBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HeadBipedObjectLocation, 0x4)) : default;
+        public BipedObject HeadBipedObject => _HeadBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_HeadBipedObjectLocation, 0x4)) : default;
         #endregion
         #region HairBipedObject
-        private int _HairBipedObjectLocation => _DATALocation!.Value + 0x48;
+        private int _HairBipedObjectLocation => _DATALocation!.Value.Min + 0x48;
         private bool _HairBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject HairBipedObject => _HairBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HairBipedObjectLocation, 0x4)) : default;
+        public BipedObject HairBipedObject => _HairBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_HairBipedObjectLocation, 0x4)) : default;
         #endregion
         #region InjuredHealthPercent
-        private int _InjuredHealthPercentLocation => _DATALocation!.Value + 0x4C;
+        private int _InjuredHealthPercentLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _recordData.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
-        private int _ShieldBipedObjectLocation => _DATALocation!.Value + 0x50;
+        private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + 0x50;
         private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
+        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
         #endregion
         #region Regen
-        private int _RegenLocation => _DATALocation!.Value + 0x54;
+        private int _RegenLocation => _DATALocation!.Value.Min + 0x54;
         private bool _Regen_IsSet => _DATALocation.HasValue;
         public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
-            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_RegenLocation), _package.MetaData)),
+            new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_RegenLocation), _package.MetaData)),
             new Dictionary<BasicStat, Single>(),
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region UnarmedDamage
-        private int _UnarmedDamageLocation => _DATALocation!.Value + 0x60;
+        private int _UnarmedDamageLocation => _DATALocation!.Value.Min + 0x60;
         private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
-        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _data.Slice(_UnarmedDamageLocation, 4).Float() : default;
+        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _recordData.Slice(_UnarmedDamageLocation, 4).Float() : default;
         #endregion
         #region UnarmedReach
-        private int _UnarmedReachLocation => _DATALocation!.Value + 0x64;
+        private int _UnarmedReachLocation => _DATALocation!.Value.Min + 0x64;
         private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
-        public Single UnarmedReach => _UnarmedReach_IsSet ? _data.Slice(_UnarmedReachLocation, 4).Float() : default;
+        public Single UnarmedReach => _UnarmedReach_IsSet ? _recordData.Slice(_UnarmedReachLocation, 4).Float() : default;
         #endregion
         #region BodyBipedObject
-        private int _BodyBipedObjectLocation => _DATALocation!.Value + 0x68;
+        private int _BodyBipedObjectLocation => _DATALocation!.Value.Min + 0x68;
         private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
+        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
         #endregion
         #region AimAngleTolerance
-        private int _AimAngleToleranceLocation => _DATALocation!.Value + 0x6C;
+        private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _recordData.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
-        private int _FlightRadiusLocation => _DATALocation!.Value + 0x70;
+        private int _FlightRadiusLocation => _DATALocation!.Value.Min + 0x70;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _recordData.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
-        private int _AngularAccelerationRateLocation => _DATALocation!.Value + 0x74;
+        private int _AngularAccelerationRateLocation => _DATALocation!.Value.Min + 0x74;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _recordData.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
-        private int _AngularToleranceLocation => _DATALocation!.Value + 0x78;
+        private int _AngularToleranceLocation => _DATALocation!.Value.Min + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _recordData.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
-         partial void Flags2CustomParse(
+        private int _Flags2Location => _DATALocation!.Value.Min + 0x7C;
+        private bool _Flags2_IsSet => _DATALocation.HasValue;
+        partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region MountData
-        private int _MountDataLocation => _DATALocation!.Value + 0x80;
+        private int _MountDataLocation => _DATALocation!.Value.Min + 0x80;
         private bool _MountData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Race.DATADataType.Break0);
-        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(new OverlayStream(_data.Slice(_MountDataLocation), _package), _package) : default;
+        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(_recordData.Slice(_MountDataLocation), _package) : default;
         public IMountDataGetter MountData => _MountData ?? new MountData();
         #endregion
         #region SkeletalModel
         private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
         public IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel => _SkeletalModelOverlay;
         #endregion
-        public IReadOnlyList<String> MovementTypeNames { get; private set; } = ListExt.Empty<String>();
+        public IReadOnlyList<String> MovementTypeNames { get; private set; } = Array.Empty<String>();
         #region Voices
         private int? _VoicesLocation;
         public IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices
@@ -8310,7 +8381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _VoicesLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -8324,7 +8395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_DecapitateArmorsLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DecapitateArmorsLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DecapitateArmorsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IArmorGetter>>(
                     new FormLink<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -8338,7 +8409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             get
             {
                 if (!_DefaultHairColorsLocation.HasValue) return default;
-                var data = HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
+                var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultHairColorsLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IColorRecordGetter>>(
                     new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
                     new FormLink<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
@@ -8347,21 +8418,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NumberOfTintsInList
         private int? _NumberOfTintsInListLocation;
-        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? NumberOfTintsInList => _NumberOfTintsInListLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NumberOfTintsInListLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> AttackRace => _AttackRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttackRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
-        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = ListExt.Empty<AttackBinaryOverlay>();
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = Array.Empty<IAttackGetter>();
         #region BodyData
         private IGenderedItemGetter<IBodyDataGetter?>? _BodyDataOverlay;
         public IGenderedItemGetter<IBodyDataGetter?> BodyData => _BodyDataOverlay ?? new GenderedItem<IBodyDataGetter?>(default, default);
@@ -8370,10 +8441,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IEyesGetter>>? Eyes { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
         #endregion
         #region ExtraNAM2
-         partial void ExtraNAM2CustomParse(
+        partial void ExtraNAM2CustomParse(
             OverlayStream stream,
             int offset);
         protected int ExtraNAM2EndingPos;
@@ -8384,33 +8455,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region DecapitationFX
         private int? _DecapitationFXLocation;
-        public IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX => _DecapitationFXLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DecapitationFXLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        public IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX => _DecapitationFXLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DecapitationFXLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
         #endregion
         #region OpenLootSound
         private int? _OpenLootSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenLootSound => _OpenLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenLootSound => _OpenLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpenLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region CloseLootSound
         private int? _CloseLootSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseLootSound => _CloseLootSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CloseLootSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = ListExt.Empty<RaceMovementTypeBinaryOverlay>();
+        public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = Array.Empty<IRaceMovementTypeGetter>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentFlagsLocation!.Value, _package.MetaData.Constants)) : default(EquipTypeFlag?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = ListExt.Empty<IFormLinkGetter<IEquipTypeGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IEquipTypeGetter>>();
         #region UnarmedEquipSlot
         private int? _UnarmedEquipSlotLocation;
-        public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        public IFormLinkNullableGetter<IEquipTypeGetter> UnarmedEquipSlot => _UnarmedEquipSlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnarmedEquipSlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
@@ -8424,27 +8495,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk => _BaseMovementDefaultWalkLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultWalkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultWalk => _BaseMovementDefaultWalkLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultWalkLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultRun
         private int? _BaseMovementDefaultRunLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun => _BaseMovementDefaultRunLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultRunLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultRun => _BaseMovementDefaultRunLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultRunLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSwim
         private int? _BaseMovementDefaultSwimLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSwim => _BaseMovementDefaultSwimLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSwimLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultFly
         private int? _BaseMovementDefaultFlyLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultFly => _BaseMovementDefaultFlyLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultFlyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSneak
         private int? _BaseMovementDefaultSneakLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak => _BaseMovementDefaultSneakLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSneakLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region BaseMovementDefaultSprint
         private int? _BaseMovementDefaultSprintLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseMovementDefaultSprintLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint => _BaseMovementDefaultSprintLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultSprintLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region HeadData
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
@@ -8452,11 +8523,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MorphRace
         private int? _MorphRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -8465,28 +8536,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected RaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -8496,20 +8570,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RaceBinaryOverlay RaceFactory(
+        public static IRaceGetter RaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -8519,9 +8593,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -8543,7 +8617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        subrecordType: RecordTypes.SPLO,
+                        trigger: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.ActorEffect;
                 }
@@ -8561,8 +8635,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
-                case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
                 {
                     this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
@@ -8570,14 +8644,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
-                        subrecordType: RecordTypes.KWDA,
+                        trigger: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x80)
                     {
                         this.DATADataTypeState |= Race.DATADataType.Break0;
@@ -8593,7 +8667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
-                        parseParams: Race_Registration.SkeletalModelConverter);
+                        translationParams: Race_Registration.SkeletalModelConverter);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
@@ -8601,13 +8675,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.MovementTypeNames = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Race_FieldIndex.MovementTypeNames;
                 }
                 case RecordTypeInts.VTCK:
@@ -8648,10 +8722,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ATKD:
                 case RecordTypeInts.ATKE:
                 {
-                    this.Attacks = this.ParseRepeatedTypelessSubrecord<AttackBinaryOverlay>(
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: Attack_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: Attack_Registration.TriggerSpecs,
                         factory: AttackBinaryOverlay.AttackFactory);
                     return (int)Race_FieldIndex.Attacks;
                 }
@@ -8664,13 +8738,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IHairGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -8681,8 +8755,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IEyesGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -8705,7 +8779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
-                        parseParams: parseParams);
+                        translationParams: translationParams);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -8744,10 +8818,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MTYP:
                 case RecordTypeInts.SPED:
                 {
-                    this.MovementTypes = this.ParseRepeatedTypelessSubrecord<RaceMovementTypeBinaryOverlay>(
+                    this.MovementTypes = this.ParseRepeatedTypelessSubrecord<IRaceMovementTypeGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: RaceMovementType_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: RaceMovementType_Registration.TriggerSpecs,
                         factory: RaceMovementTypeBinaryOverlay.RaceMovementTypeFactory);
                     return (int)Race_FieldIndex.MovementTypes;
                 }
@@ -8767,7 +8841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Race_FieldIndex.EquipmentSlots;
                 }
                 case RecordTypeInts.UNES:
@@ -8846,17 +8920,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.ToString(
+            RaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

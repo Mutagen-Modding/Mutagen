@@ -1,5 +1,99 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Armor" objType="Record" recordType="ARMO" baseClass="Fallout4MajorRecord" GUID="e4416f66-bbff-4fd0-aefd-28c57a08502c" ID="87">
+  <Object name="Armor" objType="Record" recordType="ARMO" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="c4d097a3-85cc-49c7-8a94-606c9086f0ca" ID="136">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <FormLink name="ObjectEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <Gendered name="WorldModel">
+        <MaleTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODT" To="MO2T" />
+          <Mapping From="MODS" To="MO2S" />
+        </MaleTypeOverrides>
+        <FemaleTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODS" To="MO4S" />
+          <Mapping From="ICON" To="ICO2" />
+          <Mapping From="MICO" To="MIC2" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="ArmorModel" />
+        </Fields>
+      </Gendered>
+      <RefDirect name="BipedBodyTemplate" refName="BipedBodyTemplate" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
+      <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Description" recordType="DESC" translated="Normal" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
+      <RefList name="Armatures" refName="ArmorAddonModel" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+          <UInt32 name="Health" />
+        </Fields>
+      </Data>
+      <Data recordType="FNAM">
+        <Fields>
+          <UInt16 name="ArmorRating" />
+          <UInt16 name="BaseAddonIndex" />
+          <UInt16 name="StaggerRating" />
+          <UInt16 name="Unknown" />
+        </Fields>
+      </Data>
+      <RefList name="Resistances" refName="ArmorResistance" recordType="DAMA" />
+      <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" >
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IOutfitTarget</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBindableEquipment</LinkInterface>
+    <LinkInterface>IFurnitureAssociation</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+  <Object name="ArmorModel" objType="Subrecord" GUID="9c3dda06-b786-4b46-98d2-98ce753be2b5" ID="137">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+    </Fields>
+  </Object>
+  <Object name="ArmorAddonModel" objType="Subrecord" GUID="48cceadb-aa7c-4586-bf3b-48fff52d5059" ID="144">
+    <Fields>
+      <UInt16 name="AddonIndex" recordType="INDX" />
+      <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
+    </Fields>
+  </Object>
+  <Object name="ArmorResistance" objType="Subrecord" GUID="376e43f7-2bef-4600-af06-4464f173d2fb" ID="145">
+    <Fields>
+      <FormLink name="DamageType" refName="DamageType" />
+      <UInt32 name="Value" />
+    </Fields>
   </Object>
 </Loqui>

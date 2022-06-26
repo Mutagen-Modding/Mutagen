@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -76,12 +77,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkPlacementMixIn.ToString(
+            PerkPlacementMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,38 +205,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PerkPlacement.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PerkPlacement.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkPlacement.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PerkPlacement.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PerkPlacement.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkPlacement.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Perk ?? true)
                     {
-                        fg.AppendItem(Perk, "Perk");
+                        sb.AppendItem(Perk, "Perk");
                     }
                     if (printMask?.Rank ?? true)
                     {
-                        fg.AppendItem(Rank, "Rank");
+                        sb.AppendItem(Rank, "Rank");
                     }
                     if (printMask?.Fluff ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        sb.AppendItem(Fluff, "Fluff");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -329,38 +326,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Perk, "Perk");
-                fg.AppendItem(Rank, "Rank");
-                fg.AppendItem(Fluff, "Fluff");
+                {
+                    sb.AppendItem(Perk, "Perk");
+                }
+                {
+                    sb.AppendItem(Rank, "Rank");
+                }
+                {
+                    sb.AppendItem(Fluff, "Fluff");
+                }
             }
             #endregion
 
@@ -439,8 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkPlacement_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkPlacementCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkPlacementCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkPlacementSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -451,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -461,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PerkPlacement CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkPlacement();
             ((PerkPlacementSetterCommon)((IPerkPlacementGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -476,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkPlacement item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -486,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -552,26 +545,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPerkPlacementGetter item,
             string? name = null,
             PerkPlacement.Mask<bool>? printMask = null)
         {
-            return ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).ToString(
+            return ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPerkPlacementGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkPlacement.Mask<bool>? printMask = null)
         {
-            ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).ToString(
+            ((PerkPlacementCommon)((IPerkPlacementGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -677,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkPlacementSetterCommon)((IPerkPlacementGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -692,10 +685,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkPlacement_FieldIndex
+    internal enum PerkPlacement_FieldIndex
     {
         Perk = 0,
         Rank = 1,
@@ -704,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkPlacement_Registration : ILoquiRegistration
+    internal partial class PerkPlacement_Registration : ILoquiRegistration
     {
         public static readonly PerkPlacement_Registration Instance = new PerkPlacement_Registration();
 
@@ -746,6 +739,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PRKR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PerkPlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -779,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkPlacementSetterCommon
+    internal partial class PerkPlacementSetterCommon
     {
         public static readonly PerkPlacementSetterCommon Instance = new PerkPlacementSetterCommon();
 
@@ -805,12 +804,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPerkPlacement item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PRKR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -821,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkPlacementCommon
+    internal partial class PerkPlacementCommon
     {
         public static readonly PerkPlacementCommon Instance = new PerkPlacementCommon();
 
@@ -845,67 +844,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkPlacement.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.Rank = item.Rank == rhs.Rank;
             ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
         }
         
-        public string ToString(
+        public string Print(
             IPerkPlacementGetter item,
             string? name = null,
             PerkPlacement.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPerkPlacementGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkPlacement.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkPlacement =>");
+                sb.AppendLine($"PerkPlacement =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkPlacement) =>");
+                sb.AppendLine($"{name} (PerkPlacement) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkPlacementGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkPlacement.Mask<bool>? printMask = null)
         {
             if (printMask?.Perk ?? true)
             {
-                fg.AppendItem(item.Perk.FormKey, "Perk");
+                sb.AppendItem(item.Perk.FormKey, "Perk");
             }
             if (printMask?.Rank ?? true)
             {
-                fg.AppendItem(item.Rank, "Rank");
+                sb.AppendItem(item.Rank, "Rank");
             }
             if (printMask?.Fluff ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                sb.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
             }
         }
         
@@ -949,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkPlacementGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkPlacementGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Perk);
             yield break;
@@ -958,7 +954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkPlacementSetterTranslationCommon
+    internal partial class PerkPlacementSetterTranslationCommon
     {
         public static readonly PerkPlacementSetterTranslationCommon Instance = new PerkPlacementSetterTranslationCommon();
 
@@ -1044,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkPlacement_Registration.Instance;
-        public static PerkPlacement_Registration StaticRegistration => PerkPlacement_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkPlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1068,11 +1064,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkPlacementBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PerkPlacementBinaryWriteTranslation Instance = new PerkPlacementBinaryWriteTranslation();
+        public static readonly PerkPlacementBinaryWriteTranslation Instance = new PerkPlacementBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkPlacementGetter item,
@@ -1090,12 +1086,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkPlacementGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PRKR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1107,7 +1103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkPlacementGetter)item,
@@ -1117,9 +1113,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkPlacementBinaryCreateTranslation
+    internal partial class PerkPlacementBinaryCreateTranslation
     {
-        public readonly static PerkPlacementBinaryCreateTranslation Instance = new PerkPlacementBinaryCreateTranslation();
+        public static readonly PerkPlacementBinaryCreateTranslation Instance = new PerkPlacementBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkPlacement item,
@@ -1141,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPerkPlacementGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkPlacementBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1154,16 +1150,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkPlacementBinaryOverlay :
+    internal partial class PerkPlacementBinaryOverlay :
         PluginBinaryOverlay,
         IPerkPlacementGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkPlacement_Registration.Instance;
-        public static PerkPlacement_Registration StaticRegistration => PerkPlacement_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkPlacement_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PerkPlacementCommon.Instance;
         [DebuggerStepThrough]
@@ -1177,16 +1173,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkPlacementCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkPlacementCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PerkPlacementBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkPlacementBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1194,9 +1190,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Byte Rank => _data.Span[0x4];
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
+        public IFormLinkGetter<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Byte Rank => _structData.Span[0x4];
+        public ReadOnlyMemorySlice<Byte> Fluff => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1204,25 +1200,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PerkPlacementBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PerkPlacementBinaryOverlay PerkPlacementFactory(
+        public static IPerkPlacementGetter PerkPlacementFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PerkPlacementBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1231,25 +1232,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PerkPlacementBinaryOverlay PerkPlacementFactory(
+        public static IPerkPlacementGetter PerkPlacementFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkPlacementFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkPlacementMixIn.ToString(
+            PerkPlacementMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

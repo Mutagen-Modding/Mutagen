@@ -7,14 +7,10 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -117,12 +113,13 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PexObjectMixIn.ToString(
+            PexObjectMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -394,9 +391,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>>();
                         obj.StructInfos.Specific = l;
-                        foreach (var item in StructInfos.Specific.WithIndex())
+                        foreach (var item in StructInfos.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectStructInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -409,9 +406,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectVariable.Mask<R>?>>();
                         obj.Variables.Specific = l;
-                        foreach (var item in Variables.Specific.WithIndex())
+                        foreach (var item in Variables.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectVariable.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectVariable.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectVariable.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectVariable.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -424,9 +421,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectProperty.Mask<R>?>>();
                         obj.Properties.Specific = l;
-                        foreach (var item in Properties.Specific.WithIndex())
+                        foreach (var item in Properties.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectProperty.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectProperty.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectProperty.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectProperty.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -439,9 +436,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, PexObjectState.Mask<R>?>>();
                         obj.States.Specific = l;
-                        foreach (var item in States.Specific.WithIndex())
+                        foreach (var item in States.Specific)
                         {
-                            MaskItemIndexed<R, PexObjectState.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, PexObjectState.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PexObjectState.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PexObjectState.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -451,142 +448,121 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PexObject.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PexObject.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PexObject.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PexObject.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PexObject.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PexObject.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.ParentClassName ?? true)
                     {
-                        fg.AppendItem(ParentClassName, "ParentClassName");
+                        sb.AppendItem(ParentClassName, "ParentClassName");
                     }
                     if (printMask?.DocString ?? true)
                     {
-                        fg.AppendItem(DocString, "DocString");
+                        sb.AppendItem(DocString, "DocString");
                     }
                     if (printMask?.IsConst ?? true)
                     {
-                        fg.AppendItem(IsConst, "IsConst");
+                        sb.AppendItem(IsConst, "IsConst");
                     }
                     if (printMask?.RawUserFlags ?? true)
                     {
-                        fg.AppendItem(RawUserFlags, "RawUserFlags");
+                        sb.AppendItem(RawUserFlags, "RawUserFlags");
                     }
                     if (printMask?.AutoStateName ?? true)
                     {
-                        fg.AppendItem(AutoStateName, "AutoStateName");
+                        sb.AppendItem(AutoStateName, "AutoStateName");
                     }
                     if ((printMask?.StructInfos?.Overall ?? true)
                         && StructInfos is {} StructInfosItem)
                     {
-                        fg.AppendLine("StructInfos =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("StructInfos =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(StructInfosItem.Overall);
+                            sb.AppendItem(StructInfosItem.Overall);
                             if (StructInfosItem.Specific != null)
                             {
                                 foreach (var subItem in StructInfosItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Variables?.Overall ?? true)
                         && Variables is {} VariablesItem)
                     {
-                        fg.AppendLine("Variables =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Variables =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(VariablesItem.Overall);
+                            sb.AppendItem(VariablesItem.Overall);
                             if (VariablesItem.Specific != null)
                             {
                                 foreach (var subItem in VariablesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Properties?.Overall ?? true)
                         && Properties is {} PropertiesItem)
                     {
-                        fg.AppendLine("Properties =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Properties =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PropertiesItem.Overall);
+                            sb.AppendItem(PropertiesItem.Overall);
                             if (PropertiesItem.Specific != null)
                             {
                                 foreach (var subItem in PropertiesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.States?.Overall ?? true)
                         && States is {} StatesItem)
                     {
-                        fg.AppendLine("States =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("States =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(StatesItem.Overall);
+                            sb.AppendItem(StatesItem.Overall);
                             if (StatesItem.Specific != null)
                             {
                                 foreach (var subItem in StatesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -751,128 +727,115 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(ParentClassName, "ParentClassName");
-                fg.AppendItem(DocString, "DocString");
-                fg.AppendItem(IsConst, "IsConst");
-                fg.AppendItem(RawUserFlags, "RawUserFlags");
-                fg.AppendItem(AutoStateName, "AutoStateName");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(ParentClassName, "ParentClassName");
+                }
+                {
+                    sb.AppendItem(DocString, "DocString");
+                }
+                {
+                    sb.AppendItem(IsConst, "IsConst");
+                }
+                {
+                    sb.AppendItem(RawUserFlags, "RawUserFlags");
+                }
+                {
+                    sb.AppendItem(AutoStateName, "AutoStateName");
+                }
                 if (StructInfos is {} StructInfosItem)
                 {
-                    fg.AppendLine("StructInfos =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("StructInfos =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(StructInfosItem.Overall);
+                        sb.AppendItem(StructInfosItem.Overall);
                         if (StructInfosItem.Specific != null)
                         {
                             foreach (var subItem in StructInfosItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Variables is {} VariablesItem)
                 {
-                    fg.AppendLine("Variables =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Variables =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(VariablesItem.Overall);
+                        sb.AppendItem(VariablesItem.Overall);
                         if (VariablesItem.Specific != null)
                         {
                             foreach (var subItem in VariablesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Properties is {} PropertiesItem)
                 {
-                    fg.AppendLine("Properties =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Properties =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PropertiesItem.Overall);
+                        sb.AppendItem(PropertiesItem.Overall);
                         if (PropertiesItem.Specific != null)
                         {
                             foreach (var subItem in PropertiesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (States is {} StatesItem)
                 {
-                    fg.AppendLine("States =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("States =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(StatesItem.Overall);
+                        sb.AppendItem(StatesItem.Overall);
                         if (StatesItem.Specific != null)
                         {
                             foreach (var subItem in StatesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -975,7 +938,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1054,26 +1017,26 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPexObjectGetter item,
             string? name = null,
             PexObject.Mask<bool>? printMask = null)
         {
-            return ((PexObjectCommon)((IPexObjectGetter)item).CommonInstance()!).ToString(
+            return ((PexObjectCommon)((IPexObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPexObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObject.Mask<bool>? printMask = null)
         {
-            ((PexObjectCommon)((IPexObjectGetter)item).CommonInstance()!).ToString(
+            ((PexObjectCommon)((IPexObjectGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1180,10 +1143,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexObject_FieldIndex
+    internal enum PexObject_FieldIndex
     {
         Name = 0,
         ParentClassName = 1,
@@ -1199,7 +1162,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexObject_Registration : ILoquiRegistration
+    internal partial class PexObject_Registration : ILoquiRegistration
     {
         public static readonly PexObject_Registration Instance = new PexObject_Registration();
 
@@ -1272,7 +1235,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexObjectSetterCommon
+    internal partial class PexObjectSetterCommon
     {
         public static readonly PexObjectSetterCommon Instance = new PexObjectSetterCommon();
 
@@ -1294,7 +1257,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectCommon
+    internal partial class PexObjectCommon
     {
         public static readonly PexObjectCommon Instance = new PexObjectCommon();
 
@@ -1318,7 +1281,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ParentClassName = string.Equals(item.ParentClassName, rhs.ParentClassName);
             ret.DocString = string.Equals(item.DocString, rhs.DocString);
@@ -1343,148 +1305,130 @@ namespace Mutagen.Bethesda.Pex.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IPexObjectGetter item,
             string? name = null,
             PexObject.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPexObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PexObject =>");
+                sb.AppendLine($"PexObject =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PexObject) =>");
+                sb.AppendLine($"{name} (PexObject) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPexObjectGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PexObject.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.ParentClassName ?? true)
                 && item.ParentClassName is {} ParentClassNameItem)
             {
-                fg.AppendItem(ParentClassNameItem, "ParentClassName");
+                sb.AppendItem(ParentClassNameItem, "ParentClassName");
             }
             if ((printMask?.DocString ?? true)
                 && item.DocString is {} DocStringItem)
             {
-                fg.AppendItem(DocStringItem, "DocString");
+                sb.AppendItem(DocStringItem, "DocString");
             }
             if (printMask?.IsConst ?? true)
             {
-                fg.AppendItem(item.IsConst, "IsConst");
+                sb.AppendItem(item.IsConst, "IsConst");
             }
             if (printMask?.RawUserFlags ?? true)
             {
-                fg.AppendItem(item.RawUserFlags, "RawUserFlags");
+                sb.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
             if (printMask?.AutoStateName ?? true)
             {
-                fg.AppendItem(item.AutoStateName, "AutoStateName");
+                sb.AppendItem(item.AutoStateName, "AutoStateName");
             }
             if (printMask?.StructInfos?.Overall ?? true)
             {
-                fg.AppendLine("StructInfos =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("StructInfos =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.StructInfos)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Variables?.Overall ?? true)
             {
-                fg.AppendLine("Variables =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Variables =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Variables)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Properties?.Overall ?? true)
             {
-                fg.AppendLine("Properties =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Properties =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Properties)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.States?.Overall ?? true)
             {
-                fg.AppendLine("States =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("States =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.States)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1521,19 +1465,19 @@ namespace Mutagen.Bethesda.Pex.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.StructInfos) ?? true))
             {
-                if (!lhs.StructInfos.SequenceEqualNullable(rhs.StructInfos)) return false;
+                if (!lhs.StructInfos.SequenceEqual(rhs.StructInfos, (l, r) => ((PexObjectStructInfoCommon)((IPexObjectStructInfoGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.StructInfos)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Variables) ?? true))
             {
-                if (!lhs.Variables.SequenceEqualNullable(rhs.Variables)) return false;
+                if (!lhs.Variables.SequenceEqual(rhs.Variables, (l, r) => ((PexObjectVariableCommon)((IPexObjectVariableGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.Variables)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqualNullable(rhs.Properties)) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((PexObjectPropertyCommon)((IPexObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.Properties)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.States) ?? true))
             {
-                if (!lhs.States.SequenceEqualNullable(rhs.States)) return false;
+                if (!lhs.States.SequenceEqual(rhs.States, (l, r) => ((PexObjectStateCommon)((IPexObjectStateGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PexObject_FieldIndex.States)))) return false;
             }
             return true;
         }
@@ -1572,7 +1516,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectSetterTranslationCommon
+    internal partial class PexObjectSetterTranslationCommon
     {
         public static readonly PexObjectSetterTranslationCommon Instance = new PexObjectSetterTranslationCommon();
 
@@ -1766,7 +1710,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObject_Registration.Instance;
-        public static PexObject_Registration StaticRegistration => PexObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexObject_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectCommon.Instance;
         [DebuggerStepThrough]

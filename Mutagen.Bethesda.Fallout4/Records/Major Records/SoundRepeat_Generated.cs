@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundRepeatMixIn.ToString(
+            SoundRepeatMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SoundRepeat.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SoundRepeat.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SoundRepeat.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SoundRepeat.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SoundRepeat.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundRepeat.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.MinTime ?? true)
                     {
-                        fg.AppendItem(MinTime, "MinTime");
+                        sb.AppendItem(MinTime, "MinTime");
                     }
                     if (printMask?.MaxTime ?? true)
                     {
-                        fg.AppendItem(MaxTime, "MaxTime");
+                        sb.AppendItem(MaxTime, "MaxTime");
                     }
                     if (printMask?.Stackable ?? true)
                     {
-                        fg.AppendItem(Stackable, "Stackable");
+                        sb.AppendItem(Stackable, "Stackable");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(MinTime, "MinTime");
-                fg.AppendItem(MaxTime, "MaxTime");
-                fg.AppendItem(Stackable, "Stackable");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(MinTime, "MinTime");
+                }
+                {
+                    sb.AppendItem(MaxTime, "MaxTime");
+                }
+                {
+                    sb.AppendItem(Stackable, "Stackable");
+                }
             }
             #endregion
 
@@ -453,7 +450,6 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = SoundRepeat_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -468,7 +464,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundRepeatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -478,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static SoundRepeat CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundRepeat();
             ((SoundRepeatSetterCommon)((ISoundRepeatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -493,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundRepeat item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -503,7 +499,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -569,26 +565,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISoundRepeatGetter item,
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
-            return ((SoundRepeatCommon)((ISoundRepeatGetter)item).CommonInstance()!).ToString(
+            return ((SoundRepeatCommon)((ISoundRepeatGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISoundRepeatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
-            ((SoundRepeatCommon)((ISoundRepeatGetter)item).CommonInstance()!).ToString(
+            ((SoundRepeatCommon)((ISoundRepeatGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -694,7 +690,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundRepeat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundRepeatSetterCommon)((ISoundRepeatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -709,10 +705,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum SoundRepeat_FieldIndex
+    internal enum SoundRepeat_FieldIndex
     {
         Versioning = 0,
         MinTime = 1,
@@ -722,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class SoundRepeat_Registration : ILoquiRegistration
+    internal partial class SoundRepeat_Registration : ILoquiRegistration
     {
         public static readonly SoundRepeat_Registration Instance = new SoundRepeat_Registration();
 
@@ -764,6 +760,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REPT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.REPT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SoundRepeatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -797,7 +799,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SoundRepeatSetterCommon
+    internal partial class SoundRepeatSetterCommon
     {
         public static readonly SoundRepeatSetterCommon Instance = new SoundRepeatSetterCommon();
 
@@ -823,12 +825,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ISoundRepeat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.REPT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -839,7 +841,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundRepeatCommon
+    internal partial class SoundRepeatCommon
     {
         public static readonly SoundRepeatCommon Instance = new SoundRepeatCommon();
 
@@ -863,72 +865,69 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             SoundRepeat.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.MinTime = item.MinTime.EqualsWithin(rhs.MinTime);
             ret.MaxTime = item.MaxTime.EqualsWithin(rhs.MaxTime);
             ret.Stackable = item.Stackable == rhs.Stackable;
         }
         
-        public string ToString(
+        public string Print(
             ISoundRepeatGetter item,
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISoundRepeatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundRepeat.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundRepeat =>");
+                sb.AppendLine($"SoundRepeat =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundRepeat) =>");
+                sb.AppendLine($"{name} (SoundRepeat) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundRepeatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundRepeat.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.MinTime ?? true)
             {
-                fg.AppendItem(item.MinTime, "MinTime");
+                sb.AppendItem(item.MinTime, "MinTime");
             }
             if (printMask?.MaxTime ?? true)
             {
-                fg.AppendItem(item.MaxTime, "MaxTime");
+                sb.AppendItem(item.MaxTime, "MaxTime");
             }
             if (printMask?.Stackable ?? true)
             {
-                fg.AppendItem(item.Stackable, "Stackable");
+                sb.AppendItem(item.Stackable, "Stackable");
             }
         }
         
@@ -977,7 +976,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundRepeatGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundRepeatGetter obj)
         {
             yield break;
         }
@@ -985,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundRepeatSetterTranslationCommon
+    internal partial class SoundRepeatSetterTranslationCommon
     {
         public static readonly SoundRepeatSetterTranslationCommon Instance = new SoundRepeatSetterTranslationCommon();
 
@@ -1076,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundRepeat_Registration.Instance;
-        public static SoundRepeat_Registration StaticRegistration => SoundRepeat_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundRepeat_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundRepeatCommon.Instance;
         [DebuggerStepThrough]
@@ -1100,11 +1099,11 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundRepeatBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SoundRepeatBinaryWriteTranslation Instance = new SoundRepeatBinaryWriteTranslation();
+        public static readonly SoundRepeatBinaryWriteTranslation Instance = new SoundRepeatBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISoundRepeatGetter item,
@@ -1125,12 +1124,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             ISoundRepeatGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.REPT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1142,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundRepeatGetter)item,
@@ -1152,9 +1151,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SoundRepeatBinaryCreateTranslation
+    internal partial class SoundRepeatBinaryCreateTranslation
     {
-        public readonly static SoundRepeatBinaryCreateTranslation Instance = new SoundRepeatBinaryCreateTranslation();
+        public static readonly SoundRepeatBinaryCreateTranslation Instance = new SoundRepeatBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISoundRepeat item,
@@ -1181,7 +1180,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this ISoundRepeatGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundRepeatBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1194,16 +1193,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SoundRepeatBinaryOverlay :
+    internal partial class SoundRepeatBinaryOverlay :
         PluginBinaryOverlay,
         ISoundRepeatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundRepeat_Registration.Instance;
-        public static SoundRepeat_Registration StaticRegistration => SoundRepeat_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SoundRepeat_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SoundRepeatCommon.Instance;
         [DebuggerStepThrough]
@@ -1217,7 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundRepeatBinaryWriteTranslation.Instance;
@@ -1225,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundRepeatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1234,9 +1233,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         public SoundRepeat.VersioningBreaks Versioning { get; private set; }
-        public Single MinTime => _data.Slice(0x0, 0x4).Float();
-        public Single MaxTime => _data.Slice(0x4, 0x4).Float();
-        public Boolean Stackable => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x1)[0] == 1;
+        public Single MinTime => _structData.Slice(0x0, 0x4).Float();
+        public Single MaxTime => _structData.Slice(0x4, 0x4).Float();
+        public Boolean Stackable => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1244,26 +1243,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected SoundRepeatBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SoundRepeatBinaryOverlay SoundRepeatFactory(
+        public static ISoundRepeatGetter SoundRepeatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x9,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SoundRepeatBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x8)
+            if (ret._structData.Length <= 0x8)
             {
                 ret.Versioning |= SoundRepeat.VersioningBreaks.Break0;
             }
@@ -1274,25 +1278,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static SoundRepeatBinaryOverlay SoundRepeatFactory(
+        public static ISoundRepeatGetter SoundRepeatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundRepeatFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundRepeatMixIn.ToString(
+            SoundRepeatMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

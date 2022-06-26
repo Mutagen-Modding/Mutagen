@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -76,12 +77,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogResponsesUnknownDataMixIn.ToString(
+            DialogResponsesUnknownDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,38 +205,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DialogResponsesUnknownData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DialogResponsesUnknownData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DialogResponsesUnknownData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DialogResponsesUnknownData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DialogResponsesUnknownData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogResponsesUnknownData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.SCHR ?? true)
                     {
-                        fg.AppendItem(SCHR, "SCHR");
+                        sb.AppendItem(SCHR, "SCHR");
                     }
                     if (printMask?.QNAM ?? true)
                     {
-                        fg.AppendItem(QNAM, "QNAM");
+                        sb.AppendItem(QNAM, "QNAM");
                     }
                     if (printMask?.NEXT ?? true)
                     {
-                        fg.AppendItem(NEXT, "NEXT");
+                        sb.AppendItem(NEXT, "NEXT");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -329,38 +326,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SCHR, "SCHR");
-                fg.AppendItem(QNAM, "QNAM");
-                fg.AppendItem(NEXT, "NEXT");
+                {
+                    sb.AppendItem(SCHR, "SCHR");
+                }
+                {
+                    sb.AppendItem(QNAM, "QNAM");
+                }
+                {
+                    sb.AppendItem(NEXT, "NEXT");
+                }
             }
             #endregion
 
@@ -439,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponsesUnknownDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponsesUnknownDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponsesUnknownDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -450,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -460,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DialogResponsesUnknownData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponsesUnknownData();
             ((DialogResponsesUnknownDataSetterCommon)((IDialogResponsesUnknownDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -475,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogResponsesUnknownData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -485,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -551,26 +545,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDialogResponsesUnknownDataGetter item,
             string? name = null,
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).ToString(
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDialogResponsesUnknownDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
-            ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).ToString(
+            ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -676,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDialogResponsesUnknownData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogResponsesUnknownDataSetterCommon)((IDialogResponsesUnknownDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -691,10 +685,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogResponsesUnknownData_FieldIndex
+    internal enum DialogResponsesUnknownData_FieldIndex
     {
         SCHR = 0,
         QNAM = 1,
@@ -703,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponsesUnknownData_Registration : ILoquiRegistration
+    internal partial class DialogResponsesUnknownData_Registration : ILoquiRegistration
     {
         public static readonly DialogResponsesUnknownData_Registration Instance = new DialogResponsesUnknownData_Registration();
 
@@ -744,18 +738,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.SCHR,
-                        RecordTypes.QNAM,
-                        RecordTypes.NEXT
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.SCHR,
+                RecordTypes.QNAM,
+                RecordTypes.NEXT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesUnknownDataBinaryWriteTranslation);
         #region Interface
@@ -790,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponsesUnknownDataSetterCommon
+    internal partial class DialogResponsesUnknownDataSetterCommon
     {
         public static readonly DialogResponsesUnknownDataSetterCommon Instance = new DialogResponsesUnknownDataSetterCommon();
 
@@ -816,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IDialogResponsesUnknownData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -829,7 +819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesUnknownDataCommon
+    internal partial class DialogResponsesUnknownDataCommon
     {
         public static readonly DialogResponsesUnknownDataCommon Instance = new DialogResponsesUnknownDataCommon();
 
@@ -853,68 +843,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponsesUnknownData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SCHR = MemorySliceExt.Equal(item.SCHR, rhs.SCHR);
             ret.QNAM = item.QNAM.Equals(rhs.QNAM);
             ret.NEXT = item.NEXT == rhs.NEXT;
         }
         
-        public string ToString(
+        public string Print(
             IDialogResponsesUnknownDataGetter item,
             string? name = null,
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDialogResponsesUnknownDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogResponsesUnknownData =>");
+                sb.AppendLine($"DialogResponsesUnknownData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogResponsesUnknownData) =>");
+                sb.AppendLine($"{name} (DialogResponsesUnknownData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogResponsesUnknownDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogResponsesUnknownData.Mask<bool>? printMask = null)
         {
             if ((printMask?.SCHR ?? true)
                 && item.SCHR is {} SCHRItem)
             {
-                fg.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
+                sb.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
             }
             if (printMask?.QNAM ?? true)
             {
-                fg.AppendItem(item.QNAM.FormKeyNullable, "QNAM");
+                sb.AppendItem(item.QNAM.FormKeyNullable, "QNAM");
             }
             if (printMask?.NEXT ?? true)
             {
-                fg.AppendItem(item.NEXT, "NEXT");
+                sb.AppendItem(item.NEXT, "NEXT");
             }
         }
         
@@ -961,11 +948,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogResponsesUnknownDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogResponsesUnknownDataGetter obj)
         {
-            if (obj.QNAM.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.QNAM, out var QNAMInfo))
             {
-                yield return FormLinkInformation.Factory(obj.QNAM);
+                yield return QNAMInfo;
             }
             yield break;
         }
@@ -973,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesUnknownDataSetterTranslationCommon
+    internal partial class DialogResponsesUnknownDataSetterTranslationCommon
     {
         public static readonly DialogResponsesUnknownDataSetterTranslationCommon Instance = new DialogResponsesUnknownDataSetterTranslationCommon();
 
@@ -1066,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponsesUnknownData_Registration.Instance;
-        public static DialogResponsesUnknownData_Registration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponsesUnknownDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1090,16 +1077,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponsesUnknownDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogResponsesUnknownDataBinaryWriteTranslation Instance = new DialogResponsesUnknownDataBinaryWriteTranslation();
+        public static readonly DialogResponsesUnknownDataBinaryWriteTranslation Instance = new DialogResponsesUnknownDataBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDialogResponsesUnknownDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1118,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IDialogResponsesUnknownDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1129,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogResponsesUnknownDataGetter)item,
@@ -1139,9 +1126,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponsesUnknownDataBinaryCreateTranslation
+    internal partial class DialogResponsesUnknownDataBinaryCreateTranslation
     {
-        public readonly static DialogResponsesUnknownDataBinaryCreateTranslation Instance = new DialogResponsesUnknownDataBinaryCreateTranslation();
+        public static readonly DialogResponsesUnknownDataBinaryCreateTranslation Instance = new DialogResponsesUnknownDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogResponsesUnknownData item,
@@ -1156,28 +1143,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.QNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.NEXT, translationParams)) return ParseResult.Stop;
                     item.NEXT = true;
                     return (int)DialogResponsesUnknownData_FieldIndex.NEXT;
                 }
@@ -1197,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDialogResponsesUnknownDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1210,16 +1197,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponsesUnknownDataBinaryOverlay :
+    internal partial class DialogResponsesUnknownDataBinaryOverlay :
         PluginBinaryOverlay,
         IDialogResponsesUnknownDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponsesUnknownData_Registration.Instance;
-        public static DialogResponsesUnknownData_Registration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponsesUnknownData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponsesUnknownDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1233,16 +1220,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponsesUnknownDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponsesUnknownDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponsesUnknownDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponsesUnknownDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1252,11 +1239,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region SCHR
         private int? _SCHRLocation;
-        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region QNAM
         private int? _QNAMLocation;
-        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region NEXT
         private int? _NEXTLocation;
@@ -1269,42 +1256,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected DialogResponsesUnknownDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DialogResponsesUnknownDataBinaryOverlay DialogResponsesUnknownDataFactory(
+        public static IDialogResponsesUnknownDataGetter DialogResponsesUnknownDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DialogResponsesUnknownDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static DialogResponsesUnknownDataBinaryOverlay DialogResponsesUnknownDataFactory(
+        public static IDialogResponsesUnknownDataGetter DialogResponsesUnknownDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogResponsesUnknownDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1314,26 +1307,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.SCHR, translationParams)) return ParseResult.Stop;
                     _SCHRLocation = (stream.Position - offset);
                     return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     _QNAMLocation = (stream.Position - offset);
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponsesUnknownData_FieldIndex.NEXT) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.NEXT, translationParams)) return ParseResult.Stop;
                     _NEXTLocation = (stream.Position - offset);
                     return (int)DialogResponsesUnknownData_FieldIndex.NEXT;
                 }
@@ -1343,12 +1336,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogResponsesUnknownDataMixIn.ToString(
+            DialogResponsesUnknownDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

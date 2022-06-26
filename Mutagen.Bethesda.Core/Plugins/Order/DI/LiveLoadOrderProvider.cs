@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive;
+﻿using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -8,50 +6,50 @@ using System.Reactive.Subjects;
 using DynamicData;
 using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Order.DI
+namespace Mutagen.Bethesda.Plugins.Order.DI;
+
+public interface ILiveLoadOrderProvider : ISomeLiveLoadOrderProvider
 {
-    public interface ILiveLoadOrderProvider : ISomeLiveLoadOrderProvider
+}
+    
+public class LiveLoadOrderProvider : ILiveLoadOrderProvider
+{
+    public IPluginLiveLoadOrderProvider PluginLive { get; }
+    public ICreationClubLiveLoadOrderProvider CccLive { get; }
+    public ILoadOrderListingsProvider ListingsProvider { get; }
+    public ILiveLoadOrderTimings Timings { get; }
+
+    public LiveLoadOrderProvider(
+        IPluginLiveLoadOrderProvider pluginLive,
+        ICreationClubLiveLoadOrderProvider cccLive,
+        ILoadOrderListingsProvider loadListingsProvider,
+        ILiveLoadOrderTimings timings)
     {
+        PluginLive = pluginLive;
+        CccLive = cccLive;
+        ListingsProvider = loadListingsProvider;
+        Timings = timings;
     }
     
-    public class LiveLoadOrderProvider : ILiveLoadOrderProvider
+    public IObservable<IChangeSet<ILoadOrderListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
     {
-        public IPluginLiveLoadOrderProvider PluginLive { get; }
-        public ICreationClubLiveLoadOrderProvider CccLive { get; }
-        public ILoadOrderListingsProvider ListingsProvider { get; }
-        public ILiveLoadOrderTimings Timings { get; }
-
-        public LiveLoadOrderProvider(
-            IPluginLiveLoadOrderProvider pluginLive,
-            ICreationClubLiveLoadOrderProvider cccLive,
-            ILoadOrderListingsProvider loadListingsProvider,
-            ILiveLoadOrderTimings timings)
-        {
-            PluginLive = pluginLive;
-            CccLive = cccLive;
-            ListingsProvider = loadListingsProvider;
-            Timings = timings;
-        }
-    
-        public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
-        {
-            var stateSubj = new BehaviorSubject<Exception?>(null);
-            state = stateSubj
-                .DistinctUntilChanged()
-                .Select(x => x == null ? ErrorResponse.Success : ErrorResponse.Fail(x));
-            return Observable.Create<IChangeSet<IModListingGetter>>((observer) =>
+        var stateSubj = new BehaviorSubject<Exception?>(null);
+        state = stateSubj
+            .DistinctUntilChanged()
+            .Select(x => x == null ? ErrorResponse.Success : ErrorResponse.Fail(x));
+        return Observable.Create<IChangeSet<ILoadOrderListingGetter>>((observer) =>
+            {
+                CompositeDisposable disp = new();
+                SourceList<ILoadOrderListingGetter> list = new();
+                var ret = PluginLive.Changed
+                    .Merge(CccLive.Changed)
+                    .StartWith(Unit.Default);
+                if (Timings.Throttle.Ticks > 0)
                 {
-                    CompositeDisposable disp = new();
-                    SourceList<IModListingGetter> list = new();
-                    var ret = PluginLive.Changed
-                        .Merge(CccLive.Changed)
-                        .StartWith(Unit.Default);
-                    if (Timings.Throttle.Ticks > 0)
-                    {
-                        ret = ret.ThrottleWithOptionalScheduler(Timings.Throttle, scheduler);
-                    }
-                    disp.Add(
-                        ret.Select(_ =>
+                    ret = ret.ThrottleWithOptionalScheduler(Timings.Throttle, scheduler);
+                }
+                disp.Add(
+                    ret.Select(_ =>
                         {
                             return Observable.Return(Unit.Default)
                                 .Do(_ =>
@@ -85,19 +83,18 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                         })
                         .Switch()
                         .Subscribe());
-                    list.Connect()
-                        .Subscribe(observer);
-                    return disp;
-                })
-                .ObserveOnIfApplicable(scheduler);
-        }
+                list.Connect()
+                    .Subscribe(observer);
+                return disp;
+            })
+            .ObserveOnIfApplicable(scheduler);
+    }
 
-        public IObservable<Unit> Changed => PluginLive.Changed
-                .Merge(CccLive.Changed);
+    public IObservable<Unit> Changed => PluginLive.Changed
+        .Merge(CccLive.Changed);
 
-        public override string ToString()
-        {
-            return nameof(LiveLoadOrderProvider);
-        }
+    public override string ToString()
+    {
+        return nameof(LiveLoadOrderProvider);
     }
 }

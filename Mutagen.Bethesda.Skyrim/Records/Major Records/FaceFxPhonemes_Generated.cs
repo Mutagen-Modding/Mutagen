@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -230,12 +232,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceFxPhonemesMixIn.ToString(
+            FaceFxPhonemesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -611,94 +614,89 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FaceFxPhonemes.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FaceFxPhonemes.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FaceFxPhonemes.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FaceFxPhonemes.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FaceFxPhonemes.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FaceFxPhonemes.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ForceNames ?? true)
                     {
-                        fg.AppendItem(ForceNames, "ForceNames");
+                        sb.AppendItem(ForceNames, "ForceNames");
                     }
                     if (printMask?.Aah_LipBigAah?.Overall ?? true)
                     {
-                        Aah_LipBigAah?.ToString(fg);
+                        Aah_LipBigAah?.Print(sb);
                     }
                     if (printMask?.BigAah_LipDST?.Overall ?? true)
                     {
-                        BigAah_LipDST?.ToString(fg);
+                        BigAah_LipDST?.Print(sb);
                     }
                     if (printMask?.BMP_LipEee?.Overall ?? true)
                     {
-                        BMP_LipEee?.ToString(fg);
+                        BMP_LipEee?.Print(sb);
                     }
                     if (printMask?.ChJSh_LipFV?.Overall ?? true)
                     {
-                        ChJSh_LipFV?.ToString(fg);
+                        ChJSh_LipFV?.Print(sb);
                     }
                     if (printMask?.DST_LipK?.Overall ?? true)
                     {
-                        DST_LipK?.ToString(fg);
+                        DST_LipK?.Print(sb);
                     }
                     if (printMask?.Eee_LipL?.Overall ?? true)
                     {
-                        Eee_LipL?.ToString(fg);
+                        Eee_LipL?.Print(sb);
                     }
                     if (printMask?.Eh_LipR?.Overall ?? true)
                     {
-                        Eh_LipR?.ToString(fg);
+                        Eh_LipR?.Print(sb);
                     }
                     if (printMask?.FV_LipTh?.Overall ?? true)
                     {
-                        FV_LipTh?.ToString(fg);
+                        FV_LipTh?.Print(sb);
                     }
                     if (printMask?.I?.Overall ?? true)
                     {
-                        I?.ToString(fg);
+                        I?.Print(sb);
                     }
                     if (printMask?.K?.Overall ?? true)
                     {
-                        K?.ToString(fg);
+                        K?.Print(sb);
                     }
                     if (printMask?.N?.Overall ?? true)
                     {
-                        N?.ToString(fg);
+                        N?.Print(sb);
                     }
                     if (printMask?.Oh?.Overall ?? true)
                     {
-                        Oh?.ToString(fg);
+                        Oh?.Print(sb);
                     }
                     if (printMask?.OohQ?.Overall ?? true)
                     {
-                        OohQ?.ToString(fg);
+                        OohQ?.Print(sb);
                     }
                     if (printMask?.R?.Overall ?? true)
                     {
-                        R?.ToString(fg);
+                        R?.Print(sb);
                     }
                     if (printMask?.Th?.Overall ?? true)
                     {
-                        Th?.ToString(fg);
+                        Th?.Print(sb);
                     }
                     if (printMask?.W?.Overall ?? true)
                     {
-                        W?.ToString(fg);
+                        W?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -933,52 +931,45 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ForceNames, "ForceNames");
-                Aah_LipBigAah?.ToString(fg);
-                BigAah_LipDST?.ToString(fg);
-                BMP_LipEee?.ToString(fg);
-                ChJSh_LipFV?.ToString(fg);
-                DST_LipK?.ToString(fg);
-                Eee_LipL?.ToString(fg);
-                Eh_LipR?.ToString(fg);
-                FV_LipTh?.ToString(fg);
-                I?.ToString(fg);
-                K?.ToString(fg);
-                N?.ToString(fg);
-                Oh?.ToString(fg);
-                OohQ?.ToString(fg);
-                R?.ToString(fg);
-                Th?.ToString(fg);
-                W?.ToString(fg);
+                {
+                    sb.AppendItem(ForceNames, "ForceNames");
+                }
+                Aah_LipBigAah?.Print(sb);
+                BigAah_LipDST?.Print(sb);
+                BMP_LipEee?.Print(sb);
+                ChJSh_LipFV?.Print(sb);
+                DST_LipK?.Print(sb);
+                Eee_LipL?.Print(sb);
+                Eh_LipR?.Print(sb);
+                FV_LipTh?.Print(sb);
+                I?.Print(sb);
+                K?.Print(sb);
+                N?.Print(sb);
+                Oh?.Print(sb);
+                OohQ?.Print(sb);
+                R?.Print(sb);
+                Th?.Print(sb);
+                W?.Print(sb);
             }
             #endregion
 
@@ -1103,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1113,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static FaceFxPhonemes CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FaceFxPhonemes();
             ((FaceFxPhonemesSetterCommon)((IFaceFxPhonemesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1128,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FaceFxPhonemes item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1138,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1230,26 +1221,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFaceFxPhonemesGetter item,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).ToString(
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFaceFxPhonemesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).ToString(
+            ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1355,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFaceFxPhonemes item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FaceFxPhonemesSetterCommon)((IFaceFxPhonemesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1370,10 +1361,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FaceFxPhonemes_FieldIndex
+    internal enum FaceFxPhonemes_FieldIndex
     {
         ForceNames = 0,
         Aah_LipBigAah = 1,
@@ -1396,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FaceFxPhonemes_Registration : ILoquiRegistration
+    internal partial class FaceFxPhonemes_Registration : ILoquiRegistration
     {
         public static readonly FaceFxPhonemes_Registration Instance = new FaceFxPhonemes_Registration();
 
@@ -1470,7 +1461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FaceFxPhonemesSetterCommon
+    internal partial class FaceFxPhonemesSetterCommon
     {
         public static readonly FaceFxPhonemesSetterCommon Instance = new FaceFxPhonemesSetterCommon();
 
@@ -1509,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IFaceFxPhonemes item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1521,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FaceFxPhonemesCommon
+    internal partial class FaceFxPhonemesCommon
     {
         public static readonly FaceFxPhonemesCommon Instance = new FaceFxPhonemesCommon();
 
@@ -1545,7 +1536,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ForceNames = item.ForceNames == rhs.ForceNames;
             ret.Aah_LipBigAah = EqualsMaskHelper.EqualsHelper(
                 item.Aah_LipBigAah,
@@ -1629,133 +1619,131 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IFaceFxPhonemesGetter item,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFaceFxPhonemesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FaceFxPhonemes =>");
+                sb.AppendLine($"FaceFxPhonemes =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FaceFxPhonemes) =>");
+                sb.AppendLine($"{name} (FaceFxPhonemes) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFaceFxPhonemesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
             if (printMask?.ForceNames ?? true)
             {
-                fg.AppendItem(item.ForceNames, "ForceNames");
+                sb.AppendItem(item.ForceNames, "ForceNames");
             }
             if ((printMask?.Aah_LipBigAah?.Overall ?? true)
                 && item.Aah_LipBigAah is {} Aah_LipBigAahItem)
             {
-                Aah_LipBigAahItem?.ToString(fg, "Aah_LipBigAah");
+                Aah_LipBigAahItem?.Print(sb, "Aah_LipBigAah");
             }
             if ((printMask?.BigAah_LipDST?.Overall ?? true)
                 && item.BigAah_LipDST is {} BigAah_LipDSTItem)
             {
-                BigAah_LipDSTItem?.ToString(fg, "BigAah_LipDST");
+                BigAah_LipDSTItem?.Print(sb, "BigAah_LipDST");
             }
             if ((printMask?.BMP_LipEee?.Overall ?? true)
                 && item.BMP_LipEee is {} BMP_LipEeeItem)
             {
-                BMP_LipEeeItem?.ToString(fg, "BMP_LipEee");
+                BMP_LipEeeItem?.Print(sb, "BMP_LipEee");
             }
             if ((printMask?.ChJSh_LipFV?.Overall ?? true)
                 && item.ChJSh_LipFV is {} ChJSh_LipFVItem)
             {
-                ChJSh_LipFVItem?.ToString(fg, "ChJSh_LipFV");
+                ChJSh_LipFVItem?.Print(sb, "ChJSh_LipFV");
             }
             if ((printMask?.DST_LipK?.Overall ?? true)
                 && item.DST_LipK is {} DST_LipKItem)
             {
-                DST_LipKItem?.ToString(fg, "DST_LipK");
+                DST_LipKItem?.Print(sb, "DST_LipK");
             }
             if ((printMask?.Eee_LipL?.Overall ?? true)
                 && item.Eee_LipL is {} Eee_LipLItem)
             {
-                Eee_LipLItem?.ToString(fg, "Eee_LipL");
+                Eee_LipLItem?.Print(sb, "Eee_LipL");
             }
             if ((printMask?.Eh_LipR?.Overall ?? true)
                 && item.Eh_LipR is {} Eh_LipRItem)
             {
-                Eh_LipRItem?.ToString(fg, "Eh_LipR");
+                Eh_LipRItem?.Print(sb, "Eh_LipR");
             }
             if ((printMask?.FV_LipTh?.Overall ?? true)
                 && item.FV_LipTh is {} FV_LipThItem)
             {
-                FV_LipThItem?.ToString(fg, "FV_LipTh");
+                FV_LipThItem?.Print(sb, "FV_LipTh");
             }
             if ((printMask?.I?.Overall ?? true)
                 && item.I is {} IItem)
             {
-                IItem?.ToString(fg, "I");
+                IItem?.Print(sb, "I");
             }
             if ((printMask?.K?.Overall ?? true)
                 && item.K is {} KItem)
             {
-                KItem?.ToString(fg, "K");
+                KItem?.Print(sb, "K");
             }
             if ((printMask?.N?.Overall ?? true)
                 && item.N is {} NItem)
             {
-                NItem?.ToString(fg, "N");
+                NItem?.Print(sb, "N");
             }
             if ((printMask?.Oh?.Overall ?? true)
                 && item.Oh is {} OhItem)
             {
-                OhItem?.ToString(fg, "Oh");
+                OhItem?.Print(sb, "Oh");
             }
             if ((printMask?.OohQ?.Overall ?? true)
                 && item.OohQ is {} OohQItem)
             {
-                OohQItem?.ToString(fg, "OohQ");
+                OohQItem?.Print(sb, "OohQ");
             }
             if ((printMask?.R?.Overall ?? true)
                 && item.R is {} RItem)
             {
-                RItem?.ToString(fg, "R");
+                RItem?.Print(sb, "R");
             }
             if ((printMask?.Th?.Overall ?? true)
                 && item.Th is {} ThItem)
             {
-                ThItem?.ToString(fg, "Th");
+                ThItem?.Print(sb, "Th");
             }
             if ((printMask?.W?.Overall ?? true)
                 && item.W is {} WItem)
             {
-                WItem?.ToString(fg, "W");
+                WItem?.Print(sb, "W");
             }
         }
         
@@ -1981,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFaceFxPhonemesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceFxPhonemesGetter obj)
         {
             yield break;
         }
@@ -1989,7 +1977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FaceFxPhonemesSetterTranslationCommon
+    internal partial class FaceFxPhonemesSetterTranslationCommon
     {
         public static readonly FaceFxPhonemesSetterTranslationCommon Instance = new FaceFxPhonemesSetterTranslationCommon();
 
@@ -2483,7 +2471,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]
@@ -2507,11 +2495,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FaceFxPhonemesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FaceFxPhonemesBinaryWriteTranslation Instance = new FaceFxPhonemesBinaryWriteTranslation();
+        public static readonly FaceFxPhonemesBinaryWriteTranslation Instance = new FaceFxPhonemesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFaceFxPhonemesGetter item,
@@ -2522,7 +2510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IFaceFxPhonemesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -2532,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFaceFxPhonemesGetter)item,
@@ -2542,9 +2530,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FaceFxPhonemesBinaryCreateTranslation
+    internal partial class FaceFxPhonemesBinaryCreateTranslation
     {
-        public readonly static FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
+        public static readonly FaceFxPhonemesBinaryCreateTranslation Instance = new FaceFxPhonemesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFaceFxPhonemes item,
@@ -2563,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IFaceFxPhonemesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2576,16 +2564,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FaceFxPhonemesBinaryOverlay :
+    internal partial class FaceFxPhonemesBinaryOverlay :
         PluginBinaryOverlay,
         IFaceFxPhonemesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceFxPhonemes_Registration.Instance;
-        public static FaceFxPhonemes_Registration StaticRegistration => FaceFxPhonemes_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceFxPhonemes_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FaceFxPhonemesCommon.Instance;
         [DebuggerStepThrough]
@@ -2599,7 +2587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FaceFxPhonemesBinaryWriteTranslation.Instance;
@@ -2607,7 +2595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FaceFxPhonemesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2622,24 +2610,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected FaceFxPhonemesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FaceFxPhonemesBinaryOverlay FaceFxPhonemesFactory(
+        public static IFaceFxPhonemesGetter FaceFxPhonemesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FaceFxPhonemesBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -2647,25 +2641,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static FaceFxPhonemesBinaryOverlay FaceFxPhonemesFactory(
+        public static IFaceFxPhonemesGetter FaceFxPhonemesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FaceFxPhonemesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceFxPhonemesMixIn.ToString(
+            FaceFxPhonemesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

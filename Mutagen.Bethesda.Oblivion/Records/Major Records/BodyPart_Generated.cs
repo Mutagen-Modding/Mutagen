@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,18 +18,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -61,12 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyPartMixIn.ToString(
+            BodyPartMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -179,34 +181,29 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(BodyPart.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(BodyPart.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BodyPart.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, BodyPart.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(BodyPart.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BodyPart.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                     if (printMask?.Icon ?? true)
                     {
-                        fg.AppendItem(Icon, "Icon");
+                        sb.AppendItem(Icon, "Icon");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -291,37 +288,32 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Index, "Index");
-                fg.AppendItem(Icon, "Icon");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
+                    sb.AppendItem(Icon, "Icon");
+                }
             }
             #endregion
 
@@ -402,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -412,7 +404,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static BodyPart CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BodyPart();
             ((BodyPartSetterCommon)((IBodyPartGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -427,7 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BodyPart item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -437,7 +429,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -499,26 +491,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBodyPartGetter item,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
+            return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
+            ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -624,7 +616,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IBodyPart item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BodyPartSetterCommon)((IBodyPartGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -639,10 +631,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum BodyPart_FieldIndex
+    internal enum BodyPart_FieldIndex
     {
         Index = 0,
         Icon = 1,
@@ -650,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class BodyPart_Registration : ILoquiRegistration
+    internal partial class BodyPart_Registration : ILoquiRegistration
     {
         public static readonly BodyPart_Registration Instance = new BodyPart_Registration();
 
@@ -691,17 +683,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.INDX,
-                        RecordTypes.ICON
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.INDX,
+                RecordTypes.ICON);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartBinaryWriteTranslation);
         #region Interface
@@ -736,7 +724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BodyPartSetterCommon
+    internal partial class BodyPartSetterCommon
     {
         public static readonly BodyPartSetterCommon Instance = new BodyPartSetterCommon();
 
@@ -760,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IBodyPart item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -773,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BodyPartCommon
+    internal partial class BodyPartCommon
     {
         public static readonly BodyPartCommon Instance = new BodyPartCommon();
 
@@ -797,64 +785,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyPart.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
         }
         
-        public string ToString(
+        public string Print(
             IBodyPartGetter item,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BodyPart =>");
+                sb.AppendLine($"BodyPart =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BodyPart) =>");
+                sb.AppendLine($"{name} (BodyPart) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BodyPart.Mask<bool>? printMask = null)
         {
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon is {} IconItem)
             {
-                fg.AppendItem(IconItem, "Icon");
+                sb.AppendItem(IconItem, "Icon");
             }
         }
         
@@ -899,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyPartGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyPartGetter obj)
         {
             yield break;
         }
@@ -907,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class BodyPartSetterTranslationCommon
+    internal partial class BodyPartSetterTranslationCommon
     {
         public static readonly BodyPartSetterTranslationCommon Instance = new BodyPartSetterTranslationCommon();
 
@@ -989,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
-        public static BodyPart_Registration StaticRegistration => BodyPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
         [DebuggerStepThrough]
@@ -1013,16 +998,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BodyPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyPartBinaryWriteTranslation Instance = new BodyPartBinaryWriteTranslation();
+        public static readonly BodyPartBinaryWriteTranslation Instance = new BodyPartBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IBodyPartGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1039,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IBodyPartGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1050,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBodyPartGetter)item,
@@ -1060,9 +1045,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BodyPartBinaryCreateTranslation
+    internal partial class BodyPartBinaryCreateTranslation
     {
-        public readonly static BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
+        public static readonly BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBodyPart item,
@@ -1077,14 +1062,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1093,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Icon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Icon, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1116,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IBodyPartGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1129,16 +1114,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BodyPartBinaryOverlay :
+    internal partial class BodyPartBinaryOverlay :
         PluginBinaryOverlay,
         IBodyPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
-        public static BodyPart_Registration StaticRegistration => BodyPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
         [DebuggerStepThrough]
@@ -1152,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
@@ -1160,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1170,11 +1155,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Index
         private int? _IndexLocation;
-        public Race.BodyIndex? Index => _IndexLocation.HasValue ? (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyIndex?);
+        public Race.BodyIndex? Index => _IndexLocation.HasValue ? (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyIndex?);
         #endregion
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1183,42 +1168,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected BodyPartBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BodyPartBinaryOverlay BodyPartFactory(
+        public static IBodyPartGetter BodyPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new BodyPartBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static BodyPartBinaryOverlay BodyPartFactory(
+        public static IBodyPartGetter BodyPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BodyPartFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1228,20 +1219,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.Index;
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Icon) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Icon, translationParams)) return ParseResult.Stop;
                     _IconLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.Icon;
                 }
@@ -1251,12 +1242,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyPartMixIn.ToString(
+            BodyPartMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

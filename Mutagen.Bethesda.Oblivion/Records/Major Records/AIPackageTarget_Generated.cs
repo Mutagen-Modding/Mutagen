@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,12 +61,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AIPackageTargetMixIn.ToString(
+            AIPackageTargetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -186,38 +189,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AIPackageTarget.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AIPackageTarget.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AIPackageTarget.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AIPackageTarget.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AIPackageTarget.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AIPackageTarget.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectType ?? true)
                     {
-                        fg.AppendItem(ObjectType, "ObjectType");
+                        sb.AppendItem(ObjectType, "ObjectType");
                     }
                     if (printMask?.Object ?? true)
                     {
-                        fg.AppendItem(Object, "Object");
+                        sb.AppendItem(Object, "Object");
                     }
                     if (printMask?.Count ?? true)
                     {
-                        fg.AppendItem(Count, "Count");
+                        sb.AppendItem(Count, "Count");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -312,38 +310,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ObjectType, "ObjectType");
-                fg.AppendItem(Object, "Object");
-                fg.AppendItem(Count, "Count");
+                {
+                    sb.AppendItem(ObjectType, "ObjectType");
+                }
+                {
+                    sb.AppendItem(Object, "Object");
+                }
+                {
+                    sb.AppendItem(Count, "Count");
+                }
             }
             #endregion
 
@@ -421,10 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = AIPackageTarget_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
@@ -432,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -442,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AIPackageTarget CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIPackageTarget();
             ((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -457,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AIPackageTarget item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -467,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -531,26 +522,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAIPackageTargetGetter item,
             string? name = null,
             AIPackageTarget.Mask<bool>? printMask = null)
         {
-            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).ToString(
+            return ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAIPackageTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIPackageTarget.Mask<bool>? printMask = null)
         {
-            ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).ToString(
+            ((AIPackageTargetCommon)((IAIPackageTargetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -656,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAIPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AIPackageTargetSetterCommon)((IAIPackageTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -671,10 +662,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AIPackageTarget_FieldIndex
+    internal enum AIPackageTarget_FieldIndex
     {
         ObjectType = 0,
         Object = 1,
@@ -683,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AIPackageTarget_Registration : ILoquiRegistration
+    internal partial class AIPackageTarget_Registration : ILoquiRegistration
     {
         public static readonly AIPackageTarget_Registration Instance = new AIPackageTarget_Registration();
 
@@ -725,6 +716,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PTDT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PTDT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -758,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AIPackageTargetSetterCommon
+    internal partial class AIPackageTargetSetterCommon
     {
         public static readonly AIPackageTargetSetterCommon Instance = new AIPackageTargetSetterCommon();
 
@@ -783,12 +780,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IAIPackageTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PTDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageTargetCommon
+    internal partial class AIPackageTargetCommon
     {
         public static readonly AIPackageTargetCommon Instance = new AIPackageTargetCommon();
 
@@ -823,67 +820,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectType = item.ObjectType == rhs.ObjectType;
             ret.Object = item.Object == rhs.Object;
             ret.Count = item.Count == rhs.Count;
         }
         
-        public string ToString(
+        public string Print(
             IAIPackageTargetGetter item,
             string? name = null,
             AIPackageTarget.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAIPackageTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIPackageTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AIPackageTarget =>");
+                sb.AppendLine($"AIPackageTarget =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AIPackageTarget) =>");
+                sb.AppendLine($"{name} (AIPackageTarget) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAIPackageTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AIPackageTarget.Mask<bool>? printMask = null)
         {
             if (printMask?.ObjectType ?? true)
             {
-                fg.AppendItem(item.ObjectType, "ObjectType");
+                sb.AppendItem(item.ObjectType, "ObjectType");
             }
             if (printMask?.Object ?? true)
             {
-                fg.AppendItem(item.Object, "Object");
+                sb.AppendItem(item.Object, "Object");
             }
             if (printMask?.Count ?? true)
             {
-                fg.AppendItem(item.Count, "Count");
+                sb.AppendItem(item.Count, "Count");
             }
         }
         
@@ -927,7 +921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIPackageTargetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIPackageTargetGetter obj)
         {
             yield break;
         }
@@ -935,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageTargetSetterTranslationCommon
+    internal partial class AIPackageTargetSetterTranslationCommon
     {
         public static readonly AIPackageTargetSetterTranslationCommon Instance = new AIPackageTargetSetterTranslationCommon();
 
@@ -1021,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration StaticRegistration => AIPackageTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1045,11 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIPackageTargetBinaryWriteTranslation Instance = new AIPackageTargetBinaryWriteTranslation();
+        public static readonly AIPackageTargetBinaryWriteTranslation Instance = new AIPackageTargetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAIPackageTargetGetter item,
@@ -1066,12 +1060,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IAIPackageTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PTDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1083,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAIPackageTargetGetter)item,
@@ -1093,9 +1087,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AIPackageTargetBinaryCreateTranslation
+    internal partial class AIPackageTargetBinaryCreateTranslation
     {
-        public readonly static AIPackageTargetBinaryCreateTranslation Instance = new AIPackageTargetBinaryCreateTranslation();
+        public static readonly AIPackageTargetBinaryCreateTranslation Instance = new AIPackageTargetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAIPackageTarget item,
@@ -1119,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAIPackageTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1132,16 +1126,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AIPackageTargetBinaryOverlay :
+    internal partial class AIPackageTargetBinaryOverlay :
         PluginBinaryOverlay,
         IAIPackageTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageTarget_Registration.Instance;
-        public static AIPackageTarget_Registration StaticRegistration => AIPackageTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -1155,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageTargetBinaryWriteTranslation.Instance;
@@ -1163,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,9 +1165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public AIPackageTarget.ObjectTypes ObjectType => (AIPackageTarget.ObjectTypes)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public AIPackageTarget.ObjectTypes ObjectType => (AIPackageTarget.ObjectTypes)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1181,25 +1175,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected AIPackageTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AIPackageTargetBinaryOverlay AIPackageTargetFactory(
+        public static IAIPackageTargetGetter AIPackageTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AIPackageTargetBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1208,25 +1207,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static AIPackageTargetBinaryOverlay AIPackageTargetFactory(
+        public static IAIPackageTargetGetter AIPackageTargetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AIPackageTargetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AIPackageTargetMixIn.ToString(
+            AIPackageTargetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

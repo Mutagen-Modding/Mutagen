@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SplineConnection" objType="Subrecord" recordType="XPLK" GUID="381b9149-f078-443e-a1fb-e39651cd6b24" ID="490">
+    <Fields>
+      <FormLink name="Ref">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Break />
+      <Int32 name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

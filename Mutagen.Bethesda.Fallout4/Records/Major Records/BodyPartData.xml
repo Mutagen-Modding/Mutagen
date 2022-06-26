@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BodyPartData" recordType="BPTD" baseClass="Fallout4MajorRecord" objType="Record" GUID="0baa72a5-3d0b-4b1e-a29b-fc65129d62af" ID="96">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Parts" refName="BodyPart" />
+    </Fields>
+  </Object>
+  <Object name="BodyPart" objType="Subrecord" GUID="776b6f1c-d6fa-47db-a84a-450e3a2d36a4" ID="612">
+    <Fields>
+      <String name="Name" recordType="BPTN" translated="Normal" />
+      <String name="PartNode" recordType="BPNN" nullable="False" />
+      <String name="VatsTarget" recordType="BPNT" nullable="False" />
+      <Data recordType="BPND">
+        <Fields>
+          <Float name="DamageMult" />
+          <FormLink name="ExplodableDebris" refName="Debris" />
+          <FormLink name="ExplodableExplosion" refName="Explosion" />
+          <Float name="ExplodableDebrisScale" />
+          <FormLink name="SeverableDebris" refName="Debris" />
+          <FormLink name="SeverableExplosion" refName="Explosion" />
+          <Float name="SeverableDebrisScale" />
+          <Float name="CutMin" />
+          <Float name="CutMax" />
+          <Float name="CutRadius" />
+          <Float name="GoreEffectsLocalRotateX" isRotation="true" />
+          <Float name="GoreEffectsLocalRotateY" isRotation="true" />
+          <Float name="CutTesselation" />
+          <FormLink name="SeverableImpactData" refName="ImpactDataSet" />
+          <FormLink name="ExplodableImpactData" refName="ImpactDataSet" />
+          <Float name="ExplodableLimbReplacementScale" />
+          <Enum name="Flags" enumName="BodyPart.Flag" byteLength="1" />
+          <Enum name="Type" enumName="BodyPart.PartType" byteLength="1" />
+          <Percent name="HealthPercent" integerType="Byte" />
+          <FormLink name="ActorValue" refName="ActorValueInformation" />
+          <Percent name="ToHitChance" integerType="Byte" />
+          <Percent name="ExplosionChance" integerType="Byte" />
+          <Percent name="NonLethalDismembermentChance" integerType="Byte" />
+          <UInt8 name="SeverableDebrisCount" />
+          <UInt8 name="ExplodableDebrisCount" />
+          <UInt8 name="SeverableDecalCount" />
+          <UInt8 name="ExplodableDecalCount" />
+          <UInt8 name="GeometrySegmentIndex" />
+          <FormLink name="OnCrippleArtObject" refName="ArtObject" />
+          <FormLink name="OnCrippleDebris" refName="Debris" />
+          <FormLink name="OnCrippleExplosion" refName="Explosion" />
+          <FormLink name="OnCrippleImpactData" refName="ImpactDataSet" />
+          <Float name="OnCrippleDebrisScale" />
+          <UInt8 name="OnCrippleDebrisCount" />
+          <UInt8 name="OnCrippleDecalCount" />
+        </Fields>
+      </Data>
+      <String name="LimbReplacementModel" recordType="NAM1" nullable="False" />
+      <String name="GoreTargetBone" recordType="NAM4" nullable="False" />
+      <ByteArray name="TextureFilesHashes" recordType="NAM5" />
+      <String name="HitReactionStart" recordType="ENAM" />
+      <String name="HitReactionEnd" recordType="FNAM" />
+      <FormLink name="GoreEffectsDismemberBloodArt" refName="ArtObject" recordType="BNAM" />
+      <FormLink name="GoreEffectsBloodImpactMaterialType" refName="MaterialType" recordType="INAM" />
+      <FormLink name="OnCrippleBloodImpactMaterialType" refName="MaterialType" recordType="JNAM" />
+      <FormLink name="MeatCapTextureSet" refName="TextureSet" recordType="CNAM" />
+      <FormLink name="CollarTextureSet" refName="TextureSet" recordType="NAM2" />
+      <String name="TwistVariablePrefix" recordType="DNAM" />
+    </Fields>
+  </Object>
+</Loqui>

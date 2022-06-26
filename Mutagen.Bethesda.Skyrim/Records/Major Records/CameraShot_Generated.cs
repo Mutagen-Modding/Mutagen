@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -79,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         public CameraShot.LocationType Location { get; set; } = default;
         #endregion
         #region Target
-        public CameraShot.TargetType Target { get; set; } = default;
+        public CameraShot.LocationType Target { get; set; } = default;
         #endregion
         #region Flags
         public CameraShot.Flag Flags { get; set; } = default;
@@ -131,12 +132,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CameraShotMixIn.ToString(
+            CameraShotMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -369,82 +371,77 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CameraShot.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CameraShot.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CameraShot.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CameraShot.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CameraShot.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CameraShot.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Action ?? true)
                     {
-                        fg.AppendItem(Action, "Action");
+                        sb.AppendItem(Action, "Action");
                     }
                     if (printMask?.Location ?? true)
                     {
-                        fg.AppendItem(Location, "Location");
+                        sb.AppendItem(Location, "Location");
                     }
                     if (printMask?.Target ?? true)
                     {
-                        fg.AppendItem(Target, "Target");
+                        sb.AppendItem(Target, "Target");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.TimeMultiplierPlayer ?? true)
                     {
-                        fg.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                        sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
                     }
                     if (printMask?.TimeMultiplierTarget ?? true)
                     {
-                        fg.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                        sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
                     }
                     if (printMask?.TimeMultiplierGlobal ?? true)
                     {
-                        fg.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                        sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
                     }
                     if (printMask?.MaxTime ?? true)
                     {
-                        fg.AppendItem(MaxTime, "MaxTime");
+                        sb.AppendItem(MaxTime, "MaxTime");
                     }
                     if (printMask?.MinTime ?? true)
                     {
-                        fg.AppendItem(MinTime, "MinTime");
+                        sb.AppendItem(MinTime, "MinTime");
                     }
                     if (printMask?.TargetPercentBetweenActors ?? true)
                     {
-                        fg.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                        sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
                     }
                     if (printMask?.NearTargetDistance ?? true)
                     {
-                        fg.AppendItem(NearTargetDistance, "NearTargetDistance");
+                        sb.AppendItem(NearTargetDistance, "NearTargetDistance");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -638,50 +635,67 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Action, "Action");
-                fg.AppendItem(Location, "Location");
-                fg.AppendItem(Target, "Target");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
-                fg.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
-                fg.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
-                fg.AppendItem(MaxTime, "MaxTime");
-                fg.AppendItem(MinTime, "MinTime");
-                fg.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
-                fg.AppendItem(NearTargetDistance, "NearTargetDistance");
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Action, "Action");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                }
+                {
+                    sb.AppendItem(MaxTime, "MaxTime");
+                }
+                {
+                    sb.AppendItem(MinTime, "MinTime");
+                }
+                {
+                    sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                }
+                {
+                    sb.AppendItem(NearTargetDistance, "NearTargetDistance");
+                }
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -794,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CameraShot_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CameraShotCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraShotCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CameraShotSetterCommon.Instance.RemapLinks(this, mapping);
         public CameraShot(
             FormKey formKey,
@@ -877,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CameraShotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -887,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static CameraShot CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CameraShot();
             ((CameraShotSetterCommon)((ICameraShotGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -902,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CameraShot item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -912,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -941,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new CameraShot.ActionType Action { get; set; }
         new CameraShot.LocationType Location { get; set; }
-        new CameraShot.TargetType Target { get; set; }
+        new CameraShot.LocationType Target { get; set; }
         new CameraShot.Flag Flags { get; set; }
         new Single TimeMultiplierPlayer { get; set; }
         new Single TimeMultiplierTarget { get; set; }
@@ -979,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         CameraShot.ActionType Action { get; }
         CameraShot.LocationType Location { get; }
-        CameraShot.TargetType Target { get; }
+        CameraShot.LocationType Target { get; }
         CameraShot.Flag Flags { get; }
         Single TimeMultiplierPlayer { get; }
         Single TimeMultiplierTarget { get; }
@@ -1014,26 +1028,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICameraShotGetter item,
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
-            return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).ToString(
+            return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICameraShotGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
-            ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).ToString(
+            ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1128,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICameraShotInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CameraShotSetterCommon)((ICameraShotGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1143,10 +1157,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CameraShot_FieldIndex
+    internal enum CameraShot_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1172,7 +1186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CameraShot_Registration : ILoquiRegistration
+    internal partial class CameraShot_Registration : ILoquiRegistration
     {
         public static readonly CameraShot_Registration Instance = new CameraShot_Registration();
 
@@ -1214,6 +1228,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CAMS;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CAMS);
+            var all = RecordCollection.Factory(
+                RecordTypes.CAMS,
+                RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CameraShotBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1247,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CameraShotSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class CameraShotSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly CameraShotSetterCommon Instance = new CameraShotSetterCommon();
 
@@ -1297,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ICameraShotInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICameraShotInternal>(
                 record: item,
@@ -1310,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CameraShot)item,
@@ -1321,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CameraShot)item,
@@ -1332,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CameraShotCommon : SkyrimMajorRecordCommon
+    internal partial class CameraShotCommon : SkyrimMajorRecordCommon
     {
         public new static readonly CameraShotCommon Instance = new CameraShotCommon();
 
@@ -1356,7 +1381,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CameraShot.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1378,110 +1402,108 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ICameraShotGetter item,
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICameraShotGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CameraShot.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CameraShot =>");
+                sb.AppendLine($"CameraShot =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CameraShot) =>");
+                sb.AppendLine($"{name} (CameraShot) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICameraShotGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CameraShot.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.Action ?? true)
             {
-                fg.AppendItem(item.Action, "Action");
+                sb.AppendItem(item.Action, "Action");
             }
             if (printMask?.Location ?? true)
             {
-                fg.AppendItem(item.Location, "Location");
+                sb.AppendItem(item.Location, "Location");
             }
             if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Target, "Target");
+                sb.AppendItem(item.Target, "Target");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.TimeMultiplierPlayer ?? true)
             {
-                fg.AppendItem(item.TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                sb.AppendItem(item.TimeMultiplierPlayer, "TimeMultiplierPlayer");
             }
             if (printMask?.TimeMultiplierTarget ?? true)
             {
-                fg.AppendItem(item.TimeMultiplierTarget, "TimeMultiplierTarget");
+                sb.AppendItem(item.TimeMultiplierTarget, "TimeMultiplierTarget");
             }
             if (printMask?.TimeMultiplierGlobal ?? true)
             {
-                fg.AppendItem(item.TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                sb.AppendItem(item.TimeMultiplierGlobal, "TimeMultiplierGlobal");
             }
             if (printMask?.MaxTime ?? true)
             {
-                fg.AppendItem(item.MaxTime, "MaxTime");
+                sb.AppendItem(item.MaxTime, "MaxTime");
             }
             if (printMask?.MinTime ?? true)
             {
-                fg.AppendItem(item.MinTime, "MinTime");
+                sb.AppendItem(item.MinTime, "MinTime");
             }
             if (printMask?.TargetPercentBetweenActors ?? true)
             {
-                fg.AppendItem(item.TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                sb.AppendItem(item.TargetPercentBetweenActors, "TargetPercentBetweenActors");
             }
             if (printMask?.NearTargetDistance ?? true)
             {
-                fg.AppendItem(item.NearTargetDistance, "NearTargetDistance");
+                sb.AppendItem(item.NearTargetDistance, "NearTargetDistance");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1659,22 +1681,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICameraShotGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICameraShotGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+                yield return ImageSpaceModifierInfo;
             }
             yield break;
         }
@@ -1717,7 +1739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CameraShotSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class CameraShotSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly CameraShotSetterTranslationCommon Instance = new CameraShotSetterTranslationCommon();
 
@@ -1950,7 +1972,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraShot_Registration.Instance;
-        public new static CameraShot_Registration StaticRegistration => CameraShot_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CameraShot_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraShotCommon.Instance;
         [DebuggerStepThrough]
@@ -1968,13 +1990,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CameraShotBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CameraShotBinaryWriteTranslation Instance = new CameraShotBinaryWriteTranslation();
+        public new static readonly CameraShotBinaryWriteTranslation Instance = new CameraShotBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICameraShotGetter item,
@@ -1988,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ICameraShotGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2011,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Location,
                     length: 4);
-                EnumBinaryTranslation<CameraShot.TargetType, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Target,
                     length: 4);
@@ -2053,7 +2075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ICameraShotGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2064,12 +2086,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2081,7 +2106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICameraShotGetter)item,
@@ -2092,7 +2117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICameraShotGetter)item,
@@ -2103,7 +2128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICameraShotGetter)item,
@@ -2113,9 +2138,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CameraShotBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class CameraShotBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static CameraShotBinaryCreateTranslation Instance = new CameraShotBinaryCreateTranslation();
+        public new static readonly CameraShotBinaryCreateTranslation Instance = new CameraShotBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CAMS;
         public static void FillBinaryStructs(
@@ -2134,7 +2159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2143,7 +2168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)CameraShot_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
@@ -2156,7 +2181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Location = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.Target = EnumBinaryTranslation<CameraShot.TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Target = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     item.Flags = EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -2189,7 +2214,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2206,16 +2232,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CameraShotBinaryOverlay :
+    internal partial class CameraShotBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ICameraShotGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CameraShot_Registration.Instance;
-        public new static CameraShot_Registration StaticRegistration => CameraShot_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CameraShot_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CameraShotCommon.Instance;
         [DebuggerStepThrough]
@@ -2223,14 +2249,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CameraShotCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CameraShotCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CameraShotBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CameraShotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2241,66 +2267,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public IModelGetter? Model { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public CameraShot.DATADataType DATADataTypeState { get; private set; }
         #region Action
-        private int _ActionLocation => _DATALocation!.Value;
+        private int _ActionLocation => _DATALocation!.Value.Min;
         private bool _Action_IsSet => _DATALocation.HasValue;
-        public CameraShot.ActionType Action => _Action_IsSet ? (CameraShot.ActionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActionLocation, 0x4)) : default;
+        public CameraShot.ActionType Action => _Action_IsSet ? (CameraShot.ActionType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ActionLocation, 0x4)) : default;
         #endregion
         #region Location
-        private int _LocationLocation => _DATALocation!.Value + 0x4;
+        private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Location_IsSet => _DATALocation.HasValue;
-        public CameraShot.LocationType Location => _Location_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)) : default;
+        public CameraShot.LocationType Location => _Location_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_LocationLocation, 0x4)) : default;
         #endregion
         #region Target
-        private int _TargetLocation => _DATALocation!.Value + 0x8;
+        private int _TargetLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Target_IsSet => _DATALocation.HasValue;
-        public CameraShot.TargetType Target => _Target_IsSet ? (CameraShot.TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)) : default;
+        public CameraShot.LocationType Target => _Target_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetLocation, 0x4)) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xC;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public CameraShot.Flag Flags => _Flags_IsSet ? (CameraShot.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public CameraShot.Flag Flags => _Flags_IsSet ? (CameraShot.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region TimeMultiplierPlayer
-        private int _TimeMultiplierPlayerLocation => _DATALocation!.Value + 0x10;
+        private int _TimeMultiplierPlayerLocation => _DATALocation!.Value.Min + 0x10;
         private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _data.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
+        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
         #endregion
         #region TimeMultiplierTarget
-        private int _TimeMultiplierTargetLocation => _DATALocation!.Value + 0x14;
+        private int _TimeMultiplierTargetLocation => _DATALocation!.Value.Min + 0x14;
         private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _data.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
+        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
         #endregion
         #region TimeMultiplierGlobal
-        private int _TimeMultiplierGlobalLocation => _DATALocation!.Value + 0x18;
+        private int _TimeMultiplierGlobalLocation => _DATALocation!.Value.Min + 0x18;
         private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _data.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
+        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
         #endregion
         #region MaxTime
-        private int _MaxTimeLocation => _DATALocation!.Value + 0x1C;
+        private int _MaxTimeLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _MaxTime_IsSet => _DATALocation.HasValue;
-        public Single MaxTime => _MaxTime_IsSet ? _data.Slice(_MaxTimeLocation, 4).Float() : default;
+        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default;
         #endregion
         #region MinTime
-        private int _MinTimeLocation => _DATALocation!.Value + 0x20;
+        private int _MinTimeLocation => _DATALocation!.Value.Min + 0x20;
         private bool _MinTime_IsSet => _DATALocation.HasValue;
-        public Single MinTime => _MinTime_IsSet ? _data.Slice(_MinTimeLocation, 4).Float() : default;
+        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default;
         #endregion
         #region TargetPercentBetweenActors
-        private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value + 0x24;
+        private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value.Min + 0x24;
         private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue;
-        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _data.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
+        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
         #endregion
         #region NearTargetDistance
-        private int _NearTargetDistanceLocation => _DATALocation!.Value + 0x28;
+        private int _NearTargetDistanceLocation => _DATALocation!.Value.Min + 0x28;
         private bool _NearTargetDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0);
-        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _data.Slice(_NearTargetDistanceLocation, 4).Float() : default;
+        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _recordData.Slice(_NearTargetDistanceLocation, 4).Float() : default;
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2309,28 +2335,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected CameraShotBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CameraShotBinaryOverlay CameraShotFactory(
+        public static ICameraShotGetter CameraShotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CameraShotBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2340,20 +2369,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static CameraShotBinaryOverlay CameraShotFactory(
+        public static ICameraShotGetter CameraShotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CameraShotFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2363,9 +2392,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
@@ -2373,13 +2402,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)CameraShot_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x28)
                     {
                         this.DATADataTypeState |= CameraShot.DATADataType.Break0;
@@ -2398,17 +2427,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CameraShotMixIn.ToString(
+            CameraShotMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,20 +17,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -96,12 +97,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AvailableMorphsMixIn.ToString(
+            AvailableMorphsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -264,42 +266,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AvailableMorphs.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AvailableMorphs.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AvailableMorphs.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AvailableMorphs.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AvailableMorphs.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AvailableMorphs.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Nose?.Overall ?? true)
                     {
-                        Nose?.ToString(fg);
+                        Nose?.Print(sb);
                     }
                     if (printMask?.Brow?.Overall ?? true)
                     {
-                        Brow?.ToString(fg);
+                        Brow?.Print(sb);
                     }
                     if (printMask?.Eye?.Overall ?? true)
                     {
-                        Eye?.ToString(fg);
+                        Eye?.Print(sb);
                     }
                     if (printMask?.Lip?.Overall ?? true)
                     {
-                        Lip?.ToString(fg);
+                        Lip?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -404,39 +401,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Nose?.ToString(fg);
-                Brow?.ToString(fg);
-                Eye?.ToString(fg);
-                Lip?.ToString(fg);
+                Nose?.Print(sb);
+                Brow?.Print(sb);
+                Eye?.Print(sb);
+                Lip?.Print(sb);
             }
             #endregion
 
@@ -514,10 +502,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = AvailableMorphs_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AvailableMorphsBinaryWriteTranslation.Instance;
@@ -525,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AvailableMorphsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -535,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AvailableMorphs CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AvailableMorphs();
             ((AvailableMorphsSetterCommon)((IAvailableMorphsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -550,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AvailableMorphs item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -560,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -626,26 +610,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAvailableMorphsGetter item,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).ToString(
+            return ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAvailableMorphsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).ToString(
+            ((AvailableMorphsCommon)((IAvailableMorphsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -751,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAvailableMorphs item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AvailableMorphsSetterCommon)((IAvailableMorphsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -766,10 +750,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AvailableMorphs_FieldIndex
+    internal enum AvailableMorphs_FieldIndex
     {
         Nose = 0,
         Brow = 1,
@@ -779,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AvailableMorphs_Registration : ILoquiRegistration
+    internal partial class AvailableMorphs_Registration : ILoquiRegistration
     {
         public static readonly AvailableMorphs_Registration Instance = new AvailableMorphs_Registration();
 
@@ -821,6 +805,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MPAI;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.MPAI);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AvailableMorphsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -854,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AvailableMorphsSetterCommon
+    internal partial class AvailableMorphsSetterCommon
     {
         public static readonly AvailableMorphsSetterCommon Instance = new AvailableMorphsSetterCommon();
 
@@ -880,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAvailableMorphs item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -893,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AvailableMorphsCommon
+    internal partial class AvailableMorphsCommon
     {
         public static readonly AvailableMorphsCommon Instance = new AvailableMorphsCommon();
 
@@ -917,7 +907,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AvailableMorphs.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Nose = EqualsMaskHelper.EqualsHelper(
                 item.Nose,
                 rhs.Nose,
@@ -940,69 +929,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IAvailableMorphsGetter item,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAvailableMorphsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AvailableMorphs =>");
+                sb.AppendLine($"AvailableMorphs =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AvailableMorphs) =>");
+                sb.AppendLine($"{name} (AvailableMorphs) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAvailableMorphsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AvailableMorphs.Mask<bool>? printMask = null)
         {
             if ((printMask?.Nose?.Overall ?? true)
                 && item.Nose is {} NoseItem)
             {
-                NoseItem?.ToString(fg, "Nose");
+                NoseItem?.Print(sb, "Nose");
             }
             if ((printMask?.Brow?.Overall ?? true)
                 && item.Brow is {} BrowItem)
             {
-                BrowItem?.ToString(fg, "Brow");
+                BrowItem?.Print(sb, "Brow");
             }
             if ((printMask?.Eye?.Overall ?? true)
                 && item.Eye is {} EyeItem)
             {
-                EyeItem?.ToString(fg, "Eye");
+                EyeItem?.Print(sb, "Eye");
             }
             if ((printMask?.Lip?.Overall ?? true)
                 && item.Lip is {} LipItem)
             {
-                LipItem?.ToString(fg, "Lip");
+                LipItem?.Print(sb, "Lip");
             }
         }
         
@@ -1079,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAvailableMorphsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAvailableMorphsGetter obj)
         {
             yield break;
         }
@@ -1087,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AvailableMorphsSetterTranslationCommon
+    internal partial class AvailableMorphsSetterTranslationCommon
     {
         public static readonly AvailableMorphsSetterTranslationCommon Instance = new AvailableMorphsSetterTranslationCommon();
 
@@ -1265,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AvailableMorphs_Registration.Instance;
-        public static AvailableMorphs_Registration StaticRegistration => AvailableMorphs_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AvailableMorphs_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AvailableMorphsCommon.Instance;
         [DebuggerStepThrough]
@@ -1289,11 +1276,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AvailableMorphsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AvailableMorphsBinaryWriteTranslation Instance = new AvailableMorphsBinaryWriteTranslation();
+        public static readonly AvailableMorphsBinaryWriteTranslation Instance = new AvailableMorphsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAvailableMorphsGetter item,
@@ -1304,7 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IAvailableMorphsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             AvailableMorphsBinaryWriteTranslation.WriteBinaryParse(
                 writer: writer,
@@ -1327,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAvailableMorphsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1341,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAvailableMorphsGetter)item,
@@ -1351,9 +1338,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AvailableMorphsBinaryCreateTranslation
+    internal partial class AvailableMorphsBinaryCreateTranslation
     {
-        public readonly static AvailableMorphsBinaryCreateTranslation Instance = new AvailableMorphsBinaryCreateTranslation();
+        public static readonly AvailableMorphsBinaryCreateTranslation Instance = new AvailableMorphsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAvailableMorphs item,
@@ -1368,14 +1355,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AvailableMorphs_FieldIndex.Nose, translationParams)) return ParseResult.Stop;
                     return AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
@@ -1402,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAvailableMorphsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AvailableMorphsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1415,16 +1402,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AvailableMorphsBinaryOverlay :
+    internal partial class AvailableMorphsBinaryOverlay :
         PluginBinaryOverlay,
         IAvailableMorphsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AvailableMorphs_Registration.Instance;
-        public static AvailableMorphs_Registration StaticRegistration => AvailableMorphs_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AvailableMorphs_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AvailableMorphsCommon.Instance;
         [DebuggerStepThrough]
@@ -1438,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AvailableMorphsBinaryWriteTranslation.Instance;
@@ -1446,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AvailableMorphsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1467,42 +1454,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AvailableMorphsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AvailableMorphsBinaryOverlay AvailableMorphsFactory(
+        public static IAvailableMorphsGetter AvailableMorphsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AvailableMorphsBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static AvailableMorphsBinaryOverlay AvailableMorphsFactory(
+        public static IAvailableMorphsGetter AvailableMorphsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AvailableMorphsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1512,14 +1505,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AvailableMorphs_FieldIndex.Nose, translationParams)) return ParseResult.Stop;
                     return ParseCustomParse(
                         stream,
                         offset,
@@ -1531,12 +1524,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AvailableMorphsMixIn.ToString(
+            AvailableMorphsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

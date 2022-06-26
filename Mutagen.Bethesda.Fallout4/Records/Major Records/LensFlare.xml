@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LensFlare" recordType="LENS" baseClass="Fallout4MajorRecord" objType="Record" GUID="86dffb98-5938-4df0-81e8-640e64783482" ID="195">
+    <Fields>
+      <Float name="ColorInfluence" recordType="CNAM" />
+      <Float name="FadeDistanceRadiusScale" recordType="DNAM" />
+      <RefList name="Sprites" refName="LensFlareSprite" counterRecType="LFSP" allowNoCounter="false" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareSprite" objType="Subrecord" GUID="717e9056-cfa6-4097-8b5c-1533c6795643" ID="676">
+    <Fields>
+      <String name="LensFlareSpriteId" recordType="DNAM" />
+      <String name="Texture" recordType="FNAM" />
+      <RefDirect name="Data" refName="LensFlareSpriteData" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareSpriteData" objType="Subrecord" recordType="LFSD" GUID="a62ef4af-9689-4477-b076-b5d2c8263cd5" ID="677">
+    <Fields>
+      <Color name="Tint" binaryType="NoAlphaFloat" />
+      <Float name="Width" />
+      <Float name="Height" />
+      <Float name="Position" />
+      <Float name="AngularFade" />
+      <Float name="Opacity" />
+      <Enum name="Flags" enumName="LensFlareSpriteData.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

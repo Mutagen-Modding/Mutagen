@@ -12,7 +12,7 @@
           <String />
         </Fields>
       </Gendered>
-      <Enum name="Flags" enumName="AssociationType.Flag" recordType="DATA" nullable="False" />
+      <Bool name="IsFamily" recordType="DATA" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

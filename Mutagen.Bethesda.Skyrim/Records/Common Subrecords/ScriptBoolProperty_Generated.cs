@@ -5,31 +5,33 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptBoolPropertyMixIn.ToString(
+            ScriptBoolPropertyMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -177,30 +180,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ScriptBoolProperty.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ScriptBoolProperty.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ScriptBoolProperty.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ScriptBoolProperty.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ScriptBoolProperty.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScriptBoolProperty.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Data ?? true)
                     {
-                        fg.AppendItem(Data, "Data");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -264,37 +262,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Data, "Data");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Data, "Data");
+                }
             }
             #endregion
 
@@ -359,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ScriptBoolPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptBoolPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -369,7 +360,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ScriptBoolProperty CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptBoolProperty();
             ((ScriptBoolPropertySetterCommon)((IScriptBoolPropertyGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -384,7 +375,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptBoolProperty item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -394,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -451,26 +442,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IScriptBoolPropertyGetter item,
             string? name = null,
             ScriptBoolProperty.Mask<bool>? printMask = null)
         {
-            return ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)item).CommonInstance()!).ToString(
+            return ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IScriptBoolPropertyGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptBoolProperty.Mask<bool>? printMask = null)
         {
-            ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)item).CommonInstance()!).ToString(
+            ((ScriptBoolPropertyCommon)((IScriptBoolPropertyGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -551,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IScriptBoolProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptBoolPropertySetterCommon)((IScriptBoolPropertyGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -566,10 +557,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ScriptBoolProperty_FieldIndex
+    internal enum ScriptBoolProperty_FieldIndex
     {
         Name = 0,
         Flags = 1,
@@ -578,7 +569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptBoolProperty_Registration : ILoquiRegistration
+    internal partial class ScriptBoolProperty_Registration : ILoquiRegistration
     {
         public static readonly ScriptBoolProperty_Registration Instance = new ScriptBoolProperty_Registration();
 
@@ -652,7 +643,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptBoolPropertySetterCommon : ScriptPropertySetterCommon
+    internal partial class ScriptBoolPropertySetterCommon : ScriptPropertySetterCommon
     {
         public new static readonly ScriptBoolPropertySetterCommon Instance = new ScriptBoolPropertySetterCommon();
 
@@ -682,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IScriptBoolProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -694,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IScriptProperty item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ScriptBoolProperty)item,
@@ -705,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptBoolPropertyCommon : ScriptPropertyCommon
+    internal partial class ScriptBoolPropertyCommon : ScriptPropertyCommon
     {
         public new static readonly ScriptBoolPropertyCommon Instance = new ScriptBoolPropertyCommon();
 
@@ -729,62 +720,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptBoolProperty.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = item.Data == rhs.Data;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IScriptBoolPropertyGetter item,
             string? name = null,
             ScriptBoolProperty.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IScriptBoolPropertyGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptBoolProperty.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptBoolProperty =>");
+                sb.AppendLine($"ScriptBoolProperty =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptBoolProperty) =>");
+                sb.AppendLine($"{name} (ScriptBoolProperty) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptBoolPropertyGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScriptBoolProperty.Mask<bool>? printMask = null)
         {
             ScriptPropertyCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Data ?? true)
             {
-                fg.AppendItem(item.Data, "Data");
+                sb.AppendItem(item.Data, "Data");
             }
         }
         
@@ -849,9 +837,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptBoolPropertyGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptBoolPropertyGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -861,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptBoolPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
+    internal partial class ScriptBoolPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
     {
         public new static readonly ScriptBoolPropertySetterTranslationCommon Instance = new ScriptBoolPropertySetterTranslationCommon();
 
@@ -961,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptBoolProperty_Registration.Instance;
-        public new static ScriptBoolProperty_Registration StaticRegistration => ScriptBoolProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptBoolProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptBoolPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -979,13 +967,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ScriptBoolPropertyBinaryWriteTranslation :
         ScriptPropertyBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ScriptBoolPropertyBinaryWriteTranslation Instance = new ScriptBoolPropertyBinaryWriteTranslation();
+        public new static readonly ScriptBoolPropertyBinaryWriteTranslation Instance = new ScriptBoolPropertyBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptBoolPropertyGetter item,
@@ -1000,7 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IScriptBoolPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1010,7 +998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptBoolPropertyGetter)item,
@@ -1021,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IScriptPropertyGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IScriptBoolPropertyGetter)item,
@@ -1031,9 +1019,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptBoolPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
+    internal partial class ScriptBoolPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
     {
-        public new readonly static ScriptBoolPropertyBinaryCreateTranslation Instance = new ScriptBoolPropertyBinaryCreateTranslation();
+        public new static readonly ScriptBoolPropertyBinaryCreateTranslation Instance = new ScriptBoolPropertyBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptBoolProperty item,
@@ -1058,16 +1046,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptBoolPropertyBinaryOverlay :
+    internal partial class ScriptBoolPropertyBinaryOverlay :
         ScriptPropertyBinaryOverlay,
         IScriptBoolPropertyGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptBoolProperty_Registration.Instance;
-        public new static ScriptBoolProperty_Registration StaticRegistration => ScriptBoolProperty_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ScriptBoolProperty_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ScriptBoolPropertyCommon.Instance;
         [DebuggerStepThrough]
@@ -1075,13 +1063,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptBoolPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptBoolPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1089,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Boolean Data => _data.Slice(0x0, 0x1)[0] == 1;
+        public Boolean Data => _structData.Slice(0x0, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1097,24 +1085,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ScriptBoolPropertyBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ScriptBoolPropertyBinaryOverlay ScriptBoolPropertyFactory(
+        public static IScriptBoolPropertyGetter ScriptBoolPropertyFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ScriptBoolPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x1),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x1;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1123,25 +1117,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ScriptBoolPropertyBinaryOverlay ScriptBoolPropertyFactory(
+        public static IScriptBoolPropertyGetter ScriptBoolPropertyFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptBoolPropertyFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptBoolPropertyMixIn.ToString(
+            ScriptBoolPropertyMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +57,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationObjectTypeMixIn.ToString(
+            LocationObjectTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -165,30 +168,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LocationObjectType.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LocationObjectType.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationObjectType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LocationObjectType.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LocationObjectType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationObjectType.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -252,37 +250,30 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Type, "Type");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -347,7 +338,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LocationObjectTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationObjectTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -357,7 +348,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static LocationObjectType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationObjectType();
             ((LocationObjectTypeSetterCommon)((ILocationObjectTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -372,7 +363,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationObjectType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -382,7 +373,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -437,26 +428,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationObjectTypeGetter item,
             string? name = null,
             LocationObjectType.Mask<bool>? printMask = null)
         {
-            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)item).CommonInstance()!).ToString(
+            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationObjectTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationObjectType.Mask<bool>? printMask = null)
         {
-            ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)item).CommonInstance()!).ToString(
+            ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -537,7 +528,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILocationObjectType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationObjectTypeSetterCommon)((ILocationObjectTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -552,17 +543,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationObjectType_FieldIndex
+    internal enum LocationObjectType_FieldIndex
     {
         Type = 0,
     }
     #endregion
 
     #region Registration
-    public partial class LocationObjectType_Registration : ILoquiRegistration
+    internal partial class LocationObjectType_Registration : ILoquiRegistration
     {
         public static readonly LocationObjectType_Registration Instance = new LocationObjectType_Registration();
 
@@ -636,7 +627,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationObjectTypeSetterCommon : ALocationTargetSetterCommon
+    internal partial class LocationObjectTypeSetterCommon : ALocationTargetSetterCommon
     {
         public new static readonly LocationObjectTypeSetterCommon Instance = new LocationObjectTypeSetterCommon();
 
@@ -666,7 +657,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ILocationObjectType item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -678,7 +669,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationObjectType)item,
@@ -689,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationObjectTypeCommon : ALocationTargetCommon
+    internal partial class LocationObjectTypeCommon : ALocationTargetCommon
     {
         public new static readonly LocationObjectTypeCommon Instance = new LocationObjectTypeCommon();
 
@@ -713,62 +704,59 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             LocationObjectType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILocationObjectTypeGetter item,
             string? name = null,
             LocationObjectType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationObjectTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationObjectType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationObjectType =>");
+                sb.AppendLine($"LocationObjectType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationObjectType) =>");
+                sb.AppendLine($"{name} (LocationObjectType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationObjectTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationObjectType.Mask<bool>? printMask = null)
         {
             ALocationTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -829,9 +817,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationObjectTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationObjectTypeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -841,7 +829,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationObjectTypeSetterTranslationCommon : ALocationTargetSetterTranslationCommon
+    internal partial class LocationObjectTypeSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {
         public new static readonly LocationObjectTypeSetterTranslationCommon Instance = new LocationObjectTypeSetterTranslationCommon();
 
@@ -941,7 +929,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectType_Registration.Instance;
-        public new static LocationObjectType_Registration StaticRegistration => LocationObjectType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationObjectType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -959,13 +947,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationObjectTypeBinaryWriteTranslation :
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationObjectTypeBinaryWriteTranslation Instance = new LocationObjectTypeBinaryWriteTranslation();
+        public new static readonly LocationObjectTypeBinaryWriteTranslation Instance = new LocationObjectTypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationObjectTypeGetter item,
@@ -980,7 +968,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             ILocationObjectTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -990,7 +978,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationObjectTypeGetter)item,
@@ -1001,7 +989,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationObjectTypeGetter)item,
@@ -1011,9 +999,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationObjectTypeBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
+    internal partial class LocationObjectTypeBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationObjectTypeBinaryCreateTranslation Instance = new LocationObjectTypeBinaryCreateTranslation();
+        public new static readonly LocationObjectTypeBinaryCreateTranslation Instance = new LocationObjectTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationObjectType item,
@@ -1037,16 +1025,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationObjectTypeBinaryOverlay :
+    internal partial class LocationObjectTypeBinaryOverlay :
         ALocationTargetBinaryOverlay,
         ILocationObjectTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationObjectType_Registration.Instance;
-        public new static LocationObjectType_Registration StaticRegistration => LocationObjectType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationObjectType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationObjectTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1054,13 +1042,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationObjectTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationObjectTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1068,7 +1056,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public TargetObjectType Type => (TargetObjectType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public TargetObjectType Type => (TargetObjectType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1076,24 +1064,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected LocationObjectTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationObjectTypeBinaryOverlay LocationObjectTypeFactory(
+        public static ILocationObjectTypeGetter LocationObjectTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LocationObjectTypeBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1102,25 +1096,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static LocationObjectTypeBinaryOverlay LocationObjectTypeFactory(
+        public static ILocationObjectTypeGetter LocationObjectTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationObjectTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationObjectTypeMixIn.ToString(
+            LocationObjectTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

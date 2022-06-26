@@ -5,32 +5,34 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +53,35 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region TreeFolder
+        public String? TreeFolder { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialSwapGetter.TreeFolder => this.TreeFolder;
+        #endregion
+        #region Substitutions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<MaterialSubstitution> _Substitutions = new ExtendedList<MaterialSubstitution>();
+        public ExtendedList<MaterialSubstitution> Substitutions
+        {
+            get => this._Substitutions;
+            init => this._Substitutions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMaterialSubstitutionGetter> IMaterialSwapGetter.Substitutions => _Substitutions;
+        #endregion
+
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MaterialSwapMixIn.ToString(
+            MaterialSwapMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +97,8 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.TreeFolder = initialValue;
+                this.Substitutions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -83,7 +107,9 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem TreeFolder,
+                TItem Substitutions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +118,8 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.TreeFolder = TreeFolder;
+                this.Substitutions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>(Substitutions, Enumerable.Empty<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -100,6 +128,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem TreeFolder;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MaterialSubstitution.Mask<TItem>?>>?>? Substitutions;
             #endregion
 
             #region Equals
@@ -113,11 +146,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.TreeFolder, rhs.TreeFolder)) return false;
+                if (!object.Equals(this.Substitutions, rhs.Substitutions)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.TreeFolder);
+                hash.Add(this.Substitutions);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +165,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.TreeFolder)) return false;
+                if (this.Substitutions != null)
+                {
+                    if (!eval(this.Substitutions.Overall)) return false;
+                    if (this.Substitutions.Specific != null)
+                    {
+                        foreach (var item in this.Substitutions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -136,6 +186,19 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.TreeFolder)) return true;
+                if (this.Substitutions != null)
+                {
+                    if (eval(this.Substitutions.Overall)) return true;
+                    if (this.Substitutions.Specific != null)
+                    {
+                        foreach (var item in this.Substitutions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -151,30 +214,64 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.TreeFolder = eval(this.TreeFolder);
+                if (Substitutions != null)
+                {
+                    obj.Substitutions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>?>(eval(this.Substitutions.Overall), Enumerable.Empty<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>());
+                    if (Substitutions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>>();
+                        obj.Substitutions.Specific = l;
+                        foreach (var item in Substitutions.Specific)
+                        {
+                            MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MaterialSubstitution.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MaterialSwap.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MaterialSwap.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MaterialSwap.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MaterialSwap.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MaterialSwap.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MaterialSwap.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.TreeFolder ?? true)
+                    {
+                        sb.AppendItem(TreeFolder, "TreeFolder");
+                    }
+                    if ((printMask?.Substitutions?.Overall ?? true)
+                        && Substitutions is {} SubstitutionsItem)
+                    {
+                        sb.AppendLine("Substitutions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SubstitutionsItem.Overall);
+                            if (SubstitutionsItem.Specific != null)
+                            {
+                                foreach (var subItem in SubstitutionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +281,21 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? TreeFolder;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MaterialSubstitution.ErrorMask?>>?>? Substitutions;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MaterialSwap_FieldIndex enu = (MaterialSwap_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialSwap_FieldIndex.TreeFolder:
+                        return TreeFolder;
+                    case MaterialSwap_FieldIndex.Substitutions:
+                        return Substitutions;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +306,12 @@ namespace Mutagen.Bethesda.Fallout4
                 MaterialSwap_FieldIndex enu = (MaterialSwap_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialSwap_FieldIndex.TreeFolder:
+                        this.TreeFolder = ex;
+                        break;
+                    case MaterialSwap_FieldIndex.Substitutions:
+                        this.Substitutions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MaterialSubstitution.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +323,12 @@ namespace Mutagen.Bethesda.Fallout4
                 MaterialSwap_FieldIndex enu = (MaterialSwap_FieldIndex)index;
                 switch (enu)
                 {
+                    case MaterialSwap_FieldIndex.TreeFolder:
+                        this.TreeFolder = (Exception?)obj;
+                        break;
+                    case MaterialSwap_FieldIndex.Substitutions:
+                        this.Substitutions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MaterialSubstitution.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +338,55 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (TreeFolder != null) return true;
+                if (Substitutions != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(TreeFolder, "TreeFolder");
+                }
+                if (Substitutions is {} SubstitutionsItem)
+                {
+                    sb.AppendLine("Substitutions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SubstitutionsItem.Overall);
+                        if (SubstitutionsItem.Specific != null)
+                        {
+                            foreach (var subItem in SubstitutionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -263,6 +395,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.TreeFolder = this.TreeFolder.Combine(rhs.TreeFolder);
+                ret.Substitutions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MaterialSubstitution.ErrorMask?>>?>(ExceptionExt.Combine(this.Substitutions?.Overall, rhs.Substitutions?.Overall), ExceptionExt.Combine(this.Substitutions?.Specific, rhs.Substitutions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +418,28 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool TreeFolder;
+            public MaterialSubstitution.TranslationMask? Substitutions;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.TreeFolder = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((TreeFolder, null));
+                ret.Add((Substitutions == null ? DefaultOn : !Substitutions.GetCrystal().CopyNothing, Substitutions?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -346,6 +493,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IMaterialSwap);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -373,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => MaterialSwapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MaterialSwapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +535,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static MaterialSwap CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MaterialSwap();
             ((MaterialSwapSetterCommon)((IMaterialSwapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +550,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MaterialSwap item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +560,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -429,6 +581,12 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IMaterialSwapInternal>,
         IMaterialSwapGetter
     {
+        new String? TreeFolder { get; set; }
+        new ExtendedList<MaterialSubstitution> Substitutions { get; }
+        #region Mutagen
+        new MaterialSwap.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IMaterialSwapInternal :
@@ -446,6 +604,12 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IMaterialSwapGetter>
     {
         static new ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
+        String? TreeFolder { get; }
+        IReadOnlyList<IMaterialSubstitutionGetter> Substitutions { get; }
+
+        #region Mutagen
+        MaterialSwap.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -470,26 +634,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMaterialSwapGetter item,
             string? name = null,
             MaterialSwap.Mask<bool>? printMask = null)
         {
-            return ((MaterialSwapCommon)((IMaterialSwapGetter)item).CommonInstance()!).ToString(
+            return ((MaterialSwapCommon)((IMaterialSwapGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMaterialSwapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialSwap.Mask<bool>? printMask = null)
         {
-            ((MaterialSwapCommon)((IMaterialSwapGetter)item).CommonInstance()!).ToString(
+            ((MaterialSwapCommon)((IMaterialSwapGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +748,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IMaterialSwapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MaterialSwapSetterCommon)((IMaterialSwapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +763,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum MaterialSwap_FieldIndex
+    internal enum MaterialSwap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +774,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        TreeFolder = 6,
+        Substitutions = 7,
     }
     #endregion
 
     #region Registration
-    public partial class MaterialSwap_Registration : ILoquiRegistration
+    internal partial class MaterialSwap_Registration : ILoquiRegistration
     {
         public static readonly MaterialSwap_Registration Instance = new MaterialSwap_Registration();
 
@@ -627,9 +793,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "7727c541-c37a-4eef-886e-d1958a80bb51";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(MaterialSwap.Mask<>);
 
@@ -656,6 +822,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MSWP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.MSWP);
+            var all = RecordCollection.Factory(
+                RecordTypes.MSWP,
+                RecordTypes.FNAM,
+                RecordTypes.BNAM,
+                RecordTypes.SNAM,
+                RecordTypes.CNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(MaterialSwapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +867,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class MaterialSwapSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class MaterialSwapSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly MaterialSwapSetterCommon Instance = new MaterialSwapSetterCommon();
 
@@ -698,6 +876,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IMaterialSwapInternal item)
         {
             ClearPartial();
+            item.TreeFolder = default;
+            item.Substitutions.Clear();
             base.Clear(item);
         }
         
@@ -723,7 +903,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IMaterialSwapInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IMaterialSwapInternal>(
                 record: item,
@@ -736,7 +916,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MaterialSwap)item,
@@ -747,7 +927,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (MaterialSwap)item,
@@ -758,7 +938,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MaterialSwapCommon : Fallout4MajorRecordCommon
+    internal partial class MaterialSwapCommon : Fallout4MajorRecordCommon
     {
         public new static readonly MaterialSwapCommon Instance = new MaterialSwapCommon();
 
@@ -782,58 +962,79 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MaterialSwap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.TreeFolder = string.Equals(item.TreeFolder, rhs.TreeFolder);
+            ret.Substitutions = item.Substitutions.CollectionEqualsHelper(
+                rhs.Substitutions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IMaterialSwapGetter item,
             string? name = null,
             MaterialSwap.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMaterialSwapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MaterialSwap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MaterialSwap =>");
+                sb.AppendLine($"MaterialSwap =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MaterialSwap) =>");
+                sb.AppendLine($"{name} (MaterialSwap) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMaterialSwapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MaterialSwap.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if ((printMask?.TreeFolder ?? true)
+                && item.TreeFolder is {} TreeFolderItem)
+            {
+                sb.AppendItem(TreeFolderItem, "TreeFolder");
+            }
+            if (printMask?.Substitutions?.Overall ?? true)
+            {
+                sb.AppendLine("Substitutions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Substitutions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static MaterialSwap_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1083,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)MaterialSwap_FieldIndex.TreeFolder) ?? true))
+            {
+                if (!string.Equals(lhs.TreeFolder, rhs.TreeFolder)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MaterialSwap_FieldIndex.Substitutions) ?? true))
+            {
+                if (!lhs.Substitutions.SequenceEqual(rhs.Substitutions, (l, r) => ((MaterialSubstitutionCommon)((IMaterialSubstitutionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)MaterialSwap_FieldIndex.Substitutions)))) return false;
+            }
             return true;
         }
         
@@ -910,6 +1119,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IMaterialSwapGetter item)
         {
             var hash = new HashCode();
+            if (item.TreeFolder is {} TreeFolderitem)
+            {
+                hash.Add(TreeFolderitem);
+            }
+            hash.Add(item.Substitutions);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,9 +1147,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMaterialSwapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMaterialSwapGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -980,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class MaterialSwapSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class MaterialSwapSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly MaterialSwapSetterTranslationCommon Instance = new MaterialSwapSetterTranslationCommon();
 
@@ -1013,6 +1227,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MaterialSwap_FieldIndex.TreeFolder) ?? true))
+            {
+                item.TreeFolder = rhs.TreeFolder;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialSwap_FieldIndex.Substitutions) ?? true))
+            {
+                errorMask?.PushIndex((int)MaterialSwap_FieldIndex.Substitutions);
+                try
+                {
+                    item.Substitutions.SetTo(
+                        rhs.Substitutions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +1377,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialSwap_Registration.Instance;
-        public new static MaterialSwap_Registration StaticRegistration => MaterialSwap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialSwapCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +1395,74 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MaterialSwapBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MaterialSwapBinaryWriteTranslation Instance = new MaterialSwapBinaryWriteTranslation();
+        public new static readonly MaterialSwapBinaryWriteTranslation Instance = new MaterialSwapBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IMaterialSwapGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            MaterialSwapBinaryWriteTranslation.WriteBinaryTreeFolder(
+                writer: writer,
+                item: item);
+            MaterialSwapBinaryWriteTranslation.WriteBinarySubstitutions(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFNAMParsingCustom(
+            MutagenWriter writer,
+            IMaterialSwapGetter item);
+
+        public static void WriteBinaryFNAMParsing(
+            MutagenWriter writer,
+            IMaterialSwapGetter item)
+        {
+            WriteBinaryFNAMParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTreeFolderCustom(
+            MutagenWriter writer,
+            IMaterialSwapGetter item);
+
+        public static void WriteBinaryTreeFolder(
+            MutagenWriter writer,
+            IMaterialSwapGetter item)
+        {
+            WriteBinaryTreeFolderCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySubstitutionsCustom(
+            MutagenWriter writer,
+            IMaterialSwapGetter item);
+
+        public static void WriteBinarySubstitutions(
+            MutagenWriter writer,
+            IMaterialSwapGetter item)
+        {
+            WriteBinarySubstitutionsCustom(
+                writer: writer,
+                item: item);
+        }
 
         public void Write(
             MutagenWriter writer,
             IMaterialSwapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1175,10 +1473,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMaterialSwapGetter)item,
@@ -1201,7 +1504,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMaterialSwapGetter)item,
@@ -1212,7 +1515,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IMaterialSwapGetter)item,
@@ -1222,9 +1525,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class MaterialSwapBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class MaterialSwapBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static MaterialSwapBinaryCreateTranslation Instance = new MaterialSwapBinaryCreateTranslation();
+        public new static readonly MaterialSwapBinaryCreateTranslation Instance = new MaterialSwapBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MSWP;
         public static void FillBinaryStructs(
@@ -1234,7 +1537,60 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+            MaterialSwapBinaryCreateTranslation.FillBinaryFNAMParsingCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IMaterialSwapInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FNAM:
+                {
+                    MaterialSwapBinaryCreateTranslation.FillBinaryTreeFolderCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)MaterialSwap_FieldIndex.TreeFolder;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    MaterialSwapBinaryCreateTranslation.FillBinarySubstitutionsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)MaterialSwap_FieldIndex.Substitutions;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinaryFNAMParsingCustom(
+            MutagenFrame frame,
+            IMaterialSwapInternal item);
+
+        public static partial void FillBinaryTreeFolderCustom(
+            MutagenFrame frame,
+            IMaterialSwapInternal item);
+
+        public static partial void FillBinarySubstitutionsCustom(
+            MutagenFrame frame,
+            IMaterialSwapInternal item);
 
     }
 
@@ -1249,16 +1605,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class MaterialSwapBinaryOverlay :
+    internal partial class MaterialSwapBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IMaterialSwapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MaterialSwap_Registration.Instance;
-        public new static MaterialSwap_Registration StaticRegistration => MaterialSwap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialSwap_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => MaterialSwapCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +1622,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialSwapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MaterialSwapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1281,7 +1637,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IMaterialSwap);
 
+        public MaterialSwap.MajorFlag MajorFlags => (MaterialSwap.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region FNAMParsing
+        partial void FNAMParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        protected int FNAMParsingEndingPos;
+        #endregion
+        #region TreeFolder
+        partial void TreeFolderCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public partial String? GetTreeFolderCustom();
+        public String? TreeFolder => GetTreeFolderCustom();
+        #endregion
+        public IReadOnlyList<IMaterialSubstitutionGetter> Substitutions { get; private set; } = Array.Empty<IMaterialSubstitutionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +1661,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected MaterialSwapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MaterialSwapBinaryOverlay MaterialSwapFactory(
+        public static IMaterialSwapGetter MaterialSwapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new MaterialSwapBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +1695,71 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static MaterialSwapBinaryOverlay MaterialSwapFactory(
+        public static IMaterialSwapGetter MaterialSwapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MaterialSwapFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FNAM:
+                {
+                    TreeFolderCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return (int)MaterialSwap_FieldIndex.TreeFolder;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    this.Substitutions = this.ParseRepeatedTypelessSubrecord<IMaterialSubstitutionGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: MaterialSubstitution_Registration.TriggerSpecs,
+                        factory: MaterialSubstitutionBinaryOverlay.MaterialSubstitutionFactory);
+                    return (int)MaterialSwap_FieldIndex.Substitutions;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MaterialSwapMixIn.ToString(
+            MaterialSwapMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

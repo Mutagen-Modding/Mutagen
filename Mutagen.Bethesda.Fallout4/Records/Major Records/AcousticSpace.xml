@@ -3,11 +3,13 @@
   <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="Fallout4MajorRecord" GUID="14c09254-586f-4b9a-9397-2af190f53224" ID="95">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <FormLink name="AmbientSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="UseSoundFromRegion" refName="Region" recordType="RDAT" />
       <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
       <Bool name="IsInterior" byteLength="1" recordType="XTRI" />
-      <Float name="WeatherAttenuation" recordType="WNAM" integerType="UShort" divisor="100" />
+      <Float name="WeatherAttenuationDb" recordType="WNAM" integerType="UShort" divisor="100" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -61,12 +63,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkEntryPointModifyActorValueMixIn.ToString(
+            PerkEntryPointModifyActorValueMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -208,38 +211,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PerkEntryPointModifyActorValue.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkEntryPointModifyActorValue.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ActorValue ?? true)
                     {
-                        fg.AppendItem(ActorValue, "ActorValue");
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Modification ?? true)
                     {
-                        fg.AppendItem(Modification, "Modification");
+                        sb.AppendItem(Modification, "Modification");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -323,39 +321,36 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(ActorValue, "ActorValue");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Modification, "Modification");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ActorValue, "ActorValue");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Modification, "Modification");
+                }
             }
             #endregion
 
@@ -424,7 +419,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkEntryPointModifyActorValue_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointModifyActorValueCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointModifyActorValueSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -432,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkEntryPointModifyActorValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointModifyActorValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -442,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkEntryPointModifyActorValue CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointModifyActorValue();
             ((PerkEntryPointModifyActorValueSetterCommon)((IPerkEntryPointModifyActorValueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -457,7 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkEntryPointModifyActorValue item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -467,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -526,26 +522,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPerkEntryPointModifyActorValueGetter item,
             string? name = null,
             PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
         {
-            return ((PerkEntryPointModifyActorValueCommon)((IPerkEntryPointModifyActorValueGetter)item).CommonInstance()!).ToString(
+            return ((PerkEntryPointModifyActorValueCommon)((IPerkEntryPointModifyActorValueGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPerkEntryPointModifyActorValueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
         {
-            ((PerkEntryPointModifyActorValueCommon)((IPerkEntryPointModifyActorValueGetter)item).CommonInstance()!).ToString(
+            ((PerkEntryPointModifyActorValueCommon)((IPerkEntryPointModifyActorValueGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -626,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkEntryPointModifyActorValue item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkEntryPointModifyActorValueSetterCommon)((IPerkEntryPointModifyActorValueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -641,10 +637,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointModifyActorValue_FieldIndex
+    internal enum PerkEntryPointModifyActorValue_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -659,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointModifyActorValue_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointModifyActorValue_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointModifyActorValue_Registration Instance = new PerkEntryPointModifyActorValue_Registration();
 
@@ -701,6 +697,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PRKE);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointModifyActorValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -734,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointModifyActorValueSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointModifyActorValueSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointModifyActorValueSetterCommon Instance = new PerkEntryPointModifyActorValueSetterCommon();
 
@@ -771,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPerkEntryPointModifyActorValue item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -784,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointModifyActorValue)item,
@@ -795,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointModifyActorValue)item,
@@ -806,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointModifyActorValueCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointModifyActorValueCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointModifyActorValueCommon Instance = new PerkEntryPointModifyActorValueCommon();
 
@@ -830,72 +832,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkEntryPointModifyActorValue.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ActorValue = item.ActorValue == rhs.ActorValue;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
             ret.Modification = item.Modification == rhs.Modification;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPerkEntryPointModifyActorValueGetter item,
             string? name = null,
             PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPerkEntryPointModifyActorValueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkEntryPointModifyActorValue =>");
+                sb.AppendLine($"PerkEntryPointModifyActorValue =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkEntryPointModifyActorValue) =>");
+                sb.AppendLine($"{name} (PerkEntryPointModifyActorValue) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkEntryPointModifyActorValueGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkEntryPointModifyActorValue.Mask<bool>? printMask = null)
         {
             APerkEntryPointEffectCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ActorValue ?? true)
             {
-                fg.AppendItem(item.ActorValue, "ActorValue");
+                sb.AppendItem(item.ActorValue, "ActorValue");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Modification ?? true)
             {
-                fg.AppendItem(item.Modification, "Modification");
+                sb.AppendItem(item.Modification, "Modification");
             }
         }
         
@@ -1011,9 +1010,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkEntryPointModifyActorValueGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkEntryPointModifyActorValueGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1023,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointModifyActorValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointModifyActorValueSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointModifyActorValueSetterTranslationCommon Instance = new PerkEntryPointModifyActorValueSetterTranslationCommon();
 
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointModifyActorValue_Registration.Instance;
-        public new static PerkEntryPointModifyActorValue_Registration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointModifyActorValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1165,13 +1164,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointModifyActorValueBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkEntryPointModifyActorValueBinaryWriteTranslation Instance = new PerkEntryPointModifyActorValueBinaryWriteTranslation();
+        public new static readonly PerkEntryPointModifyActorValueBinaryWriteTranslation Instance = new PerkEntryPointModifyActorValueBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkEntryPointModifyActorValueGetter item,
@@ -1196,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointModifyActorValueGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1210,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkEntryPointModifyActorValueGetter)item,
@@ -1221,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointModifyActorValueGetter)item,
@@ -1232,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointModifyActorValueGetter)item,
@@ -1242,9 +1241,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointModifyActorValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointModifyActorValueBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
-        public new readonly static PerkEntryPointModifyActorValueBinaryCreateTranslation Instance = new PerkEntryPointModifyActorValueBinaryCreateTranslation();
+        public new static readonly PerkEntryPointModifyActorValueBinaryCreateTranslation Instance = new PerkEntryPointModifyActorValueBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkEntryPointModifyActorValue item,
@@ -1275,16 +1274,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointModifyActorValueBinaryOverlay :
+    internal partial class PerkEntryPointModifyActorValueBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointModifyActorValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointModifyActorValue_Registration.Instance;
-        public new static PerkEntryPointModifyActorValue_Registration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointModifyActorValueCommon.Instance;
         [DebuggerStepThrough]
@@ -1292,13 +1291,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointModifyActorValueBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointModifyActorValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1306,9 +1305,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public ActorValue ActorValue => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
-        public Single Value => _data.Slice(0x6, 0x4).Float();
-        public PerkEntryPointModifyActorValue.ModificationType Modification => (PerkEntryPointModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
+        public ActorValue ActorValue => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2, 0x4));
+        public Single Value => _structData.Slice(0x6, 0x4).Float();
+        public PerkEntryPointModifyActorValue.ModificationType Modification => (PerkEntryPointModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1316,52 +1315,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PerkEntryPointModifyActorValueBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PerkEntryPointModifyActorValueBinaryOverlay PerkEntryPointModifyActorValueFactory(
+        public static IPerkEntryPointModifyActorValueGetter PerkEntryPointModifyActorValueFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkEntryPointModifyActorValueBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PerkEntryPointModifyActorValueBinaryOverlay PerkEntryPointModifyActorValueFactory(
+        public static IPerkEntryPointModifyActorValueGetter PerkEntryPointModifyActorValueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkEntryPointModifyActorValueFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkEntryPointModifyActorValueMixIn.ToString(
+            PerkEntryPointModifyActorValueMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

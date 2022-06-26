@@ -6,6 +6,8 @@
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
       <ByteArray name="Unknown1" byteLength="3" nullable="False" />
     </Fields>
+    <AdditionalContainedRecordType>CIS1</AdditionalContainedRecordType>
+    <AdditionalContainedRecordType>CIS2</AdditionalContainedRecordType>
   </Object>
   <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" customBinaryEnd="Normal">
     <Fields>

@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Xunit;
 
-namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Binary.Streams;
+namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Streams;
 
-public class RecordTypeConverter_Tests
+public class RecordTypeConverterTests
 {
     [Fact]
     public void NullCustom()

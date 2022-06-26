@@ -5,32 +5,36 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +55,109 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region MapColor
+        public Color MapColor { get; set; } = default;
+        #endregion
+        #region Worldspace
+        private readonly IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
+        public IFormLinkNullable<IWorldspaceGetter> Worldspace
+        {
+            get => _Worldspace;
+            set => _Worldspace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
+        #endregion
+        #region RegionAreas
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<RegionArea> _RegionAreas = new ExtendedList<RegionArea>();
+        public ExtendedList<RegionArea> RegionAreas
+        {
+            get => this._RegionAreas;
+            init => this._RegionAreas = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRegionAreaGetter> IRegionGetter.RegionAreas => _RegionAreas;
+        #endregion
+
+        #endregion
+        #region Objects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionObjects? _Objects;
+        public RegionObjects? Objects
+        {
+            get => _Objects;
+            set => _Objects = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionObjectsGetter? IRegionGetter.Objects => this.Objects;
+        #endregion
+        #region Weather
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionWeather? _Weather;
+        public RegionWeather? Weather
+        {
+            get => _Weather;
+            set => _Weather = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionWeatherGetter? IRegionGetter.Weather => this.Weather;
+        #endregion
+        #region Map
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionMap? _Map;
+        public RegionMap? Map
+        {
+            get => _Map;
+            set => _Map = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionMapGetter? IRegionGetter.Map => this.Map;
+        #endregion
+        #region Land
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionLand? _Land;
+        public RegionLand? Land
+        {
+            get => _Land;
+            set => _Land = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionLandGetter? IRegionGetter.Land => this.Land;
+        #endregion
+        #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionGrasses? _Grasses;
+        public RegionGrasses? Grasses
+        {
+            get => _Grasses;
+            set => _Grasses = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionGrassesGetter? IRegionGetter.Grasses => this.Grasses;
+        #endregion
+        #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private RegionSounds? _Sounds;
+        public RegionSounds? Sounds
+        {
+            get => _Sounds;
+            set => _Sounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IRegionSoundsGetter? IRegionGetter.Sounds => this.Sounds;
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.ToString(
+            RegionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +173,15 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.MapColor = initialValue;
+                this.Worldspace = initialValue;
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(initialValue, new RegionObjects.Mask<TItem>(initialValue));
+                this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(initialValue, new RegionWeather.Mask<TItem>(initialValue));
+                this.Map = new MaskItem<TItem, RegionMap.Mask<TItem>?>(initialValue, new RegionMap.Mask<TItem>(initialValue));
+                this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(initialValue, new RegionLand.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(initialValue, new RegionGrasses.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(initialValue, new RegionSounds.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -83,7 +190,16 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem MapColor,
+                TItem Worldspace,
+                TItem RegionAreas,
+                TItem Objects,
+                TItem Weather,
+                TItem Map,
+                TItem Land,
+                TItem Grasses,
+                TItem Sounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +208,15 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.MapColor = MapColor;
+                this.Worldspace = Worldspace;
+                this.RegionAreas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>(RegionAreas, Enumerable.Empty<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>());
+                this.Objects = new MaskItem<TItem, RegionObjects.Mask<TItem>?>(Objects, new RegionObjects.Mask<TItem>(Objects));
+                this.Weather = new MaskItem<TItem, RegionWeather.Mask<TItem>?>(Weather, new RegionWeather.Mask<TItem>(Weather));
+                this.Map = new MaskItem<TItem, RegionMap.Mask<TItem>?>(Map, new RegionMap.Mask<TItem>(Map));
+                this.Land = new MaskItem<TItem, RegionLand.Mask<TItem>?>(Land, new RegionLand.Mask<TItem>(Land));
+                this.Grasses = new MaskItem<TItem, RegionGrasses.Mask<TItem>?>(Grasses, new RegionGrasses.Mask<TItem>(Grasses));
+                this.Sounds = new MaskItem<TItem, RegionSounds.Mask<TItem>?>(Sounds, new RegionSounds.Mask<TItem>(Sounds));
             }
 
             #pragma warning disable CS8618
@@ -100,6 +225,18 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem MapColor;
+            public TItem Worldspace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionArea.Mask<TItem>?>>?>? RegionAreas;
+            public MaskItem<TItem, RegionObjects.Mask<TItem>?>? Objects { get; set; }
+            public MaskItem<TItem, RegionWeather.Mask<TItem>?>? Weather { get; set; }
+            public MaskItem<TItem, RegionMap.Mask<TItem>?>? Map { get; set; }
+            public MaskItem<TItem, RegionLand.Mask<TItem>?>? Land { get; set; }
+            public MaskItem<TItem, RegionGrasses.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, RegionSounds.Mask<TItem>?>? Sounds { get; set; }
             #endregion
 
             #region Equals
@@ -113,11 +250,29 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.MapColor, rhs.MapColor)) return false;
+                if (!object.Equals(this.Worldspace, rhs.Worldspace)) return false;
+                if (!object.Equals(this.RegionAreas, rhs.RegionAreas)) return false;
+                if (!object.Equals(this.Objects, rhs.Objects)) return false;
+                if (!object.Equals(this.Weather, rhs.Weather)) return false;
+                if (!object.Equals(this.Map, rhs.Map)) return false;
+                if (!object.Equals(this.Land, rhs.Land)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.MapColor);
+                hash.Add(this.Worldspace);
+                hash.Add(this.RegionAreas);
+                hash.Add(this.Objects);
+                hash.Add(this.Weather);
+                hash.Add(this.Map);
+                hash.Add(this.Land);
+                hash.Add(this.Grasses);
+                hash.Add(this.Sounds);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +283,50 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.MapColor)) return false;
+                if (!eval(this.Worldspace)) return false;
+                if (this.RegionAreas != null)
+                {
+                    if (!eval(this.RegionAreas.Overall)) return false;
+                    if (this.RegionAreas.Specific != null)
+                    {
+                        foreach (var item in this.RegionAreas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Objects != null)
+                {
+                    if (!eval(this.Objects.Overall)) return false;
+                    if (this.Objects.Specific != null && !this.Objects.Specific.All(eval)) return false;
+                }
+                if (Weather != null)
+                {
+                    if (!eval(this.Weather.Overall)) return false;
+                    if (this.Weather.Specific != null && !this.Weather.Specific.All(eval)) return false;
+                }
+                if (Map != null)
+                {
+                    if (!eval(this.Map.Overall)) return false;
+                    if (this.Map.Specific != null && !this.Map.Specific.All(eval)) return false;
+                }
+                if (Land != null)
+                {
+                    if (!eval(this.Land.Overall)) return false;
+                    if (this.Land.Specific != null && !this.Land.Specific.All(eval)) return false;
+                }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
+                }
+                if (Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -136,6 +335,50 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.MapColor)) return true;
+                if (eval(this.Worldspace)) return true;
+                if (this.RegionAreas != null)
+                {
+                    if (eval(this.RegionAreas.Overall)) return true;
+                    if (this.RegionAreas.Specific != null)
+                    {
+                        foreach (var item in this.RegionAreas.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Objects != null)
+                {
+                    if (eval(this.Objects.Overall)) return true;
+                    if (this.Objects.Specific != null && this.Objects.Specific.Any(eval)) return true;
+                }
+                if (Weather != null)
+                {
+                    if (eval(this.Weather.Overall)) return true;
+                    if (this.Weather.Specific != null && this.Weather.Specific.Any(eval)) return true;
+                }
+                if (Map != null)
+                {
+                    if (eval(this.Map.Overall)) return true;
+                    if (this.Map.Specific != null && this.Map.Specific.Any(eval)) return true;
+                }
+                if (Land != null)
+                {
+                    if (eval(this.Land.Overall)) return true;
+                    if (this.Land.Specific != null && this.Land.Specific.Any(eval)) return true;
+                }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
+                if (Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -151,30 +394,99 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.MapColor = eval(this.MapColor);
+                obj.Worldspace = eval(this.Worldspace);
+                if (RegionAreas != null)
+                {
+                    obj.RegionAreas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RegionArea.Mask<R>?>>?>(eval(this.RegionAreas.Overall), Enumerable.Empty<MaskItemIndexed<R, RegionArea.Mask<R>?>>());
+                    if (RegionAreas.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, RegionArea.Mask<R>?>>();
+                        obj.RegionAreas.Specific = l;
+                        foreach (var item in RegionAreas.Specific)
+                        {
+                            MaskItemIndexed<R, RegionArea.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, RegionArea.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Objects = this.Objects == null ? null : new MaskItem<R, RegionObjects.Mask<R>?>(eval(this.Objects.Overall), this.Objects.Specific?.Translate(eval));
+                obj.Weather = this.Weather == null ? null : new MaskItem<R, RegionWeather.Mask<R>?>(eval(this.Weather.Overall), this.Weather.Specific?.Translate(eval));
+                obj.Map = this.Map == null ? null : new MaskItem<R, RegionMap.Mask<R>?>(eval(this.Map.Overall), this.Map.Specific?.Translate(eval));
+                obj.Land = this.Land == null ? null : new MaskItem<R, RegionLand.Mask<R>?>(eval(this.Land.Overall), this.Land.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, RegionGrasses.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, RegionSounds.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Region.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Region.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Region.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Region.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Region.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.MapColor ?? true)
+                    {
+                        sb.AppendItem(MapColor, "MapColor");
+                    }
+                    if (printMask?.Worldspace ?? true)
+                    {
+                        sb.AppendItem(Worldspace, "Worldspace");
+                    }
+                    if ((printMask?.RegionAreas?.Overall ?? true)
+                        && RegionAreas is {} RegionAreasItem)
+                    {
+                        sb.AppendLine("RegionAreas =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RegionAreasItem.Overall);
+                            if (RegionAreasItem.Specific != null)
+                            {
+                                foreach (var subItem in RegionAreasItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Objects?.Overall ?? true)
+                    {
+                        Objects?.Print(sb);
+                    }
+                    if (printMask?.Weather?.Overall ?? true)
+                    {
+                        Weather?.Print(sb);
+                    }
+                    if (printMask?.Map?.Overall ?? true)
+                    {
+                        Map?.Print(sb);
+                    }
+                    if (printMask?.Land?.Overall ?? true)
+                    {
+                        Land?.Print(sb);
+                    }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.Print(sb);
+                    }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        Sounds?.Print(sb);
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +496,42 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? MapColor;
+            public Exception? Worldspace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>? RegionAreas;
+            public MaskItem<Exception?, RegionObjects.ErrorMask?>? Objects;
+            public MaskItem<Exception?, RegionWeather.ErrorMask?>? Weather;
+            public MaskItem<Exception?, RegionMap.ErrorMask?>? Map;
+            public MaskItem<Exception?, RegionLand.ErrorMask?>? Land;
+            public MaskItem<Exception?, RegionGrasses.ErrorMask?>? Grasses;
+            public MaskItem<Exception?, RegionSounds.ErrorMask?>? Sounds;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        return MapColor;
+                    case Region_FieldIndex.Worldspace:
+                        return Worldspace;
+                    case Region_FieldIndex.RegionAreas:
+                        return RegionAreas;
+                    case Region_FieldIndex.Objects:
+                        return Objects;
+                    case Region_FieldIndex.Weather:
+                        return Weather;
+                    case Region_FieldIndex.Map:
+                        return Map;
+                    case Region_FieldIndex.Land:
+                        return Land;
+                    case Region_FieldIndex.Grasses:
+                        return Grasses;
+                    case Region_FieldIndex.Sounds:
+                        return Sounds;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +542,33 @@ namespace Mutagen.Bethesda.Fallout4
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = ex;
+                        break;
+                    case Region_FieldIndex.Worldspace:
+                        this.Worldspace = ex;
+                        break;
+                    case Region_FieldIndex.RegionAreas:
+                        this.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Objects:
+                        this.Objects = new MaskItem<Exception?, RegionObjects.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = new MaskItem<Exception?, RegionWeather.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Map:
+                        this.Map = new MaskItem<Exception?, RegionMap.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Land:
+                        this.Land = new MaskItem<Exception?, RegionLand.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, RegionGrasses.ErrorMask?>(ex, null);
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, RegionSounds.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +580,33 @@ namespace Mutagen.Bethesda.Fallout4
                 Region_FieldIndex enu = (Region_FieldIndex)index;
                 switch (enu)
                 {
+                    case Region_FieldIndex.MapColor:
+                        this.MapColor = (Exception?)obj;
+                        break;
+                    case Region_FieldIndex.Worldspace:
+                        this.Worldspace = (Exception?)obj;
+                        break;
+                    case Region_FieldIndex.RegionAreas:
+                        this.RegionAreas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>)obj;
+                        break;
+                    case Region_FieldIndex.Objects:
+                        this.Objects = (MaskItem<Exception?, RegionObjects.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Weather:
+                        this.Weather = (MaskItem<Exception?, RegionWeather.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Map:
+                        this.Map = (MaskItem<Exception?, RegionMap.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Land:
+                        this.Land = (MaskItem<Exception?, RegionLand.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, RegionGrasses.ErrorMask?>?)obj;
+                        break;
+                    case Region_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, RegionSounds.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +616,71 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (MapColor != null) return true;
+                if (Worldspace != null) return true;
+                if (RegionAreas != null) return true;
+                if (Objects != null) return true;
+                if (Weather != null) return true;
+                if (Map != null) return true;
+                if (Land != null) return true;
+                if (Grasses != null) return true;
+                if (Sounds != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(MapColor, "MapColor");
+                }
+                {
+                    sb.AppendItem(Worldspace, "Worldspace");
+                }
+                if (RegionAreas is {} RegionAreasItem)
+                {
+                    sb.AppendLine("RegionAreas =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RegionAreasItem.Overall);
+                        if (RegionAreasItem.Specific != null)
+                        {
+                            foreach (var subItem in RegionAreasItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Objects?.Print(sb);
+                Weather?.Print(sb);
+                Map?.Print(sb);
+                Land?.Print(sb);
+                Grasses?.Print(sb);
+                Sounds?.Print(sb);
             }
             #endregion
 
@@ -263,6 +689,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.MapColor = this.MapColor.Combine(rhs.MapColor);
+                ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
+                ret.RegionAreas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RegionArea.ErrorMask?>>?>(ExceptionExt.Combine(this.RegionAreas?.Overall, rhs.RegionAreas?.Overall), ExceptionExt.Combine(this.RegionAreas?.Specific, rhs.RegionAreas?.Specific));
+                ret.Objects = this.Objects.Combine(rhs.Objects, (l, r) => l.Combine(r));
+                ret.Weather = this.Weather.Combine(rhs.Weather, (l, r) => l.Combine(r));
+                ret.Map = this.Map.Combine(rhs.Map, (l, r) => l.Combine(r));
+                ret.Land = this.Land.Combine(rhs.Land, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +719,43 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool MapColor;
+            public bool Worldspace;
+            public RegionArea.TranslationMask? RegionAreas;
+            public RegionObjects.TranslationMask? Objects;
+            public RegionWeather.TranslationMask? Weather;
+            public RegionMap.TranslationMask? Map;
+            public RegionLand.TranslationMask? Land;
+            public RegionGrasses.TranslationMask? Grasses;
+            public RegionSounds.TranslationMask? Sounds;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.MapColor = defaultOn;
+                this.Worldspace = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((MapColor, null));
+                ret.Add((Worldspace, null));
+                ret.Add((RegionAreas == null ? DefaultOn : !RegionAreas.GetCrystal().CopyNothing, RegionAreas?.GetCrystal()));
+                ret.Add((Objects != null ? Objects.OnOverall : DefaultOn, Objects?.GetCrystal()));
+                ret.Add((Weather != null ? Weather.OnOverall : DefaultOn, Weather?.GetCrystal()));
+                ret.Add((Map != null ? Map.OnOverall : DefaultOn, Map?.GetCrystal()));
+                ret.Add((Land != null ? Land.OnOverall : DefaultOn, Land?.GetCrystal()));
+                ret.Add((Grasses != null ? Grasses.OnOverall : DefaultOn, Grasses?.GetCrystal()));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -304,6 +767,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSetterCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -346,6 +811,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IRegion);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -373,7 +843,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +853,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Region CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Region();
             ((RegionSetterCommon)((IRegionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +868,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Region item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +878,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -425,10 +895,25 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IRegion :
+        IEmittance,
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<IRegionInternal>,
         IRegionGetter
     {
+        new Color MapColor { get; set; }
+        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
+        new ExtendedList<RegionArea> RegionAreas { get; }
+        new RegionObjects? Objects { get; set; }
+        new RegionWeather? Weather { get; set; }
+        new RegionMap? Map { get; set; }
+        new RegionLand? Land { get; set; }
+        new RegionGrasses? Grasses { get; set; }
+        new RegionSounds? Sounds { get; set; }
+        #region Mutagen
+        new Region.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IRegionInternal :
@@ -442,10 +927,25 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IRegionGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IEmittanceGetter,
+        IFormLinkContainerGetter,
         ILoquiObject<IRegionGetter>,
         IMapsToGetter<IRegionGetter>
     {
         static new ILoquiRegistration StaticRegistration => Region_Registration.Instance;
+        Color MapColor { get; }
+        IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
+        IReadOnlyList<IRegionAreaGetter> RegionAreas { get; }
+        IRegionObjectsGetter? Objects { get; }
+        IRegionWeatherGetter? Weather { get; }
+        IRegionMapGetter? Map { get; }
+        IRegionLandGetter? Land { get; }
+        IRegionGrassesGetter? Grasses { get; }
+        IRegionSoundsGetter? Sounds { get; }
+
+        #region Mutagen
+        Region.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -470,26 +970,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRegionGetter item,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
+            return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).ToString(
+            ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IRegionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RegionSetterCommon)((IRegionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +1099,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Region_FieldIndex
+    internal enum Region_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +1110,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        MapColor = 6,
+        Worldspace = 7,
+        RegionAreas = 8,
+        Objects = 9,
+        Weather = 10,
+        Map = 11,
+        Land = 12,
+        Grasses = 13,
+        Sounds = 14,
     }
     #endregion
 
     #region Registration
-    public partial class Region_Registration : ILoquiRegistration
+    internal partial class Region_Registration : ILoquiRegistration
     {
         public static readonly Region_Registration Instance = new Region_Registration();
 
@@ -622,14 +1131,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 96,
+            msgID: 177,
             version: 0);
 
-        public const string GUID = "338121a9-a29d-4d43-9abc-c7a01e94ba05";
+        public const string GUID = "56939c76-580a-4107-8929-e12f38528c39";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Region.Mask<>);
 
@@ -656,6 +1165,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REGN;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.REGN);
+            var all = RecordCollection.Factory(
+                RecordTypes.REGN,
+                RecordTypes.RCLR,
+                RecordTypes.WNAM,
+                RecordTypes.RPLI,
+                RecordTypes.RPLD,
+                RecordTypes.ANAM,
+                RecordTypes.RDAT,
+                RecordTypes.ICON,
+                RecordTypes.MICO);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(RegionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +1214,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class RegionSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class RegionSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly RegionSetterCommon Instance = new RegionSetterCommon();
 
@@ -698,6 +1223,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IRegionInternal item)
         {
             ClearPartial();
+            item.MapColor = default;
+            item.Worldspace.Clear();
+            item.RegionAreas.Clear();
+            item.Objects = null;
+            item.Weather = null;
+            item.Map = null;
+            item.Land = null;
+            item.Grasses = null;
+            item.Sounds = null;
             base.Clear(item);
         }
         
@@ -715,6 +1249,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Worldspace.Relink(mapping);
+            obj.Objects?.RemapLinks(mapping);
+            obj.Weather?.RemapLinks(mapping);
+            obj.Grasses?.RemapLinks(mapping);
+            obj.Sounds?.RemapLinks(mapping);
         }
         
         #endregion
@@ -723,7 +1262,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IRegionInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IRegionInternal>(
                 record: item,
@@ -736,7 +1275,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Region)item,
@@ -747,7 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Region)item,
@@ -758,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionCommon : Fallout4MajorRecordCommon
+    internal partial class RegionCommon : Fallout4MajorRecordCommon
     {
         public new static readonly RegionCommon Instance = new RegionCommon();
 
@@ -782,58 +1321,143 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Region.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.MapColor = item.MapColor.ColorOnlyEquals(rhs.MapColor);
+            ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
+            ret.RegionAreas = item.RegionAreas.CollectionEqualsHelper(
+                rhs.RegionAreas,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objects = EqualsMaskHelper.EqualsHelper(
+                item.Objects,
+                rhs.Objects,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Weather = EqualsMaskHelper.EqualsHelper(
+                item.Weather,
+                rhs.Weather,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Map = EqualsMaskHelper.EqualsHelper(
+                item.Map,
+                rhs.Map,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Land = EqualsMaskHelper.EqualsHelper(
+                item.Land,
+                rhs.Land,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Grasses = EqualsMaskHelper.EqualsHelper(
+                item.Grasses,
+                rhs.Grasses,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Sounds = EqualsMaskHelper.EqualsHelper(
+                item.Sounds,
+                rhs.Sounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IRegionGetter item,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Region.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Region =>");
+                sb.AppendLine($"Region =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Region) =>");
+                sb.AppendLine($"{name} (Region) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRegionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Region.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if (printMask?.MapColor ?? true)
+            {
+                sb.AppendItem(item.MapColor, "MapColor");
+            }
+            if (printMask?.Worldspace ?? true)
+            {
+                sb.AppendItem(item.Worldspace.FormKeyNullable, "Worldspace");
+            }
+            if (printMask?.RegionAreas?.Overall ?? true)
+            {
+                sb.AppendLine("RegionAreas =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.RegionAreas)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Objects?.Overall ?? true)
+                && item.Objects is {} ObjectsItem)
+            {
+                ObjectsItem?.Print(sb, "Objects");
+            }
+            if ((printMask?.Weather?.Overall ?? true)
+                && item.Weather is {} WeatherItem)
+            {
+                WeatherItem?.Print(sb, "Weather");
+            }
+            if ((printMask?.Map?.Overall ?? true)
+                && item.Map is {} MapItem)
+            {
+                MapItem?.Print(sb, "Map");
+            }
+            if ((printMask?.Land?.Overall ?? true)
+                && item.Land is {} LandItem)
+            {
+                LandItem?.Print(sb, "Land");
+            }
+            if ((printMask?.Grasses?.Overall ?? true)
+                && item.Grasses is {} GrassesItem)
+            {
+                GrassesItem?.Print(sb, "Grasses");
+            }
+            if ((printMask?.Sounds?.Overall ?? true)
+                && item.Sounds is {} SoundsItem)
+            {
+                SoundsItem?.Print(sb, "Sounds");
+            }
         }
         
         public static Region_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1506,66 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            {
+                if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            {
+                if (!lhs.RegionAreas.SequenceEqual(rhs.RegionAreas, (l, r) => ((RegionAreaCommon)((IRegionAreaGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Region_FieldIndex.RegionAreas)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Objects, rhs.Objects, out var lhsObjects, out var rhsObjects, out var isObjectsEqual))
+                {
+                    if (!((RegionObjectsCommon)((IRegionObjectsGetter)lhsObjects).CommonInstance()!).Equals(lhsObjects, rhsObjects, crystal?.GetSubCrystal((int)Region_FieldIndex.Objects))) return false;
+                }
+                else if (!isObjectsEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weather, rhs.Weather, out var lhsWeather, out var rhsWeather, out var isWeatherEqual))
+                {
+                    if (!((RegionWeatherCommon)((IRegionWeatherGetter)lhsWeather).CommonInstance()!).Equals(lhsWeather, rhsWeather, crystal?.GetSubCrystal((int)Region_FieldIndex.Weather))) return false;
+                }
+                else if (!isWeatherEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Map, rhs.Map, out var lhsMap, out var rhsMap, out var isMapEqual))
+                {
+                    if (!((RegionMapCommon)((IRegionMapGetter)lhsMap).CommonInstance()!).Equals(lhsMap, rhsMap, crystal?.GetSubCrystal((int)Region_FieldIndex.Map))) return false;
+                }
+                else if (!isMapEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Land, rhs.Land, out var lhsLand, out var rhsLand, out var isLandEqual))
+                {
+                    if (!((RegionLandCommon)((IRegionLandGetter)lhsLand).CommonInstance()!).Equals(lhsLand, rhsLand, crystal?.GetSubCrystal((int)Region_FieldIndex.Land))) return false;
+                }
+                else if (!isLandEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
+                {
+                    if (!((RegionGrassesCommon)((IRegionGrassesGetter)lhsGrasses).CommonInstance()!).Equals(lhsGrasses, rhsGrasses, crystal?.GetSubCrystal((int)Region_FieldIndex.Grasses))) return false;
+                }
+                else if (!isGrassesEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
+                {
+                    if (!((RegionSoundsCommon)((IRegionSoundsGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, crystal?.GetSubCrystal((int)Region_FieldIndex.Sounds))) return false;
+                }
+                else if (!isSoundsEqual) return false;
+            }
             return true;
         }
         
@@ -910,6 +1594,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IRegionGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.MapColor);
+            hash.Add(item.Worldspace);
+            hash.Add(item.RegionAreas);
+            if (item.Objects is {} Objectsitem)
+            {
+                hash.Add(Objectsitem);
+            }
+            if (item.Weather is {} Weatheritem)
+            {
+                hash.Add(Weatheritem);
+            }
+            if (item.Map is {} Mapitem)
+            {
+                hash.Add(Mapitem);
+            }
+            if (item.Land is {} Landitem)
+            {
+                hash.Add(Landitem);
+            }
+            if (item.Grasses is {} Grassesitem)
+            {
+                hash.Add(Grassesitem);
+            }
+            if (item.Sounds is {} Soundsitem)
+            {
+                hash.Add(Soundsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,11 +1644,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRegionGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.Worldspace, out var WorldspaceInfo))
+            {
+                yield return WorldspaceInfo;
+            }
+            if (obj.Objects is {} ObjectsItems)
+            {
+                foreach (var item in ObjectsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Weather is {} WeatherItems)
+            {
+                foreach (var item in WeatherItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Grasses is {} GrassesItems)
+            {
+                foreach (var item in GrassesItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Sounds is {} SoundsItems)
+            {
+                foreach (var item in SoundsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -980,7 +1723,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class RegionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class RegionSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly RegionSetterTranslationCommon Instance = new RegionSetterTranslationCommon();
 
@@ -1013,6 +1756,194 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                item.MapColor = rhs.MapColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            {
+                item.Worldspace.SetTo(rhs.Worldspace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.RegionAreas) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.RegionAreas);
+                try
+                {
+                    item.RegionAreas.SetTo(
+                        rhs.RegionAreas
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Objects);
+                try
+                {
+                    if(rhs.Objects is {} rhsObjects)
+                    {
+                        item.Objects = rhsObjects.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Objects));
+                    }
+                    else
+                    {
+                        item.Objects = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Weather);
+                try
+                {
+                    if(rhs.Weather is {} rhsWeather)
+                    {
+                        item.Weather = rhsWeather.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Weather));
+                    }
+                    else
+                    {
+                        item.Weather = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Map);
+                try
+                {
+                    if(rhs.Map is {} rhsMap)
+                    {
+                        item.Map = rhsMap.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Map));
+                    }
+                    else
+                    {
+                        item.Map = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Land);
+                try
+                {
+                    if(rhs.Land is {} rhsLand)
+                    {
+                        item.Land = rhsLand.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Land));
+                    }
+                    else
+                    {
+                        item.Land = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Grasses);
+                try
+                {
+                    if(rhs.Grasses is {} rhsGrasses)
+                    {
+                        item.Grasses = rhsGrasses.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Grasses));
+                    }
+                    else
+                    {
+                        item.Grasses = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Region_FieldIndex.Sounds);
+                try
+                {
+                    if(rhs.Sounds is {} rhsSounds)
+                    {
+                        item.Sounds = rhsSounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Region_FieldIndex.Sounds));
+                    }
+                    else
+                    {
+                        item.Sounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +2066,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +2084,64 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class RegionBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
+        public new static readonly RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IRegionGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MapColor,
+                header: translationParams.ConvertToCustom(RecordTypes.RCLR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Worldspace,
+                header: translationParams.ConvertToCustom(RecordTypes.WNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
+                writer: writer,
+                items: item.RegionAreas,
+                transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RegionAreaBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            RegionBinaryWriteTranslation.WriteBinaryRegionAreaLogic(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryRegionAreaLogicCustom(
+            MutagenWriter writer,
+            IRegionGetter item);
+
+        public static void WriteBinaryRegionAreaLogic(
+            MutagenWriter writer,
+            IRegionGetter item)
+        {
+            WriteBinaryRegionAreaLogicCustom(
+                writer: writer,
+                item: item);
+        }
 
         public void Write(
             MutagenWriter writer,
             IRegionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1175,10 +2152,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +2172,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRegionGetter)item,
@@ -1201,7 +2183,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionGetter)item,
@@ -1212,7 +2194,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IRegionGetter)item,
@@ -1222,9 +2204,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class RegionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class RegionBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
+        public new static readonly RegionBinaryCreateTranslation Instance = new RegionBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REGN;
         public static void FillBinaryStructs(
@@ -1235,6 +2217,62 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 frame: frame);
         }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IRegionInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.RCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Region_FieldIndex.MapColor;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Region_FieldIndex.Worldspace;
+                }
+                case RecordTypeInts.RPLI:
+                {
+                    item.RegionAreas.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RegionArea_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: RegionArea.TryCreateFromBinary));
+                    return (int)Region_FieldIndex.RegionAreas;
+                }
+                case RecordTypeInts.RDAT:
+                {
+                    return RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial ParseResult FillBinaryRegionAreaLogicCustom(
+            MutagenFrame frame,
+            IRegionInternal item);
 
     }
 
@@ -1249,16 +2287,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class RegionBinaryOverlay :
+    internal partial class RegionBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IRegionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Region_Registration.Instance;
-        public new static Region_Registration StaticRegistration => Region_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Region_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => RegionCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +2304,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => RegionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RegionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1281,7 +2320,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IRegion);
 
+        public Region.MajorFlag MajorFlags => (Region.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region MapColor
+        private int? _MapColorLocation;
+        public Color MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region Worldspace
+        private int? _WorldspaceLocation;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        #endregion
+        public IReadOnlyList<IRegionAreaGetter> RegionAreas { get; private set; } = Array.Empty<IRegionAreaGetter>();
+        #region RegionAreaLogic
+        public partial ParseResult RegionAreaLogicCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +2343,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected RegionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RegionBinaryOverlay RegionFactory(
+        public static IRegionGetter RegionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RegionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +2377,79 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RegionBinaryOverlay RegionFactory(
+        public static IRegionGetter RegionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RegionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.RCLR:
+                {
+                    _MapColorLocation = (stream.Position - offset);
+                    return (int)Region_FieldIndex.MapColor;
+                }
+                case RecordTypeInts.WNAM:
+                {
+                    _WorldspaceLocation = (stream.Position - offset);
+                    return (int)Region_FieldIndex.Worldspace;
+                }
+                case RecordTypeInts.RPLI:
+                {
+                    this.RegionAreas = this.ParseRepeatedTypelessSubrecord<IRegionAreaGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: RegionArea_Registration.TriggerSpecs,
+                        factory: RegionAreaBinaryOverlay.RegionAreaFactory);
+                    return (int)Region_FieldIndex.RegionAreas;
+                }
+                case RecordTypeInts.RDAT:
+                {
+                    return RegionAreaLogicCustomParse(
+                        stream,
+                        offset);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RegionMixIn.ToString(
+            RegionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

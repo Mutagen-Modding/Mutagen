@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -96,12 +97,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FunctionConditionDataMixIn.ToString(
+            FunctionConditionDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -282,58 +284,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FunctionConditionData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FunctionConditionData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FunctionConditionData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FunctionConditionData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FunctionConditionData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FunctionConditionData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Function ?? true)
                     {
-                        fg.AppendItem(Function, "Function");
+                        sb.AppendItem(Function, "Function");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.ParameterOneRecord ?? true)
                     {
-                        fg.AppendItem(ParameterOneRecord, "ParameterOneRecord");
+                        sb.AppendItem(ParameterOneRecord, "ParameterOneRecord");
                     }
                     if (printMask?.ParameterOneNumber ?? true)
                     {
-                        fg.AppendItem(ParameterOneNumber, "ParameterOneNumber");
+                        sb.AppendItem(ParameterOneNumber, "ParameterOneNumber");
                     }
                     if (printMask?.ParameterOneString ?? true)
                     {
-                        fg.AppendItem(ParameterOneString, "ParameterOneString");
+                        sb.AppendItem(ParameterOneString, "ParameterOneString");
                     }
                     if (printMask?.ParameterTwoRecord ?? true)
                     {
-                        fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
+                        sb.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
                     }
                     if (printMask?.ParameterTwoNumber ?? true)
                     {
-                        fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
+                        sb.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
                     }
                     if (printMask?.ParameterTwoString ?? true)
                     {
-                        fg.AppendItem(ParameterTwoString, "ParameterTwoString");
+                        sb.AppendItem(ParameterTwoString, "ParameterTwoString");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -467,44 +464,51 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Function, "Function");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(ParameterOneRecord, "ParameterOneRecord");
-                fg.AppendItem(ParameterOneNumber, "ParameterOneNumber");
-                fg.AppendItem(ParameterOneString, "ParameterOneString");
-                fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
-                fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
-                fg.AppendItem(ParameterTwoString, "ParameterTwoString");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Function, "Function");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(ParameterOneRecord, "ParameterOneRecord");
+                }
+                {
+                    sb.AppendItem(ParameterOneNumber, "ParameterOneNumber");
+                }
+                {
+                    sb.AppendItem(ParameterOneString, "ParameterOneString");
+                }
+                {
+                    sb.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
+                }
+                {
+                    sb.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
+                }
+                {
+                    sb.AppendItem(ParameterTwoString, "ParameterTwoString");
+                }
             }
             #endregion
 
@@ -593,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FunctionConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FunctionConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FunctionConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -602,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => FunctionConditionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FunctionConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -612,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static FunctionConditionData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FunctionConditionData();
             ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -627,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FunctionConditionData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -637,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -708,26 +712,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFunctionConditionDataGetter item,
             string? name = null,
             FunctionConditionData.Mask<bool>? printMask = null)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).ToString(
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFunctionConditionDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FunctionConditionData.Mask<bool>? printMask = null)
         {
-            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).ToString(
+            ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -808,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFunctionConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FunctionConditionDataSetterCommon)((IFunctionConditionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -823,10 +827,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FunctionConditionData_FieldIndex
+    internal enum FunctionConditionData_FieldIndex
     {
         RunOnType = 0,
         Reference = 1,
@@ -843,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FunctionConditionData_Registration : ILoquiRegistration
+    internal partial class FunctionConditionData_Registration : ILoquiRegistration
     {
         public static readonly FunctionConditionData_Registration Instance = new FunctionConditionData_Registration();
 
@@ -917,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FunctionConditionDataSetterCommon : ConditionDataSetterCommon
+    internal partial class FunctionConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly FunctionConditionDataSetterCommon Instance = new FunctionConditionDataSetterCommon();
 
@@ -956,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IFunctionConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -968,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (FunctionConditionData)item,
@@ -979,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FunctionConditionDataCommon : ConditionDataCommon
+    internal partial class FunctionConditionDataCommon : ConditionDataCommon
     {
         public new static readonly FunctionConditionDataCommon Instance = new FunctionConditionDataCommon();
 
@@ -1003,7 +1007,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FunctionConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Function = item.Function == rhs.Function;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.ParameterOneRecord = item.ParameterOneRecord.Equals(rhs.ParameterOneRecord);
@@ -1015,87 +1018,85 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFunctionConditionDataGetter item,
             string? name = null,
             FunctionConditionData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFunctionConditionDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FunctionConditionData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FunctionConditionData =>");
+                sb.AppendLine($"FunctionConditionData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FunctionConditionData) =>");
+                sb.AppendLine($"{name} (FunctionConditionData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFunctionConditionDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FunctionConditionData.Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Function ?? true)
             {
-                fg.AppendItem(item.Function, "Function");
+                sb.AppendItem(item.Function, "Function");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.ParameterOneRecord ?? true)
             {
-                fg.AppendItem(item.ParameterOneRecord.FormKey, "ParameterOneRecord");
+                sb.AppendItem(item.ParameterOneRecord.FormKey, "ParameterOneRecord");
             }
             if (printMask?.ParameterOneNumber ?? true)
             {
-                fg.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
+                sb.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
             }
             if ((printMask?.ParameterOneString ?? true)
                 && item.ParameterOneString is {} ParameterOneStringItem)
             {
-                fg.AppendItem(ParameterOneStringItem, "ParameterOneString");
+                sb.AppendItem(ParameterOneStringItem, "ParameterOneString");
             }
             if (printMask?.ParameterTwoRecord ?? true)
             {
-                fg.AppendItem(item.ParameterTwoRecord.FormKey, "ParameterTwoRecord");
+                sb.AppendItem(item.ParameterTwoRecord.FormKey, "ParameterTwoRecord");
             }
             if (printMask?.ParameterTwoNumber ?? true)
             {
-                fg.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
+                sb.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
             }
             if ((printMask?.ParameterTwoString ?? true)
                 && item.ParameterTwoString is {} ParameterTwoStringItem)
             {
-                fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
+                sb.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
             }
         }
         
@@ -1203,9 +1204,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFunctionConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFunctionConditionDataGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1217,7 +1218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FunctionConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
+    internal partial class FunctionConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly FunctionConditionDataSetterTranslationCommon Instance = new FunctionConditionDataSetterTranslationCommon();
 
@@ -1345,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FunctionConditionData_Registration.Instance;
-        public new static FunctionConditionData_Registration StaticRegistration => FunctionConditionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FunctionConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1363,13 +1364,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FunctionConditionDataBinaryWriteTranslation :
         ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static FunctionConditionDataBinaryWriteTranslation Instance = new FunctionConditionDataBinaryWriteTranslation();
+        public new static readonly FunctionConditionDataBinaryWriteTranslation Instance = new FunctionConditionDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFunctionConditionDataGetter item,
@@ -1404,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IFunctionConditionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1414,7 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFunctionConditionDataGetter)item,
@@ -1425,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFunctionConditionDataGetter)item,
@@ -1435,9 +1436,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FunctionConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
+    internal partial class FunctionConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
-        public new readonly static FunctionConditionDataBinaryCreateTranslation Instance = new FunctionConditionDataBinaryCreateTranslation();
+        public new static readonly FunctionConditionDataBinaryCreateTranslation Instance = new FunctionConditionDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFunctionConditionData item,
@@ -1472,16 +1473,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FunctionConditionDataBinaryOverlay :
+    internal partial class FunctionConditionDataBinaryOverlay :
         ConditionDataBinaryOverlay,
         IFunctionConditionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FunctionConditionData_Registration.Instance;
-        public new static FunctionConditionData_Registration StaticRegistration => FunctionConditionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => FunctionConditionDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1489,14 +1490,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FunctionConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FunctionConditionDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FunctionConditionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FunctionConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1504,10 +1505,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Condition.Function Function => (Condition.Function)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
-        public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public Condition.Function Function => (Condition.Function)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
+        public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
         #region ParameterParsing
-         partial void ParameterParsingCustomParse(
+        partial void ParameterParsingCustomParse(
             OverlayStream stream,
             int offset);
         protected int ParameterParsingEndingPos;
@@ -1519,24 +1520,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected FunctionConditionDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
+        public static IFunctionConditionDataGetter FunctionConditionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FunctionConditionDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1545,25 +1552,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static FunctionConditionDataBinaryOverlay FunctionConditionDataFactory(
+        public static IFunctionConditionDataGetter FunctionConditionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FunctionConditionDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FunctionConditionDataMixIn.ToString(
+            FunctionConditionDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

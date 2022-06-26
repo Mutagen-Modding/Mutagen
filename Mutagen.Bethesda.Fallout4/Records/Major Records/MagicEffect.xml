@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="Fallout4MajorRecord" GUID="daa8d891-40bb-4c9f-b41b-be62f907dda4" ID="103">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="4" />
+          <Float name="BaseCost" />
+          <CustomLogic name="AssociatedItem" byteLength="4" />
+          <FormLink name="MagicSkill" refName="ActorValueInformation" />
+          <FormLink name="ResistValue" refName="ActorValueInformation" />
+          <UInt16 name="CounterEffectCount" />
+          <UInt16 name="Unknown1" />
+          <FormLink name="CastingLight" refName="Light" />
+          <Float name="TaperWeight" />
+          <FormLink name="HitShader" refName="EffectShader" />
+          <FormLink name="EnchantShader" refName="EffectShader" />
+          <UInt32 name="MinimumSkillLevel" />
+          <UInt32 name="SpellmakingArea" />
+          <Float name="SpellmakingCastingTime" />
+          <Float name="TaperCurve" />
+          <Float name="TaperDuration" />
+          <Float name="SecondActorValueWeight" />
+          <RefDirect name="Archetype" binary="Custom" refName="MagicEffectArchetype" byteLength="8" />
+          <!-- Actor Value parsed by above custom logic -->
+          <FormLink name="Projectile" refName="Projectile" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <Enum name="CastType" enumName="CastType" byteLength="4" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+          <FormLink name="SecondActorValue" refName="ActorValueInformation" />
+          <FormLink name="CastingArt" refName="ArtObject" />
+          <FormLink name="HitEffectArt" refName="ArtObject" />
+          <FormLink name="ImpactData" refName="ImpactDataSet" />
+          <Float name="SkillUsageMultiplier" />
+          <FormLink name="DualCastArt" refName="DualCastData" />
+          <Float name="DualCastScale" />
+          <FormLink name="EnchantArt" refName="ArtObject" />
+          <FormLink name="HitVisuals" refName="VisualEffect" />
+          <FormLink name="EnchantVisuals" refName="VisualEffect" />
+          <FormLink name="EquipAbility" refName="Spell" />
+          <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
+          <FormLink name="PerkToApply" refName="Perk" />
+          <Enum name="CastingSoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Float name="ScriptEffectAIScore" />
+          <Float name="ScriptEffectAIDelayTime" />
+        </Fields>
+      </Data>
+      <List name="CounterEffects">
+        <FormLink refName="MagicEffect" recordType="ESCE" />
+      </List>
+      <RefList name="Sounds" refName="MagicEffectSound" recordType="SNDD" />
+      <String name="Description" recordType="DNAM" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectArchetype" objType="Subrecord" ctorPermission="noGeneration" GUID="f0b747b5-e363-4a35-9918-0f8099a15f0c" ID="274">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" internalSetInterface="true" />
+      <FormKey name="AssociationKey" generateClassMembers="false" binary="NoGeneration" />
+      <FormLink name="ActorValue" enumName="ActorValue" refName="ActorValueInformation" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectLightArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="7bc46047-4215-4c08-841a-9b4b1e57d65b" ID="275">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectBoundArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="9a6509dc-94e2-47df-8676-e450027835d7" ID="276">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="8269ac1b-2ec3-4c19-96ce-a7d7d1e33e2f" ID="277">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectGuideArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="895a61f4-4532-4079-b0ad-4a5f2f5f1414" ID="278">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSpawnHazardArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="0e067efe-9c06-40c2-9595-fb8ecae7877d" ID="279">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectCloakArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="a46bf6dd-77e0-4b32-aba2-b8550e2ae753" ID="280">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectWerewolfArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="292ebc5e-db59-4dba-b398-2d923f3ef47f" ID="281">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectVampireArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="6df96b70-72cc-47f0-aa06-a0b087acc517" ID="282">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectEnhanceWeaponArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="9be01c63-f9c4-47f1-8c75-92a1fe1e6095" ID="283">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectPeakValueModArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="ae5a75cd-21d8-4dfa-867b-198d88fec23b" ID="284">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSound" objType="Subrecord" GUID="ee28d561-03db-4965-bad7-fee9f5308fd2" ID="287">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffect.SoundType" byteLength="4" />
+      <FormLink name="Sound" refName="SoundDescriptor" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,19 +17,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -84,12 +85,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebrisModelMixIn.ToString(
+            DebrisModelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -229,46 +231,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DebrisModel.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DebrisModel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DebrisModel.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DebrisModel.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DebrisModel.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DebrisModel.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Percentage ?? true)
                     {
-                        fg.AppendItem(Percentage, "Percentage");
+                        sb.AppendItem(Percentage, "Percentage");
                     }
                     if (printMask?.ModelFilename ?? true)
                     {
-                        fg.AppendItem(ModelFilename, "ModelFilename");
+                        sb.AppendItem(ModelFilename, "ModelFilename");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.TextureFileHashes ?? true)
                     {
-                        fg.AppendItem(TextureFileHashes, "TextureFileHashes");
+                        sb.AppendItem(TextureFileHashes, "TextureFileHashes");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -383,40 +380,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Percentage, "Percentage");
-                fg.AppendItem(ModelFilename, "ModelFilename");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(TextureFileHashes, "TextureFileHashes");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                {
+                    sb.AppendItem(Percentage, "Percentage");
+                }
+                {
+                    sb.AppendItem(ModelFilename, "ModelFilename");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(TextureFileHashes, "TextureFileHashes");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -503,7 +501,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = DebrisModel_Registration.TriggeringRecordType;
         [Flags]
         public enum DATADataType
         {
@@ -518,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -528,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DebrisModel CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DebrisModel();
             ((DebrisModelSetterCommon)((IDebrisModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -543,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DebrisModel item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -553,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -621,26 +618,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebrisModelGetter item,
             string? name = null,
             DebrisModel.Mask<bool>? printMask = null)
         {
-            return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).ToString(
+            return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebrisModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebrisModel.Mask<bool>? printMask = null)
         {
-            ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).ToString(
+            ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -746,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDebrisModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DebrisModelSetterCommon)((IDebrisModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -761,10 +758,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DebrisModel_FieldIndex
+    internal enum DebrisModel_FieldIndex
     {
         Percentage = 0,
         ModelFilename = 1,
@@ -775,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DebrisModel_Registration : ILoquiRegistration
+    internal partial class DebrisModel_Registration : ILoquiRegistration
     {
         public static readonly DebrisModel_Registration Instance = new DebrisModel_Registration();
 
@@ -817,6 +814,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.DATA);
+            var all = RecordCollection.Factory(
+                RecordTypes.DATA,
+                RecordTypes.MODT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DebrisModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -850,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DebrisModelSetterCommon
+    internal partial class DebrisModelSetterCommon
     {
         public static readonly DebrisModelSetterCommon Instance = new DebrisModelSetterCommon();
 
@@ -877,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IDebrisModel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -890,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DebrisModelCommon
+    internal partial class DebrisModelCommon
     {
         public static readonly DebrisModelCommon Instance = new DebrisModelCommon();
 
@@ -914,7 +920,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DebrisModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Percentage = item.Percentage == rhs.Percentage;
             ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
@@ -922,70 +927,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
         }
         
-        public string ToString(
+        public string Print(
             IDebrisModelGetter item,
             string? name = null,
             DebrisModel.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebrisModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebrisModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DebrisModel =>");
+                sb.AppendLine($"DebrisModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DebrisModel) =>");
+                sb.AppendLine($"{name} (DebrisModel) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebrisModelGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DebrisModel.Mask<bool>? printMask = null)
         {
             if (printMask?.Percentage ?? true)
             {
-                fg.AppendItem(item.Percentage, "Percentage");
+                sb.AppendItem(item.Percentage, "Percentage");
             }
             if (printMask?.ModelFilename ?? true)
             {
-                fg.AppendItem(item.ModelFilename, "ModelFilename");
+                sb.AppendItem(item.ModelFilename, "ModelFilename");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.TextureFileHashes ?? true)
                 && item.TextureFileHashes is {} TextureFileHashesItem)
             {
-                fg.AppendLine($"TextureFileHashes => {SpanExt.ToHexString(TextureFileHashesItem)}");
+                sb.AppendLine($"TextureFileHashes => {SpanExt.ToHexString(TextureFileHashesItem)}");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1042,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDebrisModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDebrisModelGetter obj)
         {
             yield break;
         }
@@ -1050,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DebrisModelSetterTranslationCommon
+    internal partial class DebrisModelSetterTranslationCommon
     {
         public static readonly DebrisModelSetterTranslationCommon Instance = new DebrisModelSetterTranslationCommon();
 
@@ -1151,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebrisModel_Registration.Instance;
-        public static DebrisModel_Registration StaticRegistration => DebrisModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebrisModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1175,11 +1178,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DebrisModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DebrisModelBinaryWriteTranslation Instance = new DebrisModelBinaryWriteTranslation();
+        public static readonly DebrisModelBinaryWriteTranslation Instance = new DebrisModelBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDebrisModelGetter item,
@@ -1190,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IDebrisModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
@@ -1216,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IDebrisModelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1230,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDebrisModelGetter)item,
@@ -1240,9 +1243,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DebrisModelBinaryCreateTranslation
+    internal partial class DebrisModelBinaryCreateTranslation
     {
-        public readonly static DebrisModelBinaryCreateTranslation Instance = new DebrisModelBinaryCreateTranslation();
+        public static readonly DebrisModelBinaryCreateTranslation Instance = new DebrisModelBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDebrisModel item,
@@ -1257,14 +1260,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Percentage = dataFrame.ReadUInt8();
@@ -1304,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDebrisModelGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1317,16 +1320,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DebrisModelBinaryOverlay :
+    internal partial class DebrisModelBinaryOverlay :
         PluginBinaryOverlay,
         IDebrisModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebrisModel_Registration.Instance;
-        public static DebrisModel_Registration StaticRegistration => DebrisModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebrisModelCommon.Instance;
         [DebuggerStepThrough]
@@ -1340,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DebrisModelBinaryWriteTranslation.Instance;
@@ -1348,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DebrisModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1356,12 +1359,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public DebrisModel.DATADataType DATADataTypeState { get; private set; }
         #region Percentage
-        private int _PercentageLocation => _DATALocation!.Value;
+        private int _PercentageLocation => _DATALocation!.Value.Min;
         private bool _Percentage_IsSet => _DATALocation.HasValue;
-        public Byte Percentage => _Percentage_IsSet ? _data.Span[_PercentageLocation] : default;
+        public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default;
         #endregion
         #region ModelFilename
         public String ModelFilename { get; private set; } = string.Empty;
@@ -1370,11 +1373,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Flags
         private int _FlagsLocation => ModelFilenameEndingPos;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0);
-        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region TextureFileHashes
         private int? _TextureFileHashesLocation;
-        public ReadOnlyMemorySlice<Byte>? TextureFileHashes => _TextureFileHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFileHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextureFileHashes => _TextureFileHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFileHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1383,44 +1386,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected DebrisModelBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DebrisModelBinaryOverlay DebrisModelFactory(
+        public static IDebrisModelGetter DebrisModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DebrisModelBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._data.Slice(ret._DATALocation!.Value + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value + 0x1 + ret.ModelFilename.Length + 1;
+            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
             return ret;
         }
 
-        public static DebrisModelBinaryOverlay DebrisModelFactory(
+        public static IDebrisModelGetter DebrisModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DebrisModelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1430,16 +1439,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= ModelFilenameEndingPos)
                     {
                         this.DATADataTypeState |= DebrisModel.DATADataType.Break0;
@@ -1457,12 +1466,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebrisModelMixIn.ToString(
+            DebrisModelMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

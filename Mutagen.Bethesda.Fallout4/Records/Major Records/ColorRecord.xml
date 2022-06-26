@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="Fallout4MajorRecord" GUID="4776d5fb-36ec-48ab-9106-fa275bfd7cc4" ID="79">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Data" refName="AColorRecordData" binary="Custom" recordType="CNAM" nullable="False" defaultType="ColorData" />
+      <Enum name="Flags" recordType="FNAM" byteLength="4" nullable="False" enumName="ColorRecord.Flag" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="AColorRecordData" objType="Subrecord" abstract="true" GUID="ae1e1a62-71dc-4518-b40d-aed12473261d" ID="648" />
+  <Object name="ColorData" objType="Subrecord" baseClass="AColorRecordData" GUID="6236ceeb-5c16-4b04-a6c1-160a789e87de" ID="649">
+    <Fields>
+      <Color name="Color" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="ColorRemappingIndex" objType="Subrecord" baseClass="AColorRecordData" GUID="fe2c4e23-3ec9-4334-8264-a02c091b9a4f" ID="650">
+    <Fields>
+      <Float name="Index" />
+    </Fields>
   </Object>
 </Loqui>

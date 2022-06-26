@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,19 +17,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -61,12 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PartMixIn.ToString(
+            PartMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -179,34 +181,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Part.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Part.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Part.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Part.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Part.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Part.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.PartType ?? true)
                     {
-                        fg.AppendItem(PartType, "PartType");
+                        sb.AppendItem(PartType, "PartType");
                     }
                     if (printMask?.FileName ?? true)
                     {
-                        fg.AppendItem(FileName, "FileName");
+                        sb.AppendItem(FileName, "FileName");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -291,37 +288,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(PartType, "PartType");
-                fg.AppendItem(FileName, "FileName");
+                {
+                    sb.AppendItem(PartType, "PartType");
+                }
+                {
+                    sb.AppendItem(FileName, "FileName");
+                }
             }
             #endregion
 
@@ -402,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -412,7 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Part CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Part();
             ((PartSetterCommon)((IPartGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -427,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Part item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -437,7 +429,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -499,26 +491,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPartGetter item,
             string? name = null,
             Part.Mask<bool>? printMask = null)
         {
-            return ((PartCommon)((IPartGetter)item).CommonInstance()!).ToString(
+            return ((PartCommon)((IPartGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Part.Mask<bool>? printMask = null)
         {
-            ((PartCommon)((IPartGetter)item).CommonInstance()!).ToString(
+            ((PartCommon)((IPartGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -624,7 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPart item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PartSetterCommon)((IPartGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -639,10 +631,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Part_FieldIndex
+    internal enum Part_FieldIndex
     {
         PartType = 0,
         FileName = 1,
@@ -650,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Part_Registration : ILoquiRegistration
+    internal partial class Part_Registration : ILoquiRegistration
     {
         public static readonly Part_Registration Instance = new Part_Registration();
 
@@ -691,17 +683,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.NAM0,
-                        RecordTypes.NAM1
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.NAM0,
+                RecordTypes.NAM1);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PartBinaryWriteTranslation);
         #region Interface
@@ -736,7 +724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PartSetterCommon
+    internal partial class PartSetterCommon
     {
         public static readonly PartSetterCommon Instance = new PartSetterCommon();
 
@@ -760,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPart item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -773,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PartCommon
+    internal partial class PartCommon
     {
         public static readonly PartCommon Instance = new PartCommon();
 
@@ -797,64 +785,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Part.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.PartType = item.PartType == rhs.PartType;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
         }
         
-        public string ToString(
+        public string Print(
             IPartGetter item,
             string? name = null,
             Part.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Part.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Part =>");
+                sb.AppendLine($"Part =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Part) =>");
+                sb.AppendLine($"{name} (Part) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Part.Mask<bool>? printMask = null)
         {
             if ((printMask?.PartType ?? true)
                 && item.PartType is {} PartTypeItem)
             {
-                fg.AppendItem(PartTypeItem, "PartType");
+                sb.AppendItem(PartTypeItem, "PartType");
             }
             if ((printMask?.FileName ?? true)
                 && item.FileName is {} FileNameItem)
             {
-                fg.AppendItem(FileNameItem, "FileName");
+                sb.AppendItem(FileNameItem, "FileName");
             }
         }
         
@@ -899,7 +884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPartGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPartGetter obj)
         {
             yield break;
         }
@@ -907,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PartSetterTranslationCommon
+    internal partial class PartSetterTranslationCommon
     {
         public static readonly PartSetterTranslationCommon Instance = new PartSetterTranslationCommon();
 
@@ -989,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Part_Registration.Instance;
-        public static Part_Registration StaticRegistration => Part_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PartCommon.Instance;
         [DebuggerStepThrough]
@@ -1013,16 +998,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PartBinaryWriteTranslation Instance = new PartBinaryWriteTranslation();
+        public static readonly PartBinaryWriteTranslation Instance = new PartBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IPartGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1039,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPartGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1050,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPartGetter)item,
@@ -1060,9 +1045,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PartBinaryCreateTranslation
+    internal partial class PartBinaryCreateTranslation
     {
-        public readonly static PartBinaryCreateTranslation Instance = new PartBinaryCreateTranslation();
+        public static readonly PartBinaryCreateTranslation Instance = new PartBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPart item,
@@ -1077,14 +1062,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.PartType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PartType = EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
@@ -1093,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1116,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPartGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1129,16 +1114,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PartBinaryOverlay :
+    internal partial class PartBinaryOverlay :
         PluginBinaryOverlay,
         IPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Part_Registration.Instance;
-        public static Part_Registration StaticRegistration => Part_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PartCommon.Instance;
         [DebuggerStepThrough]
@@ -1152,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PartBinaryWriteTranslation.Instance;
@@ -1160,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1170,11 +1155,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region PartType
         private int? _PartTypeLocation;
-        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PartTypeLocation!.Value, _package.MetaData.Constants)) : default(Part.PartTypeEnum?);
+        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PartTypeLocation!.Value, _package.MetaData.Constants)) : default(Part.PartTypeEnum?);
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1183,42 +1168,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PartBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PartBinaryOverlay PartFactory(
+        public static IPartGetter PartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PartBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PartBinaryOverlay PartFactory(
+        public static IPartGetter PartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PartFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1228,20 +1219,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.PartType, translationParams)) return ParseResult.Stop;
                     _PartTypeLocation = (stream.Position - offset);
                     return (int)Part_FieldIndex.PartType;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
                     return (int)Part_FieldIndex.FileName;
                 }
@@ -1251,12 +1242,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PartMixIn.ToString(
+            PartMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

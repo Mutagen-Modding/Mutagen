@@ -7,6 +7,7 @@
       <RefList name="InterCellConnections" recordType="PGRI" refName="InterCellPoint" />
       <RefList name="PointToReferenceMappings" refName="PointToReferenceMapping" />
     </Fields>
+    <AdditionalContainedRecordType>PGRR</AdditionalContainedRecordType>
   </Object>
   <Object name="PathGridPoint" objType="Subrecord" GUID="6091ea9f-d0f5-4697-b89d-90083da7fde3" ID="130">
     <Fields>

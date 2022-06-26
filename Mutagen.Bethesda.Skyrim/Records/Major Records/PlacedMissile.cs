@@ -1,13 +1,8 @@
-using System;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class PlacedMissileBinaryOverlay
 {
-    namespace Internals
-    {
-        public partial class PlacedMissileBinaryOverlay
-        {
-            public IFormLinkGetter<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
-        }
-    }
+    public IFormLinkGetter<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
 }

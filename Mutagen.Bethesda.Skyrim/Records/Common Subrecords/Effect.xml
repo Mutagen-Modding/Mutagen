@@ -4,7 +4,7 @@
     <Fields>
       <FormLink name="BaseEffect" refName="MagicEffect" recordType="EFID" />
       <RefDirect name="Data" refName="EffectData" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
   <Object name="EffectData" objType="Subrecord" recordType="EFIT" GUID="09ebdd2c-420c-40fa-bd21-a1977c94208d" ID="135">

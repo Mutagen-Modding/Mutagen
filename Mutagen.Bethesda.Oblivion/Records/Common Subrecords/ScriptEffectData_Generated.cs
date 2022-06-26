@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -81,12 +82,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptEffectDataMixIn.ToString(
+            ScriptEffectDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -226,46 +228,41 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ScriptEffectData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ScriptEffectData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ScriptEffectData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ScriptEffectData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ScriptEffectData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScriptEffectData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.MagicSchool ?? true)
                     {
-                        fg.AppendItem(MagicSchool, "MagicSchool");
+                        sb.AppendItem(MagicSchool, "MagicSchool");
                     }
                     if (printMask?.VisualEffect ?? true)
                     {
-                        fg.AppendItem(VisualEffect, "VisualEffect");
+                        sb.AppendItem(VisualEffect, "VisualEffect");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -380,40 +377,41 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Script, "Script");
-                fg.AppendItem(MagicSchool, "MagicSchool");
-                fg.AppendItem(VisualEffect, "VisualEffect");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                {
+                    sb.AppendItem(MagicSchool, "MagicSchool");
+                }
+                {
+                    sb.AppendItem(VisualEffect, "VisualEffect");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -500,14 +498,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ScriptEffectData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
             Break0 = 1,
             Break1 = 2
         }
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptEffectDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEffectDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEffectDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -518,7 +515,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptEffectDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -528,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ScriptEffectData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptEffectData();
             ((ScriptEffectDataSetterCommon)((IScriptEffectDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -543,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptEffectData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -553,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -623,26 +620,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IScriptEffectDataGetter item,
             string? name = null,
             ScriptEffectData.Mask<bool>? printMask = null)
         {
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)item).CommonInstance()!).ToString(
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IScriptEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptEffectData.Mask<bool>? printMask = null)
         {
-            ((ScriptEffectDataCommon)((IScriptEffectDataGetter)item).CommonInstance()!).ToString(
+            ((ScriptEffectDataCommon)((IScriptEffectDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -748,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IScriptEffectData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptEffectDataSetterCommon)((IScriptEffectDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -763,10 +760,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ScriptEffectData_FieldIndex
+    internal enum ScriptEffectData_FieldIndex
     {
         Versioning = 0,
         Script = 1,
@@ -777,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptEffectData_Registration : ILoquiRegistration
+    internal partial class ScriptEffectData_Registration : ILoquiRegistration
     {
         public static readonly ScriptEffectData_Registration Instance = new ScriptEffectData_Registration();
 
@@ -819,6 +816,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SCIT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.SCIT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ScriptEffectDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -852,7 +855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptEffectDataSetterCommon
+    internal partial class ScriptEffectDataSetterCommon
     {
         public static readonly ScriptEffectDataSetterCommon Instance = new ScriptEffectDataSetterCommon();
 
@@ -880,12 +883,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IScriptEffectData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SCIT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -896,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptEffectDataCommon
+    internal partial class ScriptEffectDataCommon
     {
         public static readonly ScriptEffectDataCommon Instance = new ScriptEffectDataCommon();
 
@@ -920,7 +923,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Script = item.Script.Equals(rhs.Script);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
@@ -928,69 +930,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IScriptEffectDataGetter item,
             string? name = null,
             ScriptEffectData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IScriptEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptEffectData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptEffectData =>");
+                sb.AppendLine($"ScriptEffectData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptEffectData) =>");
+                sb.AppendLine($"{name} (ScriptEffectData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptEffectDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScriptEffectData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKey, "Script");
+                sb.AppendItem(item.Script.FormKey, "Script");
             }
             if (printMask?.MagicSchool ?? true)
             {
-                fg.AppendItem(item.MagicSchool, "MagicSchool");
+                sb.AppendItem(item.MagicSchool, "MagicSchool");
             }
             if (printMask?.VisualEffect ?? true)
             {
-                fg.AppendItem(item.VisualEffect.EDID, "VisualEffect");
+                sb.AppendItem(item.VisualEffect.EDID, "VisualEffect");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptEffectDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptEffectDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Script);
             yield break;
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptEffectDataSetterTranslationCommon
+    internal partial class ScriptEffectDataSetterTranslationCommon
     {
         public static readonly ScriptEffectDataSetterTranslationCommon Instance = new ScriptEffectDataSetterTranslationCommon();
 
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffectData_Registration.Instance;
-        public static ScriptEffectData_Registration StaticRegistration => ScriptEffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptEffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1173,11 +1173,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptEffectDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScriptEffectDataBinaryWriteTranslation Instance = new ScriptEffectDataBinaryWriteTranslation();
+        public static readonly ScriptEffectDataBinaryWriteTranslation Instance = new ScriptEffectDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptEffectDataGetter item,
@@ -1208,12 +1208,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IScriptEffectDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SCIT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptEffectDataGetter)item,
@@ -1235,9 +1235,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptEffectDataBinaryCreateTranslation
+    internal partial class ScriptEffectDataBinaryCreateTranslation
     {
-        public readonly static ScriptEffectDataBinaryCreateTranslation Instance = new ScriptEffectDataBinaryCreateTranslation();
+        public static readonly ScriptEffectDataBinaryCreateTranslation Instance = new ScriptEffectDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptEffectData item,
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IScriptEffectDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptEffectDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1287,16 +1287,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ScriptEffectDataBinaryOverlay :
+    internal partial class ScriptEffectDataBinaryOverlay :
         PluginBinaryOverlay,
         IScriptEffectDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffectData_Registration.Instance;
-        public static ScriptEffectData_Registration StaticRegistration => ScriptEffectData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptEffectData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptEffectDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1310,16 +1310,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptEffectDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ScriptEffectDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptEffectDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptEffectDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1328,10 +1328,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public ScriptEffectData.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<IScriptGetter> Script => new FormLink<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public MagicSchool MagicSchool => _data.Span.Length <= 0x4 ? default : (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public ScriptEffect.Flag Flags => _data.Span.Length <= 0xC ? default : (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<IScriptGetter> Script => new FormLink<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public MagicSchool MagicSchool => _structData.Span.Length <= 0x4 ? default : (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public ScriptEffect.Flag Flags => _structData.Span.Length <= 0xC ? default : (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1339,30 +1339,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected ScriptEffectDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ScriptEffectDataBinaryOverlay ScriptEffectDataFactory(
+        public static IScriptEffectDataGetter ScriptEffectDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ScriptEffectDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x4)
+            if (ret._structData.Length <= 0x4)
             {
                 ret.Versioning |= ScriptEffectData.VersioningBreaks.Break0;
             }
-            if (ret._data.Length <= 0xC)
+            if (ret._structData.Length <= 0xC)
             {
                 ret.Versioning |= ScriptEffectData.VersioningBreaks.Break1;
             }
@@ -1373,25 +1378,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static ScriptEffectDataBinaryOverlay ScriptEffectDataFactory(
+        public static IScriptEffectDataGetter ScriptEffectDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptEffectDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptEffectDataMixIn.ToString(
+            ScriptEffectDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

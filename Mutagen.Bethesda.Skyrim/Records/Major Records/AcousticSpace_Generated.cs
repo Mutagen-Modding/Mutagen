@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,12 +108,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AcousticSpaceMixIn.ToString(
+            AcousticSpaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -255,42 +257,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AcousticSpace.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AcousticSpace.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AcousticSpace.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AcousticSpace.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AcousticSpace.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AcousticSpace.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.AmbientSound ?? true)
                     {
-                        fg.AppendItem(AmbientSound, "AmbientSound");
+                        sb.AppendItem(AmbientSound, "AmbientSound");
                     }
                     if (printMask?.UseSoundFromRegion ?? true)
                     {
-                        fg.AppendItem(UseSoundFromRegion, "UseSoundFromRegion");
+                        sb.AppendItem(UseSoundFromRegion, "UseSoundFromRegion");
                     }
                     if (printMask?.EnvironmentType ?? true)
                     {
-                        fg.AppendItem(EnvironmentType, "EnvironmentType");
+                        sb.AppendItem(EnvironmentType, "EnvironmentType");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -384,40 +381,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(AmbientSound, "AmbientSound");
-                fg.AppendItem(UseSoundFromRegion, "UseSoundFromRegion");
-                fg.AppendItem(EnvironmentType, "EnvironmentType");
+                base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(AmbientSound, "AmbientSound");
+                }
+                {
+                    sb.AppendItem(UseSoundFromRegion, "UseSoundFromRegion");
+                }
+                {
+                    sb.AppendItem(EnvironmentType, "EnvironmentType");
+                }
             }
             #endregion
 
@@ -490,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AcousticSpace_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AcousticSpaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AcousticSpaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceSetterCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(
             FormKey formKey,
@@ -568,7 +562,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => AcousticSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AcousticSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -578,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static AcousticSpace CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AcousticSpace();
             ((AcousticSpaceSetterCommon)((IAcousticSpaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -593,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AcousticSpace item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -603,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -621,14 +615,15 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
+        IExplodeSpawn,
         IFormLinkContainer,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IObjectBounded,
-        IObjectBoundedOptional,
+        IPlaceableObject,
         ISkyrimMajorRecordInternal
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; set; }
@@ -647,16 +642,17 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAcousticSpaceGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IAcousticSpaceGetter>,
         IMapsToGetter<IAcousticSpaceGetter>,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -687,26 +683,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAcousticSpaceGetter item,
             string? name = null,
             AcousticSpace.Mask<bool>? printMask = null)
         {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).ToString(
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAcousticSpaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AcousticSpace.Mask<bool>? printMask = null)
         {
-            ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).ToString(
+            ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -801,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAcousticSpaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AcousticSpaceSetterCommon)((IAcousticSpaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -816,10 +812,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AcousticSpace_FieldIndex
+    internal enum AcousticSpace_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -835,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AcousticSpace_Registration : ILoquiRegistration
+    internal partial class AcousticSpace_Registration : ILoquiRegistration
     {
         public static readonly AcousticSpace_Registration Instance = new AcousticSpace_Registration();
 
@@ -877,6 +873,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ASPC;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.ASPC);
+            var all = RecordCollection.Factory(
+                RecordTypes.ASPC,
+                RecordTypes.OBND,
+                RecordTypes.SNAM,
+                RecordTypes.RDAT,
+                RecordTypes.BNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AcousticSpaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -910,7 +918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AcousticSpaceSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class AcousticSpaceSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly AcousticSpaceSetterCommon Instance = new AcousticSpaceSetterCommon();
 
@@ -951,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAcousticSpaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IAcousticSpaceInternal>(
                 record: item,
@@ -964,7 +972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AcousticSpace)item,
@@ -975,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AcousticSpace)item,
@@ -986,7 +994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AcousticSpaceCommon : SkyrimMajorRecordCommon
+    internal partial class AcousticSpaceCommon : SkyrimMajorRecordCommon
     {
         public new static readonly AcousticSpaceCommon Instance = new AcousticSpaceCommon();
 
@@ -1010,7 +1018,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AcousticSpace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
             ret.UseSoundFromRegion = item.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion);
@@ -1018,69 +1025,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAcousticSpaceGetter item,
             string? name = null,
             AcousticSpace.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAcousticSpaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AcousticSpace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AcousticSpace =>");
+                sb.AppendLine($"AcousticSpace =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AcousticSpace) =>");
+                sb.AppendLine($"{name} (AcousticSpace) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAcousticSpaceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AcousticSpace.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if (printMask?.AmbientSound ?? true)
             {
-                fg.AppendItem(item.AmbientSound.FormKeyNullable, "AmbientSound");
+                sb.AppendItem(item.AmbientSound.FormKeyNullable, "AmbientSound");
             }
             if (printMask?.UseSoundFromRegion ?? true)
             {
-                fg.AppendItem(item.UseSoundFromRegion.FormKeyNullable, "UseSoundFromRegion");
+                sb.AppendItem(item.UseSoundFromRegion.FormKeyNullable, "UseSoundFromRegion");
             }
             if (printMask?.EnvironmentType ?? true)
             {
-                fg.AppendItem(item.EnvironmentType.FormKeyNullable, "EnvironmentType");
+                sb.AppendItem(item.EnvironmentType.FormKeyNullable, "EnvironmentType");
             }
         }
         
@@ -1205,23 +1210,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAcousticSpaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAcousticSpaceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.AmbientSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AmbientSound, out var AmbientSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AmbientSound);
+                yield return AmbientSoundInfo;
             }
-            if (obj.UseSoundFromRegion.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.UseSoundFromRegion, out var UseSoundFromRegionInfo))
             {
-                yield return FormLinkInformation.Factory(obj.UseSoundFromRegion);
+                yield return UseSoundFromRegionInfo;
             }
-            if (obj.EnvironmentType.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.EnvironmentType, out var EnvironmentTypeInfo))
             {
-                yield return FormLinkInformation.Factory(obj.EnvironmentType);
+                yield return EnvironmentTypeInfo;
             }
             yield break;
         }
@@ -1264,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AcousticSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class AcousticSpaceSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly AcousticSpaceSetterTranslationCommon Instance = new AcousticSpaceSetterTranslationCommon();
 
@@ -1453,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AcousticSpace_Registration.Instance;
-        public new static AcousticSpace_Registration StaticRegistration => AcousticSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AcousticSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1471,18 +1476,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AcousticSpaceBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AcousticSpaceBinaryWriteTranslation Instance = new AcousticSpaceBinaryWriteTranslation();
+        public new static readonly AcousticSpaceBinaryWriteTranslation Instance = new AcousticSpaceBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAcousticSpaceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1510,7 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAcousticSpaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1521,12 +1526,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1538,7 +1546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAcousticSpaceGetter)item,
@@ -1549,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAcousticSpaceGetter)item,
@@ -1560,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAcousticSpaceGetter)item,
@@ -1570,9 +1578,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AcousticSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class AcousticSpaceBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
+        public new static readonly AcousticSpaceBinaryCreateTranslation Instance = new AcousticSpaceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASPC;
         public static void FillBinaryStructs(
@@ -1591,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1626,7 +1634,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1643,16 +1652,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AcousticSpaceBinaryOverlay :
+    internal partial class AcousticSpaceBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAcousticSpaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AcousticSpace_Registration.Instance;
-        public new static AcousticSpace_Registration StaticRegistration => AcousticSpace_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AcousticSpaceCommon.Instance;
         [DebuggerStepThrough]
@@ -1660,14 +1669,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AcousticSpaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AcousticSpaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AcousticSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AcousticSpaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1679,20 +1688,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region AmbientSound
         private int? _AmbientSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound => _AmbientSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmbientSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UseSoundFromRegion
         private int? _UseSoundFromRegionLocation;
-        public IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion => _UseSoundFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UseSoundFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        public IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion => _UseSoundFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UseSoundFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
-        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => _EnvironmentTypeLocation.HasValue ? new FormLinkNullable<IReverbParametersGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnvironmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReverbParametersGetter>.Null;
+        public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => _EnvironmentTypeLocation.HasValue ? new FormLinkNullable<IReverbParametersGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReverbParametersGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1701,28 +1710,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AcousticSpaceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AcousticSpaceBinaryOverlay AcousticSpaceFactory(
+        public static IAcousticSpaceGetter AcousticSpaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AcousticSpaceBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1732,20 +1744,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static AcousticSpaceBinaryOverlay AcousticSpaceFactory(
+        public static IAcousticSpaceGetter AcousticSpaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AcousticSpaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1755,9 +1767,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -1787,17 +1799,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AcousticSpaceMixIn.ToString(
+            AcousticSpaceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

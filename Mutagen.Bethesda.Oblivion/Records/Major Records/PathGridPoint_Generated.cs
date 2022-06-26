@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -81,12 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PathGridPointMixIn.ToString(
+            PathGridPointMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -239,9 +242,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Connections.Specific = l;
-                        foreach (var item in Connections.Specific.WithIndex())
+                        foreach (var item in Connections.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -250,61 +253,54 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PathGridPoint.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PathGridPoint.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PathGridPoint.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PathGridPoint.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PathGridPoint.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PathGridPoint.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                     if (printMask?.NumConnections ?? true)
                     {
-                        fg.AppendItem(NumConnections, "NumConnections");
+                        sb.AppendItem(NumConnections, "NumConnections");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((printMask?.Connections?.Overall ?? true)
                         && Connections is {} ConnectionsItem)
                     {
-                        fg.AppendLine("Connections =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Connections =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConnectionsItem.Overall);
+                            sb.AppendItem(ConnectionsItem.Overall);
                             if (ConnectionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConnectionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -409,59 +405,54 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Point, "Point");
-                fg.AppendItem(NumConnections, "NumConnections");
-                fg.AppendItem(Unused, "Unused");
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(NumConnections, "NumConnections");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
                 if (Connections is {} ConnectionsItem)
                 {
-                    fg.AppendLine("Connections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Connections =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConnectionsItem.Overall);
+                        sb.AppendItem(ConnectionsItem.Overall);
                         if (ConnectionsItem.Specific != null)
                         {
                             foreach (var subItem in ConnectionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -551,7 +542,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -561,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static PathGridPoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PathGridPoint();
             ((PathGridPointSetterCommon)((IPathGridPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -576,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PathGridPoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -586,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -652,26 +643,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPathGridPointGetter item,
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
-            return ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).ToString(
+            return ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPathGridPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
-            ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).ToString(
+            ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -777,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPathGridPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PathGridPointSetterCommon)((IPathGridPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -792,10 +783,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PathGridPoint_FieldIndex
+    internal enum PathGridPoint_FieldIndex
     {
         Point = 0,
         NumConnections = 1,
@@ -805,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PathGridPoint_Registration : ILoquiRegistration
+    internal partial class PathGridPoint_Registration : ILoquiRegistration
     {
         public static readonly PathGridPoint_Registration Instance = new PathGridPoint_Registration();
 
@@ -879,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PathGridPointSetterCommon
+    internal partial class PathGridPointSetterCommon
     {
         public static readonly PathGridPointSetterCommon Instance = new PathGridPointSetterCommon();
 
@@ -905,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IPathGridPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -917,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PathGridPointCommon
+    internal partial class PathGridPointCommon
     {
         public static readonly PathGridPointCommon Instance = new PathGridPointCommon();
 
@@ -941,7 +932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGridPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.NumConnections = item.NumConnections == rhs.NumConnections;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
@@ -951,79 +941,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IPathGridPointGetter item,
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPathGridPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PathGridPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PathGridPoint =>");
+                sb.AppendLine($"PathGridPoint =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PathGridPoint) =>");
+                sb.AppendLine($"{name} (PathGridPoint) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPathGridPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PathGridPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
             if (printMask?.NumConnections ?? true)
             {
-                fg.AppendItem(item.NumConnections, "NumConnections");
+                sb.AppendItem(item.NumConnections, "NumConnections");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Connections?.Overall ?? true)
             {
-                fg.AppendLine("Connections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Connections =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Connections)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1072,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPathGridPointGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPathGridPointGetter obj)
         {
             yield break;
         }
@@ -1080,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PathGridPointSetterTranslationCommon
+    internal partial class PathGridPointSetterTranslationCommon
     {
         public static readonly PathGridPointSetterTranslationCommon Instance = new PathGridPointSetterTranslationCommon();
 
@@ -1183,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration StaticRegistration => PathGridPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PathGridPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1207,11 +1191,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PathGridPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
+        public static readonly PathGridPointBinaryWriteTranslation Instance = new PathGridPointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPathGridPointGetter item,
@@ -1229,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IPathGridPointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1239,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPathGridPointGetter)item,
@@ -1249,9 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PathGridPointBinaryCreateTranslation
+    internal partial class PathGridPointBinaryCreateTranslation
     {
-        public readonly static PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
+        public static readonly PathGridPointBinaryCreateTranslation Instance = new PathGridPointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPathGridPoint item,
@@ -1273,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IPathGridPointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1286,16 +1270,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PathGridPointBinaryOverlay :
+    internal partial class PathGridPointBinaryOverlay :
         PluginBinaryOverlay,
         IPathGridPointGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PathGridPoint_Registration.Instance;
-        public static PathGridPoint_Registration StaticRegistration => PathGridPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PathGridPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PathGridPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1309,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PathGridPointBinaryWriteTranslation.Instance;
@@ -1317,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PathGridPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1325,9 +1309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public Byte NumConnections => _data.Span[0xC];
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0xD, 0x3).ToArray();
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public Byte NumConnections => _structData.Span[0xC];
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1335,24 +1319,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected PathGridPointBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PathGridPointBinaryOverlay PathGridPointFactory(
+        public static IPathGridPointGetter PathGridPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PathGridPointBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1361,25 +1351,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static PathGridPointBinaryOverlay PathGridPointFactory(
+        public static IPathGridPointGetter PathGridPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PathGridPointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PathGridPointMixIn.ToString(
+            PathGridPointMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

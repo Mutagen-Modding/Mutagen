@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
-    <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -26,38 +24,25 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Environments\GameEnvironmentBuilder.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
-    <Compile Include="Environments\OutputModTrimming.cs" />
-    <Compile Include="Plugins\Records\Internals\GameCategoryExt.cs" />
-    <Compile Include="Plugins\Records\ProtocolDefinition_All.cs" />
-    <Compile Include="Plugins\Utility\GameEnvironmentMixIn_Generated.cs" />
-    <Compile Include="Plugins\WarmupAll_Generated.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="GitInfo" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.39.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.39.0" />
-    <PackageReference Include="NuGetizer" Version="0.7.5">
+    <PackageReference Include="Loqui" Version="2.48" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.48" />
+    <PackageReference Include="NuGetizer" Version="0.8.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda&quot;" />
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
   </Target>
 </Project>

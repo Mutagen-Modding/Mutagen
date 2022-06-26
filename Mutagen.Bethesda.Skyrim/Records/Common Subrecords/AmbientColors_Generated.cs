@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -78,12 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AmbientColorsMixIn.ToString(
+            AmbientColorsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -259,62 +262,57 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AmbientColors.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AmbientColors.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AmbientColors.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AmbientColors.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AmbientColors.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AmbientColors.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.DirectionalXPlus ?? true)
                     {
-                        fg.AppendItem(DirectionalXPlus, "DirectionalXPlus");
+                        sb.AppendItem(DirectionalXPlus, "DirectionalXPlus");
                     }
                     if (printMask?.DirectionalXMinus ?? true)
                     {
-                        fg.AppendItem(DirectionalXMinus, "DirectionalXMinus");
+                        sb.AppendItem(DirectionalXMinus, "DirectionalXMinus");
                     }
                     if (printMask?.DirectionalYPlus ?? true)
                     {
-                        fg.AppendItem(DirectionalYPlus, "DirectionalYPlus");
+                        sb.AppendItem(DirectionalYPlus, "DirectionalYPlus");
                     }
                     if (printMask?.DirectionalYMinus ?? true)
                     {
-                        fg.AppendItem(DirectionalYMinus, "DirectionalYMinus");
+                        sb.AppendItem(DirectionalYMinus, "DirectionalYMinus");
                     }
                     if (printMask?.DirectionalZPlus ?? true)
                     {
-                        fg.AppendItem(DirectionalZPlus, "DirectionalZPlus");
+                        sb.AppendItem(DirectionalZPlus, "DirectionalZPlus");
                     }
                     if (printMask?.DirectionalZMinus ?? true)
                     {
-                        fg.AppendItem(DirectionalZMinus, "DirectionalZMinus");
+                        sb.AppendItem(DirectionalZMinus, "DirectionalZMinus");
                     }
                     if (printMask?.Specular ?? true)
                     {
-                        fg.AppendItem(Specular, "Specular");
+                        sb.AppendItem(Specular, "Specular");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -469,44 +467,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(DirectionalXPlus, "DirectionalXPlus");
-                fg.AppendItem(DirectionalXMinus, "DirectionalXMinus");
-                fg.AppendItem(DirectionalYPlus, "DirectionalYPlus");
-                fg.AppendItem(DirectionalYMinus, "DirectionalYMinus");
-                fg.AppendItem(DirectionalZPlus, "DirectionalZPlus");
-                fg.AppendItem(DirectionalZMinus, "DirectionalZMinus");
-                fg.AppendItem(Specular, "Specular");
-                fg.AppendItem(Scale, "Scale");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(DirectionalXPlus, "DirectionalXPlus");
+                }
+                {
+                    sb.AppendItem(DirectionalXMinus, "DirectionalXMinus");
+                }
+                {
+                    sb.AppendItem(DirectionalYPlus, "DirectionalYPlus");
+                }
+                {
+                    sb.AppendItem(DirectionalYMinus, "DirectionalYMinus");
+                }
+                {
+                    sb.AppendItem(DirectionalZPlus, "DirectionalZPlus");
+                }
+                {
+                    sb.AppendItem(DirectionalZMinus, "DirectionalZMinus");
+                }
+                {
+                    sb.AppendItem(Specular, "Specular");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
             }
             #endregion
 
@@ -623,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -633,7 +640,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AmbientColors CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AmbientColors();
             ((AmbientColorsSetterCommon)((IAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -648,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AmbientColors item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -658,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -675,7 +682,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IAmbientColors :
-        IAmbientColorsCommon,
         IAmbientColorsGetter,
         ILoquiObjectSetter<IAmbientColors>
     {
@@ -692,7 +698,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAmbientColorsGetter :
         ILoquiObject,
-        IAmbientColorsCommonGetter,
         IBinaryItem,
         ILoquiObject<IAmbientColorsGetter>
     {
@@ -736,26 +741,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAmbientColorsGetter item,
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).ToString(
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAmbientColorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
-            ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).ToString(
+            ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -861,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAmbientColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AmbientColorsSetterCommon)((IAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -876,10 +881,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AmbientColors_FieldIndex
+    internal enum AmbientColors_FieldIndex
     {
         Versioning = 0,
         DirectionalXPlus = 1,
@@ -894,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AmbientColors_Registration : ILoquiRegistration
+    internal partial class AmbientColors_Registration : ILoquiRegistration
     {
         public static readonly AmbientColors_Registration Instance = new AmbientColors_Registration();
 
@@ -968,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AmbientColorsSetterCommon
+    internal partial class AmbientColorsSetterCommon
     {
         public static readonly AmbientColorsSetterCommon Instance = new AmbientColorsSetterCommon();
 
@@ -999,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAmbientColors item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1011,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AmbientColorsCommon
+    internal partial class AmbientColorsCommon
     {
         public static readonly AmbientColorsCommon Instance = new AmbientColorsCommon();
 
@@ -1035,7 +1040,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AmbientColors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DirectionalXPlus = item.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus);
             ret.DirectionalXMinus = item.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus);
@@ -1047,85 +1051,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
         }
         
-        public string ToString(
+        public string Print(
             IAmbientColorsGetter item,
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAmbientColorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AmbientColors.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AmbientColors =>");
+                sb.AppendLine($"AmbientColors =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AmbientColors) =>");
+                sb.AppendLine($"{name} (AmbientColors) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAmbientColorsGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AmbientColors.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.DirectionalXPlus ?? true)
             {
-                fg.AppendItem(item.DirectionalXPlus, "DirectionalXPlus");
+                sb.AppendItem(item.DirectionalXPlus, "DirectionalXPlus");
             }
             if (printMask?.DirectionalXMinus ?? true)
             {
-                fg.AppendItem(item.DirectionalXMinus, "DirectionalXMinus");
+                sb.AppendItem(item.DirectionalXMinus, "DirectionalXMinus");
             }
             if (printMask?.DirectionalYPlus ?? true)
             {
-                fg.AppendItem(item.DirectionalYPlus, "DirectionalYPlus");
+                sb.AppendItem(item.DirectionalYPlus, "DirectionalYPlus");
             }
             if (printMask?.DirectionalYMinus ?? true)
             {
-                fg.AppendItem(item.DirectionalYMinus, "DirectionalYMinus");
+                sb.AppendItem(item.DirectionalYMinus, "DirectionalYMinus");
             }
             if (printMask?.DirectionalZPlus ?? true)
             {
-                fg.AppendItem(item.DirectionalZPlus, "DirectionalZPlus");
+                sb.AppendItem(item.DirectionalZPlus, "DirectionalZPlus");
             }
             if (printMask?.DirectionalZMinus ?? true)
             {
-                fg.AppendItem(item.DirectionalZMinus, "DirectionalZMinus");
+                sb.AppendItem(item.DirectionalZMinus, "DirectionalZMinus");
             }
             if (printMask?.Specular ?? true)
             {
-                fg.AppendItem(item.Specular, "Specular");
+                sb.AppendItem(item.Specular, "Specular");
             }
             if (printMask?.Scale ?? true)
             {
-                fg.AppendItem(item.Scale, "Scale");
+                sb.AppendItem(item.Scale, "Scale");
             }
         }
         
@@ -1199,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAmbientColorsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAmbientColorsGetter obj)
         {
             yield break;
         }
@@ -1207,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AmbientColorsSetterTranslationCommon
+    internal partial class AmbientColorsSetterTranslationCommon
     {
         public static readonly AmbientColorsSetterTranslationCommon Instance = new AmbientColorsSetterTranslationCommon();
 
@@ -1318,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
-        public static AmbientColors_Registration StaticRegistration => AmbientColors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1342,11 +1344,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
+        public static readonly AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAmbientColorsGetter item,
@@ -1384,7 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAmbientColorsGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1394,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAmbientColorsGetter)item,
@@ -1404,9 +1406,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AmbientColorsBinaryCreateTranslation
+    internal partial class AmbientColorsBinaryCreateTranslation
     {
-        public readonly static AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
+        public static readonly AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAmbientColors item,
@@ -1438,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAmbientColorsGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1451,16 +1453,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AmbientColorsBinaryOverlay :
+    internal partial class AmbientColorsBinaryOverlay :
         PluginBinaryOverlay,
         IAmbientColorsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
-        public static AmbientColors_Registration StaticRegistration => AmbientColors_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]
@@ -1474,7 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AmbientColorsBinaryWriteTranslation.Instance;
@@ -1482,7 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1491,14 +1493,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public AmbientColors.VersioningBreaks Versioning { get; private set; }
-        public Color DirectionalXPlus => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalXMinus => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalYPlus => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalYMinus => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalZPlus => _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color DirectionalZMinus => _data.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color Specular => _data.Length <= 0x18 ? default : _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single Scale => _data.Length <= 0x1C ? default : _data.Slice(0x1C, 0x4).Float();
+        public Color DirectionalXPlus => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalXMinus => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYPlus => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYMinus => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZPlus => _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZMinus => _structData.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Specular => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single Scale => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1506,26 +1508,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AmbientColorsBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AmbientColorsBinaryOverlay AmbientColorsFactory(
+        public static IAmbientColorsGetter AmbientColorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int finalPos,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: finalPos - stream.Position,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AmbientColorsBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            if (ret._data.Length <= 0x18)
+            if (ret._structData.Length <= 0x18)
             {
                 ret.Versioning |= AmbientColors.VersioningBreaks.Break0;
             }
@@ -1536,26 +1544,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static AmbientColorsBinaryOverlay AmbientColorsFactory(
+        public static IAmbientColorsGetter AmbientColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AmbientColorsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 finalPos: slice.Length,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AmbientColorsMixIn.ToString(
+            AmbientColorsMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

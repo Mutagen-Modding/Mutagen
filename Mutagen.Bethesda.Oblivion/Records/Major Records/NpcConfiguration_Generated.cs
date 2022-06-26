@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +73,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcConfigurationMixIn.ToString(
+            NpcConfigurationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -234,54 +237,49 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NpcConfiguration.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NpcConfiguration.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NpcConfiguration.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NpcConfiguration.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NpcConfiguration.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcConfiguration.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.BaseSpellPoints ?? true)
                     {
-                        fg.AppendItem(BaseSpellPoints, "BaseSpellPoints");
+                        sb.AppendItem(BaseSpellPoints, "BaseSpellPoints");
                     }
                     if (printMask?.Fatigue ?? true)
                     {
-                        fg.AppendItem(Fatigue, "Fatigue");
+                        sb.AppendItem(Fatigue, "Fatigue");
                     }
                     if (printMask?.BarterGold ?? true)
                     {
-                        fg.AppendItem(BarterGold, "BarterGold");
+                        sb.AppendItem(BarterGold, "BarterGold");
                     }
                     if (printMask?.LevelOffset ?? true)
                     {
-                        fg.AppendItem(LevelOffset, "LevelOffset");
+                        sb.AppendItem(LevelOffset, "LevelOffset");
                     }
                     if (printMask?.CalcMin ?? true)
                     {
-                        fg.AppendItem(CalcMin, "CalcMin");
+                        sb.AppendItem(CalcMin, "CalcMin");
                     }
                     if (printMask?.CalcMax ?? true)
                     {
-                        fg.AppendItem(CalcMax, "CalcMax");
+                        sb.AppendItem(CalcMax, "CalcMax");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -416,42 +414,47 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(BaseSpellPoints, "BaseSpellPoints");
-                fg.AppendItem(Fatigue, "Fatigue");
-                fg.AppendItem(BarterGold, "BarterGold");
-                fg.AppendItem(LevelOffset, "LevelOffset");
-                fg.AppendItem(CalcMin, "CalcMin");
-                fg.AppendItem(CalcMax, "CalcMax");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(BaseSpellPoints, "BaseSpellPoints");
+                }
+                {
+                    sb.AppendItem(Fatigue, "Fatigue");
+                }
+                {
+                    sb.AppendItem(BarterGold, "BarterGold");
+                }
+                {
+                    sb.AppendItem(LevelOffset, "LevelOffset");
+                }
+                {
+                    sb.AppendItem(CalcMin, "CalcMin");
+                }
+                {
+                    sb.AppendItem(CalcMax, "CalcMax");
+                }
             }
             #endregion
 
@@ -545,10 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = NpcConfiguration_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcConfigurationBinaryWriteTranslation.Instance;
@@ -556,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcConfigurationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -566,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static NpcConfiguration CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcConfiguration();
             ((NpcConfigurationSetterCommon)((INpcConfigurationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -581,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcConfiguration item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -591,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -663,26 +662,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcConfigurationGetter item,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).ToString(
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
-            ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).ToString(
+            ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -788,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this INpcConfiguration item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcConfigurationSetterCommon)((INpcConfigurationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -803,10 +802,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum NpcConfiguration_FieldIndex
+    internal enum NpcConfiguration_FieldIndex
     {
         Flags = 0,
         BaseSpellPoints = 1,
@@ -819,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class NpcConfiguration_Registration : ILoquiRegistration
+    internal partial class NpcConfiguration_Registration : ILoquiRegistration
     {
         public static readonly NpcConfiguration_Registration Instance = new NpcConfiguration_Registration();
 
@@ -861,6 +860,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ACBS;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.ACBS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcConfigurationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -894,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class NpcConfigurationSetterCommon
+    internal partial class NpcConfigurationSetterCommon
     {
         public static readonly NpcConfigurationSetterCommon Instance = new NpcConfigurationSetterCommon();
 
@@ -923,12 +928,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             INpcConfiguration item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.ACBS),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -939,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcConfigurationCommon
+    internal partial class NpcConfigurationCommon
     {
         public static readonly NpcConfigurationCommon Instance = new NpcConfigurationCommon();
 
@@ -963,7 +968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NpcConfiguration.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
             ret.Fatigue = item.Fatigue == rhs.Fatigue;
@@ -973,77 +977,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CalcMax = item.CalcMax == rhs.CalcMax;
         }
         
-        public string ToString(
+        public string Print(
             INpcConfigurationGetter item,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcConfiguration =>");
+                sb.AppendLine($"NpcConfiguration =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcConfiguration) =>");
+                sb.AppendLine($"{name} (NpcConfiguration) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcConfigurationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcConfiguration.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.BaseSpellPoints ?? true)
             {
-                fg.AppendItem(item.BaseSpellPoints, "BaseSpellPoints");
+                sb.AppendItem(item.BaseSpellPoints, "BaseSpellPoints");
             }
             if (printMask?.Fatigue ?? true)
             {
-                fg.AppendItem(item.Fatigue, "Fatigue");
+                sb.AppendItem(item.Fatigue, "Fatigue");
             }
             if (printMask?.BarterGold ?? true)
             {
-                fg.AppendItem(item.BarterGold, "BarterGold");
+                sb.AppendItem(item.BarterGold, "BarterGold");
             }
             if (printMask?.LevelOffset ?? true)
             {
-                fg.AppendItem(item.LevelOffset, "LevelOffset");
+                sb.AppendItem(item.LevelOffset, "LevelOffset");
             }
             if (printMask?.CalcMin ?? true)
             {
-                fg.AppendItem(item.CalcMin, "CalcMin");
+                sb.AppendItem(item.CalcMin, "CalcMin");
             }
             if (printMask?.CalcMax ?? true)
             {
-                fg.AppendItem(item.CalcMax, "CalcMax");
+                sb.AppendItem(item.CalcMax, "CalcMax");
             }
         }
         
@@ -1107,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcConfigurationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcConfigurationGetter obj)
         {
             yield break;
         }
@@ -1115,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcConfigurationSetterTranslationCommon
+    internal partial class NpcConfigurationSetterTranslationCommon
     {
         public static readonly NpcConfigurationSetterTranslationCommon Instance = new NpcConfigurationSetterTranslationCommon();
 
@@ -1217,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]
@@ -1241,11 +1243,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class NpcConfigurationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcConfigurationBinaryWriteTranslation Instance = new NpcConfigurationBinaryWriteTranslation();
+        public static readonly NpcConfigurationBinaryWriteTranslation Instance = new NpcConfigurationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcConfigurationGetter item,
@@ -1266,12 +1268,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             INpcConfigurationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.ACBS),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1283,7 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcConfigurationGetter)item,
@@ -1293,9 +1295,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class NpcConfigurationBinaryCreateTranslation
+    internal partial class NpcConfigurationBinaryCreateTranslation
     {
-        public readonly static NpcConfigurationBinaryCreateTranslation Instance = new NpcConfigurationBinaryCreateTranslation();
+        public static readonly NpcConfigurationBinaryCreateTranslation Instance = new NpcConfigurationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcConfiguration item,
@@ -1323,7 +1325,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this INpcConfigurationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcConfigurationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1336,16 +1338,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class NpcConfigurationBinaryOverlay :
+    internal partial class NpcConfigurationBinaryOverlay :
         PluginBinaryOverlay,
         INpcConfigurationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcConfiguration_Registration.Instance;
-        public static NpcConfiguration_Registration StaticRegistration => NpcConfiguration_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcConfiguration_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcConfigurationCommon.Instance;
         [DebuggerStepThrough]
@@ -1359,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcConfigurationBinaryWriteTranslation.Instance;
@@ -1367,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcConfigurationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1375,13 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Npc.NpcFlag Flags => (Npc.NpcFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public UInt16 BaseSpellPoints => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public UInt16 Fatigue => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public UInt16 BarterGold => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
-        public Int16 LevelOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
-        public UInt16 CalcMin => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public UInt16 CalcMax => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
+        public Npc.NpcFlag Flags => (Npc.NpcFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public UInt16 BaseSpellPoints => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
+        public UInt16 Fatigue => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public UInt16 BarterGold => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public Int16 LevelOffset => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xA, 0x2));
+        public UInt16 CalcMin => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public UInt16 CalcMax => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1389,25 +1391,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected NpcConfigurationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NpcConfigurationBinaryOverlay NpcConfigurationFactory(
+        public static INpcConfigurationGetter NpcConfigurationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcConfigurationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1416,25 +1423,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static NpcConfigurationBinaryOverlay NpcConfigurationFactory(
+        public static INpcConfigurationGetter NpcConfigurationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcConfigurationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcConfigurationMixIn.ToString(
+            NpcConfigurationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

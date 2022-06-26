@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -57,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -203,12 +204,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            HazardMixIn.ToString(
+            HazardMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -458,86 +460,81 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Hazard.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Hazard.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Hazard.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Hazard.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Hazard.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Hazard.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
-                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                        sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
                     }
                     if (printMask?.Limit ?? true)
                     {
-                        fg.AppendItem(Limit, "Limit");
+                        sb.AppendItem(Limit, "Limit");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Lifetime ?? true)
                     {
-                        fg.AppendItem(Lifetime, "Lifetime");
+                        sb.AppendItem(Lifetime, "Lifetime");
                     }
                     if (printMask?.ImageSpaceRadius ?? true)
                     {
-                        fg.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
+                        sb.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
                     }
                     if (printMask?.TargetInterval ?? true)
                     {
-                        fg.AppendItem(TargetInterval, "TargetInterval");
+                        sb.AppendItem(TargetInterval, "TargetInterval");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.Light ?? true)
                     {
-                        fg.AppendItem(Light, "Light");
+                        sb.AppendItem(Light, "Light");
                     }
                     if (printMask?.ImpactDataSet ?? true)
                     {
-                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendItem(Sound, "Sound");
+                        sb.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -741,51 +738,68 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(Name, "Name");
-                Model?.ToString(fg);
-                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
-                fg.AppendItem(Limit, "Limit");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Lifetime, "Lifetime");
-                fg.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
-                fg.AppendItem(TargetInterval, "TargetInterval");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Spell, "Spell");
-                fg.AppendItem(Light, "Light");
-                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
-                fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(Limit, "Limit");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Lifetime, "Lifetime");
+                }
+                {
+                    sb.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
+                }
+                {
+                    sb.AppendItem(TargetInterval, "TargetInterval");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
+                {
+                    sb.AppendItem(Light, "Light");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -901,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Hazard_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => HazardCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HazardCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardSetterCommon.Instance.RemapLinks(this, mapping);
         public Hazard(
             FormKey formKey,
@@ -983,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => HazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HazardBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -993,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Hazard CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Hazard();
             ((HazardSetterCommon)((IHazardGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1008,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Hazard item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1018,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1035,6 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IHazard :
+        IExplodeSpawn,
         IFormLinkContainer,
         IHazardGetter,
         ILoquiObjectSetter<IHazardInternal>,
@@ -1042,14 +1057,13 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired,
         IObjectBounded,
-        IObjectBoundedOptional,
         IPlacedTrapTarget,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
@@ -1085,6 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHazardGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IHazardGetter>,
         IMapsToGetter<IHazardGetter>,
@@ -1092,7 +1107,6 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
-        IObjectBoundedOptionalGetter,
         IPlacedTrapTargetGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
@@ -1100,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => Hazard_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -1152,26 +1166,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IHazardGetter item,
             string? name = null,
             Hazard.Mask<bool>? printMask = null)
         {
-            return ((HazardCommon)((IHazardGetter)item).CommonInstance()!).ToString(
+            return ((HazardCommon)((IHazardGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IHazardGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Hazard.Mask<bool>? printMask = null)
         {
-            ((HazardCommon)((IHazardGetter)item).CommonInstance()!).ToString(
+            ((HazardCommon)((IHazardGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1266,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IHazardInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HazardSetterCommon)((IHazardGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1281,10 +1295,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Hazard_FieldIndex
+    internal enum Hazard_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1311,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Hazard_Registration : ILoquiRegistration
+    internal partial class Hazard_Registration : ILoquiRegistration
     {
         public static readonly Hazard_Registration Instance = new Hazard_Registration();
 
@@ -1353,6 +1367,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.HAZD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.HAZD);
+            var all = RecordCollection.Factory(
+                RecordTypes.HAZD,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MNAM,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(HazardBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1386,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class HazardSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class HazardSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly HazardSetterCommon Instance = new HazardSetterCommon();
 
@@ -1441,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IHazardInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IHazardInternal>(
                 record: item,
@@ -1454,7 +1481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Hazard)item,
@@ -1465,7 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Hazard)item,
@@ -1476,7 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HazardCommon : SkyrimMajorRecordCommon
+    internal partial class HazardCommon : SkyrimMajorRecordCommon
     {
         public new static readonly HazardCommon Instance = new HazardCommon();
 
@@ -1500,7 +1527,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
@@ -1523,115 +1549,113 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IHazardGetter item,
             string? name = null,
             Hazard.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IHazardGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Hazard.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Hazard =>");
+                sb.AppendLine($"Hazard =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Hazard) =>");
+                sb.AppendLine($"{name} (Hazard) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IHazardGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Hazard.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
-                fg.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+                sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
             }
             if (printMask?.Limit ?? true)
             {
-                fg.AppendItem(item.Limit, "Limit");
+                sb.AppendItem(item.Limit, "Limit");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.Lifetime ?? true)
             {
-                fg.AppendItem(item.Lifetime, "Lifetime");
+                sb.AppendItem(item.Lifetime, "Lifetime");
             }
             if (printMask?.ImageSpaceRadius ?? true)
             {
-                fg.AppendItem(item.ImageSpaceRadius, "ImageSpaceRadius");
+                sb.AppendItem(item.ImageSpaceRadius, "ImageSpaceRadius");
             }
             if (printMask?.TargetInterval ?? true)
             {
-                fg.AppendItem(item.TargetInterval, "TargetInterval");
+                sb.AppendItem(item.TargetInterval, "TargetInterval");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKey, "Spell");
+                sb.AppendItem(item.Spell.FormKey, "Spell");
             }
             if (printMask?.Light ?? true)
             {
-                fg.AppendItem(item.Light.FormKey, "Light");
+                sb.AppendItem(item.Light.FormKey, "Light");
             }
             if (printMask?.ImpactDataSet ?? true)
             {
-                fg.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                sb.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1821,22 +1845,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHazardGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHazardGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.ImageSpaceModifier.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpaceModifier, out var ImageSpaceModifierInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpaceModifier);
+                yield return ImageSpaceModifierInfo;
             }
             yield return FormLinkInformation.Factory(obj.Spell);
             yield return FormLinkInformation.Factory(obj.Light);
@@ -1883,7 +1907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HazardSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class HazardSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly HazardSetterTranslationCommon Instance = new HazardSetterTranslationCommon();
 
@@ -2138,7 +2162,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hazard_Registration.Instance;
-        public new static Hazard_Registration StaticRegistration => Hazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Hazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HazardCommon.Instance;
         [DebuggerStepThrough]
@@ -2156,13 +2180,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HazardBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static HazardBinaryWriteTranslation Instance = new HazardBinaryWriteTranslation();
+        public new static readonly HazardBinaryWriteTranslation Instance = new HazardBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IHazardGetter item,
@@ -2176,7 +2200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IHazardGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2241,7 +2265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IHazardGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2252,12 +2276,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2269,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHazardGetter)item,
@@ -2280,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHazardGetter)item,
@@ -2291,7 +2318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IHazardGetter)item,
@@ -2301,9 +2328,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class HazardBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class HazardBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
+        public new static readonly HazardBinaryCreateTranslation Instance = new HazardBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.HAZD;
         public static void FillBinaryStructs(
@@ -2322,7 +2349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2345,7 +2372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Hazard_FieldIndex.Model;
                 }
                 case RecordTypeInts.MNAM:
@@ -2379,7 +2406,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2396,16 +2424,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class HazardBinaryOverlay :
+    internal partial class HazardBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IHazardGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Hazard_Registration.Instance;
-        public new static Hazard_Registration StaticRegistration => Hazard_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Hazard_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => HazardCommon.Instance;
         [DebuggerStepThrough]
@@ -2413,14 +2441,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => HazardCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HazardCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HazardBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HazardBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2432,12 +2460,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2450,59 +2478,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Hazard.DATADataType DATADataTypeState { get; private set; }
         #region Limit
-        private int _LimitLocation => _DATALocation!.Value;
+        private int _LimitLocation => _DATALocation!.Value.Min;
         private bool _Limit_IsSet => _DATALocation.HasValue;
-        public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_LimitLocation, 4)) : default;
+        public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_LimitLocation, 4)) : default;
         #endregion
         #region Radius
-        private int _RadiusLocation => _DATALocation!.Value + 0x4;
+        private int _RadiusLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
-        private int _LifetimeLocation => _DATALocation!.Value + 0x8;
+        private int _LifetimeLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
+        public Single Lifetime => _Lifetime_IsSet ? _recordData.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region ImageSpaceRadius
-        private int _ImageSpaceRadiusLocation => _DATALocation!.Value + 0xC;
+        private int _ImageSpaceRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ImageSpaceRadius_IsSet => _DATALocation.HasValue;
-        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _data.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
+        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _recordData.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
         #endregion
         #region TargetInterval
-        private int _TargetIntervalLocation => _DATALocation!.Value + 0x10;
+        private int _TargetIntervalLocation => _DATALocation!.Value.Min + 0x10;
         private bool _TargetInterval_IsSet => _DATALocation.HasValue;
-        public Single TargetInterval => _TargetInterval_IsSet ? _data.Slice(_TargetIntervalLocation, 4).Float() : default;
+        public Single TargetInterval => _TargetInterval_IsSet ? _recordData.Slice(_TargetIntervalLocation, 4).Float() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x14;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Spell
-        private int _SpellLocation => _DATALocation!.Value + 0x18;
+        private int _SpellLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Spell_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectRecordGetter> Spell => _Spell_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpellLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
+        public IFormLinkGetter<IEffectRecordGetter> Spell => _Spell_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SpellLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
         #endregion
         #region Light
-        private int _LightLocation => _DATALocation!.Value + 0x1C;
+        private int _LightLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
         #endregion
         #region ImpactDataSet
-        private int _ImpactDataSetLocation => _DATALocation!.Value + 0x20;
+        private int _ImpactDataSetLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region Sound
-        private int _SoundLocation => _DATALocation!.Value + 0x24;
+        private int _SoundLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Sound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2511,28 +2539,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected HazardBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static HazardBinaryOverlay HazardFactory(
+        public static IHazardGetter HazardFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new HazardBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2542,20 +2573,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static HazardBinaryOverlay HazardFactory(
+        public static IHazardGetter HazardFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return HazardFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2565,9 +2596,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.OBND:
@@ -2585,7 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Hazard_FieldIndex.Model;
                 }
                 case RecordTypeInts.MNAM:
@@ -2595,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Hazard_FieldIndex.Sound;
                 }
                 default:
@@ -2605,17 +2636,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            HazardMixIn.ToString(
+            HazardMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

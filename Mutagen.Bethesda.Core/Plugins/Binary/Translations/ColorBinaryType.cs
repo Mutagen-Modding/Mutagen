@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-namespace Mutagen.Bethesda.Plugins.Binary.Translations
+public enum ColorBinaryType
 {
-    public enum ColorBinaryType
-    {
-        NoAlpha,
-        Alpha,
-        NoAlphaFloat,
-        AlphaFloat,
-    }
+    NoAlpha,
+    Alpha,
+    NoAlphaFloat,
+    AlphaFloat,
 }

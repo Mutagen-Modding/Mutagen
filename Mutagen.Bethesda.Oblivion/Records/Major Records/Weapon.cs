@@ -1,28 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Oblivion;
 
-namespace Mutagen.Bethesda.Oblivion
+public partial class Weapon
 {
-    public partial class Weapon
+    public enum WeaponType
     {
-        public enum WeaponType
-        {
-            BladeOneHand,
-            BladeTwoHand,
-            BluntOneHand,
-            BluntTwoHand,
-            Bow,
-            Staff,
-        }
+        BladeOneHand,
+        BladeTwoHand,
+        BluntOneHand,
+        BluntTwoHand,
+        Bow,
+        Staff,
+    }
 
-        [Flags]
-        public enum WeaponFlag
-        {
-            IgnoresNormalWeaponResistance = 0x01
-        }
+    [Flags]
+    public enum WeaponFlag
+    {
+        IgnoresNormalWeaponResistance = 0x01
     }
 }

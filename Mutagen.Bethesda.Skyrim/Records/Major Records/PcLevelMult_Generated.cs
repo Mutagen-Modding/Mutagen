@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +57,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PcLevelMultMixIn.ToString(
+            PcLevelMultMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -165,30 +168,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PcLevelMult.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PcLevelMult.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PcLevelMult.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PcLevelMult.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PcLevelMult.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PcLevelMult.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.LevelMult ?? true)
                     {
-                        fg.AppendItem(LevelMult, "LevelMult");
+                        sb.AppendItem(LevelMult, "LevelMult");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -252,37 +250,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(LevelMult, "LevelMult");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(LevelMult, "LevelMult");
+                }
             }
             #endregion
 
@@ -347,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -357,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PcLevelMult CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PcLevelMult();
             ((PcLevelMultSetterCommon)((IPcLevelMultGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -372,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PcLevelMult item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -382,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -437,26 +428,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPcLevelMultGetter item,
             string? name = null,
             PcLevelMult.Mask<bool>? printMask = null)
         {
-            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).ToString(
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPcLevelMultGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PcLevelMult.Mask<bool>? printMask = null)
         {
-            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).ToString(
+            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -537,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPcLevelMult item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -552,17 +543,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PcLevelMult_FieldIndex
+    internal enum PcLevelMult_FieldIndex
     {
         LevelMult = 0,
     }
     #endregion
 
     #region Registration
-    public partial class PcLevelMult_Registration : ILoquiRegistration
+    internal partial class PcLevelMult_Registration : ILoquiRegistration
     {
         public static readonly PcLevelMult_Registration Instance = new PcLevelMult_Registration();
 
@@ -636,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PcLevelMultSetterCommon : ANpcLevelSetterCommon
+    internal partial class PcLevelMultSetterCommon : ANpcLevelSetterCommon
     {
         public new static readonly PcLevelMultSetterCommon Instance = new PcLevelMultSetterCommon();
 
@@ -665,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPcLevelMult item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -677,7 +668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IANpcLevel item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PcLevelMult)item,
@@ -688,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PcLevelMultCommon : ANpcLevelCommon
+    internal partial class PcLevelMultCommon : ANpcLevelCommon
     {
         public new static readonly PcLevelMultCommon Instance = new PcLevelMultCommon();
 
@@ -712,62 +703,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PcLevelMult.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LevelMult = item.LevelMult.EqualsWithin(rhs.LevelMult);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPcLevelMultGetter item,
             string? name = null,
             PcLevelMult.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPcLevelMultGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PcLevelMult.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PcLevelMult =>");
+                sb.AppendLine($"PcLevelMult =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PcLevelMult) =>");
+                sb.AppendLine($"{name} (PcLevelMult) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPcLevelMultGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PcLevelMult.Mask<bool>? printMask = null)
         {
             ANpcLevelCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.LevelMult ?? true)
             {
-                fg.AppendItem(item.LevelMult, "LevelMult");
+                sb.AppendItem(item.LevelMult, "LevelMult");
             }
         }
         
@@ -828,7 +816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPcLevelMultGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPcLevelMultGetter obj)
         {
             yield break;
         }
@@ -836,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon
+    internal partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon
     {
         public new static readonly PcLevelMultSetterTranslationCommon Instance = new PcLevelMultSetterTranslationCommon();
 
@@ -936,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
-        public new static PcLevelMult_Registration StaticRegistration => PcLevelMult_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PcLevelMult_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PcLevelMultCommon.Instance;
         [DebuggerStepThrough]
@@ -954,40 +942,24 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PcLevelMultBinaryWriteTranslation :
         ANpcLevelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
+        public new static readonly PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPcLevelMultGetter item,
             MutagenWriter writer)
         {
-            PcLevelMultBinaryWriteTranslation.WriteBinaryLevelMult(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryLevelMultCustom(
-            MutagenWriter writer,
-            IPcLevelMultGetter item);
-
-        public static void WriteBinaryLevelMult(
-            MutagenWriter writer,
-            IPcLevelMultGetter item)
-        {
-            WriteBinaryLevelMultCustom(
-                writer: writer,
-                item: item);
         }
 
         public void Write(
             MutagenWriter writer,
             IPcLevelMultGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -997,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPcLevelMultGetter)item,
@@ -1008,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IANpcLevelGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPcLevelMultGetter)item,
@@ -1018,22 +990,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
+    internal partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
-        public new readonly static PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
+        public new static readonly PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPcLevelMult item,
             MutagenFrame frame)
         {
-            PcLevelMultBinaryCreateTranslation.FillBinaryLevelMultCustom(
-                frame: frame,
-                item: item);
         }
-
-        public static partial void FillBinaryLevelMultCustom(
-            MutagenFrame frame,
-            IPcLevelMult item);
 
     }
 
@@ -1048,16 +1013,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PcLevelMultBinaryOverlay :
+    internal partial class PcLevelMultBinaryOverlay :
         ANpcLevelBinaryOverlay,
         IPcLevelMultGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
-        public new static PcLevelMult_Registration StaticRegistration => PcLevelMult_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PcLevelMult_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PcLevelMultCommon.Instance;
         [DebuggerStepThrough]
@@ -1065,13 +1030,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1079,11 +1044,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        #region LevelMult
-        public Single LevelMult => GetLevelMultCustom(location: 0x0);
-        protected int LevelMultEndingPos;
-        partial void CustomLevelMultEndPos();
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1091,25 +1051,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PcLevelMultBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
+        public static IPcLevelMultGetter PcLevelMultFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PcLevelMultBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            stream.Position += ret.LevelMultEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1117,25 +1082,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
+        public static IPcLevelMultGetter PcLevelMultFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PcLevelMultFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PcLevelMultMixIn.ToString(
+            PcLevelMultMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

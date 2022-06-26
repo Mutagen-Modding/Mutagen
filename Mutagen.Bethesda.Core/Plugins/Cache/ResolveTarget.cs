@@ -1,18 +1,17 @@
-﻿namespace Mutagen.Bethesda.Plugins.Cache
+﻿namespace Mutagen.Bethesda.Plugins.Cache;
+
+/// <summary>
+/// What target to look up during a resolution
+/// </summary>
+public enum ResolveTarget
 {
     /// <summary>
-    /// What target to look up during a resolution
+    /// Locate the winning override
     /// </summary>
-    public enum ResolveTarget
-    {
-        /// <summary>
-        /// Locate the winning override
-        /// </summary>
-        Winner,
+    Winner,
         
-        /// <summary>
-        /// Locate the original definition as it was initially defined
-        /// </summary>
-        Origin
-    }
+    /// <summary>
+    /// Locate the original definition as it was initially defined
+    /// </summary>
+    Origin
 }

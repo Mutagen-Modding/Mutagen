@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,23 +18,23 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -444,12 +445,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherMixIn.ToString(
+            WeatherMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1307,9 +1309,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.CloudTextures.Specific = l;
-                        foreach (var item in CloudTextures.Specific.WithIndex())
+                        foreach (var item in CloudTextures.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1329,9 +1331,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, CloudLayer.Mask<R>?>>();
                         obj.Clouds.Specific = l;
-                        foreach (var item in Clouds.Specific.WithIndex())
+                        foreach (var item in Clouds.Specific)
                         {
-                            MaskItemIndexed<R, CloudLayer.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, CloudLayer.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, CloudLayer.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, CloudLayer.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1385,9 +1387,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, WeatherSound.Mask<R>?>>();
                         obj.Sounds.Specific = l;
-                        foreach (var item in Sounds.Specific.WithIndex())
+                        foreach (var item in Sounds.Specific)
                         {
-                            MaskItemIndexed<R, WeatherSound.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, WeatherSound.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, WeatherSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeatherSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1400,9 +1402,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.SkyStatics.Specific = l;
-                        foreach (var item in SkyStatics.Specific.WithIndex())
+                        foreach (var item in SkyStatics.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1421,354 +1423,337 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Weather.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Weather.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Weather.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Weather.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Weather.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.CloudTextures?.Overall ?? true)
                         && CloudTextures is {} CloudTexturesItem)
                     {
-                        fg.AppendLine("CloudTextures =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CloudTextures =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CloudTexturesItem.Overall);
+                            sb.AppendItem(CloudTexturesItem.Overall);
                             if (CloudTexturesItem.Specific != null)
                             {
                                 foreach (var subItem in CloudTexturesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.DNAM ?? true)
                     {
-                        fg.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(DNAM, "DNAM");
                     }
                     if (printMask?.CNAM ?? true)
                     {
-                        fg.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(CNAM, "CNAM");
                     }
                     if (printMask?.ANAM ?? true)
                     {
-                        fg.AppendItem(ANAM, "ANAM");
+                        sb.AppendItem(ANAM, "ANAM");
                     }
                     if (printMask?.BNAM ?? true)
                     {
-                        fg.AppendItem(BNAM, "BNAM");
+                        sb.AppendItem(BNAM, "BNAM");
                     }
                     if (printMask?.LNAM ?? true)
                     {
-                        fg.AppendItem(LNAM, "LNAM");
+                        sb.AppendItem(LNAM, "LNAM");
                     }
                     if (printMask?.Precipitation ?? true)
                     {
-                        fg.AppendItem(Precipitation, "Precipitation");
+                        sb.AppendItem(Precipitation, "Precipitation");
                     }
                     if (printMask?.VisualEffect ?? true)
                     {
-                        fg.AppendItem(VisualEffect, "VisualEffect");
+                        sb.AppendItem(VisualEffect, "VisualEffect");
                     }
                     if (printMask?.ONAM ?? true)
                     {
-                        fg.AppendItem(ONAM, "ONAM");
+                        sb.AppendItem(ONAM, "ONAM");
                     }
                     if ((printMask?.Clouds?.Overall ?? true)
                         && Clouds is {} CloudsItem)
                     {
-                        fg.AppendLine("Clouds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Clouds =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CloudsItem.Overall);
+                            sb.AppendItem(CloudsItem.Overall);
                             if (CloudsItem.Specific != null)
                             {
                                 foreach (var subItem in CloudsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.SkyUpperColor?.Overall ?? true)
                     {
-                        SkyUpperColor?.ToString(fg);
+                        SkyUpperColor?.Print(sb);
                     }
                     if (printMask?.FogNearColor?.Overall ?? true)
                     {
-                        FogNearColor?.ToString(fg);
+                        FogNearColor?.Print(sb);
                     }
                     if (printMask?.UnknownColor?.Overall ?? true)
                     {
-                        UnknownColor?.ToString(fg);
+                        UnknownColor?.Print(sb);
                     }
                     if (printMask?.AmbientColor?.Overall ?? true)
                     {
-                        AmbientColor?.ToString(fg);
+                        AmbientColor?.Print(sb);
                     }
                     if (printMask?.SunlightColor?.Overall ?? true)
                     {
-                        SunlightColor?.ToString(fg);
+                        SunlightColor?.Print(sb);
                     }
                     if (printMask?.SunColor?.Overall ?? true)
                     {
-                        SunColor?.ToString(fg);
+                        SunColor?.Print(sb);
                     }
                     if (printMask?.StarsColor?.Overall ?? true)
                     {
-                        StarsColor?.ToString(fg);
+                        StarsColor?.Print(sb);
                     }
                     if (printMask?.SkyLowerColor?.Overall ?? true)
                     {
-                        SkyLowerColor?.ToString(fg);
+                        SkyLowerColor?.Print(sb);
                     }
                     if (printMask?.HorizonColor?.Overall ?? true)
                     {
-                        HorizonColor?.ToString(fg);
+                        HorizonColor?.Print(sb);
                     }
                     if (printMask?.EffectLightingColor?.Overall ?? true)
                     {
-                        EffectLightingColor?.ToString(fg);
+                        EffectLightingColor?.Print(sb);
                     }
                     if (printMask?.CloudLodDiffuseColor?.Overall ?? true)
                     {
-                        CloudLodDiffuseColor?.ToString(fg);
+                        CloudLodDiffuseColor?.Print(sb);
                     }
                     if (printMask?.CloudLodAmbientColor?.Overall ?? true)
                     {
-                        CloudLodAmbientColor?.ToString(fg);
+                        CloudLodAmbientColor?.Print(sb);
                     }
                     if (printMask?.FogFarColor?.Overall ?? true)
                     {
-                        FogFarColor?.ToString(fg);
+                        FogFarColor?.Print(sb);
                     }
                     if (printMask?.SkyStaticsColor?.Overall ?? true)
                     {
-                        SkyStaticsColor?.ToString(fg);
+                        SkyStaticsColor?.Print(sb);
                     }
                     if (printMask?.WaterMultiplierColor?.Overall ?? true)
                     {
-                        WaterMultiplierColor?.ToString(fg);
+                        WaterMultiplierColor?.Print(sb);
                     }
                     if (printMask?.SunGlareColor?.Overall ?? true)
                     {
-                        SunGlareColor?.ToString(fg);
+                        SunGlareColor?.Print(sb);
                     }
                     if (printMask?.MoonGlareColor?.Overall ?? true)
                     {
-                        MoonGlareColor?.ToString(fg);
+                        MoonGlareColor?.Print(sb);
                     }
                     if (printMask?.FogDistanceDayNear ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
+                        sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
                     }
                     if (printMask?.FogDistanceDayFar ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
+                        sb.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
                     }
                     if (printMask?.FogDistanceNightNear ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
+                        sb.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
                     }
                     if (printMask?.FogDistanceNightFar ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
+                        sb.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
                     }
                     if (printMask?.FogDistanceDayPower ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
+                        sb.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
                     }
                     if (printMask?.FogDistanceNightPower ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
+                        sb.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
                     }
                     if (printMask?.FogDistanceDayMax ?? true)
                     {
-                        fg.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
+                        sb.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
                     }
                     if (printMask?.FogDistanceNightMax ?? true)
                     {
-                        fg.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
+                        sb.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
                     }
                     if (printMask?.WindSpeed ?? true)
                     {
-                        fg.AppendItem(WindSpeed, "WindSpeed");
+                        sb.AppendItem(WindSpeed, "WindSpeed");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
-                        fg.AppendItem(TransDelta, "TransDelta");
+                        sb.AppendItem(TransDelta, "TransDelta");
                     }
                     if (printMask?.SunGlare ?? true)
                     {
-                        fg.AppendItem(SunGlare, "SunGlare");
+                        sb.AppendItem(SunGlare, "SunGlare");
                     }
                     if (printMask?.SunDamage ?? true)
                     {
-                        fg.AppendItem(SunDamage, "SunDamage");
+                        sb.AppendItem(SunDamage, "SunDamage");
                     }
                     if (printMask?.PrecipitationBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                        sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
                     }
                     if (printMask?.PrecipitationEndFadeOut ?? true)
                     {
-                        fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                        sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
                     }
                     if (printMask?.ThunderLightningBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                        sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
                     }
                     if (printMask?.ThunderLightningEndFadeOut ?? true)
                     {
-                        fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                        sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
                     }
                     if (printMask?.ThunderLightningFrequency ?? true)
                     {
-                        fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                        sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.LightningColor ?? true)
                     {
-                        fg.AppendItem(LightningColor, "LightningColor");
+                        sb.AppendItem(LightningColor, "LightningColor");
                     }
                     if (printMask?.VisualEffectBegin ?? true)
                     {
-                        fg.AppendItem(VisualEffectBegin, "VisualEffectBegin");
+                        sb.AppendItem(VisualEffectBegin, "VisualEffectBegin");
                     }
                     if (printMask?.VisualEffectEnd ?? true)
                     {
-                        fg.AppendItem(VisualEffectEnd, "VisualEffectEnd");
+                        sb.AppendItem(VisualEffectEnd, "VisualEffectEnd");
                     }
                     if (printMask?.WindDirection ?? true)
                     {
-                        fg.AppendItem(WindDirection, "WindDirection");
+                        sb.AppendItem(WindDirection, "WindDirection");
                     }
                     if (printMask?.WindDirectionRange ?? true)
                     {
-                        fg.AppendItem(WindDirectionRange, "WindDirectionRange");
+                        sb.AppendItem(WindDirectionRange, "WindDirectionRange");
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
                     {
-                        fg.AppendLine("Sounds =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Sounds =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(SoundsItem.Overall);
+                            sb.AppendItem(SoundsItem.Overall);
                             if (SoundsItem.Specific != null)
                             {
                                 foreach (var subItem in SoundsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.SkyStatics?.Overall ?? true)
                         && SkyStatics is {} SkyStaticsItem)
                     {
-                        fg.AppendLine("SkyStatics =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("SkyStatics =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(SkyStaticsItem.Overall);
+                            sb.AppendItem(SkyStaticsItem.Overall);
                             if (SkyStaticsItem.Specific != null)
                             {
                                 foreach (var subItem in SkyStaticsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.ImageSpaces?.Overall ?? true)
                     {
-                        ImageSpaces?.ToString(fg);
+                        ImageSpaces?.Print(sb);
                     }
                     if (printMask?.VolumetricLighting?.Overall ?? true)
                     {
-                        VolumetricLighting?.ToString(fg);
+                        VolumetricLighting?.Print(sb);
                     }
                     if (printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                     {
-                        DirectionalAmbientLightingColors?.ToString(fg);
+                        DirectionalAmbientLightingColors?.Print(sb);
                     }
                     if (printMask?.NAM2 ?? true)
                     {
-                        fg.AppendItem(NAM2, "NAM2");
+                        sb.AppendItem(NAM2, "NAM2");
                     }
                     if (printMask?.NAM3 ?? true)
                     {
-                        fg.AppendItem(NAM3, "NAM3");
+                        sb.AppendItem(NAM3, "NAM3");
                     }
                     if (printMask?.Aurora?.Overall ?? true)
                     {
-                        Aurora?.ToString(fg);
+                        Aurora?.Print(sb);
                     }
                     if (printMask?.SunGlareLensFlare ?? true)
                     {
-                        fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
+                        sb.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                     }
                     if (printMask?.NAM0DataTypeState ?? true)
                     {
-                        fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
+                        sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                     }
                     if (printMask?.FNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                        sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -2452,183 +2437,238 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
                 if (CloudTextures is {} CloudTexturesItem)
                 {
-                    fg.AppendLine("CloudTextures =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CloudTextures =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CloudTexturesItem.Overall);
+                        sb.AppendItem(CloudTexturesItem.Overall);
                         if (CloudTexturesItem.Specific != null)
                         {
                             foreach (var subItem in CloudTexturesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(DNAM, "DNAM");
-                fg.AppendItem(CNAM, "CNAM");
-                fg.AppendItem(ANAM, "ANAM");
-                fg.AppendItem(BNAM, "BNAM");
-                fg.AppendItem(LNAM, "LNAM");
-                fg.AppendItem(Precipitation, "Precipitation");
-                fg.AppendItem(VisualEffect, "VisualEffect");
-                fg.AppendItem(ONAM, "ONAM");
+                {
+                    sb.AppendItem(DNAM, "DNAM");
+                }
+                {
+                    sb.AppendItem(CNAM, "CNAM");
+                }
+                {
+                    sb.AppendItem(ANAM, "ANAM");
+                }
+                {
+                    sb.AppendItem(BNAM, "BNAM");
+                }
+                {
+                    sb.AppendItem(LNAM, "LNAM");
+                }
+                {
+                    sb.AppendItem(Precipitation, "Precipitation");
+                }
+                {
+                    sb.AppendItem(VisualEffect, "VisualEffect");
+                }
+                {
+                    sb.AppendItem(ONAM, "ONAM");
+                }
                 if (Clouds is {} CloudsItem)
                 {
-                    fg.AppendLine("Clouds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Clouds =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CloudsItem.Overall);
+                        sb.AppendItem(CloudsItem.Overall);
                         if (CloudsItem.Specific != null)
                         {
                             foreach (var subItem in CloudsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                SkyUpperColor?.ToString(fg);
-                FogNearColor?.ToString(fg);
-                UnknownColor?.ToString(fg);
-                AmbientColor?.ToString(fg);
-                SunlightColor?.ToString(fg);
-                SunColor?.ToString(fg);
-                StarsColor?.ToString(fg);
-                SkyLowerColor?.ToString(fg);
-                HorizonColor?.ToString(fg);
-                EffectLightingColor?.ToString(fg);
-                CloudLodDiffuseColor?.ToString(fg);
-                CloudLodAmbientColor?.ToString(fg);
-                FogFarColor?.ToString(fg);
-                SkyStaticsColor?.ToString(fg);
-                WaterMultiplierColor?.ToString(fg);
-                SunGlareColor?.ToString(fg);
-                MoonGlareColor?.ToString(fg);
-                fg.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
-                fg.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
-                fg.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
-                fg.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
-                fg.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
-                fg.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
-                fg.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
-                fg.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
-                fg.AppendItem(WindSpeed, "WindSpeed");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(TransDelta, "TransDelta");
-                fg.AppendItem(SunGlare, "SunGlare");
-                fg.AppendItem(SunDamage, "SunDamage");
-                fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-                fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-                fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-                fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-                fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(LightningColor, "LightningColor");
-                fg.AppendItem(VisualEffectBegin, "VisualEffectBegin");
-                fg.AppendItem(VisualEffectEnd, "VisualEffectEnd");
-                fg.AppendItem(WindDirection, "WindDirection");
-                fg.AppendItem(WindDirectionRange, "WindDirectionRange");
+                SkyUpperColor?.Print(sb);
+                FogNearColor?.Print(sb);
+                UnknownColor?.Print(sb);
+                AmbientColor?.Print(sb);
+                SunlightColor?.Print(sb);
+                SunColor?.Print(sb);
+                StarsColor?.Print(sb);
+                SkyLowerColor?.Print(sb);
+                HorizonColor?.Print(sb);
+                EffectLightingColor?.Print(sb);
+                CloudLodDiffuseColor?.Print(sb);
+                CloudLodAmbientColor?.Print(sb);
+                FogFarColor?.Print(sb);
+                SkyStaticsColor?.Print(sb);
+                WaterMultiplierColor?.Print(sb);
+                SunGlareColor?.Print(sb);
+                MoonGlareColor?.Print(sb);
+                {
+                    sb.AppendItem(FogDistanceDayNear, "FogDistanceDayNear");
+                }
+                {
+                    sb.AppendItem(FogDistanceDayFar, "FogDistanceDayFar");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightNear, "FogDistanceNightNear");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightFar, "FogDistanceNightFar");
+                }
+                {
+                    sb.AppendItem(FogDistanceDayPower, "FogDistanceDayPower");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightPower, "FogDistanceNightPower");
+                }
+                {
+                    sb.AppendItem(FogDistanceDayMax, "FogDistanceDayMax");
+                }
+                {
+                    sb.AppendItem(FogDistanceNightMax, "FogDistanceNightMax");
+                }
+                {
+                    sb.AppendItem(WindSpeed, "WindSpeed");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(TransDelta, "TransDelta");
+                }
+                {
+                    sb.AppendItem(SunGlare, "SunGlare");
+                }
+                {
+                    sb.AppendItem(SunDamage, "SunDamage");
+                }
+                {
+                    sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(LightningColor, "LightningColor");
+                }
+                {
+                    sb.AppendItem(VisualEffectBegin, "VisualEffectBegin");
+                }
+                {
+                    sb.AppendItem(VisualEffectEnd, "VisualEffectEnd");
+                }
+                {
+                    sb.AppendItem(WindDirection, "WindDirection");
+                }
+                {
+                    sb.AppendItem(WindDirectionRange, "WindDirectionRange");
+                }
                 if (Sounds is {} SoundsItem)
                 {
-                    fg.AppendLine("Sounds =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Sounds =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(SoundsItem.Overall);
+                        sb.AppendItem(SoundsItem.Overall);
                         if (SoundsItem.Specific != null)
                         {
                             foreach (var subItem in SoundsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (SkyStatics is {} SkyStaticsItem)
                 {
-                    fg.AppendLine("SkyStatics =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("SkyStatics =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(SkyStaticsItem.Overall);
+                        sb.AppendItem(SkyStaticsItem.Overall);
                         if (SkyStaticsItem.Specific != null)
                         {
                             foreach (var subItem in SkyStaticsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                ImageSpaces?.ToString(fg);
-                VolumetricLighting?.ToString(fg);
-                DirectionalAmbientLightingColors?.ToString(fg);
-                fg.AppendItem(NAM2, "NAM2");
-                fg.AppendItem(NAM3, "NAM3");
-                Aurora?.ToString(fg);
-                fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
-                fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                ImageSpaces?.Print(sb);
+                VolumetricLighting?.Print(sb);
+                DirectionalAmbientLightingColors?.Print(sb);
+                {
+                    sb.AppendItem(NAM2, "NAM2");
+                }
+                {
+                    sb.AppendItem(NAM3, "NAM3");
+                }
+                Aurora?.Print(sb);
+                {
+                    sb.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
+                }
+                {
+                    sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
+                }
+                {
+                    sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -2915,7 +2955,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherSetterCommon.Instance.RemapLinks(this, mapping);
         public Weather(
             FormKey formKey,
@@ -3007,7 +3047,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3017,7 +3057,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Weather CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Weather();
             ((WeatherSetterCommon)((IWeatherGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -3032,7 +3072,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Weather item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -3042,7 +3082,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -3232,26 +3272,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherGetter item,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
+            return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).ToString(
+            ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3346,7 +3386,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherSetterCommon)((IWeatherGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -3361,10 +3401,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Weather_FieldIndex
+    internal enum Weather_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3439,7 +3479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Weather_Registration : ILoquiRegistration
+    internal partial class Weather_Registration : ILoquiRegistration
     {
         public static readonly Weather_Registration Instance = new Weather_Registration();
 
@@ -3481,6 +3521,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WTHR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.WTHR);
+            var all = RecordCollection.Factory(
+                RecordTypes.WTHR,
+                RecordTypes.DNAM,
+                RecordTypes.CNAM,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.LNAM,
+                RecordTypes.MNAM,
+                RecordTypes.NNAM,
+                RecordTypes.ONAM,
+                RecordTypes.RNAM,
+                RecordTypes.QNAM,
+                RecordTypes.PNAM,
+                RecordTypes.JNAM,
+                RecordTypes.NAM0,
+                RecordTypes.FNAM,
+                RecordTypes.DATA,
+                RecordTypes.NAM1,
+                RecordTypes.SNAM,
+                RecordTypes.TNAM,
+                RecordTypes.IMSP,
+                RecordTypes.HNAM,
+                RecordTypes.DALC,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.MODL,
+                RecordTypes.GNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3514,7 +3587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class WeatherSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly WeatherSetterCommon Instance = new WeatherSetterCommon();
 
@@ -3619,7 +3692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeatherInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IWeatherInternal>(
                 record: item,
@@ -3632,7 +3705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Weather)item,
@@ -3643,7 +3716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Weather)item,
@@ -3654,7 +3727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherCommon : SkyrimMajorRecordCommon
+    internal partial class WeatherCommon : SkyrimMajorRecordCommon
     {
         public new static readonly WeatherCommon Instance = new WeatherCommon();
 
@@ -3678,8 +3751,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Weather.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
-            ret.CloudTextures = item.CloudTextures.SpanEqualsHelper(
+            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<String?>(
+                item.CloudTextures,
                 rhs.CloudTextures,
                 (l, r) => string.Equals(l, r),
                 include);
@@ -3691,7 +3764,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.ONAM = MemorySliceExt.Equal(item.ONAM, rhs.ONAM);
-            ret.Clouds = item.Clouds.SpanEqualsHelper(
+            ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
+                item.Clouds,
                 rhs.Clouds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
@@ -3773,373 +3847,355 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherGetter item,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Weather.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Weather =>");
+                sb.AppendLine($"Weather =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Weather) =>");
+                sb.AppendLine($"{name} (Weather) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Weather.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.CloudTextures?.Overall ?? true)
             {
-                fg.AppendLine("CloudTextures =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CloudTextures =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.CloudTextures)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.DNAM ?? true)
                 && item.DNAM is {} DNAMItem)
             {
-                fg.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
             if ((printMask?.CNAM ?? true)
                 && item.CNAM is {} CNAMItem)
             {
-                fg.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
             }
             if ((printMask?.ANAM ?? true)
                 && item.ANAM is {} ANAMItem)
             {
-                fg.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
+                sb.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
             }
             if ((printMask?.BNAM ?? true)
                 && item.BNAM is {} BNAMItem)
             {
-                fg.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
+                sb.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
             }
             if ((printMask?.LNAM ?? true)
                 && item.LNAM is {} LNAMItem)
             {
-                fg.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
+                sb.AppendLine($"LNAM => {SpanExt.ToHexString(LNAMItem)}");
             }
             if (printMask?.Precipitation ?? true)
             {
-                fg.AppendItem(item.Precipitation.FormKeyNullable, "Precipitation");
+                sb.AppendItem(item.Precipitation.FormKeyNullable, "Precipitation");
             }
             if (printMask?.VisualEffect ?? true)
             {
-                fg.AppendItem(item.VisualEffect.FormKey, "VisualEffect");
+                sb.AppendItem(item.VisualEffect.FormKey, "VisualEffect");
             }
             if ((printMask?.ONAM ?? true)
                 && item.ONAM is {} ONAMItem)
             {
-                fg.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
+                sb.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
             }
             if (printMask?.Clouds?.Overall ?? true)
             {
-                fg.AppendLine("Clouds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Clouds =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Clouds)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.SkyUpperColor?.Overall ?? true)
             {
-                item.SkyUpperColor?.ToString(fg, "SkyUpperColor");
+                item.SkyUpperColor?.Print(sb, "SkyUpperColor");
             }
             if (printMask?.FogNearColor?.Overall ?? true)
             {
-                item.FogNearColor?.ToString(fg, "FogNearColor");
+                item.FogNearColor?.Print(sb, "FogNearColor");
             }
             if (printMask?.UnknownColor?.Overall ?? true)
             {
-                item.UnknownColor?.ToString(fg, "UnknownColor");
+                item.UnknownColor?.Print(sb, "UnknownColor");
             }
             if (printMask?.AmbientColor?.Overall ?? true)
             {
-                item.AmbientColor?.ToString(fg, "AmbientColor");
+                item.AmbientColor?.Print(sb, "AmbientColor");
             }
             if (printMask?.SunlightColor?.Overall ?? true)
             {
-                item.SunlightColor?.ToString(fg, "SunlightColor");
+                item.SunlightColor?.Print(sb, "SunlightColor");
             }
             if (printMask?.SunColor?.Overall ?? true)
             {
-                item.SunColor?.ToString(fg, "SunColor");
+                item.SunColor?.Print(sb, "SunColor");
             }
             if (printMask?.StarsColor?.Overall ?? true)
             {
-                item.StarsColor?.ToString(fg, "StarsColor");
+                item.StarsColor?.Print(sb, "StarsColor");
             }
             if (printMask?.SkyLowerColor?.Overall ?? true)
             {
-                item.SkyLowerColor?.ToString(fg, "SkyLowerColor");
+                item.SkyLowerColor?.Print(sb, "SkyLowerColor");
             }
             if (printMask?.HorizonColor?.Overall ?? true)
             {
-                item.HorizonColor?.ToString(fg, "HorizonColor");
+                item.HorizonColor?.Print(sb, "HorizonColor");
             }
             if (printMask?.EffectLightingColor?.Overall ?? true)
             {
-                item.EffectLightingColor?.ToString(fg, "EffectLightingColor");
+                item.EffectLightingColor?.Print(sb, "EffectLightingColor");
             }
             if (printMask?.CloudLodDiffuseColor?.Overall ?? true)
             {
-                item.CloudLodDiffuseColor?.ToString(fg, "CloudLodDiffuseColor");
+                item.CloudLodDiffuseColor?.Print(sb, "CloudLodDiffuseColor");
             }
             if (printMask?.CloudLodAmbientColor?.Overall ?? true)
             {
-                item.CloudLodAmbientColor?.ToString(fg, "CloudLodAmbientColor");
+                item.CloudLodAmbientColor?.Print(sb, "CloudLodAmbientColor");
             }
             if (printMask?.FogFarColor?.Overall ?? true)
             {
-                item.FogFarColor?.ToString(fg, "FogFarColor");
+                item.FogFarColor?.Print(sb, "FogFarColor");
             }
             if (printMask?.SkyStaticsColor?.Overall ?? true)
             {
-                item.SkyStaticsColor?.ToString(fg, "SkyStaticsColor");
+                item.SkyStaticsColor?.Print(sb, "SkyStaticsColor");
             }
             if (printMask?.WaterMultiplierColor?.Overall ?? true)
             {
-                item.WaterMultiplierColor?.ToString(fg, "WaterMultiplierColor");
+                item.WaterMultiplierColor?.Print(sb, "WaterMultiplierColor");
             }
             if (printMask?.SunGlareColor?.Overall ?? true)
             {
-                item.SunGlareColor?.ToString(fg, "SunGlareColor");
+                item.SunGlareColor?.Print(sb, "SunGlareColor");
             }
             if (printMask?.MoonGlareColor?.Overall ?? true)
             {
-                item.MoonGlareColor?.ToString(fg, "MoonGlareColor");
+                item.MoonGlareColor?.Print(sb, "MoonGlareColor");
             }
             if (printMask?.FogDistanceDayNear ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayNear, "FogDistanceDayNear");
+                sb.AppendItem(item.FogDistanceDayNear, "FogDistanceDayNear");
             }
             if (printMask?.FogDistanceDayFar ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayFar, "FogDistanceDayFar");
+                sb.AppendItem(item.FogDistanceDayFar, "FogDistanceDayFar");
             }
             if (printMask?.FogDistanceNightNear ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightNear, "FogDistanceNightNear");
+                sb.AppendItem(item.FogDistanceNightNear, "FogDistanceNightNear");
             }
             if (printMask?.FogDistanceNightFar ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightFar, "FogDistanceNightFar");
+                sb.AppendItem(item.FogDistanceNightFar, "FogDistanceNightFar");
             }
             if (printMask?.FogDistanceDayPower ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayPower, "FogDistanceDayPower");
+                sb.AppendItem(item.FogDistanceDayPower, "FogDistanceDayPower");
             }
             if (printMask?.FogDistanceNightPower ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightPower, "FogDistanceNightPower");
+                sb.AppendItem(item.FogDistanceNightPower, "FogDistanceNightPower");
             }
             if (printMask?.FogDistanceDayMax ?? true)
             {
-                fg.AppendItem(item.FogDistanceDayMax, "FogDistanceDayMax");
+                sb.AppendItem(item.FogDistanceDayMax, "FogDistanceDayMax");
             }
             if (printMask?.FogDistanceNightMax ?? true)
             {
-                fg.AppendItem(item.FogDistanceNightMax, "FogDistanceNightMax");
+                sb.AppendItem(item.FogDistanceNightMax, "FogDistanceNightMax");
             }
             if (printMask?.WindSpeed ?? true)
             {
-                fg.AppendItem(item.WindSpeed, "WindSpeed");
+                sb.AppendItem(item.WindSpeed, "WindSpeed");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.TransDelta ?? true)
             {
-                fg.AppendItem(item.TransDelta, "TransDelta");
+                sb.AppendItem(item.TransDelta, "TransDelta");
             }
             if (printMask?.SunGlare ?? true)
             {
-                fg.AppendItem(item.SunGlare, "SunGlare");
+                sb.AppendItem(item.SunGlare, "SunGlare");
             }
             if (printMask?.SunDamage ?? true)
             {
-                fg.AppendItem(item.SunDamage, "SunDamage");
+                sb.AppendItem(item.SunDamage, "SunDamage");
             }
             if (printMask?.PrecipitationBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                sb.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
             }
             if (printMask?.PrecipitationEndFadeOut ?? true)
             {
-                fg.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                sb.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
             }
             if (printMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                sb.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
             }
             if (printMask?.ThunderLightningEndFadeOut ?? true)
             {
-                fg.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                sb.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
             }
             if (printMask?.ThunderLightningFrequency ?? true)
             {
-                fg.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
+                sb.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.LightningColor ?? true)
             {
-                fg.AppendItem(item.LightningColor, "LightningColor");
+                sb.AppendItem(item.LightningColor, "LightningColor");
             }
             if (printMask?.VisualEffectBegin ?? true)
             {
-                fg.AppendItem(item.VisualEffectBegin, "VisualEffectBegin");
+                sb.AppendItem(item.VisualEffectBegin, "VisualEffectBegin");
             }
             if (printMask?.VisualEffectEnd ?? true)
             {
-                fg.AppendItem(item.VisualEffectEnd, "VisualEffectEnd");
+                sb.AppendItem(item.VisualEffectEnd, "VisualEffectEnd");
             }
             if (printMask?.WindDirection ?? true)
             {
-                fg.AppendItem(item.WindDirection, "WindDirection");
+                sb.AppendItem(item.WindDirection, "WindDirection");
             }
             if (printMask?.WindDirectionRange ?? true)
             {
-                fg.AppendItem(item.WindDirectionRange, "WindDirectionRange");
+                sb.AppendItem(item.WindDirectionRange, "WindDirectionRange");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
-                fg.AppendLine("Sounds =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Sounds =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Sounds)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.SkyStatics?.Overall ?? true)
             {
-                fg.AppendLine("SkyStatics =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("SkyStatics =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.SkyStatics)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.ImageSpaces?.Overall ?? true)
                 && item.ImageSpaces is {} ImageSpacesItem)
             {
-                ImageSpacesItem?.ToString(fg, "ImageSpaces");
+                ImageSpacesItem?.Print(sb, "ImageSpaces");
             }
             if ((printMask?.VolumetricLighting?.Overall ?? true)
                 && item.VolumetricLighting is {} VolumetricLightingItem)
             {
-                VolumetricLightingItem?.ToString(fg, "VolumetricLighting");
+                VolumetricLightingItem?.Print(sb, "VolumetricLighting");
             }
             if ((printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                 && item.DirectionalAmbientLightingColors is {} DirectionalAmbientLightingColorsItem)
             {
-                DirectionalAmbientLightingColorsItem?.ToString(fg, "DirectionalAmbientLightingColors");
+                DirectionalAmbientLightingColorsItem?.Print(sb, "DirectionalAmbientLightingColors");
             }
             if ((printMask?.NAM2 ?? true)
                 && item.NAM2 is {} NAM2Item)
             {
-                fg.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
+                sb.AppendLine($"NAM2 => {SpanExt.ToHexString(NAM2Item)}");
             }
             if ((printMask?.NAM3 ?? true)
                 && item.NAM3 is {} NAM3Item)
             {
-                fg.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
+                sb.AppendLine($"NAM3 => {SpanExt.ToHexString(NAM3Item)}");
             }
             if ((printMask?.Aurora?.Overall ?? true)
                 && item.Aurora is {} AuroraItem)
             {
-                AuroraItem?.ToString(fg, "Aurora");
+                AuroraItem?.Print(sb, "Aurora");
             }
             if (printMask?.SunGlareLensFlare ?? true)
             {
-                fg.AppendItem(item.SunGlareLensFlare.FormKeyNullable, "SunGlareLensFlare");
+                sb.AppendItem(item.SunGlareLensFlare.FormKeyNullable, "SunGlareLensFlare");
             }
             if (printMask?.NAM0DataTypeState ?? true)
             {
-                fg.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
+                sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
             }
             if (printMask?.FNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
+                sb.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -4191,7 +4247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<string>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+                if (!MemoryExtensions.SequenceEqual<String>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -4463,7 +4519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+                if (!lhs.Sounds.SequenceEqual(rhs.Sounds, (l, r) => ((WeatherSoundCommon)((IWeatherSoundGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Weather_FieldIndex.Sounds)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
             {
@@ -4675,18 +4731,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Precipitation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Precipitation, out var PrecipitationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Precipitation);
+                yield return PrecipitationInfo;
             }
             yield return FormLinkInformation.Factory(obj.VisualEffect);
-            foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Sounds.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -4696,28 +4752,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (obj.ImageSpaces is {} ImageSpacesItems)
             {
-                foreach (var item in ImageSpacesItems.ContainedFormLinks)
+                foreach (var item in ImageSpacesItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.VolumetricLighting is {} VolumetricLightingItems)
             {
-                foreach (var item in VolumetricLightingItems.ContainedFormLinks)
+                foreach (var item in VolumetricLightingItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Aurora is {} AuroraItems)
             {
-                foreach (var item in AuroraItems.ContainedFormLinks)
+                foreach (var item in AuroraItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.SunGlareLensFlare.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SunGlareLensFlare, out var SunGlareLensFlareInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SunGlareLensFlare);
+                yield return SunGlareLensFlareInfo;
             }
             yield break;
         }
@@ -4760,7 +4816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class WeatherSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly WeatherSetterTranslationCommon Instance = new WeatherSetterTranslationCommon();
 
@@ -4795,7 +4851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                item.CloudTextures.SetTo(rhs.CloudTextures);
+                rhs.CloudTextures.Span.CopyTo(item.CloudTextures.AsSpan());
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -5659,7 +5715,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -5677,13 +5733,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
+        public new static readonly WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherGetter item,
@@ -5697,7 +5753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWeatherGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -5944,7 +6000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWeatherSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IWeatherSoundGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((WeatherSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -5955,7 +6011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SkyStatics,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IStaticGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IStaticGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -6100,7 +6156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -6111,12 +6167,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -6128,7 +6187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherGetter)item,
@@ -6139,7 +6198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWeatherGetter)item,
@@ -6150,7 +6209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWeatherGetter)item,
@@ -6160,9 +6219,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class WeatherBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
+        public new static readonly WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WTHR;
         public static void FillBinaryStructs(
@@ -6181,7 +6240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -6370,7 +6429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WeatherSound>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.SNAM,
+                            triggeringRecord: WeatherSound_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: WeatherSound.TryCreateFromBinary));
                     return (int)Weather_FieldIndex.Sounds;
@@ -6420,7 +6479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Aurora = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weather_FieldIndex.Aurora;
                 }
                 case RecordTypeInts.GNAM:
@@ -6485,16 +6544,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherBinaryOverlay :
+    internal partial class WeatherBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IWeatherGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weather_Registration.Instance;
-        public new static Weather_Registration StaticRegistration => Weather_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WeatherCommon.Instance;
         [DebuggerStepThrough]
@@ -6502,14 +6561,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -6520,42 +6579,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         #region CloudTexturesParse
-         partial void CloudTexturesParseCustomParse(
+        partial void CloudTexturesParseCustomParse(
             OverlayStream stream,
             int offset);
         protected int CloudTexturesParseEndingPos;
         #endregion
         #region DNAM
         private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region CNAM
         private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region ANAM
         private int? _ANAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ANAM => _ANAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ANAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? ANAM => _ANAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region BNAM
         private int? _BNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region LNAM
         private int? _LNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? LNAM => _LNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Clouds
         partial void CloudsCustomParse(
@@ -6580,268 +6639,269 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OverlayStream stream,
             int offset);
         #endregion
-        private int? _NAM0Location;
+        private RangeInt32? _NAM0Location;
         public Weather.NAM0DataType NAM0DataTypeState { get; private set; }
         #region SkyUpperColor
-        private int _SkyUpperColorLocation => _NAM0Location!.Value;
+        private int _SkyUpperColorLocation => _NAM0Location!.Value.Min;
         private bool _SkyUpperColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SkyUpperColor => _SkyUpperColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyUpperColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _SkyUpperColor => _SkyUpperColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SkyUpperColorLocation), _package) : default;
         public IWeatherColorGetter SkyUpperColor => _SkyUpperColor ?? new WeatherColor();
         #endregion
         #region FogNearColor
-        private int _FogNearColorLocation => _NAM0Location!.Value + 0x10;
+        private int _FogNearColorLocation => _NAM0Location!.Value.Min + 0x10;
         private bool _FogNearColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _FogNearColor => _FogNearColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_FogNearColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _FogNearColor => _FogNearColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_FogNearColorLocation), _package) : default;
         public IWeatherColorGetter FogNearColor => _FogNearColor ?? new WeatherColor();
         #endregion
         #region UnknownColor
-        private int _UnknownColorLocation => _NAM0Location!.Value + 0x20;
+        private int _UnknownColorLocation => _NAM0Location!.Value.Min + 0x20;
         private bool _UnknownColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _UnknownColor => _UnknownColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_UnknownColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _UnknownColor => _UnknownColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_UnknownColorLocation), _package) : default;
         public IWeatherColorGetter UnknownColor => _UnknownColor ?? new WeatherColor();
         #endregion
         #region AmbientColor
-        private int _AmbientColorLocation => _NAM0Location!.Value + 0x30;
+        private int _AmbientColorLocation => _NAM0Location!.Value.Min + 0x30;
         private bool _AmbientColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _AmbientColor => _AmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_AmbientColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _AmbientColor => _AmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_AmbientColorLocation), _package) : default;
         public IWeatherColorGetter AmbientColor => _AmbientColor ?? new WeatherColor();
         #endregion
         #region SunlightColor
-        private int _SunlightColorLocation => _NAM0Location!.Value + 0x40;
+        private int _SunlightColorLocation => _NAM0Location!.Value.Min + 0x40;
         private bool _SunlightColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SunlightColor => _SunlightColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunlightColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _SunlightColor => _SunlightColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SunlightColorLocation), _package) : default;
         public IWeatherColorGetter SunlightColor => _SunlightColor ?? new WeatherColor();
         #endregion
         #region SunColor
-        private int _SunColorLocation => _NAM0Location!.Value + 0x50;
+        private int _SunColorLocation => _NAM0Location!.Value.Min + 0x50;
         private bool _SunColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SunColor => _SunColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _SunColor => _SunColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SunColorLocation), _package) : default;
         public IWeatherColorGetter SunColor => _SunColor ?? new WeatherColor();
         #endregion
         #region StarsColor
-        private int _StarsColorLocation => _NAM0Location!.Value + 0x60;
+        private int _StarsColorLocation => _NAM0Location!.Value.Min + 0x60;
         private bool _StarsColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _StarsColor => _StarsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_StarsColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _StarsColor => _StarsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_StarsColorLocation), _package) : default;
         public IWeatherColorGetter StarsColor => _StarsColor ?? new WeatherColor();
         #endregion
         #region SkyLowerColor
-        private int _SkyLowerColorLocation => _NAM0Location!.Value + 0x70;
+        private int _SkyLowerColorLocation => _NAM0Location!.Value.Min + 0x70;
         private bool _SkyLowerColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SkyLowerColor => _SkyLowerColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyLowerColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _SkyLowerColor => _SkyLowerColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SkyLowerColorLocation), _package) : default;
         public IWeatherColorGetter SkyLowerColor => _SkyLowerColor ?? new WeatherColor();
         #endregion
         #region HorizonColor
-        private int _HorizonColorLocation => _NAM0Location!.Value + 0x80;
+        private int _HorizonColorLocation => _NAM0Location!.Value.Min + 0x80;
         private bool _HorizonColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _HorizonColor => _HorizonColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_HorizonColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _HorizonColor => _HorizonColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_HorizonColorLocation), _package) : default;
         public IWeatherColorGetter HorizonColor => _HorizonColor ?? new WeatherColor();
         #endregion
         #region EffectLightingColor
-        private int _EffectLightingColorLocation => _NAM0Location!.Value + 0x90;
+        private int _EffectLightingColorLocation => _NAM0Location!.Value.Min + 0x90;
         private bool _EffectLightingColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _EffectLightingColor => _EffectLightingColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_EffectLightingColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _EffectLightingColor => _EffectLightingColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_EffectLightingColorLocation), _package) : default;
         public IWeatherColorGetter EffectLightingColor => _EffectLightingColor ?? new WeatherColor();
         #endregion
         #region CloudLodDiffuseColor
-        private int _CloudLodDiffuseColorLocation => _NAM0Location!.Value + 0xA0;
+        private int _CloudLodDiffuseColorLocation => _NAM0Location!.Value.Min + 0xA0;
         private bool _CloudLodDiffuseColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _CloudLodDiffuseColor => _CloudLodDiffuseColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_CloudLodDiffuseColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _CloudLodDiffuseColor => _CloudLodDiffuseColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_CloudLodDiffuseColorLocation), _package) : default;
         public IWeatherColorGetter CloudLodDiffuseColor => _CloudLodDiffuseColor ?? new WeatherColor();
         #endregion
         #region CloudLodAmbientColor
-        private int _CloudLodAmbientColorLocation => _NAM0Location!.Value + 0xB0;
+        private int _CloudLodAmbientColorLocation => _NAM0Location!.Value.Min + 0xB0;
         private bool _CloudLodAmbientColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _CloudLodAmbientColor => _CloudLodAmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_CloudLodAmbientColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _CloudLodAmbientColor => _CloudLodAmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_CloudLodAmbientColorLocation), _package) : default;
         public IWeatherColorGetter CloudLodAmbientColor => _CloudLodAmbientColor ?? new WeatherColor();
         #endregion
         #region FogFarColor
-        private int _FogFarColorLocation => _NAM0Location!.Value + 0xC0;
+        private int _FogFarColorLocation => _NAM0Location!.Value.Min + 0xC0;
         private bool _FogFarColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _FogFarColor => _FogFarColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_FogFarColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _FogFarColor => _FogFarColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_FogFarColorLocation), _package) : default;
         public IWeatherColorGetter FogFarColor => _FogFarColor ?? new WeatherColor();
         #endregion
         #region SkyStaticsColor
-        private int _SkyStaticsColorLocation => _NAM0Location!.Value + 0xD0;
+        private int _SkyStaticsColorLocation => _NAM0Location!.Value.Min + 0xD0;
         private bool _SkyStaticsColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
-        private IWeatherColorGetter? _SkyStaticsColor => _SkyStaticsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyStaticsColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _SkyStaticsColor => _SkyStaticsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SkyStaticsColorLocation), _package) : default;
         public IWeatherColorGetter SkyStaticsColor => _SkyStaticsColor ?? new WeatherColor();
         #endregion
         #region WaterMultiplierColor
-        private int _WaterMultiplierColorLocation => _NAM0Location!.Value + 0xE0;
+        private int _WaterMultiplierColorLocation => _NAM0Location!.Value.Min + 0xE0;
         private bool _WaterMultiplierColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
-        private IWeatherColorGetter? _WaterMultiplierColor => _WaterMultiplierColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_WaterMultiplierColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _WaterMultiplierColor => _WaterMultiplierColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_WaterMultiplierColorLocation), _package) : default;
         public IWeatherColorGetter WaterMultiplierColor => _WaterMultiplierColor ?? new WeatherColor();
         #endregion
         #region SunGlareColor
-        private int _SunGlareColorLocation => _NAM0Location!.Value + 0xF0;
+        private int _SunGlareColorLocation => _NAM0Location!.Value.Min + 0xF0;
         private bool _SunGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
-        private IWeatherColorGetter? _SunGlareColor => _SunGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunGlareColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _SunGlareColor => _SunGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SunGlareColorLocation), _package) : default;
         public IWeatherColorGetter SunGlareColor => _SunGlareColor ?? new WeatherColor();
         #endregion
         #region MoonGlareColor
-        private int _MoonGlareColorLocation => _NAM0Location!.Value + 0x100;
+        private int _MoonGlareColorLocation => _NAM0Location!.Value.Min + 0x100;
         private bool _MoonGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
-        private IWeatherColorGetter? _MoonGlareColor => _MoonGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_MoonGlareColorLocation), _package), _package) : default;
+        private IWeatherColorGetter? _MoonGlareColor => _MoonGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_MoonGlareColorLocation), _package) : default;
         public IWeatherColorGetter MoonGlareColor => _MoonGlareColor ?? new WeatherColor();
         #endregion
-        private int? _FNAMLocation;
+        private RangeInt32? _FNAMLocation;
         public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDistanceDayNear
-        private int _FogDistanceDayNearLocation => _FNAMLocation!.Value;
+        private int _FogDistanceDayNearLocation => _FNAMLocation!.Value.Min;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _data.Slice(_FogDistanceDayNearLocation, 4).Float() : default;
+        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _recordData.Slice(_FogDistanceDayNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayFar
-        private int _FogDistanceDayFarLocation => _FNAMLocation!.Value + 0x4;
+        private int _FogDistanceDayFarLocation => _FNAMLocation!.Value.Min + 0x4;
         private bool _FogDistanceDayFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _data.Slice(_FogDistanceDayFarLocation, 4).Float() : default;
+        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _recordData.Slice(_FogDistanceDayFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightNear
-        private int _FogDistanceNightNearLocation => _FNAMLocation!.Value + 0x8;
+        private int _FogDistanceNightNearLocation => _FNAMLocation!.Value.Min + 0x8;
         private bool _FogDistanceNightNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _data.Slice(_FogDistanceNightNearLocation, 4).Float() : default;
+        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _recordData.Slice(_FogDistanceNightNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightFar
-        private int _FogDistanceNightFarLocation => _FNAMLocation!.Value + 0xC;
+        private int _FogDistanceNightFarLocation => _FNAMLocation!.Value.Min + 0xC;
         private bool _FogDistanceNightFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _data.Slice(_FogDistanceNightFarLocation, 4).Float() : default;
+        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _recordData.Slice(_FogDistanceNightFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayPower
-        private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value + 0x10;
+        private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value.Min + 0x10;
         private bool _FogDistanceDayPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _data.Slice(_FogDistanceDayPowerLocation, 4).Float() : default;
+        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _recordData.Slice(_FogDistanceDayPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightPower
-        private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value + 0x14;
+        private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value.Min + 0x14;
         private bool _FogDistanceNightPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _data.Slice(_FogDistanceNightPowerLocation, 4).Float() : default;
+        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _recordData.Slice(_FogDistanceNightPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayMax
-        private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value + 0x18;
+        private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value.Min + 0x18;
         private bool _FogDistanceDayMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _data.Slice(_FogDistanceDayMaxLocation, 4).Float() : default;
+        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _recordData.Slice(_FogDistanceDayMaxLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightMax
-        private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value + 0x1C;
+        private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value.Min + 0x1C;
         private bool _FogDistanceNightMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _data.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
+        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _recordData.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
         #endregion
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }
         #region WindSpeed
-        private int _WindSpeedLocation => _DATALocation!.Value;
+        private int _WindSpeedLocation => _DATALocation!.Value.Min;
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;
-        public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent WindSpeed => _WindSpeed_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_WindSpeedLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x1;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region TransDelta
-        private int _TransDeltaLocation => _DATALocation!.Value + 0x3;
+        private int _TransDeltaLocation => _DATALocation!.Value.Min + 0x3;
         private bool _TransDelta_IsSet => _DATALocation.HasValue;
-        public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, 4) : default;
+        public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, 4) : default;
         #endregion
         #region SunGlare
-        private int _SunGlareLocation => _DATALocation!.Value + 0x4;
+        private int _SunGlareLocation => _DATALocation!.Value.Min + 0x4;
         private bool _SunGlare_IsSet => _DATALocation.HasValue;
-        public Percent SunGlare => _SunGlare_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_SunGlareLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent SunGlare => _SunGlare_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SunGlareLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region SunDamage
-        private int _SunDamageLocation => _DATALocation!.Value + 0x5;
+        private int _SunDamageLocation => _DATALocation!.Value.Min + 0x5;
         private bool _SunDamage_IsSet => _DATALocation.HasValue;
-        public Percent SunDamage => _SunDamage_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_SunDamageLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent SunDamage => _SunDamage_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SunDamageLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region PrecipitationBeginFadeIn
-        private int _PrecipitationBeginFadeInLocation => _DATALocation!.Value + 0x6;
+        private int _PrecipitationBeginFadeInLocation => _DATALocation!.Value.Min + 0x6;
         private bool _PrecipitationBeginFadeIn_IsSet => _DATALocation.HasValue;
-        public Percent PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PrecipitationBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PrecipitationBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region PrecipitationEndFadeOut
-        private int _PrecipitationEndFadeOutLocation => _DATALocation!.Value + 0x7;
+        private int _PrecipitationEndFadeOutLocation => _DATALocation!.Value.Min + 0x7;
         private bool _PrecipitationEndFadeOut_IsSet => _DATALocation.HasValue;
-        public Percent PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_PrecipitationEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_PrecipitationEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region ThunderLightningBeginFadeIn
-        private int _ThunderLightningBeginFadeInLocation => _DATALocation!.Value + 0x8;
+        private int _ThunderLightningBeginFadeInLocation => _DATALocation!.Value.Min + 0x8;
         private bool _ThunderLightningBeginFadeIn_IsSet => _DATALocation.HasValue;
-        public Percent ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_ThunderLightningBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningBeginFadeInLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region ThunderLightningEndFadeOut
-        private int _ThunderLightningEndFadeOutLocation => _DATALocation!.Value + 0x9;
+        private int _ThunderLightningEndFadeOutLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ThunderLightningEndFadeOut_IsSet => _DATALocation.HasValue;
-        public Percent ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_ThunderLightningEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningEndFadeOutLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region ThunderLightningFrequency
-        private int _ThunderLightningFrequencyLocation => _DATALocation!.Value + 0xA;
+        private int _ThunderLightningFrequencyLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ThunderLightningFrequency_IsSet => _DATALocation.HasValue;
-        public Percent ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_ThunderLightningFrequencyLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ThunderLightningFrequencyLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xB;
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region LightningColor
-        private int _LightningColorLocation => _DATALocation!.Value + 0xC;
+        private int _LightningColorLocation => _DATALocation!.Value.Min + 0xC;
         private bool _LightningColor_IsSet => _DATALocation.HasValue;
-        public Color LightningColor => _LightningColor_IsSet ? _data.Slice(_LightningColorLocation, 3).ReadColor(ColorBinaryType.NoAlpha) : default;
+        public Color LightningColor => _LightningColor_IsSet ? _recordData.Slice(_LightningColorLocation, 3).ReadColor(ColorBinaryType.NoAlpha) : default;
         #endregion
         #region VisualEffectBegin
-        private int _VisualEffectBeginLocation => _DATALocation!.Value + 0xF;
+        private int _VisualEffectBeginLocation => _DATALocation!.Value.Min + 0xF;
         private bool _VisualEffectBegin_IsSet => _DATALocation.HasValue;
-        public Percent VisualEffectBegin => _VisualEffectBegin_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_VisualEffectBeginLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent VisualEffectBegin => _VisualEffectBegin_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_VisualEffectBeginLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region VisualEffectEnd
-        private int _VisualEffectEndLocation => _DATALocation!.Value + 0x10;
+        private int _VisualEffectEndLocation => _DATALocation!.Value.Min + 0x10;
         private bool _VisualEffectEnd_IsSet => _DATALocation.HasValue;
-        public Percent VisualEffectEnd => _VisualEffectEnd_IsSet ? PercentBinaryTranslation.GetPercent(_data.Slice(_VisualEffectEndLocation, 1), FloatIntegerType.Byte) : default;
+        public Percent VisualEffectEnd => _VisualEffectEnd_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_VisualEffectEndLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region WindDirection
-        private int _WindDirectionLocation => _DATALocation!.Value + 0x11;
+        private int _WindDirectionLocation => _DATALocation!.Value.Min + 0x11;
         private bool _WindDirection_IsSet => _DATALocation.HasValue;
-        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, 0.002777777777777778) : default;
+        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, 0.002777777777777778) : default;
         #endregion
         #region WindDirectionRange
-        private int _WindDirectionRangeLocation => _DATALocation!.Value + 0x12;
+        private int _WindDirectionRangeLocation => _DATALocation!.Value.Min + 0x12;
         private bool _WindDirectionRange_IsSet => _DATALocation.HasValue;
-        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.005555555555555556) : default;
+        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.005555555555555556) : default;
         #endregion
         #region DisabledCloudLayers
         public partial ParseResult DisabledCloudLayersCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
-        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLinkGetter<IStaticGetter>>();
+        public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
-        public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
+        public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(_recordData.Slice(_ImageSpacesLocation!.Value.Min), _package) : default;
         #endregion
         #region VolumetricLighting
         private RangeInt32? _VolumetricLightingLocation;
-        public IWeatherVolumetricLightingGetter? VolumetricLighting => _VolumetricLightingLocation.HasValue ? WeatherVolumetricLightingBinaryOverlay.WeatherVolumetricLightingFactory(new OverlayStream(_data.Slice(_VolumetricLightingLocation!.Value.Min), _package), _package) : default;
+        public IWeatherVolumetricLightingGetter? VolumetricLighting => _VolumetricLightingLocation.HasValue ? WeatherVolumetricLightingBinaryOverlay.WeatherVolumetricLightingFactory(_recordData.Slice(_VolumetricLightingLocation!.Value.Min), _package) : default;
         #endregion
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
             OverlayStream stream,
             long finalPos,
             int offset);
+        public partial IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom();
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
         #endregion
         #region NAM2
         private int? _NAM2Location;
-        public ReadOnlyMemorySlice<Byte>? NAM2 => _NAM2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NAM2 => _NAM2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region NAM3
         private int? _NAM3Location;
-        public ReadOnlyMemorySlice<Byte>? NAM3 => _NAM3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? NAM3 => _NAM3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6850,28 +6910,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeatherBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WeatherBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -6881,20 +6944,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static WeatherBinaryOverlay WeatherFactory(
+        public static IWeatherGetter WeatherFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -6904,9 +6967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DNAM:
@@ -6979,8 +7042,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _NAM0Location = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _NAM0Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xD0)
                     {
                         this.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
@@ -6993,12 +7056,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Weather_FieldIndex.FogDistanceNightMax;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Weather_FieldIndex.WindDirectionRange;
                 }
                 case RecordTypeInts.NAM1:
@@ -7009,14 +7072,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Sounds = BinaryOverlayList.FactoryByArray<WeatherSoundBinaryOverlay>(
+                    this.Sounds = BinaryOverlayList.FactoryByArray<IWeatherSoundGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: WeatherSound_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Weather_FieldIndex.Sounds;
@@ -7032,7 +7096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Weather_FieldIndex.SkyStatics;
                 }
                 case RecordTypeInts.IMSP:
@@ -7068,7 +7132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Aurora = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weather_FieldIndex.Aurora;
                 }
                 case RecordTypeInts.GNAM:
@@ -7087,12 +7151,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherMixIn.ToString(
+            WeatherMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

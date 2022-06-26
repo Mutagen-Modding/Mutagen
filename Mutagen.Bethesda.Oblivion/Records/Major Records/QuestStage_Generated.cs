@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -70,12 +71,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestStageMixIn.ToString(
+            QuestStageMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -212,9 +214,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, LogEntry.Mask<R>?>>();
                         obj.LogEntries.Specific = l;
-                        foreach (var item in LogEntries.Specific.WithIndex())
+                        foreach (var item in LogEntries.Specific)
                         {
-                            MaskItemIndexed<R, LogEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LogEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LogEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LogEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -224,53 +226,44 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(QuestStage.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(QuestStage.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, QuestStage.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, QuestStage.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(QuestStage.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(QuestStage.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Stage ?? true)
                     {
-                        fg.AppendItem(Stage, "Stage");
+                        sb.AppendItem(Stage, "Stage");
                     }
                     if ((printMask?.LogEntries?.Overall ?? true)
                         && LogEntries is {} LogEntriesItem)
                     {
-                        fg.AppendLine("LogEntries =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("LogEntries =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(LogEntriesItem.Overall);
+                            sb.AppendItem(LogEntriesItem.Overall);
                             if (LogEntriesItem.Specific != null)
                             {
                                 foreach (var subItem in LogEntriesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -355,57 +348,46 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Stage, "Stage");
+                {
+                    sb.AppendItem(Stage, "Stage");
+                }
                 if (LogEntries is {} LogEntriesItem)
                 {
-                    fg.AppendLine("LogEntries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("LogEntries =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(LogEntriesItem.Overall);
+                        sb.AppendItem(LogEntriesItem.Overall);
                         if (LogEntriesItem.Specific != null)
                         {
                             foreach (var subItem in LogEntriesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -480,8 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = QuestStage_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestStageCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -492,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -502,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static QuestStage CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestStage();
             ((QuestStageSetterCommon)((IQuestStageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -517,7 +498,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestStage item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -527,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -591,26 +572,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IQuestStageGetter item,
             string? name = null,
             QuestStage.Mask<bool>? printMask = null)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).ToString(
+            return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IQuestStageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestStage.Mask<bool>? printMask = null)
         {
-            ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).ToString(
+            ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -716,7 +697,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IQuestStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestStageSetterCommon)((IQuestStageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -731,10 +712,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum QuestStage_FieldIndex
+    internal enum QuestStage_FieldIndex
     {
         Stage = 0,
         LogEntries = 1,
@@ -742,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class QuestStage_Registration : ILoquiRegistration
+    internal partial class QuestStage_Registration : ILoquiRegistration
     {
         public static readonly QuestStage_Registration Instance = new QuestStage_Registration();
 
@@ -784,6 +765,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.INDX);
+            var all = RecordCollection.Factory(
+                RecordTypes.INDX,
+                RecordTypes.QSDT,
+                RecordTypes.CTDA,
+                RecordTypes.CTDT,
+                RecordTypes.CNAM,
+                RecordTypes.SCHD,
+                RecordTypes.SCHR);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(QuestStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -817,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class QuestStageSetterCommon
+    internal partial class QuestStageSetterCommon
     {
         public static readonly QuestStageSetterCommon Instance = new QuestStageSetterCommon();
 
@@ -842,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IQuestStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -855,7 +850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class QuestStageCommon
+    internal partial class QuestStageCommon
     {
         public static readonly QuestStageCommon Instance = new QuestStageCommon();
 
@@ -879,7 +874,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             QuestStage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Stage = item.Stage == rhs.Stage;
             ret.LogEntries = item.LogEntries.CollectionEqualsHelper(
                 rhs.LogEntries,
@@ -887,71 +881,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IQuestStageGetter item,
             string? name = null,
             QuestStage.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IQuestStageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestStage.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"QuestStage =>");
+                sb.AppendLine($"QuestStage =>");
             }
             else
             {
-                fg.AppendLine($"{name} (QuestStage) =>");
+                sb.AppendLine($"{name} (QuestStage) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IQuestStageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             QuestStage.Mask<bool>? printMask = null)
         {
             if (printMask?.Stage ?? true)
             {
-                fg.AppendItem(item.Stage, "Stage");
+                sb.AppendItem(item.Stage, "Stage");
             }
             if (printMask?.LogEntries?.Overall ?? true)
             {
-                fg.AppendLine("LogEntries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("LogEntries =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.LogEntries)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -968,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
             {
-                if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
+                if (!lhs.LogEntries.SequenceEqual(rhs.LogEntries, (l, r) => ((LogEntryCommon)((ILogEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestStage_FieldIndex.LogEntries)))) return false;
             }
             return true;
         }
@@ -990,10 +978,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestStageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestStageGetter obj)
         {
             foreach (var item in obj.LogEntries.WhereCastable<ILogEntryGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1003,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class QuestStageSetterTranslationCommon
+    internal partial class QuestStageSetterTranslationCommon
     {
         public static readonly QuestStageSetterTranslationCommon Instance = new QuestStageSetterTranslationCommon();
 
@@ -1105,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration StaticRegistration => QuestStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1129,16 +1117,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class QuestStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static QuestStageBinaryWriteTranslation Instance = new QuestStageBinaryWriteTranslation();
+        public static readonly QuestStageBinaryWriteTranslation Instance = new QuestStageBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IQuestStageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1147,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILogEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.LogEntries,
-                transl: (MutagenWriter subWriter, ILogEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILogEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LogEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1160,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IQuestStageGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1171,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestStageGetter)item,
@@ -1181,9 +1169,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class QuestStageBinaryCreateTranslation
+    internal partial class QuestStageBinaryCreateTranslation
     {
-        public readonly static QuestStageBinaryCreateTranslation Instance = new QuestStageBinaryCreateTranslation();
+        public static readonly QuestStageBinaryCreateTranslation Instance = new QuestStageBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestStage item,
@@ -1198,14 +1186,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestStage_FieldIndex.Stage) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Stage, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Stage = frame.ReadUInt16();
                     return (int)QuestStage_FieldIndex.Stage;
@@ -1220,7 +1208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LogEntries.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LogEntry>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
+                            triggeringRecord: LogEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LogEntry.TryCreateFromBinary));
                     return (int)QuestStage_FieldIndex.LogEntries;
@@ -1241,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IQuestStageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestStageBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1254,16 +1242,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class QuestStageBinaryOverlay :
+    internal partial class QuestStageBinaryOverlay :
         PluginBinaryOverlay,
         IQuestStageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestStage_Registration.Instance;
-        public static QuestStage_Registration StaticRegistration => QuestStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => QuestStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => QuestStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1277,16 +1265,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestStageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestStageBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1296,9 +1284,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Stage
         private int? _StageLocation;
-        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StageLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt16 Stage => _StageLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StageLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
-        public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = ListExt.Empty<LogEntryBinaryOverlay>();
+        public IReadOnlyList<ILogEntryGetter> LogEntries { get; private set; } = Array.Empty<ILogEntryGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1306,42 +1294,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected QuestStageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static QuestStageBinaryOverlay QuestStageFactory(
+        public static IQuestStageGetter QuestStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestStageBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static QuestStageBinaryOverlay QuestStageFactory(
+        public static IQuestStageGetter QuestStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestStageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1351,14 +1345,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)QuestStage_FieldIndex.Stage) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Stage, translationParams)) return ParseResult.Stop;
                     _StageLocation = (stream.Position - offset);
                     return (int)QuestStage_FieldIndex.Stage;
                 }
@@ -1369,10 +1363,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
                 {
-                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<LogEntryBinaryOverlay>(
+                    this.LogEntries = this.ParseRepeatedTypelessSubrecord<ILogEntryGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: LogEntry_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: LogEntry_Registration.TriggerSpecs,
                         factory: LogEntryBinaryOverlay.LogEntryFactory);
                     return (int)QuestStage_FieldIndex.LogEntries;
                 }
@@ -1382,12 +1376,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestStageMixIn.ToString(
+            QuestStageMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

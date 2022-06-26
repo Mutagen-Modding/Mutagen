@@ -128,10 +128,10 @@
   </Object>
   <Object name="WeatherImageSpaces" objType="Subrecord" recordType="IMSP" GUID="1ed50512-8468-437a-8b6c-8c195c59cf4d" ID="253">
     <Fields>
-      <FormLink name="Sunrise" refName="ImageSpaceAdapter" />
-      <FormLink name="Day" refName="ImageSpaceAdapter" />
-      <FormLink name="Sunset" refName="ImageSpaceAdapter" />
-      <FormLink name="Night" refName="ImageSpaceAdapter" />
+      <FormLink name="Sunrise" refName="ImageSpace" />
+      <FormLink name="Day" refName="ImageSpace" />
+      <FormLink name="Sunset" refName="ImageSpace" />
+      <FormLink name="Night" refName="ImageSpace" />
     </Fields>
   </Object>
   <Object name="WeatherVolumetricLighting" objType="Subrecord" recordType="HNAM" GUID="9c43a8c4-aa8c-4c76-9c57-7770b4583e47" ID="254">

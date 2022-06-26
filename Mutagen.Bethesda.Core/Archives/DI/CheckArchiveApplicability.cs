@@ -1,48 +1,45 @@
-﻿using System;
-using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Plugins;
+﻿using Mutagen.Bethesda.Plugins;
 using Noggog;
 
-namespace Mutagen.Bethesda.Archives.DI
+namespace Mutagen.Bethesda.Archives.DI;
+
+public interface ICheckArchiveApplicability
 {
-    public interface ICheckArchiveApplicability
+    /// <summary>
+    /// Analyzes whether an Archive would typically apply to a given ModKey. <br />
+    ///  <br />
+    /// - Is extension of the proper type <br />
+    /// - Does the name match <br />
+    /// - Does the name match, with an extra ` - AssetType` suffix considered
+    /// </summary>
+    /// <param name="modKey">ModKey to check applicability for</param>
+    /// <param name="archiveFileName">Filename of the Archive, with extension</param>
+    /// <returns>True if Archive is typically applicable to the given ModKey</returns>
+    bool IsApplicable(ModKey modKey, FileName archiveFileName);
+}
+
+public class CheckArchiveApplicability : ICheckArchiveApplicability
+{
+    private readonly IArchiveExtensionProvider _archiveExtensionProvider;
+
+    public CheckArchiveApplicability(IArchiveExtensionProvider archiveExtensionProvider)
     {
-        /// <summary>
-        /// Analyzes whether an Archive would typically apply to a given ModKey. <br />
-        ///  <br />
-        /// - Is extension of the proper type <br />
-        /// - Does the name match <br />
-        /// - Does the name match, with an extra ` - AssetType` suffix considered
-        /// </summary>
-        /// <param name="modKey">ModKey to check applicability for</param>
-        /// <param name="archiveFileName">Filename of the Archive, with extension</param>
-        /// <returns>True if Archive is typically applicable to the given ModKey</returns>
-        bool IsApplicable(ModKey modKey, FileName archiveFileName);
+        _archiveExtensionProvider = archiveExtensionProvider;
     }
 
-    public class CheckArchiveApplicability : ICheckArchiveApplicability
+    /// <inheritdoc />
+    public bool IsApplicable(ModKey modKey, FileName archiveFileName)
     {
-        private readonly IArchiveExtensionProvider _archiveExtensionProvider;
+        if (!archiveFileName.Extension.Equals(_archiveExtensionProvider.Get(), StringComparison.OrdinalIgnoreCase)) return false;
+        var nameWithoutExt = archiveFileName.NameWithoutExtension.AsSpan();
 
-        public CheckArchiveApplicability(IArchiveExtensionProvider archiveExtensionProvider)
-        {
-            _archiveExtensionProvider = archiveExtensionProvider;
-        }
+        // See if the name matches straight up
+        if (modKey.Name.AsSpan().Equals(nameWithoutExt, StringComparison.OrdinalIgnoreCase)) return true;
 
-        /// <inheritdoc />
-        public bool IsApplicable(ModKey modKey, FileName archiveFileName)
-        {
-            if (!archiveFileName.Extension.Equals(_archiveExtensionProvider.Get(), StringComparison.OrdinalIgnoreCase)) return false;
-            var nameWithoutExt = archiveFileName.NameWithoutExtension.AsSpan();
+        // Trim ending "type" information and try again
+        var delimIndex = nameWithoutExt.LastIndexOf(" - ");
+        if (delimIndex == -1) return false;
 
-            // See if the name matches straight up
-            if (modKey.Name.AsSpan().Equals(nameWithoutExt, StringComparison.OrdinalIgnoreCase)) return true;
-
-            // Trim ending "type" information and try again
-            var delimIndex = nameWithoutExt.LastIndexOf(" - ");
-            if (delimIndex == -1) return false;
-
-            return modKey.Name.AsSpan().Equals(nameWithoutExt.Slice(0, delimIndex), StringComparison.OrdinalIgnoreCase);
-        }
+        return modKey.Name.AsSpan().Equals(nameWithoutExt.Slice(0, delimIndex), StringComparison.OrdinalIgnoreCase);
     }
 }

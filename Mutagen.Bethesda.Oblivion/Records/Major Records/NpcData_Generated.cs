@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -140,12 +142,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcDataMixIn.ToString(
+            NpcDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -510,146 +513,141 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NpcData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NpcData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NpcData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NpcData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NpcData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Armorer ?? true)
                     {
-                        fg.AppendItem(Armorer, "Armorer");
+                        sb.AppendItem(Armorer, "Armorer");
                     }
                     if (printMask?.Athletics ?? true)
                     {
-                        fg.AppendItem(Athletics, "Athletics");
+                        sb.AppendItem(Athletics, "Athletics");
                     }
                     if (printMask?.Blade ?? true)
                     {
-                        fg.AppendItem(Blade, "Blade");
+                        sb.AppendItem(Blade, "Blade");
                     }
                     if (printMask?.Block ?? true)
                     {
-                        fg.AppendItem(Block, "Block");
+                        sb.AppendItem(Block, "Block");
                     }
                     if (printMask?.Blunt ?? true)
                     {
-                        fg.AppendItem(Blunt, "Blunt");
+                        sb.AppendItem(Blunt, "Blunt");
                     }
                     if (printMask?.HandToHand ?? true)
                     {
-                        fg.AppendItem(HandToHand, "HandToHand");
+                        sb.AppendItem(HandToHand, "HandToHand");
                     }
                     if (printMask?.HeavyArmor ?? true)
                     {
-                        fg.AppendItem(HeavyArmor, "HeavyArmor");
+                        sb.AppendItem(HeavyArmor, "HeavyArmor");
                     }
                     if (printMask?.Alchemy ?? true)
                     {
-                        fg.AppendItem(Alchemy, "Alchemy");
+                        sb.AppendItem(Alchemy, "Alchemy");
                     }
                     if (printMask?.Alteration ?? true)
                     {
-                        fg.AppendItem(Alteration, "Alteration");
+                        sb.AppendItem(Alteration, "Alteration");
                     }
                     if (printMask?.Conjuration ?? true)
                     {
-                        fg.AppendItem(Conjuration, "Conjuration");
+                        sb.AppendItem(Conjuration, "Conjuration");
                     }
                     if (printMask?.Destruction ?? true)
                     {
-                        fg.AppendItem(Destruction, "Destruction");
+                        sb.AppendItem(Destruction, "Destruction");
                     }
                     if (printMask?.Illusion ?? true)
                     {
-                        fg.AppendItem(Illusion, "Illusion");
+                        sb.AppendItem(Illusion, "Illusion");
                     }
                     if (printMask?.Mysticism ?? true)
                     {
-                        fg.AppendItem(Mysticism, "Mysticism");
+                        sb.AppendItem(Mysticism, "Mysticism");
                     }
                     if (printMask?.Restoration ?? true)
                     {
-                        fg.AppendItem(Restoration, "Restoration");
+                        sb.AppendItem(Restoration, "Restoration");
                     }
                     if (printMask?.Acrobatics ?? true)
                     {
-                        fg.AppendItem(Acrobatics, "Acrobatics");
+                        sb.AppendItem(Acrobatics, "Acrobatics");
                     }
                     if (printMask?.LightArmor ?? true)
                     {
-                        fg.AppendItem(LightArmor, "LightArmor");
+                        sb.AppendItem(LightArmor, "LightArmor");
                     }
                     if (printMask?.Marksman ?? true)
                     {
-                        fg.AppendItem(Marksman, "Marksman");
+                        sb.AppendItem(Marksman, "Marksman");
                     }
                     if (printMask?.Mercantile ?? true)
                     {
-                        fg.AppendItem(Mercantile, "Mercantile");
+                        sb.AppendItem(Mercantile, "Mercantile");
                     }
                     if (printMask?.Security ?? true)
                     {
-                        fg.AppendItem(Security, "Security");
+                        sb.AppendItem(Security, "Security");
                     }
                     if (printMask?.Sneak ?? true)
                     {
-                        fg.AppendItem(Sneak, "Sneak");
+                        sb.AppendItem(Sneak, "Sneak");
                     }
                     if (printMask?.Speechcraft ?? true)
                     {
-                        fg.AppendItem(Speechcraft, "Speechcraft");
+                        sb.AppendItem(Speechcraft, "Speechcraft");
                     }
                     if (printMask?.Health ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        sb.AppendItem(Health, "Health");
                     }
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendItem(Strength, "Strength");
+                        sb.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Intelligence ?? true)
                     {
-                        fg.AppendItem(Intelligence, "Intelligence");
+                        sb.AppendItem(Intelligence, "Intelligence");
                     }
                     if (printMask?.Willpower ?? true)
                     {
-                        fg.AppendItem(Willpower, "Willpower");
+                        sb.AppendItem(Willpower, "Willpower");
                     }
                     if (printMask?.Agility ?? true)
                     {
-                        fg.AppendItem(Agility, "Agility");
+                        sb.AppendItem(Agility, "Agility");
                     }
                     if (printMask?.Speed ?? true)
                     {
-                        fg.AppendItem(Speed, "Speed");
+                        sb.AppendItem(Speed, "Speed");
                     }
                     if (printMask?.Endurance ?? true)
                     {
-                        fg.AppendItem(Endurance, "Endurance");
+                        sb.AppendItem(Endurance, "Endurance");
                     }
                     if (printMask?.Personality ?? true)
                     {
-                        fg.AppendItem(Personality, "Personality");
+                        sb.AppendItem(Personality, "Personality");
                     }
                     if (printMask?.Luck ?? true)
                     {
-                        fg.AppendItem(Luck, "Luck");
+                        sb.AppendItem(Luck, "Luck");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1014,65 +1012,116 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Armorer, "Armorer");
-                fg.AppendItem(Athletics, "Athletics");
-                fg.AppendItem(Blade, "Blade");
-                fg.AppendItem(Block, "Block");
-                fg.AppendItem(Blunt, "Blunt");
-                fg.AppendItem(HandToHand, "HandToHand");
-                fg.AppendItem(HeavyArmor, "HeavyArmor");
-                fg.AppendItem(Alchemy, "Alchemy");
-                fg.AppendItem(Alteration, "Alteration");
-                fg.AppendItem(Conjuration, "Conjuration");
-                fg.AppendItem(Destruction, "Destruction");
-                fg.AppendItem(Illusion, "Illusion");
-                fg.AppendItem(Mysticism, "Mysticism");
-                fg.AppendItem(Restoration, "Restoration");
-                fg.AppendItem(Acrobatics, "Acrobatics");
-                fg.AppendItem(LightArmor, "LightArmor");
-                fg.AppendItem(Marksman, "Marksman");
-                fg.AppendItem(Mercantile, "Mercantile");
-                fg.AppendItem(Security, "Security");
-                fg.AppendItem(Sneak, "Sneak");
-                fg.AppendItem(Speechcraft, "Speechcraft");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Intelligence, "Intelligence");
-                fg.AppendItem(Willpower, "Willpower");
-                fg.AppendItem(Agility, "Agility");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Endurance, "Endurance");
-                fg.AppendItem(Personality, "Personality");
-                fg.AppendItem(Luck, "Luck");
+                {
+                    sb.AppendItem(Armorer, "Armorer");
+                }
+                {
+                    sb.AppendItem(Athletics, "Athletics");
+                }
+                {
+                    sb.AppendItem(Blade, "Blade");
+                }
+                {
+                    sb.AppendItem(Block, "Block");
+                }
+                {
+                    sb.AppendItem(Blunt, "Blunt");
+                }
+                {
+                    sb.AppendItem(HandToHand, "HandToHand");
+                }
+                {
+                    sb.AppendItem(HeavyArmor, "HeavyArmor");
+                }
+                {
+                    sb.AppendItem(Alchemy, "Alchemy");
+                }
+                {
+                    sb.AppendItem(Alteration, "Alteration");
+                }
+                {
+                    sb.AppendItem(Conjuration, "Conjuration");
+                }
+                {
+                    sb.AppendItem(Destruction, "Destruction");
+                }
+                {
+                    sb.AppendItem(Illusion, "Illusion");
+                }
+                {
+                    sb.AppendItem(Mysticism, "Mysticism");
+                }
+                {
+                    sb.AppendItem(Restoration, "Restoration");
+                }
+                {
+                    sb.AppendItem(Acrobatics, "Acrobatics");
+                }
+                {
+                    sb.AppendItem(LightArmor, "LightArmor");
+                }
+                {
+                    sb.AppendItem(Marksman, "Marksman");
+                }
+                {
+                    sb.AppendItem(Mercantile, "Mercantile");
+                }
+                {
+                    sb.AppendItem(Security, "Security");
+                }
+                {
+                    sb.AppendItem(Sneak, "Sneak");
+                }
+                {
+                    sb.AppendItem(Speechcraft, "Speechcraft");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Intelligence, "Intelligence");
+                }
+                {
+                    sb.AppendItem(Willpower, "Willpower");
+                }
+                {
+                    sb.AppendItem(Agility, "Agility");
+                }
+                {
+                    sb.AppendItem(Speed, "Speed");
+                }
+                {
+                    sb.AppendItem(Endurance, "Endurance");
+                }
+                {
+                    sb.AppendItem(Personality, "Personality");
+                }
+                {
+                    sb.AppendItem(Luck, "Luck");
+                }
             }
             #endregion
 
@@ -1258,10 +1307,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = NpcData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcDataBinaryWriteTranslation.Instance;
@@ -1269,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1279,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static NpcData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcData();
             ((NpcDataSetterCommon)((INpcDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1294,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1304,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1422,26 +1467,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcDataGetter item,
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
-            return ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).ToString(
+            return ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
-            ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).ToString(
+            ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1547,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this INpcData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcDataSetterCommon)((INpcDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1562,10 +1607,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum NpcData_FieldIndex
+    internal enum NpcData_FieldIndex
     {
         Armorer = 0,
         Athletics = 1,
@@ -1601,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class NpcData_Registration : ILoquiRegistration
+    internal partial class NpcData_Registration : ILoquiRegistration
     {
         public static readonly NpcData_Registration Instance = new NpcData_Registration();
 
@@ -1643,6 +1688,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1676,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class NpcDataSetterCommon
+    internal partial class NpcDataSetterCommon
     {
         public static readonly NpcDataSetterCommon Instance = new NpcDataSetterCommon();
 
@@ -1728,12 +1779,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             INpcData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1744,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcDataCommon
+    internal partial class NpcDataCommon
     {
         public static readonly NpcDataCommon Instance = new NpcDataCommon();
 
@@ -1768,7 +1819,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NpcData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Armorer = item.Armorer == rhs.Armorer;
             ret.Athletics = item.Athletics == rhs.Athletics;
             ret.Blade = item.Blade == rhs.Blade;
@@ -1801,169 +1851,167 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Luck = item.Luck == rhs.Luck;
         }
         
-        public string ToString(
+        public string Print(
             INpcDataGetter item,
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcData =>");
+                sb.AppendLine($"NpcData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcData) =>");
+                sb.AppendLine($"{name} (NpcData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcData.Mask<bool>? printMask = null)
         {
             if (printMask?.Armorer ?? true)
             {
-                fg.AppendItem(item.Armorer, "Armorer");
+                sb.AppendItem(item.Armorer, "Armorer");
             }
             if (printMask?.Athletics ?? true)
             {
-                fg.AppendItem(item.Athletics, "Athletics");
+                sb.AppendItem(item.Athletics, "Athletics");
             }
             if (printMask?.Blade ?? true)
             {
-                fg.AppendItem(item.Blade, "Blade");
+                sb.AppendItem(item.Blade, "Blade");
             }
             if (printMask?.Block ?? true)
             {
-                fg.AppendItem(item.Block, "Block");
+                sb.AppendItem(item.Block, "Block");
             }
             if (printMask?.Blunt ?? true)
             {
-                fg.AppendItem(item.Blunt, "Blunt");
+                sb.AppendItem(item.Blunt, "Blunt");
             }
             if (printMask?.HandToHand ?? true)
             {
-                fg.AppendItem(item.HandToHand, "HandToHand");
+                sb.AppendItem(item.HandToHand, "HandToHand");
             }
             if (printMask?.HeavyArmor ?? true)
             {
-                fg.AppendItem(item.HeavyArmor, "HeavyArmor");
+                sb.AppendItem(item.HeavyArmor, "HeavyArmor");
             }
             if (printMask?.Alchemy ?? true)
             {
-                fg.AppendItem(item.Alchemy, "Alchemy");
+                sb.AppendItem(item.Alchemy, "Alchemy");
             }
             if (printMask?.Alteration ?? true)
             {
-                fg.AppendItem(item.Alteration, "Alteration");
+                sb.AppendItem(item.Alteration, "Alteration");
             }
             if (printMask?.Conjuration ?? true)
             {
-                fg.AppendItem(item.Conjuration, "Conjuration");
+                sb.AppendItem(item.Conjuration, "Conjuration");
             }
             if (printMask?.Destruction ?? true)
             {
-                fg.AppendItem(item.Destruction, "Destruction");
+                sb.AppendItem(item.Destruction, "Destruction");
             }
             if (printMask?.Illusion ?? true)
             {
-                fg.AppendItem(item.Illusion, "Illusion");
+                sb.AppendItem(item.Illusion, "Illusion");
             }
             if (printMask?.Mysticism ?? true)
             {
-                fg.AppendItem(item.Mysticism, "Mysticism");
+                sb.AppendItem(item.Mysticism, "Mysticism");
             }
             if (printMask?.Restoration ?? true)
             {
-                fg.AppendItem(item.Restoration, "Restoration");
+                sb.AppendItem(item.Restoration, "Restoration");
             }
             if (printMask?.Acrobatics ?? true)
             {
-                fg.AppendItem(item.Acrobatics, "Acrobatics");
+                sb.AppendItem(item.Acrobatics, "Acrobatics");
             }
             if (printMask?.LightArmor ?? true)
             {
-                fg.AppendItem(item.LightArmor, "LightArmor");
+                sb.AppendItem(item.LightArmor, "LightArmor");
             }
             if (printMask?.Marksman ?? true)
             {
-                fg.AppendItem(item.Marksman, "Marksman");
+                sb.AppendItem(item.Marksman, "Marksman");
             }
             if (printMask?.Mercantile ?? true)
             {
-                fg.AppendItem(item.Mercantile, "Mercantile");
+                sb.AppendItem(item.Mercantile, "Mercantile");
             }
             if (printMask?.Security ?? true)
             {
-                fg.AppendItem(item.Security, "Security");
+                sb.AppendItem(item.Security, "Security");
             }
             if (printMask?.Sneak ?? true)
             {
-                fg.AppendItem(item.Sneak, "Sneak");
+                sb.AppendItem(item.Sneak, "Sneak");
             }
             if (printMask?.Speechcraft ?? true)
             {
-                fg.AppendItem(item.Speechcraft, "Speechcraft");
+                sb.AppendItem(item.Speechcraft, "Speechcraft");
             }
             if (printMask?.Health ?? true)
             {
-                fg.AppendItem(item.Health, "Health");
+                sb.AppendItem(item.Health, "Health");
             }
             if (printMask?.Strength ?? true)
             {
-                fg.AppendItem(item.Strength, "Strength");
+                sb.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Intelligence ?? true)
             {
-                fg.AppendItem(item.Intelligence, "Intelligence");
+                sb.AppendItem(item.Intelligence, "Intelligence");
             }
             if (printMask?.Willpower ?? true)
             {
-                fg.AppendItem(item.Willpower, "Willpower");
+                sb.AppendItem(item.Willpower, "Willpower");
             }
             if (printMask?.Agility ?? true)
             {
-                fg.AppendItem(item.Agility, "Agility");
+                sb.AppendItem(item.Agility, "Agility");
             }
             if (printMask?.Speed ?? true)
             {
-                fg.AppendItem(item.Speed, "Speed");
+                sb.AppendItem(item.Speed, "Speed");
             }
             if (printMask?.Endurance ?? true)
             {
-                fg.AppendItem(item.Endurance, "Endurance");
+                sb.AppendItem(item.Endurance, "Endurance");
             }
             if (printMask?.Personality ?? true)
             {
-                fg.AppendItem(item.Personality, "Personality");
+                sb.AppendItem(item.Personality, "Personality");
             }
             if (printMask?.Luck ?? true)
             {
-                fg.AppendItem(item.Luck, "Luck");
+                sb.AppendItem(item.Luck, "Luck");
             }
         }
         
@@ -2142,7 +2190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcDataGetter obj)
         {
             yield break;
         }
@@ -2150,7 +2198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class NpcDataSetterTranslationCommon
+    internal partial class NpcDataSetterTranslationCommon
     {
         public static readonly NpcDataSetterTranslationCommon Instance = new NpcDataSetterTranslationCommon();
 
@@ -2344,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2368,11 +2416,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class NpcDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NpcDataBinaryWriteTranslation Instance = new NpcDataBinaryWriteTranslation();
+        public static readonly NpcDataBinaryWriteTranslation Instance = new NpcDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcDataGetter item,
@@ -2413,12 +2461,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             INpcDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2430,7 +2478,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcDataGetter)item,
@@ -2440,9 +2488,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class NpcDataBinaryCreateTranslation
+    internal partial class NpcDataBinaryCreateTranslation
     {
-        public readonly static NpcDataBinaryCreateTranslation Instance = new NpcDataBinaryCreateTranslation();
+        public static readonly NpcDataBinaryCreateTranslation Instance = new NpcDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcData item,
@@ -2491,7 +2539,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this INpcDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2504,16 +2552,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class NpcDataBinaryOverlay :
+    internal partial class NpcDataBinaryOverlay :
         PluginBinaryOverlay,
         INpcDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcData_Registration.Instance;
-        public static NpcData_Registration StaticRegistration => NpcData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NpcData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NpcDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2527,7 +2575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NpcDataBinaryWriteTranslation.Instance;
@@ -2535,7 +2583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2543,36 +2591,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Byte Armorer => _data.Span[0x0];
-        public Byte Athletics => _data.Span[0x1];
-        public Byte Blade => _data.Span[0x2];
-        public Byte Block => _data.Span[0x3];
-        public Byte Blunt => _data.Span[0x4];
-        public Byte HandToHand => _data.Span[0x5];
-        public Byte HeavyArmor => _data.Span[0x6];
-        public Byte Alchemy => _data.Span[0x7];
-        public Byte Alteration => _data.Span[0x8];
-        public Byte Conjuration => _data.Span[0x9];
-        public Byte Destruction => _data.Span[0xA];
-        public Byte Illusion => _data.Span[0xB];
-        public Byte Mysticism => _data.Span[0xC];
-        public Byte Restoration => _data.Span[0xD];
-        public Byte Acrobatics => _data.Span[0xE];
-        public Byte LightArmor => _data.Span[0xF];
-        public Byte Marksman => _data.Span[0x10];
-        public Byte Mercantile => _data.Span[0x11];
-        public Byte Security => _data.Span[0x12];
-        public Byte Sneak => _data.Span[0x13];
-        public Byte Speechcraft => _data.Span[0x14];
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x15, 0x4));
-        public Byte Strength => _data.Span[0x19];
-        public Byte Intelligence => _data.Span[0x1A];
-        public Byte Willpower => _data.Span[0x1B];
-        public Byte Agility => _data.Span[0x1C];
-        public Byte Speed => _data.Span[0x1D];
-        public Byte Endurance => _data.Span[0x1E];
-        public Byte Personality => _data.Span[0x1F];
-        public Byte Luck => _data.Span[0x20];
+        public Byte Armorer => _structData.Span[0x0];
+        public Byte Athletics => _structData.Span[0x1];
+        public Byte Blade => _structData.Span[0x2];
+        public Byte Block => _structData.Span[0x3];
+        public Byte Blunt => _structData.Span[0x4];
+        public Byte HandToHand => _structData.Span[0x5];
+        public Byte HeavyArmor => _structData.Span[0x6];
+        public Byte Alchemy => _structData.Span[0x7];
+        public Byte Alteration => _structData.Span[0x8];
+        public Byte Conjuration => _structData.Span[0x9];
+        public Byte Destruction => _structData.Span[0xA];
+        public Byte Illusion => _structData.Span[0xB];
+        public Byte Mysticism => _structData.Span[0xC];
+        public Byte Restoration => _structData.Span[0xD];
+        public Byte Acrobatics => _structData.Span[0xE];
+        public Byte LightArmor => _structData.Span[0xF];
+        public Byte Marksman => _structData.Span[0x10];
+        public Byte Mercantile => _structData.Span[0x11];
+        public Byte Security => _structData.Span[0x12];
+        public Byte Sneak => _structData.Span[0x13];
+        public Byte Speechcraft => _structData.Span[0x14];
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x15, 0x4));
+        public Byte Strength => _structData.Span[0x19];
+        public Byte Intelligence => _structData.Span[0x1A];
+        public Byte Willpower => _structData.Span[0x1B];
+        public Byte Agility => _structData.Span[0x1C];
+        public Byte Speed => _structData.Span[0x1D];
+        public Byte Endurance => _structData.Span[0x1E];
+        public Byte Personality => _structData.Span[0x1F];
+        public Byte Luck => _structData.Span[0x20];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2580,25 +2628,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected NpcDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NpcDataBinaryOverlay NpcDataFactory(
+        public static INpcDataGetter NpcDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x21,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x21 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -2607,25 +2660,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static NpcDataBinaryOverlay NpcDataFactory(
+        public static INpcDataGetter NpcDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcDataMixIn.ToString(
+            NpcDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

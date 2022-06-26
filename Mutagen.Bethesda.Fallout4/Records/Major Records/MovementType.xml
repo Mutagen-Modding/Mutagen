@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovementType" recordType="MOVT" baseClass="Fallout4MajorRecord" objType="Record" GUID="f82d6eee-4520-4ffe-8a9c-2a93ea8837d5" ID="207">
+    <Fields>
+      <String name="Name" recordType="MNAM" />
+      <Data recordType="SPED">
+        <Fields>
+          <Float name="LeftStanding" />
+          <Float name="LeftWalk" />
+          <Float name="LeftRun" />
+          <Float name="LeftSprint" />
+          <Float name="RightStanding" />
+          <Float name="RightWalk" />
+          <Float name="RightRun" />
+          <Float name="RightSprint" />
+          <Float name="ForwardStanding" />
+          <Float name="ForwardWalk" />
+          <Break />
+          <Float name="ForwardRun" />
+          <Break />
+          <Float name="ForwardSprint" />
+          <Float name="BackStanding" />
+          <Float name="BackWalk" />
+          <Float name="BackRun" />
+          <Float name="BackSprint" />
+          <Float name="PitchStanding" isRotation="true" />
+          <Break />
+          <Float name="PitchWalk" isRotation="true" />
+          <Float name="PitchRun" isRotation="true" />
+          <Float name="PitchSprint" isRotation="true" />
+          <Float name="RollStanding" isRotation="true" />
+          <Float name="RollWalk" isRotation="true" />
+          <Float name="RollRun" isRotation="true" />
+          <Float name="RollSprint" isRotation="true" />
+          <Float name="YawStanding" isRotation="true" />
+          <Float name="YawWalk" isRotation="true" />
+          <Float name="YawRun" isRotation="true" />
+          <Float name="YawSprint" isRotation="true" />
+        </Fields>
+      </Data>
+      <RefDirect name="AnimationChangeThresholds" refName="AnimationChangeThresholds" />
+      <Float name="FloatHeight" recordType="JNAM" />
+      <Float name="FlightAngleGain" recordType="LNAM" />
+    </Fields>
+  </Object>
+  <Object name="AnimationChangeThresholds" objType="Subrecord" recordType="INAM" GUID="1b85bed0-630a-4a2f-9213-bf71bc9d1228" ID="635">
+    <Fields>
+      <Float name="Directional" />
+      <Float name="MovementSpeed" />
+      <Float name="RotationSpeed" />
+    </Fields>
+  </Object>
+</Loqui>

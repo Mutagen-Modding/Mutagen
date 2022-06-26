@@ -7,14 +7,10 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -47,12 +43,13 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PexObjectNamedFunctionMixIn.ToString(
+            PexObjectNamedFunctionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -173,34 +170,29 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PexObjectNamedFunction.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PexObjectNamedFunction.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PexObjectNamedFunction.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PexObjectNamedFunction.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PexObjectNamedFunction.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PexObjectNamedFunction.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FunctionName ?? true)
                     {
-                        fg.AppendItem(FunctionName, "FunctionName");
+                        sb.AppendItem(FunctionName, "FunctionName");
                     }
                     if (printMask?.Function?.Overall ?? true)
                     {
-                        Function?.ToString(fg);
+                        Function?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -285,37 +277,30 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(FunctionName, "FunctionName");
-                Function?.ToString(fg);
+                {
+                    sb.AppendItem(FunctionName, "FunctionName");
+                }
+                Function?.Print(sb);
             }
             #endregion
 
@@ -388,7 +373,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -449,26 +434,26 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPexObjectNamedFunctionGetter item,
             string? name = null,
             PexObjectNamedFunction.Mask<bool>? printMask = null)
         {
-            return ((PexObjectNamedFunctionCommon)((IPexObjectNamedFunctionGetter)item).CommonInstance()!).ToString(
+            return ((PexObjectNamedFunctionCommon)((IPexObjectNamedFunctionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPexObjectNamedFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObjectNamedFunction.Mask<bool>? printMask = null)
         {
-            ((PexObjectNamedFunctionCommon)((IPexObjectNamedFunctionGetter)item).CommonInstance()!).ToString(
+            ((PexObjectNamedFunctionCommon)((IPexObjectNamedFunctionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -575,10 +560,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexObjectNamedFunction_FieldIndex
+    internal enum PexObjectNamedFunction_FieldIndex
     {
         FunctionName = 0,
         Function = 1,
@@ -586,7 +571,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexObjectNamedFunction_Registration : ILoquiRegistration
+    internal partial class PexObjectNamedFunction_Registration : ILoquiRegistration
     {
         public static readonly PexObjectNamedFunction_Registration Instance = new PexObjectNamedFunction_Registration();
 
@@ -659,7 +644,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexObjectNamedFunctionSetterCommon
+    internal partial class PexObjectNamedFunctionSetterCommon
     {
         public static readonly PexObjectNamedFunctionSetterCommon Instance = new PexObjectNamedFunctionSetterCommon();
 
@@ -673,7 +658,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectNamedFunctionCommon
+    internal partial class PexObjectNamedFunctionCommon
     {
         public static readonly PexObjectNamedFunctionCommon Instance = new PexObjectNamedFunctionCommon();
 
@@ -697,63 +682,60 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectNamedFunction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FunctionName = string.Equals(item.FunctionName, rhs.FunctionName);
             ret.Function = MaskItemExt.Factory(item.Function.GetEqualsMask(rhs.Function, include), include);
         }
         
-        public string ToString(
+        public string Print(
             IPexObjectNamedFunctionGetter item,
             string? name = null,
             PexObjectNamedFunction.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPexObjectNamedFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObjectNamedFunction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PexObjectNamedFunction =>");
+                sb.AppendLine($"PexObjectNamedFunction =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PexObjectNamedFunction) =>");
+                sb.AppendLine($"{name} (PexObjectNamedFunction) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPexObjectNamedFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PexObjectNamedFunction.Mask<bool>? printMask = null)
         {
             if ((printMask?.FunctionName ?? true)
                 && item.FunctionName is {} FunctionNameItem)
             {
-                fg.AppendItem(FunctionNameItem, "FunctionName");
+                sb.AppendItem(FunctionNameItem, "FunctionName");
             }
             if (printMask?.Function?.Overall ?? true)
             {
-                item.Function?.ToString(fg, "Function");
+                item.Function?.Print(sb, "Function");
             }
         }
         
@@ -799,7 +781,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectNamedFunctionSetterTranslationCommon
+    internal partial class PexObjectNamedFunctionSetterTranslationCommon
     {
         public static readonly PexObjectNamedFunctionSetterTranslationCommon Instance = new PexObjectNamedFunctionSetterTranslationCommon();
 
@@ -899,7 +881,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectNamedFunction_Registration.Instance;
-        public static PexObjectNamedFunction_Registration StaticRegistration => PexObjectNamedFunction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexObjectNamedFunction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectNamedFunctionCommon.Instance;
         [DebuggerStepThrough]

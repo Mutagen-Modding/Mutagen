@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimModel" recordType="AMDL" objType="Record" baseClass="Fallout4MajorRecord" GUID="646f5dc0-24dd-45a1-a3e7-2bdfbc2bbcc7" ID="335">
+    <Fields>
+      <Data recordType="DNAM" >
+        <Fields>
+          <Float name="ConeOfFireMinAngle" />
+          <Float name="ConeOfFireMaxAngle" />
+          <Float name="ConeOfFireIncreasePerShot" />
+          <Float name="ConeOfFireIncreasePerSec" />
+          <UInt32 name="ConeOfFireDecreaseDelayMilliseconds" />
+          <Float name="ConeOfFireSneakMult" />
+          <Float name="RecoilDiminishSpringForce" />
+          <Float name="RecoilDiminishSightsMult" />
+          <Float name="RecoilMaxPerShot" />
+          <Float name="RecoilMinPerShot" />
+          <Float name="RecoilHipMult" />
+          <UInt32 name="RunawayRecoilShots" />
+          <Float name="RecoilArc" />
+          <Float name="RecoilArcRotate" />
+          <Float name="ConeOfFireIronSightsMult" />
+          <Float name="BaseStability" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

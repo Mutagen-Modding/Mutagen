@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -76,12 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageFlagsOverrideMixIn.ToString(
+            PackageFlagsOverrideMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -230,50 +233,45 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PackageFlagsOverride.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PackageFlagsOverride.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PackageFlagsOverride.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PackageFlagsOverride.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PackageFlagsOverride.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PackageFlagsOverride.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.SetFlags ?? true)
                     {
-                        fg.AppendItem(SetFlags, "SetFlags");
+                        sb.AppendItem(SetFlags, "SetFlags");
                     }
                     if (printMask?.ClearFlags ?? true)
                     {
-                        fg.AppendItem(ClearFlags, "ClearFlags");
+                        sb.AppendItem(ClearFlags, "ClearFlags");
                     }
                     if (printMask?.SetInterruptFlags ?? true)
                     {
-                        fg.AppendItem(SetInterruptFlags, "SetInterruptFlags");
+                        sb.AppendItem(SetInterruptFlags, "SetInterruptFlags");
                     }
                     if (printMask?.ClearInterruptFlags ?? true)
                     {
-                        fg.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
+                        sb.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
                     }
                     if (printMask?.PreferredSpeed ?? true)
                     {
-                        fg.AppendItem(PreferredSpeed, "PreferredSpeed");
+                        sb.AppendItem(PreferredSpeed, "PreferredSpeed");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -398,41 +396,44 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(SetFlags, "SetFlags");
-                fg.AppendItem(ClearFlags, "ClearFlags");
-                fg.AppendItem(SetInterruptFlags, "SetInterruptFlags");
-                fg.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
-                fg.AppendItem(PreferredSpeed, "PreferredSpeed");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(SetFlags, "SetFlags");
+                }
+                {
+                    sb.AppendItem(ClearFlags, "ClearFlags");
+                }
+                {
+                    sb.AppendItem(SetInterruptFlags, "SetInterruptFlags");
+                }
+                {
+                    sb.AppendItem(ClearInterruptFlags, "ClearInterruptFlags");
+                }
+                {
+                    sb.AppendItem(PreferredSpeed, "PreferredSpeed");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -522,10 +523,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = PackageFlagsOverride_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageFlagsOverrideBinaryWriteTranslation.Instance;
@@ -533,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -543,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PackageFlagsOverride CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PackageFlagsOverride();
             ((PackageFlagsOverrideSetterCommon)((IPackageFlagsOverrideGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -558,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PackageFlagsOverride item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -568,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -638,26 +635,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPackageFlagsOverrideGetter item,
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).ToString(
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPackageFlagsOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
-            ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).ToString(
+            ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -763,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPackageFlagsOverride item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PackageFlagsOverrideSetterCommon)((IPackageFlagsOverrideGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -778,10 +775,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PackageFlagsOverride_FieldIndex
+    internal enum PackageFlagsOverride_FieldIndex
     {
         SetFlags = 0,
         ClearFlags = 1,
@@ -793,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PackageFlagsOverride_Registration : ILoquiRegistration
+    internal partial class PackageFlagsOverride_Registration : ILoquiRegistration
     {
         public static readonly PackageFlagsOverride_Registration Instance = new PackageFlagsOverride_Registration();
 
@@ -835,6 +832,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PFO2;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PFO2);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PackageFlagsOverrideBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -868,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PackageFlagsOverrideSetterCommon
+    internal partial class PackageFlagsOverrideSetterCommon
     {
         public static readonly PackageFlagsOverrideSetterCommon Instance = new PackageFlagsOverrideSetterCommon();
 
@@ -896,12 +899,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPackageFlagsOverride item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PFO2),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -912,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageFlagsOverrideCommon
+    internal partial class PackageFlagsOverrideCommon
     {
         public static readonly PackageFlagsOverrideCommon Instance = new PackageFlagsOverrideCommon();
 
@@ -936,7 +939,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageFlagsOverride.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.SetFlags = item.SetFlags == rhs.SetFlags;
             ret.ClearFlags = item.ClearFlags == rhs.ClearFlags;
             ret.SetInterruptFlags = item.SetInterruptFlags == rhs.SetInterruptFlags;
@@ -945,73 +947,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }
         
-        public string ToString(
+        public string Print(
             IPackageFlagsOverrideGetter item,
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPackageFlagsOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PackageFlagsOverride =>");
+                sb.AppendLine($"PackageFlagsOverride =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PackageFlagsOverride) =>");
+                sb.AppendLine($"{name} (PackageFlagsOverride) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPackageFlagsOverrideGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PackageFlagsOverride.Mask<bool>? printMask = null)
         {
             if (printMask?.SetFlags ?? true)
             {
-                fg.AppendItem(item.SetFlags, "SetFlags");
+                sb.AppendItem(item.SetFlags, "SetFlags");
             }
             if (printMask?.ClearFlags ?? true)
             {
-                fg.AppendItem(item.ClearFlags, "ClearFlags");
+                sb.AppendItem(item.ClearFlags, "ClearFlags");
             }
             if (printMask?.SetInterruptFlags ?? true)
             {
-                fg.AppendItem(item.SetInterruptFlags, "SetInterruptFlags");
+                sb.AppendItem(item.SetInterruptFlags, "SetInterruptFlags");
             }
             if (printMask?.ClearInterruptFlags ?? true)
             {
-                fg.AppendItem(item.ClearInterruptFlags, "ClearInterruptFlags");
+                sb.AppendItem(item.ClearInterruptFlags, "ClearInterruptFlags");
             }
             if (printMask?.PreferredSpeed ?? true)
             {
-                fg.AppendItem(item.PreferredSpeed, "PreferredSpeed");
+                sb.AppendItem(item.PreferredSpeed, "PreferredSpeed");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
         }
         
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageFlagsOverrideGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageFlagsOverrideGetter obj)
         {
             yield break;
         }
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PackageFlagsOverrideSetterTranslationCommon
+    internal partial class PackageFlagsOverrideSetterTranslationCommon
     {
         public static readonly PackageFlagsOverrideSetterTranslationCommon Instance = new PackageFlagsOverrideSetterTranslationCommon();
 
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageFlagsOverride_Registration.Instance;
-        public static PackageFlagsOverride_Registration StaticRegistration => PackageFlagsOverride_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageFlagsOverride_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageFlagsOverrideCommon.Instance;
         [DebuggerStepThrough]
@@ -1200,11 +1200,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PackageFlagsOverrideBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PackageFlagsOverrideBinaryWriteTranslation Instance = new PackageFlagsOverrideBinaryWriteTranslation();
+        public static readonly PackageFlagsOverrideBinaryWriteTranslation Instance = new PackageFlagsOverrideBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPackageFlagsOverrideGetter item,
@@ -1238,12 +1238,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPackageFlagsOverrideGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PFO2),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPackageFlagsOverrideGetter)item,
@@ -1265,9 +1265,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PackageFlagsOverrideBinaryCreateTranslation
+    internal partial class PackageFlagsOverrideBinaryCreateTranslation
     {
-        public readonly static PackageFlagsOverrideBinaryCreateTranslation Instance = new PackageFlagsOverrideBinaryCreateTranslation();
+        public static readonly PackageFlagsOverrideBinaryCreateTranslation Instance = new PackageFlagsOverrideBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPackageFlagsOverride item,
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPackageFlagsOverrideGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1315,16 +1315,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PackageFlagsOverrideBinaryOverlay :
+    internal partial class PackageFlagsOverrideBinaryOverlay :
         PluginBinaryOverlay,
         IPackageFlagsOverrideGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PackageFlagsOverride_Registration.Instance;
-        public static PackageFlagsOverride_Registration StaticRegistration => PackageFlagsOverride_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PackageFlagsOverride_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PackageFlagsOverrideCommon.Instance;
         [DebuggerStepThrough]
@@ -1338,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageFlagsOverrideBinaryWriteTranslation.Instance;
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PackageFlagsOverrideBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1354,12 +1354,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Package.Flag SetFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Package.Flag ClearFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Package.InterruptFlag SetInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x8, 0x2));
-        public Package.InterruptFlag ClearInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0xA, 0x2));
-        public Package.Speed PreferredSpeed => (Package.Speed)_data.Span.Slice(0xC, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0xD, 0x3).ToArray();
+        public Package.Flag SetFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Package.Flag ClearFlags => (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Package.InterruptFlag SetInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x8, 0x2));
+        public Package.InterruptFlag ClearInterruptFlags => (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0xA, 0x2));
+        public Package.Speed PreferredSpeed => (Package.Speed)_structData.Span.Slice(0xC, 0x1)[0];
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1367,25 +1367,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PackageFlagsOverrideBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PackageFlagsOverrideBinaryOverlay PackageFlagsOverrideFactory(
+        public static IPackageFlagsOverrideGetter PackageFlagsOverrideFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PackageFlagsOverrideBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1394,25 +1399,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PackageFlagsOverrideBinaryOverlay PackageFlagsOverrideFactory(
+        public static IPackageFlagsOverrideGetter PackageFlagsOverrideFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PackageFlagsOverrideFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PackageFlagsOverrideMixIn.ToString(
+            PackageFlagsOverrideMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

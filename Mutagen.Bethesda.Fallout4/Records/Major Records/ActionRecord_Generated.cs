@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,21 +21,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -101,12 +102,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActionRecordMixIn.ToString(
+            ActionRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -250,46 +252,41 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ActionRecord.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ActionRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ActionRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ActionRecord.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ActionRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActionRecord.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.Notes ?? true)
                     {
-                        fg.AppendItem(Notes, "Notes");
+                        sb.AppendItem(Notes, "Notes");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.AttractionRule ?? true)
                     {
-                        fg.AppendItem(AttractionRule, "AttractionRule");
+                        sb.AppendItem(AttractionRule, "AttractionRule");
                     }
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -393,41 +390,42 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(Notes, "Notes");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(AttractionRule, "AttractionRule");
-                fg.AppendItem(Name, "Name");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(Notes, "Notes");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(AttractionRule, "AttractionRule");
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
             }
             #endregion
 
@@ -505,7 +503,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ActionRecord_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActionRecordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActionRecordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActionRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public ActionRecord(FormKey formKey)
         {
@@ -549,6 +547,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IActionRecord);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -576,7 +579,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ActionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActionRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -586,7 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ActionRecord CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActionRecord();
             ((ActionRecordSetterCommon)((IActionRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -601,7 +604,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActionRecord item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -611,7 +614,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -644,6 +647,10 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
+        #region Mutagen
+        new ActionRecord.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IActionRecordInternal :
@@ -676,6 +683,10 @@ namespace Mutagen.Bethesda.Fallout4
         String? Name { get; }
         #endregion
 
+        #region Mutagen
+        ActionRecord.MajorFlag MajorFlags { get; }
+        #endregion
+
     }
 
     #endregion
@@ -699,26 +710,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IActionRecordGetter item,
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
-            return ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).ToString(
+            return ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IActionRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
-            ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).ToString(
+            ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -813,7 +824,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IActionRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActionRecordSetterCommon)((IActionRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -828,10 +839,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ActionRecord_FieldIndex
+    internal enum ActionRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -848,7 +859,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ActionRecord_Registration : ILoquiRegistration
+    internal partial class ActionRecord_Registration : ILoquiRegistration
     {
         public static readonly ActionRecord_Registration Instance = new ActionRecord_Registration();
 
@@ -890,6 +901,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AACT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.AACT);
+            var all = RecordCollection.Factory(
+                RecordTypes.AACT,
+                RecordTypes.CNAM,
+                RecordTypes.DNAM,
+                RecordTypes.TNAM,
+                RecordTypes.DATA,
+                RecordTypes.FULL);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ActionRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -923,7 +947,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ActionRecordSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ActionRecordSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ActionRecordSetterCommon Instance = new ActionRecordSetterCommon();
 
@@ -963,7 +987,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IActionRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IActionRecordInternal>(
                 record: item,
@@ -976,7 +1000,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ActionRecord)item,
@@ -987,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ActionRecord)item,
@@ -998,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActionRecordCommon : Fallout4MajorRecordCommon
+    internal partial class ActionRecordCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ActionRecordCommon Instance = new ActionRecordCommon();
 
@@ -1022,7 +1046,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ActionRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.Notes = string.Equals(item.Notes, rhs.Notes);
             ret.Type = item.Type == rhs.Type;
@@ -1031,77 +1054,75 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IActionRecordGetter item,
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IActionRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActionRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActionRecord =>");
+                sb.AppendLine($"ActionRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActionRecord) =>");
+                sb.AppendLine($"{name} (ActionRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActionRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActionRecord.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                fg.AppendItem(ColorItem, "Color");
+                sb.AppendItem(ColorItem, "Color");
             }
             if ((printMask?.Notes ?? true)
                 && item.Notes is {} NotesItem)
             {
-                fg.AppendItem(NotesItem, "Notes");
+                sb.AppendItem(NotesItem, "Notes");
             }
             if ((printMask?.Type ?? true)
                 && item.Type is {} TypeItem)
             {
-                fg.AppendItem(TypeItem, "Type");
+                sb.AppendItem(TypeItem, "Type");
             }
             if (printMask?.AttractionRule ?? true)
             {
-                fg.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
+                sb.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
         }
         
@@ -1239,15 +1260,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActionRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActionRecordGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.AttractionRule.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AttractionRule, out var AttractionRuleInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AttractionRule);
+                yield return AttractionRuleInfo;
             }
             yield break;
         }
@@ -1290,7 +1311,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActionRecordSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ActionRecordSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ActionRecordSetterTranslationCommon Instance = new ActionRecordSetterTranslationCommon();
 
@@ -1465,7 +1486,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
-        public new static ActionRecord_Registration StaticRegistration => ActionRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActionRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1483,18 +1504,18 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ActionRecordBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ActionRecordBinaryWriteTranslation Instance = new ActionRecordBinaryWriteTranslation();
+        public new static readonly ActionRecordBinaryWriteTranslation Instance = new ActionRecordBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IActionRecordGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1528,7 +1549,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IActionRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1539,12 +1560,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1556,7 +1580,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActionRecordGetter)item,
@@ -1567,7 +1591,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IActionRecordGetter)item,
@@ -1578,7 +1602,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IActionRecordGetter)item,
@@ -1588,9 +1612,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ActionRecordBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ActionRecordBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ActionRecordBinaryCreateTranslation Instance = new ActionRecordBinaryCreateTranslation();
+        public new static readonly ActionRecordBinaryCreateTranslation Instance = new ActionRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AACT;
         public static void FillBinaryStructs(
@@ -1609,7 +1633,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1657,7 +1681,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1674,16 +1699,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ActionRecordBinaryOverlay :
+    internal partial class ActionRecordBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IActionRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActionRecord_Registration.Instance;
-        public new static ActionRecord_Registration StaticRegistration => ActionRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActionRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1691,14 +1716,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ActionRecordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActionRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActionRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1707,26 +1732,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(IActionRecord);
 
+        public ActionRecord.MajorFlag MajorFlags => (ActionRecord.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Color
         private int? _ColorLocation;
-        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region Notes
         private int? _NotesLocation;
-        public String? Notes => _NotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Notes => _NotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Type
         private int? _TypeLocation;
-        public ActionRecord.TypeEnum? Type => _TypeLocation.HasValue ? (ActionRecord.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActionRecord.TypeEnum?);
+        public ActionRecord.TypeEnum? Type => _TypeLocation.HasValue ? (ActionRecord.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActionRecord.TypeEnum?);
         #endregion
         #region AttractionRule
         private int? _AttractionRuleLocation;
-        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
+        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -1739,28 +1765,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected ActionRecordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ActionRecordBinaryOverlay ActionRecordFactory(
+        public static IActionRecordGetter ActionRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ActionRecordBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1770,20 +1799,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ActionRecordBinaryOverlay ActionRecordFactory(
+        public static IActionRecordGetter ActionRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActionRecordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1793,9 +1822,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CNAM:
@@ -1830,17 +1859,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActionRecordMixIn.ToString(
+            ActionRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

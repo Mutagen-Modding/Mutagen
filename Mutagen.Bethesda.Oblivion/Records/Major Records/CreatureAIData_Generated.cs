@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +73,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CreatureAIDataMixIn.ToString(
+            CreatureAIDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -234,54 +237,49 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CreatureAIData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CreatureAIData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CreatureAIData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CreatureAIData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CreatureAIData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CreatureAIData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Aggression ?? true)
                     {
-                        fg.AppendItem(Aggression, "Aggression");
+                        sb.AppendItem(Aggression, "Aggression");
                     }
                     if (printMask?.Confidence ?? true)
                     {
-                        fg.AppendItem(Confidence, "Confidence");
+                        sb.AppendItem(Confidence, "Confidence");
                     }
                     if (printMask?.EnergyLevel ?? true)
                     {
-                        fg.AppendItem(EnergyLevel, "EnergyLevel");
+                        sb.AppendItem(EnergyLevel, "EnergyLevel");
                     }
                     if (printMask?.Responsibility ?? true)
                     {
-                        fg.AppendItem(Responsibility, "Responsibility");
+                        sb.AppendItem(Responsibility, "Responsibility");
                     }
                     if (printMask?.BuySellServices ?? true)
                     {
-                        fg.AppendItem(BuySellServices, "BuySellServices");
+                        sb.AppendItem(BuySellServices, "BuySellServices");
                     }
                     if (printMask?.Teaches ?? true)
                     {
-                        fg.AppendItem(Teaches, "Teaches");
+                        sb.AppendItem(Teaches, "Teaches");
                     }
                     if (printMask?.MaximumTrainingLevel ?? true)
                     {
-                        fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                        sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -416,42 +414,47 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Aggression, "Aggression");
-                fg.AppendItem(Confidence, "Confidence");
-                fg.AppendItem(EnergyLevel, "EnergyLevel");
-                fg.AppendItem(Responsibility, "Responsibility");
-                fg.AppendItem(BuySellServices, "BuySellServices");
-                fg.AppendItem(Teaches, "Teaches");
-                fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                {
+                    sb.AppendItem(Aggression, "Aggression");
+                }
+                {
+                    sb.AppendItem(Confidence, "Confidence");
+                }
+                {
+                    sb.AppendItem(EnergyLevel, "EnergyLevel");
+                }
+                {
+                    sb.AppendItem(Responsibility, "Responsibility");
+                }
+                {
+                    sb.AppendItem(BuySellServices, "BuySellServices");
+                }
+                {
+                    sb.AppendItem(Teaches, "Teaches");
+                }
+                {
+                    sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                }
             }
             #endregion
 
@@ -545,10 +548,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = CreatureAIData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureAIDataBinaryWriteTranslation.Instance;
@@ -556,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureAIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -566,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CreatureAIData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CreatureAIData();
             ((CreatureAIDataSetterCommon)((ICreatureAIDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -581,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CreatureAIData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -591,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -663,26 +662,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICreatureAIDataGetter item,
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
-            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).ToString(
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICreatureAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
-            ((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).ToString(
+            ((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -788,7 +787,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICreatureAIData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CreatureAIDataSetterCommon)((ICreatureAIDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -803,10 +802,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CreatureAIData_FieldIndex
+    internal enum CreatureAIData_FieldIndex
     {
         Aggression = 0,
         Confidence = 1,
@@ -819,7 +818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CreatureAIData_Registration : ILoquiRegistration
+    internal partial class CreatureAIData_Registration : ILoquiRegistration
     {
         public static readonly CreatureAIData_Registration Instance = new CreatureAIData_Registration();
 
@@ -861,6 +860,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AIDT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.AIDT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CreatureAIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -894,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureAIDataSetterCommon
+    internal partial class CreatureAIDataSetterCommon
     {
         public static readonly CreatureAIDataSetterCommon Instance = new CreatureAIDataSetterCommon();
 
@@ -923,12 +928,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ICreatureAIData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.AIDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -939,7 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureAIDataCommon
+    internal partial class CreatureAIDataCommon
     {
         public static readonly CreatureAIDataCommon Instance = new CreatureAIDataCommon();
 
@@ -963,7 +968,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CreatureAIData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Aggression = item.Aggression == rhs.Aggression;
             ret.Confidence = item.Confidence == rhs.Confidence;
             ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
@@ -973,77 +977,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
         }
         
-        public string ToString(
+        public string Print(
             ICreatureAIDataGetter item,
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICreatureAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CreatureAIData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CreatureAIData =>");
+                sb.AppendLine($"CreatureAIData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CreatureAIData) =>");
+                sb.AppendLine($"{name} (CreatureAIData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICreatureAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CreatureAIData.Mask<bool>? printMask = null)
         {
             if (printMask?.Aggression ?? true)
             {
-                fg.AppendItem(item.Aggression, "Aggression");
+                sb.AppendItem(item.Aggression, "Aggression");
             }
             if (printMask?.Confidence ?? true)
             {
-                fg.AppendItem(item.Confidence, "Confidence");
+                sb.AppendItem(item.Confidence, "Confidence");
             }
             if (printMask?.EnergyLevel ?? true)
             {
-                fg.AppendItem(item.EnergyLevel, "EnergyLevel");
+                sb.AppendItem(item.EnergyLevel, "EnergyLevel");
             }
             if (printMask?.Responsibility ?? true)
             {
-                fg.AppendItem(item.Responsibility, "Responsibility");
+                sb.AppendItem(item.Responsibility, "Responsibility");
             }
             if (printMask?.BuySellServices ?? true)
             {
-                fg.AppendItem(item.BuySellServices, "BuySellServices");
+                sb.AppendItem(item.BuySellServices, "BuySellServices");
             }
             if (printMask?.Teaches ?? true)
             {
-                fg.AppendItem(item.Teaches, "Teaches");
+                sb.AppendItem(item.Teaches, "Teaches");
             }
             if (printMask?.MaximumTrainingLevel ?? true)
             {
-                fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
+                sb.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
             }
         }
         
@@ -1107,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICreatureAIDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICreatureAIDataGetter obj)
         {
             yield break;
         }
@@ -1115,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureAIDataSetterTranslationCommon
+    internal partial class CreatureAIDataSetterTranslationCommon
     {
         public static readonly CreatureAIDataSetterTranslationCommon Instance = new CreatureAIDataSetterTranslationCommon();
 
@@ -1217,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureAIData_Registration.Instance;
-        public static CreatureAIData_Registration StaticRegistration => CreatureAIData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureAIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureAIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1241,11 +1243,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CreatureAIDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CreatureAIDataBinaryWriteTranslation Instance = new CreatureAIDataBinaryWriteTranslation();
+        public static readonly CreatureAIDataBinaryWriteTranslation Instance = new CreatureAIDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICreatureAIDataGetter item,
@@ -1270,12 +1272,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ICreatureAIDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.AIDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1287,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICreatureAIDataGetter)item,
@@ -1297,9 +1299,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureAIDataBinaryCreateTranslation
+    internal partial class CreatureAIDataBinaryCreateTranslation
     {
-        public readonly static CreatureAIDataBinaryCreateTranslation Instance = new CreatureAIDataBinaryCreateTranslation();
+        public static readonly CreatureAIDataBinaryCreateTranslation Instance = new CreatureAIDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICreatureAIData item,
@@ -1330,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICreatureAIDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureAIDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1343,16 +1345,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CreatureAIDataBinaryOverlay :
+    internal partial class CreatureAIDataBinaryOverlay :
         PluginBinaryOverlay,
         ICreatureAIDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureAIData_Registration.Instance;
-        public static CreatureAIData_Registration StaticRegistration => CreatureAIData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CreatureAIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CreatureAIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1366,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureAIDataBinaryWriteTranslation.Instance;
@@ -1374,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CreatureAIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1382,13 +1384,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Byte Aggression => _data.Span[0x0];
-        public Byte Confidence => _data.Span[0x1];
-        public Byte EnergyLevel => _data.Span[0x2];
-        public Byte Responsibility => _data.Span[0x3];
-        public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Skill Teaches => (Skill)_data.Span.Slice(0x8, 0x1)[0];
-        public Byte MaximumTrainingLevel => _data.Span[0x9];
+        public Byte Aggression => _structData.Span[0x0];
+        public Byte Confidence => _structData.Span[0x1];
+        public Byte EnergyLevel => _structData.Span[0x2];
+        public Byte Responsibility => _structData.Span[0x3];
+        public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Skill Teaches => (Skill)_structData.Span.Slice(0x8, 0x1)[0];
+        public Byte MaximumTrainingLevel => _structData.Span[0x9];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1396,25 +1398,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected CreatureAIDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CreatureAIDataBinaryOverlay CreatureAIDataFactory(
+        public static ICreatureAIDataGetter CreatureAIDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CreatureAIDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1423,25 +1430,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static CreatureAIDataBinaryOverlay CreatureAIDataFactory(
+        public static ICreatureAIDataGetter CreatureAIDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CreatureAIDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CreatureAIDataMixIn.ToString(
+            CreatureAIDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

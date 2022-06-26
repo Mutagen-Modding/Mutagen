@@ -1,5 +1,153 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Cell" objType="Record" baseClass="Fallout4MajorRecord" recordType="CELL" GUID="b321b92c-b424-4529-b35e-1628751a402d" ID="69">
+  <Object name="CellBlock" objType="Group" GUID="32bcf683-8f12-4d6d-a638-21ae314f27be" ID="453">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="CellSubBlock" objType="Group" GUID="8132428c-2328-4f95-8861-0238c3fb04a7" ID="454">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="Cell" objType="Record" baseClass="Fallout4MajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal" GUID="90df0b0f-867c-4255-9a63-282384024c7c" ID="455">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="2" nullable="False" recordType="DATA" />
+      <UInt16 name="PreVisFilesTimestamp" recordType="VISI" />
+      <FormLink name="InPreVisFileOf" refName="Cell" recordType="RVIS" />
+      <UInt16 name="PreCombinedFilesTimestamp" recordType="PCMB" />
+      <RefDirect name="Grid" refName="CellGrid" />
+      <RefDirect name="Lighting" refName="CellLighting" />
+      <UInt8 name="PrecombinedObjectLevelXY" recordType="CNAM" />
+      <UInt8 name="PrecombinedObjectLevelZ" recordType="ZNAM" />
+      <ByteArray name="TVDT" recordType="TVDT" />
+      <RefDirect name="MaxHeightData" refName="CellMaxHeightData" />
+      <FormLink name="LightingTemplate" refName="LightingTemplate" nullable="False" recordType="LTMP" />
+      <Float name="WaterHeight" recordType="XCLW" />
+      <List name="Regions" recordType="XCLR">
+        <FormLink refName="Region" />
+      </List>
+      <FormLink name="Location" refName="Location" recordType="XLCN" />
+      <ByteArray name="XWCN" recordType="XWCN" />
+      <RefDirect name="WaterVelocity" refName="CellWaterVelocity" />
+      <FormLink name="Water" refName="Water" recordType="XCWT" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormLink name="LockList" recordType="XILL">
+        <Interface>ILockList</Interface>
+      </FormLink>
+      <RefDirect name="ExteriorLod" refName="CellExteriorLod" />
+      <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <FormLink name="SkyAndWeatherFromRegion" refName="Region" recordType="XCCM" />
+      <FormLink name="AcousticSpace" refName="AcousticSpace" recordType="XCAS" />
+      <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
+      <FormLink name="Music" refName="MusicType" recordType="XCMO" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
+      <FormLink name="GodRays" refName="GodRays" recordType="XGDR" />
+      <List name="PhysicsReferences" recordType="XPRI">
+        <FormLink>
+          <Interface>IPlacedThing</Interface>
+        </FormLink>
+      </List>
+      <CustomLogic name="CombinedMeshLogic" recordType="XCRI" />
+      <List name="CombinedMeshes" binary="NoGeneration">
+        <UInt32 />
+      </List>
+      <RefList name="CombinedMeshReferences" refName="CellCombinedMeshReference" binary="NoGeneration" />
+      <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="UnknownGroupData" binary="NoGeneration" />
+      <Int32 name="PersistentTimestamp" binary="NoGeneration" />
+      <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
+      <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+    </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
+  </Object>
+  <Object name="CellGrid" objType="Subrecord" recordType="XCLC" GUID="ee91638d-08b7-4a2c-af21-048de576e461" ID="456">
+    <Fields>
+      <P2Int32 name="Point" />
+      <Enum name="Flags" enumName="CellGrid.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="CellLighting" objType="Subrecord" recordType="XCLL" GUID="edebd51b-a10e-4441-b1dd-730eef1d9b1b" ID="457">
+    <Fields>
+      <Color name="AmbientColor" binaryType="Alpha" />
+      <Color name="DirectionalColor" binaryType="Alpha" />
+      <Color name="FogNearColor" binaryType="Alpha" />
+      <Float name="FogNear" />
+      <Float name="FogFar" />
+      <Int32 name="DirectionalRotationXY" />
+      <Int32 name="DirectionalRotationZ" />
+      <Float name="DirectionalFade" />
+      <Float name="FogClipDistance" />
+      <Float name="FogPower" />
+      <RefDirect name="AmbientColors" refName="AmbientColors" />
+      <Color name="FogFarColor" binaryType="Alpha" />
+      <Float name="FogMax" />
+      <Float name="LightFadeBegin" />
+      <Float name="LightFadeEnd" />
+      <Enum name="Inherits" enumName="CellLighting.Inherit" byteLength="4" />
+      <Break />
+      <Float name="NearHeightMid" />
+      <Float name="NearHeightRange" />
+      <Color name="ForColorHighNear" binaryType="Alpha" />
+      <Color name="ForColorHighFar" binaryType="Alpha" />
+      <Float name="HighDensityScale" />
+      <Break />
+      <Float name="FogNearScale" />
+      <Float name="FogFarScale" />
+      <Float name="FogHighNearScale" />
+      <Float name="FogHighFarScale" />
+      <Break />
+      <Float name="FarHeightMid" />
+      <Float name="FarHeightRange" />
+    </Fields>
+  </Object>
+  <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU" GUID="604cb500-4868-4cbc-a80e-126cc55fe784" ID="460">
+    <Fields>
+      <P3Float name="Offset" />
+      <Int32 name="Unknown" />
+      <P3Float name="Angle" />
+      <ByteArray name="Unknown2" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord" GUID="68d7657a-0ca2-4bc8-ba58-49bb270c1da8" ID="461">
+    <Fields>
+      <Float name="Offset" />
+      <Array2d name="HeightMap" fixedWidth="32" fixedHeight="32">
+        <UInt8 />
+      </Array2d>
+    </Fields>
+  </Object>
+  <Object name="CellExteriorLod" recordType="XILW" objType="Subrecord" GUID="0524d1fd-71c9-48af-9fd4-caf9a64d48eb" ID="462">
+    <Fields>
+      <FormLink name="Worldspace" refName="Worldspace" />
+      <P3Float name="Offset" />
+    </Fields>
+  </Object>
+  <Object name="CellCombinedMeshReference" objType="Subrecord" GUID="3667d0c6-100b-4fbc-b327-a2c58c563c48" ID="463">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IPlacedThing</Interface>
+      </FormLink>
+      <UInt32 name="CombinedMesh" />
+    </Fields>
   </Object>
 </Loqui>

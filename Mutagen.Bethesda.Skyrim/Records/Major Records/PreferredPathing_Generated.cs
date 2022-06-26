@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -81,12 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PreferredPathingMixIn.ToString(
+            PreferredPathingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -244,9 +246,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshSet.Mask<R>?>>();
                         obj.NavmeshSets.Specific = l;
-                        foreach (var item in NavmeshSets.Specific.WithIndex())
+                        foreach (var item in NavmeshSets.Specific)
                         {
-                            MaskItemIndexed<R, NavmeshSet.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, NavmeshSet.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, NavmeshSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -259,9 +261,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, NavmeshNode.Mask<R>?>>();
                         obj.NavmeshTree.Specific = l;
-                        foreach (var item in NavmeshTree.Specific.WithIndex())
+                        foreach (var item in NavmeshTree.Specific)
                         {
-                            MaskItemIndexed<R, NavmeshNode.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, NavmeshNode.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, NavmeshNode.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshNode.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -271,72 +273,59 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PreferredPathing.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PreferredPathing.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PreferredPathing.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PreferredPathing.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PreferredPathing.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PreferredPathing.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.NavmeshSets?.Overall ?? true)
                         && NavmeshSets is {} NavmeshSetsItem)
                     {
-                        fg.AppendLine("NavmeshSets =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("NavmeshSets =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(NavmeshSetsItem.Overall);
+                            sb.AppendItem(NavmeshSetsItem.Overall);
                             if (NavmeshSetsItem.Specific != null)
                             {
                                 foreach (var subItem in NavmeshSetsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.NavmeshTree?.Overall ?? true)
                         && NavmeshTree is {} NavmeshTreeItem)
                     {
-                        fg.AppendLine("NavmeshTree =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("NavmeshTree =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(NavmeshTreeItem.Overall);
+                            sb.AppendItem(NavmeshTreeItem.Overall);
                             if (NavmeshTreeItem.Specific != null)
                             {
                                 foreach (var subItem in NavmeshTreeItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -421,78 +410,61 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 if (NavmeshSets is {} NavmeshSetsItem)
                 {
-                    fg.AppendLine("NavmeshSets =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("NavmeshSets =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(NavmeshSetsItem.Overall);
+                        sb.AppendItem(NavmeshSetsItem.Overall);
                         if (NavmeshSetsItem.Specific != null)
                         {
                             foreach (var subItem in NavmeshSetsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (NavmeshTree is {} NavmeshTreeItem)
                 {
-                    fg.AppendLine("NavmeshTree =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("NavmeshTree =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(NavmeshTreeItem.Overall);
+                        sb.AppendItem(NavmeshTreeItem.Overall);
                         if (NavmeshTreeItem.Specific != null)
                         {
                             foreach (var subItem in NavmeshTreeItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -566,8 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PreferredPathingCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -578,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreferredPathingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -588,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PreferredPathing CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PreferredPathing();
             ((PreferredPathingSetterCommon)((IPreferredPathingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -603,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PreferredPathing item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -613,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -677,26 +648,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPreferredPathingGetter item,
             string? name = null,
             PreferredPathing.Mask<bool>? printMask = null)
         {
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).ToString(
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPreferredPathingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PreferredPathing.Mask<bool>? printMask = null)
         {
-            ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).ToString(
+            ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -802,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPreferredPathing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PreferredPathingSetterCommon)((IPreferredPathingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -817,10 +788,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PreferredPathing_FieldIndex
+    internal enum PreferredPathing_FieldIndex
     {
         NavmeshSets = 0,
         NavmeshTree = 1,
@@ -828,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PreferredPathing_Registration : ILoquiRegistration
+    internal partial class PreferredPathing_Registration : ILoquiRegistration
     {
         public static readonly PreferredPathing_Registration Instance = new PreferredPathing_Registration();
 
@@ -870,6 +841,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.NVPP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.NVPP);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PreferredPathingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -903,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PreferredPathingSetterCommon
+    internal partial class PreferredPathingSetterCommon
     {
         public static readonly PreferredPathingSetterCommon Instance = new PreferredPathingSetterCommon();
 
@@ -929,12 +906,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPreferredPathing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.NVPP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -945,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PreferredPathingCommon
+    internal partial class PreferredPathingCommon
     {
         public static readonly PreferredPathingCommon Instance = new PreferredPathingCommon();
 
@@ -969,7 +946,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PreferredPathing.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavmeshSets = item.NavmeshSets.CollectionEqualsHelper(
                 rhs.NavmeshSets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -980,85 +956,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IPreferredPathingGetter item,
             string? name = null,
             PreferredPathing.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPreferredPathingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PreferredPathing.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PreferredPathing =>");
+                sb.AppendLine($"PreferredPathing =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PreferredPathing) =>");
+                sb.AppendLine($"{name} (PreferredPathing) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPreferredPathingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PreferredPathing.Mask<bool>? printMask = null)
         {
             if (printMask?.NavmeshSets?.Overall ?? true)
             {
-                fg.AppendLine("NavmeshSets =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("NavmeshSets =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.NavmeshSets)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.NavmeshTree?.Overall ?? true)
             {
-                fg.AppendLine("NavmeshTree =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("NavmeshTree =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.NavmeshTree)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1071,11 +1037,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
             {
-                if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;
+                if (!lhs.NavmeshSets.SequenceEqual(rhs.NavmeshSets, (l, r) => ((NavmeshSetCommon)((INavmeshSetGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshSets)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshTree) ?? true))
             {
-                if (!lhs.NavmeshTree.SequenceEqualNullable(rhs.NavmeshTree)) return false;
+                if (!lhs.NavmeshTree.SequenceEqual(rhs.NavmeshTree, (l, r) => ((NavmeshNodeCommon)((INavmeshNodeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)PreferredPathing_FieldIndex.NavmeshTree)))) return false;
             }
             return true;
         }
@@ -1097,13 +1063,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPreferredPathingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPreferredPathingGetter obj)
         {
-            foreach (var item in obj.NavmeshSets.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.NavmeshSets.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.NavmeshTree.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.NavmeshTree.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1113,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PreferredPathingSetterTranslationCommon
+    internal partial class PreferredPathingSetterTranslationCommon
     {
         public static readonly PreferredPathingSetterTranslationCommon Instance = new PreferredPathingSetterTranslationCommon();
 
@@ -1235,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]
@@ -1259,11 +1225,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PreferredPathingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PreferredPathingBinaryWriteTranslation Instance = new PreferredPathingBinaryWriteTranslation();
+        public static readonly PreferredPathingBinaryWriteTranslation Instance = new PreferredPathingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPreferredPathingGetter item,
@@ -1273,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.NavmeshSets,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshSetGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshSetGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1285,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.NavmeshTree,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, INavmeshNodeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, INavmeshNodeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((NavmeshNodeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1298,12 +1264,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPreferredPathingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.NVPP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1315,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPreferredPathingGetter)item,
@@ -1325,9 +1291,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PreferredPathingBinaryCreateTranslation
+    internal partial class PreferredPathingBinaryCreateTranslation
     {
-        public readonly static PreferredPathingBinaryCreateTranslation Instance = new PreferredPathingBinaryCreateTranslation();
+        public static readonly PreferredPathingBinaryCreateTranslation Instance = new PreferredPathingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPreferredPathing item,
@@ -1356,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPreferredPathingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreferredPathingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1369,16 +1335,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PreferredPathingBinaryOverlay :
+    internal partial class PreferredPathingBinaryOverlay :
         PluginBinaryOverlay,
         IPreferredPathingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PreferredPathing_Registration.Instance;
-        public static PreferredPathing_Registration StaticRegistration => PreferredPathing_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PreferredPathing_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PreferredPathingCommon.Instance;
         [DebuggerStepThrough]
@@ -1392,16 +1358,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PreferredPathingCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PreferredPathingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PreferredPathingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1414,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomNavmeshSetsEndPos();
         #endregion
         #region NavmeshTree
-        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<NavmeshNodeBinaryOverlay>(_data.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
+        public IReadOnlyList<INavmeshNodeGetter> NavmeshTree => BinaryOverlayList.FactoryByCountLength<INavmeshNodeGetter>(_structData.Slice(NavmeshSetsEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshNodeBinaryOverlay.NavmeshNodeFactory(s, p));
         protected int NavmeshTreeEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1424,27 +1390,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PreferredPathingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PreferredPathingBinaryOverlay PreferredPathingFactory(
+        public static IPreferredPathingGetter PreferredPathingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PreferredPathingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomNavmeshSetsEndPos();
-            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._data.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
+            ret.NavmeshTreeEndingPos = ret.NavmeshSetsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.NavmeshSetsEndingPos)) * 8 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1452,25 +1423,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PreferredPathingBinaryOverlay PreferredPathingFactory(
+        public static IPreferredPathingGetter PreferredPathingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PreferredPathingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PreferredPathingMixIn.ToString(
+            PreferredPathingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

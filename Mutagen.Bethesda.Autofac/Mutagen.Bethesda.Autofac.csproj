@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+		<TargetFramework>net6.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Company>Mutagen</Company>
         <Product>Mutagen</Product>
@@ -21,12 +20,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.3.0" />
+      <PackageReference Include="Autofac" Version="6.4.0" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Noggog.Autofac" Version="2.39.0" />
+        <PackageReference Include="Noggog.Autofac" Version="2.48" />
         <PackageReference Include="NuGetizer" Version="0.7.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,12 +33,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.autofac&quot;" />
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.autofac&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
   </Target>
 
 </Project>

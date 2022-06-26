@@ -5,32 +5,37 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +56,415 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ICellGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Flags
+        public Cell.Flag Flags { get; set; } = default;
+        #endregion
+        #region PreVisFilesTimestamp
+        public UInt16? PreVisFilesTimestamp { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? ICellGetter.PreVisFilesTimestamp => this.PreVisFilesTimestamp;
+        #endregion
+        #region InPreVisFileOf
+        private readonly IFormLinkNullable<ICellGetter> _InPreVisFileOf = new FormLinkNullable<ICellGetter>();
+        public IFormLinkNullable<ICellGetter> InPreVisFileOf
+        {
+            get => _InPreVisFileOf;
+            set => _InPreVisFileOf.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICellGetter> ICellGetter.InPreVisFileOf => this.InPreVisFileOf;
+        #endregion
+        #region PreCombinedFilesTimestamp
+        public UInt16? PreCombinedFilesTimestamp { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? ICellGetter.PreCombinedFilesTimestamp => this.PreCombinedFilesTimestamp;
+        #endregion
+        #region Grid
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CellGrid? _Grid;
+        public CellGrid? Grid
+        {
+            get => _Grid;
+            set => _Grid = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellGridGetter? ICellGetter.Grid => this.Grid;
+        #endregion
+        #region Lighting
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CellLighting? _Lighting;
+        public CellLighting? Lighting
+        {
+            get => _Lighting;
+            set => _Lighting = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellLightingGetter? ICellGetter.Lighting => this.Lighting;
+        #endregion
+        #region PrecombinedObjectLevelXY
+        public Byte? PrecombinedObjectLevelXY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? ICellGetter.PrecombinedObjectLevelXY => this.PrecombinedObjectLevelXY;
+        #endregion
+        #region PrecombinedObjectLevelZ
+        public Byte? PrecombinedObjectLevelZ { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? ICellGetter.PrecombinedObjectLevelZ => this.PrecombinedObjectLevelZ;
+        #endregion
+        #region TVDT
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _TVDT;
+        public MemorySlice<Byte>? TVDT
+        {
+            get => this._TVDT;
+            set => this._TVDT = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ICellGetter.TVDT => this.TVDT;
+        #endregion
+        #region MaxHeightData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CellMaxHeightData? _MaxHeightData;
+        public CellMaxHeightData? MaxHeightData
+        {
+            get => _MaxHeightData;
+            set => _MaxHeightData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellMaxHeightDataGetter? ICellGetter.MaxHeightData => this.MaxHeightData;
+        #endregion
+        #region LightingTemplate
+        private readonly IFormLink<ILightingTemplateGetter> _LightingTemplate = new FormLink<ILightingTemplateGetter>();
+        public IFormLink<ILightingTemplateGetter> LightingTemplate
+        {
+            get => _LightingTemplate;
+            set => _LightingTemplate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightingTemplateGetter> ICellGetter.LightingTemplate => this.LightingTemplate;
+        #endregion
+        #region WaterHeight
+        public Single? WaterHeight { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ICellGetter.WaterHeight => this.WaterHeight;
+        #endregion
+        #region Regions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IRegionGetter>>? _Regions;
+        public ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions
+        {
+            get => this._Regions;
+            set => this._Regions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? ICellGetter.Regions => _Regions;
+        #endregion
+
+        #endregion
+        #region Location
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> ICellGetter.Location => this.Location;
+        #endregion
+        #region XWCN
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XWCN;
+        public MemorySlice<Byte>? XWCN
+        {
+            get => this._XWCN;
+            set => this._XWCN = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ICellGetter.XWCN => this.XWCN;
+        #endregion
+        #region WaterVelocity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CellWaterVelocity? _WaterVelocity;
+        public CellWaterVelocity? WaterVelocity
+        {
+            get => _WaterVelocity;
+            set => _WaterVelocity = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellWaterVelocityGetter? ICellGetter.WaterVelocity => this.WaterVelocity;
+        #endregion
+        #region Water
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> ICellGetter.Water => this.Water;
+        #endregion
+        #region Ownership
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Ownership? _Ownership;
+        public Ownership? Ownership
+        {
+            get => _Ownership;
+            set => _Ownership = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IOwnershipGetter? ICellGetter.Ownership => this.Ownership;
+        #endregion
+        #region FactionRank
+        public Int32? FactionRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? ICellGetter.FactionRank => this.FactionRank;
+        #endregion
+        #region LockList
+        private readonly IFormLinkNullable<ILockListGetter> _LockList = new FormLinkNullable<ILockListGetter>();
+        public IFormLinkNullable<ILockListGetter> LockList
+        {
+            get => _LockList;
+            set => _LockList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILockListGetter> ICellGetter.LockList => this.LockList;
+        #endregion
+        #region ExteriorLod
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private CellExteriorLod? _ExteriorLod;
+        public CellExteriorLod? ExteriorLod
+        {
+            get => _ExteriorLod;
+            set => _ExteriorLod = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICellExteriorLodGetter? ICellGetter.ExteriorLod => this.ExteriorLod;
+        #endregion
+        #region WaterEnvironmentMap
+        public String? WaterEnvironmentMap { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICellGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
+        #endregion
+        #region SkyAndWeatherFromRegion
+        private readonly IFormLinkNullable<IRegionGetter> _SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>();
+        public IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion
+        {
+            get => _SkyAndWeatherFromRegion;
+            set => _SkyAndWeatherFromRegion.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRegionGetter> ICellGetter.SkyAndWeatherFromRegion => this.SkyAndWeatherFromRegion;
+        #endregion
+        #region AcousticSpace
+        private readonly IFormLinkNullable<IAcousticSpaceGetter> _AcousticSpace = new FormLinkNullable<IAcousticSpaceGetter>();
+        public IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace
+        {
+            get => _AcousticSpace;
+            set => _AcousticSpace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAcousticSpaceGetter> ICellGetter.AcousticSpace => this.AcousticSpace;
+        #endregion
+        #region EncounterZone
+        private readonly IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
+        public IFormLinkNullable<IEncounterZoneGetter> EncounterZone
+        {
+            get => _EncounterZone;
+            set => _EncounterZone.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone;
+        #endregion
+        #region Music
+        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music
+        {
+            get => _Music;
+            set => _Music.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMusicTypeGetter> ICellGetter.Music => this.Music;
+        #endregion
+        #region ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
+        {
+            get => _ImageSpace;
+            set => _ImageSpace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceGetter> ICellGetter.ImageSpace => this.ImageSpace;
+        #endregion
+        #region GodRays
+        private readonly IFormLinkNullable<IGodRaysGetter> _GodRays = new FormLinkNullable<IGodRaysGetter>();
+        public IFormLinkNullable<IGodRaysGetter> GodRays
+        {
+            get => _GodRays;
+            set => _GodRays.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGodRaysGetter> ICellGetter.GodRays => this.GodRays;
+        #endregion
+        #region PhysicsReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IPlacedThingGetter>>? _PhysicsReferences;
+        public ExtendedList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences
+        {
+            get => this._PhysicsReferences;
+            set => this._PhysicsReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? ICellGetter.PhysicsReferences => _PhysicsReferences;
+        #endregion
+
+        #endregion
+        #region CombinedMeshes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<UInt32> _CombinedMeshes = new ExtendedList<UInt32>();
+        public ExtendedList<UInt32> CombinedMeshes
+        {
+            get => this._CombinedMeshes;
+            init => this._CombinedMeshes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<UInt32> ICellGetter.CombinedMeshes => _CombinedMeshes;
+        #endregion
+
+        #endregion
+        #region CombinedMeshReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<CellCombinedMeshReference> _CombinedMeshReferences = new ExtendedList<CellCombinedMeshReference>();
+        public ExtendedList<CellCombinedMeshReference> CombinedMeshReferences
+        {
+            get => this._CombinedMeshReferences;
+            init => this._CombinedMeshReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ICellCombinedMeshReferenceGetter> ICellGetter.CombinedMeshReferences => _CombinedMeshReferences;
+        #endregion
+
+        #endregion
+        #region Landscape
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Landscape? _Landscape;
+        public Landscape? Landscape
+        {
+            get => _Landscape;
+            set => _Landscape = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILandscapeGetter? ICellGetter.Landscape => this.Landscape;
+        #endregion
+        #region NavigationMeshes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<NavigationMesh> _NavigationMeshes = new ExtendedList<NavigationMesh>();
+        public ExtendedList<NavigationMesh> NavigationMeshes
+        {
+            get => this._NavigationMeshes;
+            init => this._NavigationMeshes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<INavigationMeshGetter> ICellGetter.NavigationMeshes => _NavigationMeshes;
+        #endregion
+
+        #endregion
+        #region Timestamp
+        public Int32 Timestamp { get; set; } = default;
+        #endregion
+        #region UnknownGroupData
+        public Int32 UnknownGroupData { get; set; } = default;
+        #endregion
+        #region PersistentTimestamp
+        public Int32 PersistentTimestamp { get; set; } = default;
+        #endregion
+        #region PersistentUnknownGroupData
+        public Int32 PersistentUnknownGroupData { get; set; } = default;
+        #endregion
+        #region Persistent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Persistent
+        {
+            get => this._Persistent;
+            init => this._Persistent = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedGetter> ICellGetter.Persistent => _Persistent;
+        #endregion
+
+        #endregion
+        #region TemporaryTimestamp
+        public Int32 TemporaryTimestamp { get; set; } = default;
+        #endregion
+        #region TemporaryUnknownGroupData
+        public Int32 TemporaryUnknownGroupData { get; set; } = default;
+        #endregion
+        #region Temporary
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Temporary
+        {
+            get => this._Temporary;
+            init => this._Temporary = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedGetter> ICellGetter.Temporary => _Temporary;
+        #endregion
+
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellMixIn.ToString(
+            CellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +480,48 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Flags = initialValue;
+                this.PreVisFilesTimestamp = initialValue;
+                this.InPreVisFileOf = initialValue;
+                this.PreCombinedFilesTimestamp = initialValue;
+                this.Grid = new MaskItem<TItem, CellGrid.Mask<TItem>?>(initialValue, new CellGrid.Mask<TItem>(initialValue));
+                this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(initialValue, new CellLighting.Mask<TItem>(initialValue));
+                this.PrecombinedObjectLevelXY = initialValue;
+                this.PrecombinedObjectLevelZ = initialValue;
+                this.TVDT = initialValue;
+                this.MaxHeightData = new MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>(initialValue, new CellMaxHeightData.Mask<TItem>(initialValue));
+                this.LightingTemplate = initialValue;
+                this.WaterHeight = initialValue;
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Location = initialValue;
+                this.XWCN = initialValue;
+                this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(initialValue, new CellWaterVelocity.Mask<TItem>(initialValue));
+                this.Water = initialValue;
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
+                this.FactionRank = initialValue;
+                this.LockList = initialValue;
+                this.ExteriorLod = new MaskItem<TItem, CellExteriorLod.Mask<TItem>?>(initialValue, new CellExteriorLod.Mask<TItem>(initialValue));
+                this.WaterEnvironmentMap = initialValue;
+                this.SkyAndWeatherFromRegion = initialValue;
+                this.AcousticSpace = initialValue;
+                this.EncounterZone = initialValue;
+                this.Music = initialValue;
+                this.ImageSpace = initialValue;
+                this.GodRays = initialValue;
+                this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>());
+                this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
+                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.Timestamp = initialValue;
+                this.UnknownGroupData = initialValue;
+                this.PersistentTimestamp = initialValue;
+                this.PersistentUnknownGroupData = initialValue;
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.TemporaryTimestamp = initialValue;
+                this.TemporaryUnknownGroupData = initialValue;
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             public Mask(
@@ -83,7 +530,49 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Flags,
+                TItem PreVisFilesTimestamp,
+                TItem InPreVisFileOf,
+                TItem PreCombinedFilesTimestamp,
+                TItem Grid,
+                TItem Lighting,
+                TItem PrecombinedObjectLevelXY,
+                TItem PrecombinedObjectLevelZ,
+                TItem TVDT,
+                TItem MaxHeightData,
+                TItem LightingTemplate,
+                TItem WaterHeight,
+                TItem Regions,
+                TItem Location,
+                TItem XWCN,
+                TItem WaterVelocity,
+                TItem Water,
+                TItem Ownership,
+                TItem FactionRank,
+                TItem LockList,
+                TItem ExteriorLod,
+                TItem WaterEnvironmentMap,
+                TItem SkyAndWeatherFromRegion,
+                TItem AcousticSpace,
+                TItem EncounterZone,
+                TItem Music,
+                TItem ImageSpace,
+                TItem GodRays,
+                TItem PhysicsReferences,
+                TItem CombinedMeshes,
+                TItem CombinedMeshReferences,
+                TItem Landscape,
+                TItem NavigationMeshes,
+                TItem Timestamp,
+                TItem UnknownGroupData,
+                TItem PersistentTimestamp,
+                TItem PersistentUnknownGroupData,
+                TItem Persistent,
+                TItem TemporaryTimestamp,
+                TItem TemporaryUnknownGroupData,
+                TItem Temporary)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +581,48 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Flags = Flags;
+                this.PreVisFilesTimestamp = PreVisFilesTimestamp;
+                this.InPreVisFileOf = InPreVisFileOf;
+                this.PreCombinedFilesTimestamp = PreCombinedFilesTimestamp;
+                this.Grid = new MaskItem<TItem, CellGrid.Mask<TItem>?>(Grid, new CellGrid.Mask<TItem>(Grid));
+                this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(Lighting, new CellLighting.Mask<TItem>(Lighting));
+                this.PrecombinedObjectLevelXY = PrecombinedObjectLevelXY;
+                this.PrecombinedObjectLevelZ = PrecombinedObjectLevelZ;
+                this.TVDT = TVDT;
+                this.MaxHeightData = new MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>(MaxHeightData, new CellMaxHeightData.Mask<TItem>(MaxHeightData));
+                this.LightingTemplate = LightingTemplate;
+                this.WaterHeight = WaterHeight;
+                this.Regions = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Regions, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Location = Location;
+                this.XWCN = XWCN;
+                this.WaterVelocity = new MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>(WaterVelocity, new CellWaterVelocity.Mask<TItem>(WaterVelocity));
+                this.Water = Water;
+                this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
+                this.FactionRank = FactionRank;
+                this.LockList = LockList;
+                this.ExteriorLod = new MaskItem<TItem, CellExteriorLod.Mask<TItem>?>(ExteriorLod, new CellExteriorLod.Mask<TItem>(ExteriorLod));
+                this.WaterEnvironmentMap = WaterEnvironmentMap;
+                this.SkyAndWeatherFromRegion = SkyAndWeatherFromRegion;
+                this.AcousticSpace = AcousticSpace;
+                this.EncounterZone = EncounterZone;
+                this.Music = Music;
+                this.ImageSpace = ImageSpace;
+                this.GodRays = GodRays;
+                this.PhysicsReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PhysicsReferences, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CombinedMeshes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CombinedMeshes, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CombinedMeshReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>(CombinedMeshReferences, Enumerable.Empty<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>());
+                this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
+                this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>());
+                this.Timestamp = Timestamp;
+                this.UnknownGroupData = UnknownGroupData;
+                this.PersistentTimestamp = PersistentTimestamp;
+                this.PersistentUnknownGroupData = PersistentUnknownGroupData;
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.TemporaryTimestamp = TemporaryTimestamp;
+                this.TemporaryUnknownGroupData = TemporaryUnknownGroupData;
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -100,6 +631,51 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Flags;
+            public TItem PreVisFilesTimestamp;
+            public TItem InPreVisFileOf;
+            public TItem PreCombinedFilesTimestamp;
+            public MaskItem<TItem, CellGrid.Mask<TItem>?>? Grid { get; set; }
+            public MaskItem<TItem, CellLighting.Mask<TItem>?>? Lighting { get; set; }
+            public TItem PrecombinedObjectLevelXY;
+            public TItem PrecombinedObjectLevelZ;
+            public TItem TVDT;
+            public MaskItem<TItem, CellMaxHeightData.Mask<TItem>?>? MaxHeightData { get; set; }
+            public TItem LightingTemplate;
+            public TItem WaterHeight;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Regions;
+            public TItem Location;
+            public TItem XWCN;
+            public MaskItem<TItem, CellWaterVelocity.Mask<TItem>?>? WaterVelocity { get; set; }
+            public TItem Water;
+            public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
+            public TItem FactionRank;
+            public TItem LockList;
+            public MaskItem<TItem, CellExteriorLod.Mask<TItem>?>? ExteriorLod { get; set; }
+            public TItem WaterEnvironmentMap;
+            public TItem SkyAndWeatherFromRegion;
+            public TItem AcousticSpace;
+            public TItem EncounterZone;
+            public TItem Music;
+            public TItem ImageSpace;
+            public TItem GodRays;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PhysicsReferences;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CombinedMeshes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellCombinedMeshReference.Mask<TItem>?>>?>? CombinedMeshReferences;
+            public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
+            public TItem Timestamp;
+            public TItem UnknownGroupData;
+            public TItem PersistentTimestamp;
+            public TItem PersistentUnknownGroupData;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? Persistent;
+            public TItem TemporaryTimestamp;
+            public TItem TemporaryUnknownGroupData;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? Temporary;
             #endregion
 
             #region Equals
@@ -113,11 +689,95 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.PreVisFilesTimestamp, rhs.PreVisFilesTimestamp)) return false;
+                if (!object.Equals(this.InPreVisFileOf, rhs.InPreVisFileOf)) return false;
+                if (!object.Equals(this.PreCombinedFilesTimestamp, rhs.PreCombinedFilesTimestamp)) return false;
+                if (!object.Equals(this.Grid, rhs.Grid)) return false;
+                if (!object.Equals(this.Lighting, rhs.Lighting)) return false;
+                if (!object.Equals(this.PrecombinedObjectLevelXY, rhs.PrecombinedObjectLevelXY)) return false;
+                if (!object.Equals(this.PrecombinedObjectLevelZ, rhs.PrecombinedObjectLevelZ)) return false;
+                if (!object.Equals(this.TVDT, rhs.TVDT)) return false;
+                if (!object.Equals(this.MaxHeightData, rhs.MaxHeightData)) return false;
+                if (!object.Equals(this.LightingTemplate, rhs.LightingTemplate)) return false;
+                if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
+                if (!object.Equals(this.Regions, rhs.Regions)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.XWCN, rhs.XWCN)) return false;
+                if (!object.Equals(this.WaterVelocity, rhs.WaterVelocity)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
+                if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
+                if (!object.Equals(this.LockList, rhs.LockList)) return false;
+                if (!object.Equals(this.ExteriorLod, rhs.ExteriorLod)) return false;
+                if (!object.Equals(this.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+                if (!object.Equals(this.SkyAndWeatherFromRegion, rhs.SkyAndWeatherFromRegion)) return false;
+                if (!object.Equals(this.AcousticSpace, rhs.AcousticSpace)) return false;
+                if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
+                if (!object.Equals(this.Music, rhs.Music)) return false;
+                if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
+                if (!object.Equals(this.GodRays, rhs.GodRays)) return false;
+                if (!object.Equals(this.PhysicsReferences, rhs.PhysicsReferences)) return false;
+                if (!object.Equals(this.CombinedMeshes, rhs.CombinedMeshes)) return false;
+                if (!object.Equals(this.CombinedMeshReferences, rhs.CombinedMeshReferences)) return false;
+                if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
+                if (!object.Equals(this.NavigationMeshes, rhs.NavigationMeshes)) return false;
+                if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
+                if (!object.Equals(this.UnknownGroupData, rhs.UnknownGroupData)) return false;
+                if (!object.Equals(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
+                if (!object.Equals(this.PersistentUnknownGroupData, rhs.PersistentUnknownGroupData)) return false;
+                if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
+                if (!object.Equals(this.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
+                if (!object.Equals(this.TemporaryUnknownGroupData, rhs.TemporaryUnknownGroupData)) return false;
+                if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Flags);
+                hash.Add(this.PreVisFilesTimestamp);
+                hash.Add(this.InPreVisFileOf);
+                hash.Add(this.PreCombinedFilesTimestamp);
+                hash.Add(this.Grid);
+                hash.Add(this.Lighting);
+                hash.Add(this.PrecombinedObjectLevelXY);
+                hash.Add(this.PrecombinedObjectLevelZ);
+                hash.Add(this.TVDT);
+                hash.Add(this.MaxHeightData);
+                hash.Add(this.LightingTemplate);
+                hash.Add(this.WaterHeight);
+                hash.Add(this.Regions);
+                hash.Add(this.Location);
+                hash.Add(this.XWCN);
+                hash.Add(this.WaterVelocity);
+                hash.Add(this.Water);
+                hash.Add(this.Ownership);
+                hash.Add(this.FactionRank);
+                hash.Add(this.LockList);
+                hash.Add(this.ExteriorLod);
+                hash.Add(this.WaterEnvironmentMap);
+                hash.Add(this.SkyAndWeatherFromRegion);
+                hash.Add(this.AcousticSpace);
+                hash.Add(this.EncounterZone);
+                hash.Add(this.Music);
+                hash.Add(this.ImageSpace);
+                hash.Add(this.GodRays);
+                hash.Add(this.PhysicsReferences);
+                hash.Add(this.CombinedMeshes);
+                hash.Add(this.CombinedMeshReferences);
+                hash.Add(this.Landscape);
+                hash.Add(this.NavigationMeshes);
+                hash.Add(this.Timestamp);
+                hash.Add(this.UnknownGroupData);
+                hash.Add(this.PersistentTimestamp);
+                hash.Add(this.PersistentUnknownGroupData);
+                hash.Add(this.Persistent);
+                hash.Add(this.TemporaryTimestamp);
+                hash.Add(this.TemporaryUnknownGroupData);
+                hash.Add(this.Temporary);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +788,150 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.PreVisFilesTimestamp)) return false;
+                if (!eval(this.InPreVisFileOf)) return false;
+                if (!eval(this.PreCombinedFilesTimestamp)) return false;
+                if (Grid != null)
+                {
+                    if (!eval(this.Grid.Overall)) return false;
+                    if (this.Grid.Specific != null && !this.Grid.Specific.All(eval)) return false;
+                }
+                if (Lighting != null)
+                {
+                    if (!eval(this.Lighting.Overall)) return false;
+                    if (this.Lighting.Specific != null && !this.Lighting.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PrecombinedObjectLevelXY)) return false;
+                if (!eval(this.PrecombinedObjectLevelZ)) return false;
+                if (!eval(this.TVDT)) return false;
+                if (MaxHeightData != null)
+                {
+                    if (!eval(this.MaxHeightData.Overall)) return false;
+                    if (this.MaxHeightData.Specific != null && !this.MaxHeightData.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LightingTemplate)) return false;
+                if (!eval(this.WaterHeight)) return false;
+                if (this.Regions != null)
+                {
+                    if (!eval(this.Regions.Overall)) return false;
+                    if (this.Regions.Specific != null)
+                    {
+                        foreach (var item in this.Regions.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Location)) return false;
+                if (!eval(this.XWCN)) return false;
+                if (WaterVelocity != null)
+                {
+                    if (!eval(this.WaterVelocity.Overall)) return false;
+                    if (this.WaterVelocity.Specific != null && !this.WaterVelocity.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Water)) return false;
+                if (Ownership != null)
+                {
+                    if (!eval(this.Ownership.Overall)) return false;
+                    if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
+                }
+                if (!eval(this.FactionRank)) return false;
+                if (!eval(this.LockList)) return false;
+                if (ExteriorLod != null)
+                {
+                    if (!eval(this.ExteriorLod.Overall)) return false;
+                    if (this.ExteriorLod.Specific != null && !this.ExteriorLod.Specific.All(eval)) return false;
+                }
+                if (!eval(this.WaterEnvironmentMap)) return false;
+                if (!eval(this.SkyAndWeatherFromRegion)) return false;
+                if (!eval(this.AcousticSpace)) return false;
+                if (!eval(this.EncounterZone)) return false;
+                if (!eval(this.Music)) return false;
+                if (!eval(this.ImageSpace)) return false;
+                if (!eval(this.GodRays)) return false;
+                if (this.PhysicsReferences != null)
+                {
+                    if (!eval(this.PhysicsReferences.Overall)) return false;
+                    if (this.PhysicsReferences.Specific != null)
+                    {
+                        foreach (var item in this.PhysicsReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.CombinedMeshes != null)
+                {
+                    if (!eval(this.CombinedMeshes.Overall)) return false;
+                    if (this.CombinedMeshes.Specific != null)
+                    {
+                        foreach (var item in this.CombinedMeshes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.CombinedMeshReferences != null)
+                {
+                    if (!eval(this.CombinedMeshReferences.Overall)) return false;
+                    if (this.CombinedMeshReferences.Specific != null)
+                    {
+                        foreach (var item in this.CombinedMeshReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Landscape != null)
+                {
+                    if (!eval(this.Landscape.Overall)) return false;
+                    if (this.Landscape.Specific != null && !this.Landscape.Specific.All(eval)) return false;
+                }
+                if (this.NavigationMeshes != null)
+                {
+                    if (!eval(this.NavigationMeshes.Overall)) return false;
+                    if (this.NavigationMeshes.Specific != null)
+                    {
+                        foreach (var item in this.NavigationMeshes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Timestamp)) return false;
+                if (!eval(this.UnknownGroupData)) return false;
+                if (!eval(this.PersistentTimestamp)) return false;
+                if (!eval(this.PersistentUnknownGroupData)) return false;
+                if (this.Persistent != null)
+                {
+                    if (!eval(this.Persistent.Overall)) return false;
+                    if (this.Persistent.Specific != null)
+                    {
+                        foreach (var item in this.Persistent.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.TemporaryTimestamp)) return false;
+                if (!eval(this.TemporaryUnknownGroupData)) return false;
+                if (this.Temporary != null)
+                {
+                    if (!eval(this.Temporary.Overall)) return false;
+                    if (this.Temporary.Specific != null)
+                    {
+                        foreach (var item in this.Temporary.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -136,6 +940,150 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.PreVisFilesTimestamp)) return true;
+                if (eval(this.InPreVisFileOf)) return true;
+                if (eval(this.PreCombinedFilesTimestamp)) return true;
+                if (Grid != null)
+                {
+                    if (eval(this.Grid.Overall)) return true;
+                    if (this.Grid.Specific != null && this.Grid.Specific.Any(eval)) return true;
+                }
+                if (Lighting != null)
+                {
+                    if (eval(this.Lighting.Overall)) return true;
+                    if (this.Lighting.Specific != null && this.Lighting.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PrecombinedObjectLevelXY)) return true;
+                if (eval(this.PrecombinedObjectLevelZ)) return true;
+                if (eval(this.TVDT)) return true;
+                if (MaxHeightData != null)
+                {
+                    if (eval(this.MaxHeightData.Overall)) return true;
+                    if (this.MaxHeightData.Specific != null && this.MaxHeightData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LightingTemplate)) return true;
+                if (eval(this.WaterHeight)) return true;
+                if (this.Regions != null)
+                {
+                    if (eval(this.Regions.Overall)) return true;
+                    if (this.Regions.Specific != null)
+                    {
+                        foreach (var item in this.Regions.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Location)) return true;
+                if (eval(this.XWCN)) return true;
+                if (WaterVelocity != null)
+                {
+                    if (eval(this.WaterVelocity.Overall)) return true;
+                    if (this.WaterVelocity.Specific != null && this.WaterVelocity.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Water)) return true;
+                if (Ownership != null)
+                {
+                    if (eval(this.Ownership.Overall)) return true;
+                    if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
+                }
+                if (eval(this.FactionRank)) return true;
+                if (eval(this.LockList)) return true;
+                if (ExteriorLod != null)
+                {
+                    if (eval(this.ExteriorLod.Overall)) return true;
+                    if (this.ExteriorLod.Specific != null && this.ExteriorLod.Specific.Any(eval)) return true;
+                }
+                if (eval(this.WaterEnvironmentMap)) return true;
+                if (eval(this.SkyAndWeatherFromRegion)) return true;
+                if (eval(this.AcousticSpace)) return true;
+                if (eval(this.EncounterZone)) return true;
+                if (eval(this.Music)) return true;
+                if (eval(this.ImageSpace)) return true;
+                if (eval(this.GodRays)) return true;
+                if (this.PhysicsReferences != null)
+                {
+                    if (eval(this.PhysicsReferences.Overall)) return true;
+                    if (this.PhysicsReferences.Specific != null)
+                    {
+                        foreach (var item in this.PhysicsReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.CombinedMeshes != null)
+                {
+                    if (eval(this.CombinedMeshes.Overall)) return true;
+                    if (this.CombinedMeshes.Specific != null)
+                    {
+                        foreach (var item in this.CombinedMeshes.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.CombinedMeshReferences != null)
+                {
+                    if (eval(this.CombinedMeshReferences.Overall)) return true;
+                    if (this.CombinedMeshReferences.Specific != null)
+                    {
+                        foreach (var item in this.CombinedMeshReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Landscape != null)
+                {
+                    if (eval(this.Landscape.Overall)) return true;
+                    if (this.Landscape.Specific != null && this.Landscape.Specific.Any(eval)) return true;
+                }
+                if (this.NavigationMeshes != null)
+                {
+                    if (eval(this.NavigationMeshes.Overall)) return true;
+                    if (this.NavigationMeshes.Specific != null)
+                    {
+                        foreach (var item in this.NavigationMeshes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Timestamp)) return true;
+                if (eval(this.UnknownGroupData)) return true;
+                if (eval(this.PersistentTimestamp)) return true;
+                if (eval(this.PersistentUnknownGroupData)) return true;
+                if (this.Persistent != null)
+                {
+                    if (eval(this.Persistent.Overall)) return true;
+                    if (this.Persistent.Specific != null)
+                    {
+                        foreach (var item in this.Persistent.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (eval(this.TemporaryTimestamp)) return true;
+                if (eval(this.TemporaryUnknownGroupData)) return true;
+                if (this.Temporary != null)
+                {
+                    if (eval(this.Temporary.Overall)) return true;
+                    if (this.Temporary.Specific != null)
+                    {
+                        foreach (var item in this.Temporary.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -151,30 +1099,443 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Flags = eval(this.Flags);
+                obj.PreVisFilesTimestamp = eval(this.PreVisFilesTimestamp);
+                obj.InPreVisFileOf = eval(this.InPreVisFileOf);
+                obj.PreCombinedFilesTimestamp = eval(this.PreCombinedFilesTimestamp);
+                obj.Grid = this.Grid == null ? null : new MaskItem<R, CellGrid.Mask<R>?>(eval(this.Grid.Overall), this.Grid.Specific?.Translate(eval));
+                obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
+                obj.PrecombinedObjectLevelXY = eval(this.PrecombinedObjectLevelXY);
+                obj.PrecombinedObjectLevelZ = eval(this.PrecombinedObjectLevelZ);
+                obj.TVDT = eval(this.TVDT);
+                obj.MaxHeightData = this.MaxHeightData == null ? null : new MaskItem<R, CellMaxHeightData.Mask<R>?>(eval(this.MaxHeightData.Overall), this.MaxHeightData.Specific?.Translate(eval));
+                obj.LightingTemplate = eval(this.LightingTemplate);
+                obj.WaterHeight = eval(this.WaterHeight);
+                if (Regions != null)
+                {
+                    obj.Regions = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Regions.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Regions.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Regions.Specific = l;
+                        foreach (var item in Regions.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Location = eval(this.Location);
+                obj.XWCN = eval(this.XWCN);
+                obj.WaterVelocity = this.WaterVelocity == null ? null : new MaskItem<R, CellWaterVelocity.Mask<R>?>(eval(this.WaterVelocity.Overall), this.WaterVelocity.Specific?.Translate(eval));
+                obj.Water = eval(this.Water);
+                obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
+                obj.FactionRank = eval(this.FactionRank);
+                obj.LockList = eval(this.LockList);
+                obj.ExteriorLod = this.ExteriorLod == null ? null : new MaskItem<R, CellExteriorLod.Mask<R>?>(eval(this.ExteriorLod.Overall), this.ExteriorLod.Specific?.Translate(eval));
+                obj.WaterEnvironmentMap = eval(this.WaterEnvironmentMap);
+                obj.SkyAndWeatherFromRegion = eval(this.SkyAndWeatherFromRegion);
+                obj.AcousticSpace = eval(this.AcousticSpace);
+                obj.EncounterZone = eval(this.EncounterZone);
+                obj.Music = eval(this.Music);
+                obj.ImageSpace = eval(this.ImageSpace);
+                obj.GodRays = eval(this.GodRays);
+                if (PhysicsReferences != null)
+                {
+                    obj.PhysicsReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PhysicsReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (PhysicsReferences.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.PhysicsReferences.Specific = l;
+                        foreach (var item in PhysicsReferences.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (CombinedMeshes != null)
+                {
+                    obj.CombinedMeshes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CombinedMeshes.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (CombinedMeshes.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CombinedMeshes.Specific = l;
+                        foreach (var item in CombinedMeshes.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (CombinedMeshReferences != null)
+                {
+                    obj.CombinedMeshReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>?>(eval(this.CombinedMeshReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>());
+                    if (CombinedMeshReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>>();
+                        obj.CombinedMeshReferences.Specific = l;
+                        foreach (var item in CombinedMeshReferences.Specific)
+                        {
+                            MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, CellCombinedMeshReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
+                if (NavigationMeshes != null)
+                {
+                    obj.NavigationMeshes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>?>(eval(this.NavigationMeshes.Overall), Enumerable.Empty<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>());
+                    if (NavigationMeshes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavigationMesh.Mask<R>?>>();
+                        obj.NavigationMeshes.Specific = l;
+                        foreach (var item in NavigationMeshes.Specific)
+                        {
+                            MaskItemIndexed<R, NavigationMesh.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMesh.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Timestamp = eval(this.Timestamp);
+                obj.UnknownGroupData = eval(this.UnknownGroupData);
+                obj.PersistentTimestamp = eval(this.PersistentTimestamp);
+                obj.PersistentUnknownGroupData = eval(this.PersistentUnknownGroupData);
+                if (Persistent != null)
+                {
+                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (Persistent.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.Persistent.Specific = l;
+                        foreach (var item in Persistent.Specific)
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
+                obj.TemporaryUnknownGroupData = eval(this.TemporaryUnknownGroupData);
+                if (Temporary != null)
+                {
+                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (Temporary.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.Temporary.Specific = l;
+                        foreach (var item in Temporary.Specific)
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Cell.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Cell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Cell.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Cell.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.PreVisFilesTimestamp ?? true)
+                    {
+                        sb.AppendItem(PreVisFilesTimestamp, "PreVisFilesTimestamp");
+                    }
+                    if (printMask?.InPreVisFileOf ?? true)
+                    {
+                        sb.AppendItem(InPreVisFileOf, "InPreVisFileOf");
+                    }
+                    if (printMask?.PreCombinedFilesTimestamp ?? true)
+                    {
+                        sb.AppendItem(PreCombinedFilesTimestamp, "PreCombinedFilesTimestamp");
+                    }
+                    if (printMask?.Grid?.Overall ?? true)
+                    {
+                        Grid?.Print(sb);
+                    }
+                    if (printMask?.Lighting?.Overall ?? true)
+                    {
+                        Lighting?.Print(sb);
+                    }
+                    if (printMask?.PrecombinedObjectLevelXY ?? true)
+                    {
+                        sb.AppendItem(PrecombinedObjectLevelXY, "PrecombinedObjectLevelXY");
+                    }
+                    if (printMask?.PrecombinedObjectLevelZ ?? true)
+                    {
+                        sb.AppendItem(PrecombinedObjectLevelZ, "PrecombinedObjectLevelZ");
+                    }
+                    if (printMask?.TVDT ?? true)
+                    {
+                        sb.AppendItem(TVDT, "TVDT");
+                    }
+                    if (printMask?.MaxHeightData?.Overall ?? true)
+                    {
+                        MaxHeightData?.Print(sb);
+                    }
+                    if (printMask?.LightingTemplate ?? true)
+                    {
+                        sb.AppendItem(LightingTemplate, "LightingTemplate");
+                    }
+                    if (printMask?.WaterHeight ?? true)
+                    {
+                        sb.AppendItem(WaterHeight, "WaterHeight");
+                    }
+                    if ((printMask?.Regions?.Overall ?? true)
+                        && Regions is {} RegionsItem)
+                    {
+                        sb.AppendLine("Regions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RegionsItem.Overall);
+                            if (RegionsItem.Specific != null)
+                            {
+                                foreach (var subItem in RegionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.XWCN ?? true)
+                    {
+                        sb.AppendItem(XWCN, "XWCN");
+                    }
+                    if (printMask?.WaterVelocity?.Overall ?? true)
+                    {
+                        WaterVelocity?.Print(sb);
+                    }
+                    if (printMask?.Water ?? true)
+                    {
+                        sb.AppendItem(Water, "Water");
+                    }
+                    if (printMask?.Ownership?.Overall ?? true)
+                    {
+                        Ownership?.Print(sb);
+                    }
+                    if (printMask?.FactionRank ?? true)
+                    {
+                        sb.AppendItem(FactionRank, "FactionRank");
+                    }
+                    if (printMask?.LockList ?? true)
+                    {
+                        sb.AppendItem(LockList, "LockList");
+                    }
+                    if (printMask?.ExteriorLod?.Overall ?? true)
+                    {
+                        ExteriorLod?.Print(sb);
+                    }
+                    if (printMask?.WaterEnvironmentMap ?? true)
+                    {
+                        sb.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
+                    }
+                    if (printMask?.SkyAndWeatherFromRegion ?? true)
+                    {
+                        sb.AppendItem(SkyAndWeatherFromRegion, "SkyAndWeatherFromRegion");
+                    }
+                    if (printMask?.AcousticSpace ?? true)
+                    {
+                        sb.AppendItem(AcousticSpace, "AcousticSpace");
+                    }
+                    if (printMask?.EncounterZone ?? true)
+                    {
+                        sb.AppendItem(EncounterZone, "EncounterZone");
+                    }
+                    if (printMask?.Music ?? true)
+                    {
+                        sb.AppendItem(Music, "Music");
+                    }
+                    if (printMask?.ImageSpace ?? true)
+                    {
+                        sb.AppendItem(ImageSpace, "ImageSpace");
+                    }
+                    if (printMask?.GodRays ?? true)
+                    {
+                        sb.AppendItem(GodRays, "GodRays");
+                    }
+                    if ((printMask?.PhysicsReferences?.Overall ?? true)
+                        && PhysicsReferences is {} PhysicsReferencesItem)
+                    {
+                        sb.AppendLine("PhysicsReferences =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PhysicsReferencesItem.Overall);
+                            if (PhysicsReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in PhysicsReferencesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.CombinedMeshes?.Overall ?? true)
+                        && CombinedMeshes is {} CombinedMeshesItem)
+                    {
+                        sb.AppendLine("CombinedMeshes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CombinedMeshesItem.Overall);
+                            if (CombinedMeshesItem.Specific != null)
+                            {
+                                foreach (var subItem in CombinedMeshesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.CombinedMeshReferences?.Overall ?? true)
+                        && CombinedMeshReferences is {} CombinedMeshReferencesItem)
+                    {
+                        sb.AppendLine("CombinedMeshReferences =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CombinedMeshReferencesItem.Overall);
+                            if (CombinedMeshReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in CombinedMeshReferencesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Landscape?.Overall ?? true)
+                    {
+                        Landscape?.Print(sb);
+                    }
+                    if ((printMask?.NavigationMeshes?.Overall ?? true)
+                        && NavigationMeshes is {} NavigationMeshesItem)
+                    {
+                        sb.AppendLine("NavigationMeshes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(NavigationMeshesItem.Overall);
+                            if (NavigationMeshesItem.Specific != null)
+                            {
+                                foreach (var subItem in NavigationMeshesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Timestamp ?? true)
+                    {
+                        sb.AppendItem(Timestamp, "Timestamp");
+                    }
+                    if (printMask?.UnknownGroupData ?? true)
+                    {
+                        sb.AppendItem(UnknownGroupData, "UnknownGroupData");
+                    }
+                    if (printMask?.PersistentTimestamp ?? true)
+                    {
+                        sb.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                    }
+                    if (printMask?.PersistentUnknownGroupData ?? true)
+                    {
+                        sb.AppendItem(PersistentUnknownGroupData, "PersistentUnknownGroupData");
+                    }
+                    if ((printMask?.Persistent?.Overall ?? true)
+                        && Persistent is {} PersistentItem)
+                    {
+                        sb.AppendLine("Persistent =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PersistentItem.Overall);
+                            if (PersistentItem.Specific != null)
+                            {
+                                foreach (var subItem in PersistentItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.TemporaryTimestamp ?? true)
+                    {
+                        sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                    }
+                    if (printMask?.TemporaryUnknownGroupData ?? true)
+                    {
+                        sb.AppendItem(TemporaryUnknownGroupData, "TemporaryUnknownGroupData");
+                    }
+                    if ((printMask?.Temporary?.Overall ?? true)
+                        && Temporary is {} TemporaryItem)
+                    {
+                        sb.AppendLine("Temporary =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TemporaryItem.Overall);
+                            if (TemporaryItem.Specific != null)
+                            {
+                                foreach (var subItem in TemporaryItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +1545,141 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Flags;
+            public Exception? PreVisFilesTimestamp;
+            public Exception? InPreVisFileOf;
+            public Exception? PreCombinedFilesTimestamp;
+            public MaskItem<Exception?, CellGrid.ErrorMask?>? Grid;
+            public MaskItem<Exception?, CellLighting.ErrorMask?>? Lighting;
+            public Exception? PrecombinedObjectLevelXY;
+            public Exception? PrecombinedObjectLevelZ;
+            public Exception? TVDT;
+            public MaskItem<Exception?, CellMaxHeightData.ErrorMask?>? MaxHeightData;
+            public Exception? LightingTemplate;
+            public Exception? WaterHeight;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Regions;
+            public Exception? Location;
+            public Exception? XWCN;
+            public MaskItem<Exception?, CellWaterVelocity.ErrorMask?>? WaterVelocity;
+            public Exception? Water;
+            public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
+            public Exception? FactionRank;
+            public Exception? LockList;
+            public MaskItem<Exception?, CellExteriorLod.ErrorMask?>? ExteriorLod;
+            public Exception? WaterEnvironmentMap;
+            public Exception? SkyAndWeatherFromRegion;
+            public Exception? AcousticSpace;
+            public Exception? EncounterZone;
+            public Exception? Music;
+            public Exception? ImageSpace;
+            public Exception? GodRays;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PhysicsReferences;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CombinedMeshes;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>? CombinedMeshReferences;
+            public MaskItem<Exception?, Landscape.ErrorMask?>? Landscape;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>? NavigationMeshes;
+            public Exception? Timestamp;
+            public Exception? UnknownGroupData;
+            public Exception? PersistentTimestamp;
+            public Exception? PersistentUnknownGroupData;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Persistent;
+            public Exception? TemporaryTimestamp;
+            public Exception? TemporaryUnknownGroupData;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Temporary;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
+                    case Cell_FieldIndex.Name:
+                        return Name;
+                    case Cell_FieldIndex.Flags:
+                        return Flags;
+                    case Cell_FieldIndex.PreVisFilesTimestamp:
+                        return PreVisFilesTimestamp;
+                    case Cell_FieldIndex.InPreVisFileOf:
+                        return InPreVisFileOf;
+                    case Cell_FieldIndex.PreCombinedFilesTimestamp:
+                        return PreCombinedFilesTimestamp;
+                    case Cell_FieldIndex.Grid:
+                        return Grid;
+                    case Cell_FieldIndex.Lighting:
+                        return Lighting;
+                    case Cell_FieldIndex.PrecombinedObjectLevelXY:
+                        return PrecombinedObjectLevelXY;
+                    case Cell_FieldIndex.PrecombinedObjectLevelZ:
+                        return PrecombinedObjectLevelZ;
+                    case Cell_FieldIndex.TVDT:
+                        return TVDT;
+                    case Cell_FieldIndex.MaxHeightData:
+                        return MaxHeightData;
+                    case Cell_FieldIndex.LightingTemplate:
+                        return LightingTemplate;
+                    case Cell_FieldIndex.WaterHeight:
+                        return WaterHeight;
+                    case Cell_FieldIndex.Regions:
+                        return Regions;
+                    case Cell_FieldIndex.Location:
+                        return Location;
+                    case Cell_FieldIndex.XWCN:
+                        return XWCN;
+                    case Cell_FieldIndex.WaterVelocity:
+                        return WaterVelocity;
+                    case Cell_FieldIndex.Water:
+                        return Water;
+                    case Cell_FieldIndex.Ownership:
+                        return Ownership;
+                    case Cell_FieldIndex.FactionRank:
+                        return FactionRank;
+                    case Cell_FieldIndex.LockList:
+                        return LockList;
+                    case Cell_FieldIndex.ExteriorLod:
+                        return ExteriorLod;
+                    case Cell_FieldIndex.WaterEnvironmentMap:
+                        return WaterEnvironmentMap;
+                    case Cell_FieldIndex.SkyAndWeatherFromRegion:
+                        return SkyAndWeatherFromRegion;
+                    case Cell_FieldIndex.AcousticSpace:
+                        return AcousticSpace;
+                    case Cell_FieldIndex.EncounterZone:
+                        return EncounterZone;
+                    case Cell_FieldIndex.Music:
+                        return Music;
+                    case Cell_FieldIndex.ImageSpace:
+                        return ImageSpace;
+                    case Cell_FieldIndex.GodRays:
+                        return GodRays;
+                    case Cell_FieldIndex.PhysicsReferences:
+                        return PhysicsReferences;
+                    case Cell_FieldIndex.CombinedMeshes:
+                        return CombinedMeshes;
+                    case Cell_FieldIndex.CombinedMeshReferences:
+                        return CombinedMeshReferences;
+                    case Cell_FieldIndex.Landscape:
+                        return Landscape;
+                    case Cell_FieldIndex.NavigationMeshes:
+                        return NavigationMeshes;
+                    case Cell_FieldIndex.Timestamp:
+                        return Timestamp;
+                    case Cell_FieldIndex.UnknownGroupData:
+                        return UnknownGroupData;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        return PersistentTimestamp;
+                    case Cell_FieldIndex.PersistentUnknownGroupData:
+                        return PersistentUnknownGroupData;
+                    case Cell_FieldIndex.Persistent:
+                        return Persistent;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        return TemporaryTimestamp;
+                    case Cell_FieldIndex.TemporaryUnknownGroupData:
+                        return TemporaryUnknownGroupData;
+                    case Cell_FieldIndex.Temporary:
+                        return Temporary;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +1690,132 @@ namespace Mutagen.Bethesda.Fallout4
                 Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
+                    case Cell_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Cell_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Cell_FieldIndex.PreVisFilesTimestamp:
+                        this.PreVisFilesTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.InPreVisFileOf:
+                        this.InPreVisFileOf = ex;
+                        break;
+                    case Cell_FieldIndex.PreCombinedFilesTimestamp:
+                        this.PreCombinedFilesTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.Grid:
+                        this.Grid = new MaskItem<Exception?, CellGrid.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Lighting:
+                        this.Lighting = new MaskItem<Exception?, CellLighting.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.PrecombinedObjectLevelXY:
+                        this.PrecombinedObjectLevelXY = ex;
+                        break;
+                    case Cell_FieldIndex.PrecombinedObjectLevelZ:
+                        this.PrecombinedObjectLevelZ = ex;
+                        break;
+                    case Cell_FieldIndex.TVDT:
+                        this.TVDT = ex;
+                        break;
+                    case Cell_FieldIndex.MaxHeightData:
+                        this.MaxHeightData = new MaskItem<Exception?, CellMaxHeightData.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.LightingTemplate:
+                        this.LightingTemplate = ex;
+                        break;
+                    case Cell_FieldIndex.WaterHeight:
+                        this.WaterHeight = ex;
+                        break;
+                    case Cell_FieldIndex.Regions:
+                        this.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case Cell_FieldIndex.XWCN:
+                        this.XWCN = ex;
+                        break;
+                    case Cell_FieldIndex.WaterVelocity:
+                        this.WaterVelocity = new MaskItem<Exception?, CellWaterVelocity.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Water:
+                        this.Water = ex;
+                        break;
+                    case Cell_FieldIndex.Ownership:
+                        this.Ownership = new MaskItem<Exception?, Ownership.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.FactionRank:
+                        this.FactionRank = ex;
+                        break;
+                    case Cell_FieldIndex.LockList:
+                        this.LockList = ex;
+                        break;
+                    case Cell_FieldIndex.ExteriorLod:
+                        this.ExteriorLod = new MaskItem<Exception?, CellExteriorLod.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.WaterEnvironmentMap:
+                        this.WaterEnvironmentMap = ex;
+                        break;
+                    case Cell_FieldIndex.SkyAndWeatherFromRegion:
+                        this.SkyAndWeatherFromRegion = ex;
+                        break;
+                    case Cell_FieldIndex.AcousticSpace:
+                        this.AcousticSpace = ex;
+                        break;
+                    case Cell_FieldIndex.EncounterZone:
+                        this.EncounterZone = ex;
+                        break;
+                    case Cell_FieldIndex.Music:
+                        this.Music = ex;
+                        break;
+                    case Cell_FieldIndex.ImageSpace:
+                        this.ImageSpace = ex;
+                        break;
+                    case Cell_FieldIndex.GodRays:
+                        this.GodRays = ex;
+                        break;
+                    case Cell_FieldIndex.PhysicsReferences:
+                        this.PhysicsReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.CombinedMeshes:
+                        this.CombinedMeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.CombinedMeshReferences:
+                        this.CombinedMeshReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Landscape:
+                        this.Landscape = new MaskItem<Exception?, Landscape.ErrorMask?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.NavigationMeshes:
+                        this.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.Timestamp:
+                        this.Timestamp = ex;
+                        break;
+                    case Cell_FieldIndex.UnknownGroupData:
+                        this.UnknownGroupData = ex;
+                        break;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        this.PersistentTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.PersistentUnknownGroupData:
+                        this.PersistentUnknownGroupData = ex;
+                        break;
+                    case Cell_FieldIndex.Persistent:
+                        this.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        this.TemporaryTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.TemporaryUnknownGroupData:
+                        this.TemporaryUnknownGroupData = ex;
+                        break;
+                    case Cell_FieldIndex.Temporary:
+                        this.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +1827,132 @@ namespace Mutagen.Bethesda.Fallout4
                 Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
+                    case Cell_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PreVisFilesTimestamp:
+                        this.PreVisFilesTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.InPreVisFileOf:
+                        this.InPreVisFileOf = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PreCombinedFilesTimestamp:
+                        this.PreCombinedFilesTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Grid:
+                        this.Grid = (MaskItem<Exception?, CellGrid.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.Lighting:
+                        this.Lighting = (MaskItem<Exception?, CellLighting.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.PrecombinedObjectLevelXY:
+                        this.PrecombinedObjectLevelXY = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PrecombinedObjectLevelZ:
+                        this.PrecombinedObjectLevelZ = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.TVDT:
+                        this.TVDT = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.MaxHeightData:
+                        this.MaxHeightData = (MaskItem<Exception?, CellMaxHeightData.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.LightingTemplate:
+                        this.LightingTemplate = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.WaterHeight:
+                        this.WaterHeight = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Regions:
+                        this.Regions = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Cell_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.XWCN:
+                        this.XWCN = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.WaterVelocity:
+                        this.WaterVelocity = (MaskItem<Exception?, CellWaterVelocity.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.Water:
+                        this.Water = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Ownership:
+                        this.Ownership = (MaskItem<Exception?, Ownership.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.FactionRank:
+                        this.FactionRank = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.LockList:
+                        this.LockList = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.ExteriorLod:
+                        this.ExteriorLod = (MaskItem<Exception?, CellExteriorLod.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.WaterEnvironmentMap:
+                        this.WaterEnvironmentMap = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.SkyAndWeatherFromRegion:
+                        this.SkyAndWeatherFromRegion = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.AcousticSpace:
+                        this.AcousticSpace = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.EncounterZone:
+                        this.EncounterZone = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Music:
+                        this.Music = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.ImageSpace:
+                        this.ImageSpace = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.GodRays:
+                        this.GodRays = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PhysicsReferences:
+                        this.PhysicsReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Cell_FieldIndex.CombinedMeshes:
+                        this.CombinedMeshes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Cell_FieldIndex.CombinedMeshReferences:
+                        this.CombinedMeshReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.Landscape:
+                        this.Landscape = (MaskItem<Exception?, Landscape.ErrorMask?>?)obj;
+                        break;
+                    case Cell_FieldIndex.NavigationMeshes:
+                        this.NavigationMeshes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.Timestamp:
+                        this.Timestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.UnknownGroupData:
+                        this.UnknownGroupData = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        this.PersistentTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PersistentUnknownGroupData:
+                        this.PersistentUnknownGroupData = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Persistent:
+                        this.Persistent = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        this.TemporaryTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.TemporaryUnknownGroupData:
+                        this.TemporaryUnknownGroupData = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Temporary:
+                        this.Temporary = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +1962,297 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Flags != null) return true;
+                if (PreVisFilesTimestamp != null) return true;
+                if (InPreVisFileOf != null) return true;
+                if (PreCombinedFilesTimestamp != null) return true;
+                if (Grid != null) return true;
+                if (Lighting != null) return true;
+                if (PrecombinedObjectLevelXY != null) return true;
+                if (PrecombinedObjectLevelZ != null) return true;
+                if (TVDT != null) return true;
+                if (MaxHeightData != null) return true;
+                if (LightingTemplate != null) return true;
+                if (WaterHeight != null) return true;
+                if (Regions != null) return true;
+                if (Location != null) return true;
+                if (XWCN != null) return true;
+                if (WaterVelocity != null) return true;
+                if (Water != null) return true;
+                if (Ownership != null) return true;
+                if (FactionRank != null) return true;
+                if (LockList != null) return true;
+                if (ExteriorLod != null) return true;
+                if (WaterEnvironmentMap != null) return true;
+                if (SkyAndWeatherFromRegion != null) return true;
+                if (AcousticSpace != null) return true;
+                if (EncounterZone != null) return true;
+                if (Music != null) return true;
+                if (ImageSpace != null) return true;
+                if (GodRays != null) return true;
+                if (PhysicsReferences != null) return true;
+                if (CombinedMeshes != null) return true;
+                if (CombinedMeshReferences != null) return true;
+                if (Landscape != null) return true;
+                if (NavigationMeshes != null) return true;
+                if (Timestamp != null) return true;
+                if (UnknownGroupData != null) return true;
+                if (PersistentTimestamp != null) return true;
+                if (PersistentUnknownGroupData != null) return true;
+                if (Persistent != null) return true;
+                if (TemporaryTimestamp != null) return true;
+                if (TemporaryUnknownGroupData != null) return true;
+                if (Temporary != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(PreVisFilesTimestamp, "PreVisFilesTimestamp");
+                }
+                {
+                    sb.AppendItem(InPreVisFileOf, "InPreVisFileOf");
+                }
+                {
+                    sb.AppendItem(PreCombinedFilesTimestamp, "PreCombinedFilesTimestamp");
+                }
+                Grid?.Print(sb);
+                Lighting?.Print(sb);
+                {
+                    sb.AppendItem(PrecombinedObjectLevelXY, "PrecombinedObjectLevelXY");
+                }
+                {
+                    sb.AppendItem(PrecombinedObjectLevelZ, "PrecombinedObjectLevelZ");
+                }
+                {
+                    sb.AppendItem(TVDT, "TVDT");
+                }
+                MaxHeightData?.Print(sb);
+                {
+                    sb.AppendItem(LightingTemplate, "LightingTemplate");
+                }
+                {
+                    sb.AppendItem(WaterHeight, "WaterHeight");
+                }
+                if (Regions is {} RegionsItem)
+                {
+                    sb.AppendLine("Regions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RegionsItem.Overall);
+                        if (RegionsItem.Specific != null)
+                        {
+                            foreach (var subItem in RegionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(XWCN, "XWCN");
+                }
+                WaterVelocity?.Print(sb);
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                Ownership?.Print(sb);
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(LockList, "LockList");
+                }
+                ExteriorLod?.Print(sb);
+                {
+                    sb.AppendItem(WaterEnvironmentMap, "WaterEnvironmentMap");
+                }
+                {
+                    sb.AppendItem(SkyAndWeatherFromRegion, "SkyAndWeatherFromRegion");
+                }
+                {
+                    sb.AppendItem(AcousticSpace, "AcousticSpace");
+                }
+                {
+                    sb.AppendItem(EncounterZone, "EncounterZone");
+                }
+                {
+                    sb.AppendItem(Music, "Music");
+                }
+                {
+                    sb.AppendItem(ImageSpace, "ImageSpace");
+                }
+                {
+                    sb.AppendItem(GodRays, "GodRays");
+                }
+                if (PhysicsReferences is {} PhysicsReferencesItem)
+                {
+                    sb.AppendLine("PhysicsReferences =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PhysicsReferencesItem.Overall);
+                        if (PhysicsReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in PhysicsReferencesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (CombinedMeshes is {} CombinedMeshesItem)
+                {
+                    sb.AppendLine("CombinedMeshes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CombinedMeshesItem.Overall);
+                        if (CombinedMeshesItem.Specific != null)
+                        {
+                            foreach (var subItem in CombinedMeshesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (CombinedMeshReferences is {} CombinedMeshReferencesItem)
+                {
+                    sb.AppendLine("CombinedMeshReferences =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CombinedMeshReferencesItem.Overall);
+                        if (CombinedMeshReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in CombinedMeshReferencesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Landscape?.Print(sb);
+                if (NavigationMeshes is {} NavigationMeshesItem)
+                {
+                    sb.AppendLine("NavigationMeshes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(NavigationMeshesItem.Overall);
+                        if (NavigationMeshesItem.Specific != null)
+                        {
+                            foreach (var subItem in NavigationMeshesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Timestamp, "Timestamp");
+                }
+                {
+                    sb.AppendItem(UnknownGroupData, "UnknownGroupData");
+                }
+                {
+                    sb.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                }
+                {
+                    sb.AppendItem(PersistentUnknownGroupData, "PersistentUnknownGroupData");
+                }
+                if (Persistent is {} PersistentItem)
+                {
+                    sb.AppendLine("Persistent =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PersistentItem.Overall);
+                        if (PersistentItem.Specific != null)
+                        {
+                            foreach (var subItem in PersistentItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                }
+                {
+                    sb.AppendItem(TemporaryUnknownGroupData, "TemporaryUnknownGroupData");
+                }
+                if (Temporary is {} TemporaryItem)
+                {
+                    sb.AppendLine("Temporary =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TemporaryItem.Overall);
+                        if (TemporaryItem.Specific != null)
+                        {
+                            foreach (var subItem in TemporaryItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -263,6 +2261,48 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.PreVisFilesTimestamp = this.PreVisFilesTimestamp.Combine(rhs.PreVisFilesTimestamp);
+                ret.InPreVisFileOf = this.InPreVisFileOf.Combine(rhs.InPreVisFileOf);
+                ret.PreCombinedFilesTimestamp = this.PreCombinedFilesTimestamp.Combine(rhs.PreCombinedFilesTimestamp);
+                ret.Grid = this.Grid.Combine(rhs.Grid, (l, r) => l.Combine(r));
+                ret.Lighting = this.Lighting.Combine(rhs.Lighting, (l, r) => l.Combine(r));
+                ret.PrecombinedObjectLevelXY = this.PrecombinedObjectLevelXY.Combine(rhs.PrecombinedObjectLevelXY);
+                ret.PrecombinedObjectLevelZ = this.PrecombinedObjectLevelZ.Combine(rhs.PrecombinedObjectLevelZ);
+                ret.TVDT = this.TVDT.Combine(rhs.TVDT);
+                ret.MaxHeightData = this.MaxHeightData.Combine(rhs.MaxHeightData, (l, r) => l.Combine(r));
+                ret.LightingTemplate = this.LightingTemplate.Combine(rhs.LightingTemplate);
+                ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
+                ret.Regions = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Regions?.Overall, rhs.Regions?.Overall), ExceptionExt.Combine(this.Regions?.Specific, rhs.Regions?.Specific));
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.XWCN = this.XWCN.Combine(rhs.XWCN);
+                ret.WaterVelocity = this.WaterVelocity.Combine(rhs.WaterVelocity, (l, r) => l.Combine(r));
+                ret.Water = this.Water.Combine(rhs.Water);
+                ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
+                ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
+                ret.LockList = this.LockList.Combine(rhs.LockList);
+                ret.ExteriorLod = this.ExteriorLod.Combine(rhs.ExteriorLod, (l, r) => l.Combine(r));
+                ret.WaterEnvironmentMap = this.WaterEnvironmentMap.Combine(rhs.WaterEnvironmentMap);
+                ret.SkyAndWeatherFromRegion = this.SkyAndWeatherFromRegion.Combine(rhs.SkyAndWeatherFromRegion);
+                ret.AcousticSpace = this.AcousticSpace.Combine(rhs.AcousticSpace);
+                ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
+                ret.Music = this.Music.Combine(rhs.Music);
+                ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
+                ret.GodRays = this.GodRays.Combine(rhs.GodRays);
+                ret.PhysicsReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PhysicsReferences?.Overall, rhs.PhysicsReferences?.Overall), ExceptionExt.Combine(this.PhysicsReferences?.Specific, rhs.PhysicsReferences?.Specific));
+                ret.CombinedMeshes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CombinedMeshes?.Overall, rhs.CombinedMeshes?.Overall), ExceptionExt.Combine(this.CombinedMeshes?.Specific, rhs.CombinedMeshes?.Specific));
+                ret.CombinedMeshReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CellCombinedMeshReference.ErrorMask?>>?>(ExceptionExt.Combine(this.CombinedMeshReferences?.Overall, rhs.CombinedMeshReferences?.Overall), ExceptionExt.Combine(this.CombinedMeshReferences?.Specific, rhs.CombinedMeshReferences?.Specific));
+                ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
+                ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
+                ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
+                ret.UnknownGroupData = this.UnknownGroupData.Combine(rhs.UnknownGroupData);
+                ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
+                ret.PersistentUnknownGroupData = this.PersistentUnknownGroupData.Combine(rhs.PersistentUnknownGroupData);
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
+                ret.TemporaryUnknownGroupData = this.TemporaryUnknownGroupData.Combine(rhs.TemporaryUnknownGroupData);
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +2324,140 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Flags;
+            public bool PreVisFilesTimestamp;
+            public bool InPreVisFileOf;
+            public bool PreCombinedFilesTimestamp;
+            public CellGrid.TranslationMask? Grid;
+            public CellLighting.TranslationMask? Lighting;
+            public bool PrecombinedObjectLevelXY;
+            public bool PrecombinedObjectLevelZ;
+            public bool TVDT;
+            public CellMaxHeightData.TranslationMask? MaxHeightData;
+            public bool LightingTemplate;
+            public bool WaterHeight;
+            public bool Regions;
+            public bool Location;
+            public bool XWCN;
+            public CellWaterVelocity.TranslationMask? WaterVelocity;
+            public bool Water;
+            public Ownership.TranslationMask? Ownership;
+            public bool FactionRank;
+            public bool LockList;
+            public CellExteriorLod.TranslationMask? ExteriorLod;
+            public bool WaterEnvironmentMap;
+            public bool SkyAndWeatherFromRegion;
+            public bool AcousticSpace;
+            public bool EncounterZone;
+            public bool Music;
+            public bool ImageSpace;
+            public bool GodRays;
+            public bool PhysicsReferences;
+            public bool CombinedMeshes;
+            public CellCombinedMeshReference.TranslationMask? CombinedMeshReferences;
+            public Landscape.TranslationMask? Landscape;
+            public NavigationMesh.TranslationMask? NavigationMeshes;
+            public bool Timestamp;
+            public bool UnknownGroupData;
+            public bool PersistentTimestamp;
+            public bool PersistentUnknownGroupData;
+            public bool Persistent;
+            public bool TemporaryTimestamp;
+            public bool TemporaryUnknownGroupData;
+            public bool Temporary;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Flags = defaultOn;
+                this.PreVisFilesTimestamp = defaultOn;
+                this.InPreVisFileOf = defaultOn;
+                this.PreCombinedFilesTimestamp = defaultOn;
+                this.PrecombinedObjectLevelXY = defaultOn;
+                this.PrecombinedObjectLevelZ = defaultOn;
+                this.TVDT = defaultOn;
+                this.LightingTemplate = defaultOn;
+                this.WaterHeight = defaultOn;
+                this.Regions = defaultOn;
+                this.Location = defaultOn;
+                this.XWCN = defaultOn;
+                this.Water = defaultOn;
+                this.FactionRank = defaultOn;
+                this.LockList = defaultOn;
+                this.WaterEnvironmentMap = defaultOn;
+                this.SkyAndWeatherFromRegion = defaultOn;
+                this.AcousticSpace = defaultOn;
+                this.EncounterZone = defaultOn;
+                this.Music = defaultOn;
+                this.ImageSpace = defaultOn;
+                this.GodRays = defaultOn;
+                this.PhysicsReferences = defaultOn;
+                this.CombinedMeshes = defaultOn;
+                this.Timestamp = defaultOn;
+                this.UnknownGroupData = defaultOn;
+                this.PersistentTimestamp = defaultOn;
+                this.PersistentUnknownGroupData = defaultOn;
+                this.Persistent = defaultOn;
+                this.TemporaryTimestamp = defaultOn;
+                this.TemporaryUnknownGroupData = defaultOn;
+                this.Temporary = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Flags, null));
+                ret.Add((PreVisFilesTimestamp, null));
+                ret.Add((InPreVisFileOf, null));
+                ret.Add((PreCombinedFilesTimestamp, null));
+                ret.Add((Grid != null ? Grid.OnOverall : DefaultOn, Grid?.GetCrystal()));
+                ret.Add((Lighting != null ? Lighting.OnOverall : DefaultOn, Lighting?.GetCrystal()));
+                ret.Add((PrecombinedObjectLevelXY, null));
+                ret.Add((PrecombinedObjectLevelZ, null));
+                ret.Add((TVDT, null));
+                ret.Add((MaxHeightData != null ? MaxHeightData.OnOverall : DefaultOn, MaxHeightData?.GetCrystal()));
+                ret.Add((LightingTemplate, null));
+                ret.Add((WaterHeight, null));
+                ret.Add((Regions, null));
+                ret.Add((Location, null));
+                ret.Add((XWCN, null));
+                ret.Add((WaterVelocity != null ? WaterVelocity.OnOverall : DefaultOn, WaterVelocity?.GetCrystal()));
+                ret.Add((Water, null));
+                ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
+                ret.Add((FactionRank, null));
+                ret.Add((LockList, null));
+                ret.Add((ExteriorLod != null ? ExteriorLod.OnOverall : DefaultOn, ExteriorLod?.GetCrystal()));
+                ret.Add((WaterEnvironmentMap, null));
+                ret.Add((SkyAndWeatherFromRegion, null));
+                ret.Add((AcousticSpace, null));
+                ret.Add((EncounterZone, null));
+                ret.Add((Music, null));
+                ret.Add((ImageSpace, null));
+                ret.Add((GodRays, null));
+                ret.Add((PhysicsReferences, null));
+                ret.Add((CombinedMeshes, null));
+                ret.Add((CombinedMeshReferences == null ? DefaultOn : !CombinedMeshReferences.GetCrystal().CopyNothing, CombinedMeshReferences?.GetCrystal()));
+                ret.Add((Landscape != null ? Landscape.OnOverall : DefaultOn, Landscape?.GetCrystal()));
+                ret.Add((NavigationMeshes == null ? DefaultOn : !NavigationMeshes.GetCrystal().CopyNothing, NavigationMeshes?.GetCrystal()));
+                ret.Add((Timestamp, null));
+                ret.Add((UnknownGroupData, null));
+                ret.Add((PersistentTimestamp, null));
+                ret.Add((PersistentUnknownGroupData, null));
+                ret.Add((Persistent, null));
+                ret.Add((TemporaryTimestamp, null));
+                ret.Add((TemporaryUnknownGroupData, null));
+                ret.Add((Temporary, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -304,6 +2469,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
         public Cell(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -346,6 +2513,45 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ICell);
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -373,7 +2579,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +2589,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Cell CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Cell();
             ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +2604,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Cell item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +2614,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -426,9 +2632,65 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ICell :
         ICellGetter,
+        IComplexLocation,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<ICellInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<ICellInternal>,
+        IMajorRecordEnumerable,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new Cell.Flag Flags { get; set; }
+        new UInt16? PreVisFilesTimestamp { get; set; }
+        new IFormLinkNullable<ICellGetter> InPreVisFileOf { get; set; }
+        new UInt16? PreCombinedFilesTimestamp { get; set; }
+        new CellGrid? Grid { get; set; }
+        new CellLighting? Lighting { get; set; }
+        new Byte? PrecombinedObjectLevelXY { get; set; }
+        new Byte? PrecombinedObjectLevelZ { get; set; }
+        new MemorySlice<Byte>? TVDT { get; set; }
+        new CellMaxHeightData? MaxHeightData { get; set; }
+        new IFormLink<ILightingTemplateGetter> LightingTemplate { get; set; }
+        new Single? WaterHeight { get; set; }
+        new ExtendedList<IFormLinkGetter<IRegionGetter>>? Regions { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
+        new MemorySlice<Byte>? XWCN { get; set; }
+        new CellWaterVelocity? WaterVelocity { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
+        new Ownership? Ownership { get; set; }
+        new Int32? FactionRank { get; set; }
+        new IFormLinkNullable<ILockListGetter> LockList { get; set; }
+        new CellExteriorLod? ExteriorLod { get; set; }
+        new String? WaterEnvironmentMap { get; set; }
+        new IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; set; }
+        new IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; set; }
+        new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
+        new IFormLinkNullable<IGodRaysGetter> GodRays { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; set; }
+        new ExtendedList<UInt32> CombinedMeshes { get; }
+        new ExtendedList<CellCombinedMeshReference> CombinedMeshReferences { get; }
+        new Landscape? Landscape { get; set; }
+        new ExtendedList<NavigationMesh> NavigationMeshes { get; }
+        new Int32 Timestamp { get; set; }
+        new Int32 UnknownGroupData { get; set; }
+        new Int32 PersistentTimestamp { get; set; }
+        new Int32 PersistentUnknownGroupData { get; set; }
+        new ExtendedList<IPlaced> Persistent { get; }
+        new Int32 TemporaryTimestamp { get; set; }
+        new Int32 TemporaryUnknownGroupData { get; set; }
+        new ExtendedList<IPlaced> Temporary { get; }
+        #region Mutagen
+        new Cell.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ICellInternal :
@@ -442,10 +2704,68 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ICellGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IComplexLocationGetter,
+        IFormLinkContainerGetter,
         ILoquiObject<ICellGetter>,
-        IMapsToGetter<ICellGetter>
+        IMajorRecordGetterEnumerable,
+        IMapsToGetter<ICellGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        Cell.Flag Flags { get; }
+        UInt16? PreVisFilesTimestamp { get; }
+        IFormLinkNullableGetter<ICellGetter> InPreVisFileOf { get; }
+        UInt16? PreCombinedFilesTimestamp { get; }
+        ICellGridGetter? Grid { get; }
+        ICellLightingGetter? Lighting { get; }
+        Byte? PrecombinedObjectLevelXY { get; }
+        Byte? PrecombinedObjectLevelZ { get; }
+        ReadOnlyMemorySlice<Byte>? TVDT { get; }
+        ICellMaxHeightDataGetter? MaxHeightData { get; }
+        IFormLinkGetter<ILightingTemplateGetter> LightingTemplate { get; }
+        Single? WaterHeight { get; }
+        IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; }
+        IFormLinkNullableGetter<ILocationGetter> Location { get; }
+        ReadOnlyMemorySlice<Byte>? XWCN { get; }
+        ICellWaterVelocityGetter? WaterVelocity { get; }
+        IFormLinkNullableGetter<IWaterGetter> Water { get; }
+        IOwnershipGetter? Ownership { get; }
+        Int32? FactionRank { get; }
+        IFormLinkNullableGetter<ILockListGetter> LockList { get; }
+        ICellExteriorLodGetter? ExteriorLod { get; }
+        String? WaterEnvironmentMap { get; }
+        IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion { get; }
+        IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace { get; }
+        IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
+        IFormLinkNullableGetter<IGodRaysGetter> GodRays { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; }
+        IReadOnlyList<UInt32> CombinedMeshes { get; }
+        IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; }
+        ILandscapeGetter? Landscape { get; }
+        IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; }
+        Int32 Timestamp { get; }
+        Int32 UnknownGroupData { get; }
+        Int32 PersistentTimestamp { get; }
+        Int32 PersistentUnknownGroupData { get; }
+        IReadOnlyList<IPlacedGetter> Persistent { get; }
+        Int32 TemporaryTimestamp { get; }
+        Int32 TemporaryUnknownGroupData { get; }
+        IReadOnlyList<IPlacedGetter> Temporary { get; }
+
+        #region Mutagen
+        Cell.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -470,26 +2790,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellGetter item,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            return ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -567,6 +2887,218 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this ICellGetter obj)
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this ICellGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this ICellGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this ICellInternal obj)
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this ICellInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static Cell Duplicate(
             this ICellGetter item,
             FormKey formKey,
@@ -584,7 +3116,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +3131,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Cell_FieldIndex
+    internal enum Cell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +3142,53 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Flags = 7,
+        PreVisFilesTimestamp = 8,
+        InPreVisFileOf = 9,
+        PreCombinedFilesTimestamp = 10,
+        Grid = 11,
+        Lighting = 12,
+        PrecombinedObjectLevelXY = 13,
+        PrecombinedObjectLevelZ = 14,
+        TVDT = 15,
+        MaxHeightData = 16,
+        LightingTemplate = 17,
+        WaterHeight = 18,
+        Regions = 19,
+        Location = 20,
+        XWCN = 21,
+        WaterVelocity = 22,
+        Water = 23,
+        Ownership = 24,
+        FactionRank = 25,
+        LockList = 26,
+        ExteriorLod = 27,
+        WaterEnvironmentMap = 28,
+        SkyAndWeatherFromRegion = 29,
+        AcousticSpace = 30,
+        EncounterZone = 31,
+        Music = 32,
+        ImageSpace = 33,
+        GodRays = 34,
+        PhysicsReferences = 35,
+        CombinedMeshes = 36,
+        CombinedMeshReferences = 37,
+        Landscape = 38,
+        NavigationMeshes = 39,
+        Timestamp = 40,
+        UnknownGroupData = 41,
+        PersistentTimestamp = 42,
+        PersistentUnknownGroupData = 43,
+        Persistent = 44,
+        TemporaryTimestamp = 45,
+        TemporaryUnknownGroupData = 46,
+        Temporary = 47,
     }
     #endregion
 
     #region Registration
-    public partial class Cell_Registration : ILoquiRegistration
+    internal partial class Cell_Registration : ILoquiRegistration
     {
         public static readonly Cell_Registration Instance = new Cell_Registration();
 
@@ -622,14 +3196,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 69,
+            msgID: 455,
             version: 0);
 
-        public const string GUID = "b321b92c-b424-4529-b35e-1628751a402d";
+        public const string GUID = "90df0b0f-867c-4255-9a63-282384024c7c";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 42;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 48;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -656,6 +3230,77 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CELL);
+            var all = RecordCollection.Factory(
+                RecordTypes.CELL,
+                RecordTypes.FULL,
+                RecordTypes.DATA,
+                RecordTypes.VISI,
+                RecordTypes.RVIS,
+                RecordTypes.PCMB,
+                RecordTypes.XCLC,
+                RecordTypes.XCLL,
+                RecordTypes.CNAM,
+                RecordTypes.ZNAM,
+                RecordTypes.TVDT,
+                RecordTypes.MHDT,
+                RecordTypes.LTMP,
+                RecordTypes.XCLW,
+                RecordTypes.XCLR,
+                RecordTypes.XLCN,
+                RecordTypes.XWCN,
+                RecordTypes.XWCU,
+                RecordTypes.XCWT,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XILL,
+                RecordTypes.XILW,
+                RecordTypes.XWEM,
+                RecordTypes.XCCM,
+                RecordTypes.XCAS,
+                RecordTypes.XEZN,
+                RecordTypes.XCMO,
+                RecordTypes.XCIM,
+                RecordTypes.XGDR,
+                RecordTypes.XPRI,
+                RecordTypes.XCRI,
+                RecordTypes.LAND,
+                RecordTypes.NAVM,
+                RecordTypes.NVNM,
+                RecordTypes.XXXX,
+                RecordTypes.ONAM,
+                RecordTypes.NNAM,
+                RecordTypes.MNAM,
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
+                RecordTypes.VMAD,
+                RecordTypes.NAME,
+                RecordTypes.XHTW,
+                RecordTypes.XFVC,
+                RecordTypes.XPWR,
+                RecordTypes.XLKR,
+                RecordTypes.XAPD,
+                RecordTypes.XASP,
+                RecordTypes.XATP,
+                RecordTypes.XAMC,
+                RecordTypes.XLKT,
+                RecordTypes.XLYR,
+                RecordTypes.XMSP,
+                RecordTypes.XRFG,
+                RecordTypes.XCVR,
+                RecordTypes.XESP,
+                RecordTypes.XEMI,
+                RecordTypes.XMBR,
+                RecordTypes.XIS2,
+                RecordTypes.XLRT,
+                RecordTypes.XLRL,
+                RecordTypes.XSCL,
+                RecordTypes.XLOD);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +3334,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class CellSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class CellSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly CellSetterCommon Instance = new CellSetterCommon();
 
@@ -698,6 +3343,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(ICellInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Flags = default;
+            item.PreVisFilesTimestamp = default;
+            item.InPreVisFileOf.Clear();
+            item.PreCombinedFilesTimestamp = default;
+            item.Grid = null;
+            item.Lighting = null;
+            item.PrecombinedObjectLevelXY = default;
+            item.PrecombinedObjectLevelZ = default;
+            item.TVDT = default;
+            item.MaxHeightData = null;
+            item.LightingTemplate.Clear();
+            item.WaterHeight = default;
+            item.Regions = null;
+            item.Location.Clear();
+            item.XWCN = default;
+            item.WaterVelocity = null;
+            item.Water.Clear();
+            item.Ownership = null;
+            item.FactionRank = default;
+            item.LockList.Clear();
+            item.ExteriorLod = null;
+            item.WaterEnvironmentMap = default;
+            item.SkyAndWeatherFromRegion.Clear();
+            item.AcousticSpace.Clear();
+            item.EncounterZone.Clear();
+            item.Music.Clear();
+            item.ImageSpace.Clear();
+            item.GodRays.Clear();
+            item.PhysicsReferences = null;
+            item.CombinedMeshes.Clear();
+            item.CombinedMeshReferences.Clear();
+            item.Landscape = null;
+            item.NavigationMeshes.Clear();
+            item.Timestamp = default;
+            item.UnknownGroupData = default;
+            item.PersistentTimestamp = default;
+            item.PersistentUnknownGroupData = default;
+            item.Persistent.Clear();
+            item.TemporaryTimestamp = default;
+            item.TemporaryUnknownGroupData = default;
+            item.Temporary.Clear();
             base.Clear(item);
         }
         
@@ -715,6 +3402,175 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.InPreVisFileOf.Relink(mapping);
+            obj.LightingTemplate.Relink(mapping);
+            obj.Regions?.RemapLinks(mapping);
+            obj.Location.Relink(mapping);
+            obj.Water.Relink(mapping);
+            obj.Ownership?.RemapLinks(mapping);
+            obj.LockList.Relink(mapping);
+            obj.ExteriorLod?.RemapLinks(mapping);
+            obj.SkyAndWeatherFromRegion.Relink(mapping);
+            obj.AcousticSpace.Relink(mapping);
+            obj.EncounterZone.Relink(mapping);
+            obj.Music.Relink(mapping);
+            obj.ImageSpace.Relink(mapping);
+            obj.GodRays.Relink(mapping);
+            obj.PhysicsReferences?.RemapLinks(mapping);
+            obj.CombinedMeshReferences.RemapLinks(mapping);
+            obj.Landscape?.RemapLinks(mapping);
+            obj.NavigationMeshes.RemapLinks(mapping);
+            obj.Persistent.RemapLinks(mapping);
+            obj.Temporary.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellInternal obj)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            ICellInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public void Remove(
+            ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            if (obj.Landscape != null && keys.Contains(obj.Landscape.FormKey))
+            {
+                obj.Landscape = null;
+            }
+            obj.NavigationMeshes.Remove(keys);
+            obj.Persistent.Remove(keys);
+            obj.Temporary.Remove(keys);
+        }
+        
+        public void Remove(
+            ICellInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "CellCombinedMeshReference":
+                case "ICellCombinedMeshReferenceGetter":
+                case "ICellCombinedMeshReference":
+                    break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} Landscapeitem)
+                        {
+                            Landscapeitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    obj.NavigationMeshes.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
+                case "PlacedBeam":
+                case "IPlacedBeamGetter":
+                case "IPlacedBeam":
+                case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
+                case "PlacedTrap":
+                case "IPlacedTrapGetter":
+                case "IPlacedTrap":
+                case "IPlacedTrapInternal":
+                case "PlacedHazard":
+                case "IPlacedHazardGetter":
+                case "IPlacedHazard":
+                case "IPlacedHazardInternal":
+                case "PlacedMissile":
+                case "IPlacedMissileGetter":
+                case "IPlacedMissile":
+                case "IPlacedMissileInternal":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
         }
         
         #endregion
@@ -723,7 +3579,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ICellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICellInternal>(
                 record: item,
@@ -731,12 +3587,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams,
                 fillStructs: CellBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: CellBinaryCreateTranslation.FillBinaryRecordTypes);
+            CellBinaryCreateTranslation.CustomBinaryEndImportPublic(
+                frame: frame,
+                obj: item);
         }
         
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Cell)item,
@@ -747,7 +3606,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Cell)item,
@@ -758,7 +3617,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class CellCommon : Fallout4MajorRecordCommon
+    internal partial class CellCommon : Fallout4MajorRecordCommon
     {
         public new static readonly CellCommon Instance = new CellCommon();
 
@@ -782,58 +3641,403 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Cell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.PreVisFilesTimestamp = item.PreVisFilesTimestamp == rhs.PreVisFilesTimestamp;
+            ret.InPreVisFileOf = item.InPreVisFileOf.Equals(rhs.InPreVisFileOf);
+            ret.PreCombinedFilesTimestamp = item.PreCombinedFilesTimestamp == rhs.PreCombinedFilesTimestamp;
+            ret.Grid = EqualsMaskHelper.EqualsHelper(
+                item.Grid,
+                rhs.Grid,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Lighting = EqualsMaskHelper.EqualsHelper(
+                item.Lighting,
+                rhs.Lighting,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PrecombinedObjectLevelXY = item.PrecombinedObjectLevelXY == rhs.PrecombinedObjectLevelXY;
+            ret.PrecombinedObjectLevelZ = item.PrecombinedObjectLevelZ == rhs.PrecombinedObjectLevelZ;
+            ret.TVDT = MemorySliceExt.Equal(item.TVDT, rhs.TVDT);
+            ret.MaxHeightData = EqualsMaskHelper.EqualsHelper(
+                item.MaxHeightData,
+                rhs.MaxHeightData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LightingTemplate = item.LightingTemplate.Equals(rhs.LightingTemplate);
+            ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
+            ret.Regions = item.Regions.CollectionEqualsHelper(
+                rhs.Regions,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Location = item.Location.Equals(rhs.Location);
+            ret.XWCN = MemorySliceExt.Equal(item.XWCN, rhs.XWCN);
+            ret.WaterVelocity = EqualsMaskHelper.EqualsHelper(
+                item.WaterVelocity,
+                rhs.WaterVelocity,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.Ownership = EqualsMaskHelper.EqualsHelper(
+                item.Ownership,
+                rhs.Ownership,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FactionRank = item.FactionRank == rhs.FactionRank;
+            ret.LockList = item.LockList.Equals(rhs.LockList);
+            ret.ExteriorLod = EqualsMaskHelper.EqualsHelper(
+                item.ExteriorLod,
+                rhs.ExteriorLod,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
+            ret.SkyAndWeatherFromRegion = item.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion);
+            ret.AcousticSpace = item.AcousticSpace.Equals(rhs.AcousticSpace);
+            ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
+            ret.Music = item.Music.Equals(rhs.Music);
+            ret.ImageSpace = item.ImageSpace.Equals(rhs.ImageSpace);
+            ret.GodRays = item.GodRays.Equals(rhs.GodRays);
+            ret.PhysicsReferences = item.PhysicsReferences.CollectionEqualsHelper(
+                rhs.PhysicsReferences,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.CombinedMeshes = item.CombinedMeshes.CollectionEqualsHelper(
+                rhs.CombinedMeshes,
+                (l, r) => l == r,
+                include);
+            ret.CombinedMeshReferences = item.CombinedMeshReferences.CollectionEqualsHelper(
+                rhs.CombinedMeshReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Landscape = EqualsMaskHelper.EqualsHelper(
+                item.Landscape,
+                rhs.Landscape,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.NavigationMeshes = item.NavigationMeshes.CollectionEqualsHelper(
+                rhs.NavigationMeshes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Timestamp = item.Timestamp == rhs.Timestamp;
+            ret.UnknownGroupData = item.UnknownGroupData == rhs.UnknownGroupData;
+            ret.PersistentTimestamp = item.PersistentTimestamp == rhs.PersistentTimestamp;
+            ret.PersistentUnknownGroupData = item.PersistentUnknownGroupData == rhs.PersistentUnknownGroupData;
+            ret.Persistent = item.Persistent.CollectionEqualsHelper(
+                rhs.Persistent,
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.TemporaryTimestamp = item.TemporaryTimestamp == rhs.TemporaryTimestamp;
+            ret.TemporaryUnknownGroupData = item.TemporaryUnknownGroupData == rhs.TemporaryUnknownGroupData;
+            ret.Temporary = item.Temporary.CollectionEqualsHelper(
+                rhs.Temporary,
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ICellGetter item,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Cell =>");
+                sb.AppendLine($"Cell =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Cell) =>");
+                sb.AppendLine($"{name} (Cell) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Cell.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.PreVisFilesTimestamp ?? true)
+                && item.PreVisFilesTimestamp is {} PreVisFilesTimestampItem)
+            {
+                sb.AppendItem(PreVisFilesTimestampItem, "PreVisFilesTimestamp");
+            }
+            if (printMask?.InPreVisFileOf ?? true)
+            {
+                sb.AppendItem(item.InPreVisFileOf.FormKeyNullable, "InPreVisFileOf");
+            }
+            if ((printMask?.PreCombinedFilesTimestamp ?? true)
+                && item.PreCombinedFilesTimestamp is {} PreCombinedFilesTimestampItem)
+            {
+                sb.AppendItem(PreCombinedFilesTimestampItem, "PreCombinedFilesTimestamp");
+            }
+            if ((printMask?.Grid?.Overall ?? true)
+                && item.Grid is {} GridItem)
+            {
+                GridItem?.Print(sb, "Grid");
+            }
+            if ((printMask?.Lighting?.Overall ?? true)
+                && item.Lighting is {} LightingItem)
+            {
+                LightingItem?.Print(sb, "Lighting");
+            }
+            if ((printMask?.PrecombinedObjectLevelXY ?? true)
+                && item.PrecombinedObjectLevelXY is {} PrecombinedObjectLevelXYItem)
+            {
+                sb.AppendItem(PrecombinedObjectLevelXYItem, "PrecombinedObjectLevelXY");
+            }
+            if ((printMask?.PrecombinedObjectLevelZ ?? true)
+                && item.PrecombinedObjectLevelZ is {} PrecombinedObjectLevelZItem)
+            {
+                sb.AppendItem(PrecombinedObjectLevelZItem, "PrecombinedObjectLevelZ");
+            }
+            if ((printMask?.TVDT ?? true)
+                && item.TVDT is {} TVDTItem)
+            {
+                sb.AppendLine($"TVDT => {SpanExt.ToHexString(TVDTItem)}");
+            }
+            if ((printMask?.MaxHeightData?.Overall ?? true)
+                && item.MaxHeightData is {} MaxHeightDataItem)
+            {
+                MaxHeightDataItem?.Print(sb, "MaxHeightData");
+            }
+            if (printMask?.LightingTemplate ?? true)
+            {
+                sb.AppendItem(item.LightingTemplate.FormKey, "LightingTemplate");
+            }
+            if ((printMask?.WaterHeight ?? true)
+                && item.WaterHeight is {} WaterHeightItem)
+            {
+                sb.AppendItem(WaterHeightItem, "WaterHeight");
+            }
+            if ((printMask?.Regions?.Overall ?? true)
+                && item.Regions is {} RegionsItem)
+            {
+                sb.AppendLine("Regions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RegionsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
+            }
+            if ((printMask?.XWCN ?? true)
+                && item.XWCN is {} XWCNItem)
+            {
+                sb.AppendLine($"XWCN => {SpanExt.ToHexString(XWCNItem)}");
+            }
+            if ((printMask?.WaterVelocity?.Overall ?? true)
+                && item.WaterVelocity is {} WaterVelocityItem)
+            {
+                WaterVelocityItem?.Print(sb, "WaterVelocity");
+            }
+            if (printMask?.Water ?? true)
+            {
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
+            }
+            if ((printMask?.Ownership?.Overall ?? true)
+                && item.Ownership is {} OwnershipItem)
+            {
+                OwnershipItem?.Print(sb, "Ownership");
+            }
+            if ((printMask?.FactionRank ?? true)
+                && item.FactionRank is {} FactionRankItem)
+            {
+                sb.AppendItem(FactionRankItem, "FactionRank");
+            }
+            if (printMask?.LockList ?? true)
+            {
+                sb.AppendItem(item.LockList.FormKeyNullable, "LockList");
+            }
+            if ((printMask?.ExteriorLod?.Overall ?? true)
+                && item.ExteriorLod is {} ExteriorLodItem)
+            {
+                ExteriorLodItem?.Print(sb, "ExteriorLod");
+            }
+            if ((printMask?.WaterEnvironmentMap ?? true)
+                && item.WaterEnvironmentMap is {} WaterEnvironmentMapItem)
+            {
+                sb.AppendItem(WaterEnvironmentMapItem, "WaterEnvironmentMap");
+            }
+            if (printMask?.SkyAndWeatherFromRegion ?? true)
+            {
+                sb.AppendItem(item.SkyAndWeatherFromRegion.FormKeyNullable, "SkyAndWeatherFromRegion");
+            }
+            if (printMask?.AcousticSpace ?? true)
+            {
+                sb.AppendItem(item.AcousticSpace.FormKeyNullable, "AcousticSpace");
+            }
+            if (printMask?.EncounterZone ?? true)
+            {
+                sb.AppendItem(item.EncounterZone.FormKeyNullable, "EncounterZone");
+            }
+            if (printMask?.Music ?? true)
+            {
+                sb.AppendItem(item.Music.FormKeyNullable, "Music");
+            }
+            if (printMask?.ImageSpace ?? true)
+            {
+                sb.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
+            }
+            if (printMask?.GodRays ?? true)
+            {
+                sb.AppendItem(item.GodRays.FormKeyNullable, "GodRays");
+            }
+            if ((printMask?.PhysicsReferences?.Overall ?? true)
+                && item.PhysicsReferences is {} PhysicsReferencesItem)
+            {
+                sb.AppendLine("PhysicsReferences =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PhysicsReferencesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.CombinedMeshes?.Overall ?? true)
+            {
+                sb.AppendLine("CombinedMeshes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.CombinedMeshes)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if (printMask?.CombinedMeshReferences?.Overall ?? true)
+            {
+                sb.AppendLine("CombinedMeshReferences =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.CombinedMeshReferences)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Landscape?.Overall ?? true)
+                && item.Landscape is {} LandscapeItem)
+            {
+                LandscapeItem?.Print(sb, "Landscape");
+            }
+            if (printMask?.NavigationMeshes?.Overall ?? true)
+            {
+                sb.AppendLine("NavigationMeshes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.NavigationMeshes)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Timestamp ?? true)
+            {
+                sb.AppendItem(item.Timestamp, "Timestamp");
+            }
+            if (printMask?.UnknownGroupData ?? true)
+            {
+                sb.AppendItem(item.UnknownGroupData, "UnknownGroupData");
+            }
+            if (printMask?.PersistentTimestamp ?? true)
+            {
+                sb.AppendItem(item.PersistentTimestamp, "PersistentTimestamp");
+            }
+            if (printMask?.PersistentUnknownGroupData ?? true)
+            {
+                sb.AppendItem(item.PersistentUnknownGroupData, "PersistentUnknownGroupData");
+            }
+            if (printMask?.Persistent?.Overall ?? true)
+            {
+                sb.AppendLine("Persistent =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Persistent)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.TemporaryTimestamp ?? true)
+            {
+                sb.AppendItem(item.TemporaryTimestamp, "TemporaryTimestamp");
+            }
+            if (printMask?.TemporaryUnknownGroupData ?? true)
+            {
+                sb.AppendItem(item.TemporaryUnknownGroupData, "TemporaryUnknownGroupData");
+            }
+            if (printMask?.Temporary?.Overall ?? true)
+            {
+                sb.AppendLine("Temporary =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Temporary)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Cell_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +4086,202 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PreVisFilesTimestamp) ?? true))
+            {
+                if (lhs.PreVisFilesTimestamp != rhs.PreVisFilesTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.InPreVisFileOf) ?? true))
+            {
+                if (!lhs.InPreVisFileOf.Equals(rhs.InPreVisFileOf)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PreCombinedFilesTimestamp) ?? true))
+            {
+                if (lhs.PreCombinedFilesTimestamp != rhs.PreCombinedFilesTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Grid, rhs.Grid, out var lhsGrid, out var rhsGrid, out var isGridEqual))
+                {
+                    if (!((CellGridCommon)((ICellGridGetter)lhsGrid).CommonInstance()!).Equals(lhsGrid, rhsGrid, crystal?.GetSubCrystal((int)Cell_FieldIndex.Grid))) return false;
+                }
+                else if (!isGridEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Lighting, rhs.Lighting, out var lhsLighting, out var rhsLighting, out var isLightingEqual))
+                {
+                    if (!((CellLightingCommon)((ICellLightingGetter)lhsLighting).CommonInstance()!).Equals(lhsLighting, rhsLighting, crystal?.GetSubCrystal((int)Cell_FieldIndex.Lighting))) return false;
+                }
+                else if (!isLightingEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PrecombinedObjectLevelXY) ?? true))
+            {
+                if (lhs.PrecombinedObjectLevelXY != rhs.PrecombinedObjectLevelXY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PrecombinedObjectLevelZ) ?? true))
+            {
+                if (lhs.PrecombinedObjectLevelZ != rhs.PrecombinedObjectLevelZ) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TVDT) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TVDT, rhs.TVDT)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MaxHeightData, rhs.MaxHeightData, out var lhsMaxHeightData, out var rhsMaxHeightData, out var isMaxHeightDataEqual))
+                {
+                    if (!((CellMaxHeightDataCommon)((ICellMaxHeightDataGetter)lhsMaxHeightData).CommonInstance()!).Equals(lhsMaxHeightData, rhsMaxHeightData, crystal?.GetSubCrystal((int)Cell_FieldIndex.MaxHeightData))) return false;
+                }
+                else if (!isMaxHeightDataEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
+            {
+                if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
+            {
+                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
+            {
+                if (!lhs.Regions.SequenceEqualNullable(rhs.Regions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.WaterVelocity, rhs.WaterVelocity, out var lhsWaterVelocity, out var rhsWaterVelocity, out var isWaterVelocityEqual))
+                {
+                    if (!((CellWaterVelocityCommon)((ICellWaterVelocityGetter)lhsWaterVelocity).CommonInstance()!).Equals(lhsWaterVelocity, rhsWaterVelocity, crystal?.GetSubCrystal((int)Cell_FieldIndex.WaterVelocity))) return false;
+                }
+                else if (!isWaterVelocityEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)Cell_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
+            {
+                if (!lhs.LockList.Equals(rhs.LockList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.ExteriorLod) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ExteriorLod, rhs.ExteriorLod, out var lhsExteriorLod, out var rhsExteriorLod, out var isExteriorLodEqual))
+                {
+                    if (!((CellExteriorLodCommon)((ICellExteriorLodGetter)lhsExteriorLod).CommonInstance()!).Equals(lhsExteriorLod, rhsExteriorLod, crystal?.GetSubCrystal((int)Cell_FieldIndex.ExteriorLod))) return false;
+                }
+                else if (!isExteriorLodEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
+            {
+                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
+            {
+                if (!lhs.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
+            {
+                if (!lhs.AcousticSpace.Equals(rhs.AcousticSpace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
+            {
+                if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
+            {
+                if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.GodRays) ?? true))
+            {
+                if (!lhs.GodRays.Equals(rhs.GodRays)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PhysicsReferences) ?? true))
+            {
+                if (!lhs.PhysicsReferences.SequenceEqualNullable(rhs.PhysicsReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.CombinedMeshes) ?? true))
+            {
+                if (!lhs.CombinedMeshes.SequenceEqualNullable(rhs.CombinedMeshes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.CombinedMeshReferences) ?? true))
+            {
+                if (!lhs.CombinedMeshReferences.SequenceEqual(rhs.CombinedMeshReferences, (l, r) => ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Cell_FieldIndex.CombinedMeshReferences)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Landscape, rhs.Landscape, out var lhsLandscape, out var rhsLandscape, out var isLandscapeEqual))
+                {
+                    if (!((LandscapeCommon)((ILandscapeGetter)lhsLandscape).CommonInstance()!).Equals(lhsLandscape, rhsLandscape, crystal?.GetSubCrystal((int)Cell_FieldIndex.Landscape))) return false;
+                }
+                else if (!isLandscapeEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
+            {
+                if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes, (l, r) => ((NavigationMeshCommon)((INavigationMeshGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Cell_FieldIndex.NavigationMeshes)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            {
+                if (lhs.Timestamp != rhs.Timestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.UnknownGroupData) ?? true))
+            {
+                if (lhs.UnknownGroupData != rhs.UnknownGroupData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            {
+                if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PersistentUnknownGroupData) ?? true))
+            {
+                if (lhs.PersistentUnknownGroupData != rhs.PersistentUnknownGroupData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            {
+                if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            {
+                if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryUnknownGroupData) ?? true))
+            {
+                if (lhs.TemporaryUnknownGroupData != rhs.TemporaryUnknownGroupData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            {
+                if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
+            }
             return true;
         }
         
@@ -910,6 +4310,99 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(ICellGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Flags);
+            if (item.PreVisFilesTimestamp is {} PreVisFilesTimestampitem)
+            {
+                hash.Add(PreVisFilesTimestampitem);
+            }
+            hash.Add(item.InPreVisFileOf);
+            if (item.PreCombinedFilesTimestamp is {} PreCombinedFilesTimestampitem)
+            {
+                hash.Add(PreCombinedFilesTimestampitem);
+            }
+            if (item.Grid is {} Griditem)
+            {
+                hash.Add(Griditem);
+            }
+            if (item.Lighting is {} Lightingitem)
+            {
+                hash.Add(Lightingitem);
+            }
+            if (item.PrecombinedObjectLevelXY is {} PrecombinedObjectLevelXYitem)
+            {
+                hash.Add(PrecombinedObjectLevelXYitem);
+            }
+            if (item.PrecombinedObjectLevelZ is {} PrecombinedObjectLevelZitem)
+            {
+                hash.Add(PrecombinedObjectLevelZitem);
+            }
+            if (item.TVDT is {} TVDTItem)
+            {
+                hash.Add(TVDTItem);
+            }
+            if (item.MaxHeightData is {} MaxHeightDataitem)
+            {
+                hash.Add(MaxHeightDataitem);
+            }
+            hash.Add(item.LightingTemplate);
+            if (item.WaterHeight is {} WaterHeightitem)
+            {
+                hash.Add(WaterHeightitem);
+            }
+            hash.Add(item.Regions);
+            hash.Add(item.Location);
+            if (item.XWCN is {} XWCNItem)
+            {
+                hash.Add(XWCNItem);
+            }
+            if (item.WaterVelocity is {} WaterVelocityitem)
+            {
+                hash.Add(WaterVelocityitem);
+            }
+            hash.Add(item.Water);
+            if (item.Ownership is {} Ownershipitem)
+            {
+                hash.Add(Ownershipitem);
+            }
+            if (item.FactionRank is {} FactionRankitem)
+            {
+                hash.Add(FactionRankitem);
+            }
+            hash.Add(item.LockList);
+            if (item.ExteriorLod is {} ExteriorLoditem)
+            {
+                hash.Add(ExteriorLoditem);
+            }
+            if (item.WaterEnvironmentMap is {} WaterEnvironmentMapitem)
+            {
+                hash.Add(WaterEnvironmentMapitem);
+            }
+            hash.Add(item.SkyAndWeatherFromRegion);
+            hash.Add(item.AcousticSpace);
+            hash.Add(item.EncounterZone);
+            hash.Add(item.Music);
+            hash.Add(item.ImageSpace);
+            hash.Add(item.GodRays);
+            hash.Add(item.PhysicsReferences);
+            hash.Add(item.CombinedMeshes);
+            hash.Add(item.CombinedMeshReferences);
+            if (item.Landscape is {} Landscapeitem)
+            {
+                hash.Add(Landscapeitem);
+            }
+            hash.Add(item.NavigationMeshes);
+            hash.Add(item.Timestamp);
+            hash.Add(item.UnknownGroupData);
+            hash.Add(item.PersistentTimestamp);
+            hash.Add(item.PersistentUnknownGroupData);
+            hash.Add(item.Persistent);
+            hash.Add(item.TemporaryTimestamp);
+            hash.Add(item.TemporaryUnknownGroupData);
+            hash.Add(item.Temporary);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,13 +4426,760 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            if (FormLinkInformation.TryFactory(obj.InPreVisFileOf, out var InPreVisFileOfInfo))
+            {
+                yield return InPreVisFileOfInfo;
+            }
+            yield return FormLinkInformation.Factory(obj.LightingTemplate);
+            if (obj.Regions is {} RegionsItem)
+            {
+                foreach (var item in RegionsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
+            {
+                yield return LocationInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
+            {
+                yield return WaterInfo;
+            }
+            if (obj.Ownership is {} OwnershipItems)
+            {
+                foreach (var item in OwnershipItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.LockList, out var LockListInfo))
+            {
+                yield return LockListInfo;
+            }
+            if (obj.ExteriorLod is {} ExteriorLodItems)
+            {
+                foreach (var item in ExteriorLodItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.SkyAndWeatherFromRegion, out var SkyAndWeatherFromRegionInfo))
+            {
+                yield return SkyAndWeatherFromRegionInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AcousticSpace, out var AcousticSpaceInfo))
+            {
+                yield return AcousticSpaceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.EncounterZone, out var EncounterZoneInfo))
+            {
+                yield return EncounterZoneInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
+            {
+                yield return MusicInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.ImageSpace, out var ImageSpaceInfo))
+            {
+                yield return ImageSpaceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.GodRays, out var GodRaysInfo))
+            {
+                yield return GodRaysInfo;
+            }
+            if (obj.PhysicsReferences is {} PhysicsReferencesItem)
+            {
+                foreach (var item in PhysicsReferencesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.CombinedMeshReferences.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Landscape is {} LandscapeItems)
+            {
+                foreach (var item in LandscapeItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.NavigationMeshes.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
+        {
+            if ((obj.Landscape != null))
+            {
+                if (obj.Landscape is {} Landscapeitem)
+                {
+                    yield return Landscapeitem;
+                    foreach (var item in Landscapeitem.EnumerateMajorRecords())
+                    {
+                        yield return item;
+                    }
+                }
+            }
+            foreach (var subItem in obj.NavigationMeshes)
+            {
+                yield return subItem;
+                foreach (var item in subItem.EnumerateMajorRecords())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return subItem;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            ICellGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CellCombinedMeshReference":
+                case "ICellCombinedMeshReferenceGetter":
+                case "ICellCombinedMeshReference":
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} Landscapeitem)
+                        {
+                            yield return Landscapeitem;
+                            foreach (var item in Landscapeitem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                            {
+                                yield return item;
+                            }
+                        }
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var subItem in obj.NavigationMeshes)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<IFallout4Mod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<IFallout4Mod, ICellGetter, string?, ICell> duplicateInto)
+        {
+            var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            {
+                if (obj.Landscape is {} CellLandscapeitem)
+                {
+                    yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ILandscapeInternal, ILandscapeGetter>(
+                        modKey: modKey,
+                        record: CellLandscapeitem,
+                        parent: curContext,
+                        getOrAddAsOverride: (m, r) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            if (baseRec.Landscape != null) return baseRec.Landscape;
+                            var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = copy;
+                            return copy;
+                        },
+                        duplicateInto: (m, r, e) =>
+                        {
+                            var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            baseRec.Landscape = dupRec;
+                            return dupRec;
+                        });
+                }
+            }
+            foreach (var subItem in obj.NavigationMeshes)
+            {
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (NavigationMesh)((INavigationMeshGetter)r).DeepCopy();
+                        parent.NavigationMeshes.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.Persistent.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.Temporary.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IFallout4Mod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<IFallout4Mod, ICellGetter, string?, ICell> duplicateInto)
+        {
+            var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CellCombinedMeshReference":
+                case "ICellCombinedMeshReferenceGetter":
+                case "ICellCombinedMeshReference":
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    {
+                        if (obj.Landscape is {} CellLandscapeitem)
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, ILandscapeInternal, ILandscapeGetter>(
+                                modKey: modKey,
+                                record: CellLandscapeitem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    if (baseRec.Landscape != null) return baseRec.Landscape;
+                                    var copy = r.DeepCopy(ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = copy;
+                                    return copy;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    baseRec.Landscape = dupRec;
+                                    return dupRec;
+                                });
+                        }
+                    }
+                    yield break;
+                case "NavigationMesh":
+                case "INavigationMeshGetter":
+                case "INavigationMesh":
+                case "INavigationMeshInternal":
+                    foreach (var subItem in obj.NavigationMeshes)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, INavigationMeshInternal, INavigationMeshGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.NavigationMeshes.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (NavigationMesh)((INavigationMeshGetter)r).DeepCopy();
+                                    parent.NavigationMeshes.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                case "APlacedTrap":
+                case "IAPlacedTrapGetter":
+                case "IAPlacedTrap":
+                case "IAPlacedTrapInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout4Mod, IFallout4ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<ICellGetter, IFallout4Mod, IFallout4ModGetter>(
+                        GameCategory.Fallout4,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
         }
         
         #region Duplicate
@@ -980,7 +5220,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class CellSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class CellSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
@@ -1013,6 +5253,477 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PreVisFilesTimestamp) ?? true))
+            {
+                item.PreVisFilesTimestamp = rhs.PreVisFilesTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.InPreVisFileOf) ?? true))
+            {
+                item.InPreVisFileOf.SetTo(rhs.InPreVisFileOf.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PreCombinedFilesTimestamp) ?? true))
+            {
+                item.PreCombinedFilesTimestamp = rhs.PreCombinedFilesTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Grid);
+                try
+                {
+                    if(rhs.Grid is {} rhsGrid)
+                    {
+                        item.Grid = rhsGrid.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.Grid));
+                    }
+                    else
+                    {
+                        item.Grid = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Lighting);
+                try
+                {
+                    if(rhs.Lighting is {} rhsLighting)
+                    {
+                        item.Lighting = rhsLighting.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.Lighting));
+                    }
+                    else
+                    {
+                        item.Lighting = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PrecombinedObjectLevelXY) ?? true))
+            {
+                item.PrecombinedObjectLevelXY = rhs.PrecombinedObjectLevelXY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PrecombinedObjectLevelZ) ?? true))
+            {
+                item.PrecombinedObjectLevelZ = rhs.PrecombinedObjectLevelZ;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.TVDT) ?? true))
+            {
+                if(rhs.TVDT is {} TVDTrhs)
+                {
+                    item.TVDT = TVDTrhs.ToArray();
+                }
+                else
+                {
+                    item.TVDT = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.MaxHeightData);
+                try
+                {
+                    if(rhs.MaxHeightData is {} rhsMaxHeightData)
+                    {
+                        item.MaxHeightData = rhsMaxHeightData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.MaxHeightData));
+                    }
+                    else
+                    {
+                        item.MaxHeightData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
+            {
+                item.LightingTemplate.SetTo(rhs.LightingTemplate.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
+            {
+                item.WaterHeight = rhs.WaterHeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Regions);
+                try
+                {
+                    if ((rhs.Regions != null))
+                    {
+                        item.Regions = 
+                            rhs.Regions
+                            .Select(r => (IFormLinkGetter<IRegionGetter>)new FormLink<IRegionGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IRegionGetter>>();
+                    }
+                    else
+                    {
+                        item.Regions = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
+            {
+                if(rhs.XWCN is {} XWCNrhs)
+                {
+                    item.XWCN = XWCNrhs.ToArray();
+                }
+                else
+                {
+                    item.XWCN = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.WaterVelocity);
+                try
+                {
+                    if(rhs.WaterVelocity is {} rhsWaterVelocity)
+                    {
+                        item.WaterVelocity = rhsWaterVelocity.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.WaterVelocity));
+                    }
+                    else
+                    {
+                        item.WaterVelocity = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
+            {
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Ownership);
+                try
+                {
+                    if(rhs.Ownership is {} rhsOwnership)
+                    {
+                        item.Ownership = rhsOwnership.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.Ownership));
+                    }
+                    else
+                    {
+                        item.Ownership = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.FactionRank) ?? true))
+            {
+                item.FactionRank = rhs.FactionRank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
+            {
+                item.LockList.SetTo(rhs.LockList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ExteriorLod) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.ExteriorLod);
+                try
+                {
+                    if(rhs.ExteriorLod is {} rhsExteriorLod)
+                    {
+                        item.ExteriorLod = rhsExteriorLod.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Cell_FieldIndex.ExteriorLod));
+                    }
+                    else
+                    {
+                        item.ExteriorLod = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
+            {
+                item.WaterEnvironmentMap = rhs.WaterEnvironmentMap;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
+            {
+                item.SkyAndWeatherFromRegion.SetTo(rhs.SkyAndWeatherFromRegion.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
+            {
+                item.AcousticSpace.SetTo(rhs.AcousticSpace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
+            {
+                item.EncounterZone.SetTo(rhs.EncounterZone.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
+            {
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
+            {
+                item.ImageSpace.SetTo(rhs.ImageSpace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GodRays) ?? true))
+            {
+                item.GodRays.SetTo(rhs.GodRays.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PhysicsReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.PhysicsReferences);
+                try
+                {
+                    if ((rhs.PhysicsReferences != null))
+                    {
+                        item.PhysicsReferences = 
+                            rhs.PhysicsReferences
+                            .Select(r => (IFormLinkGetter<IPlacedThingGetter>)new FormLink<IPlacedThingGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedThingGetter>>();
+                    }
+                    else
+                    {
+                        item.PhysicsReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.CombinedMeshes) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.CombinedMeshes);
+                try
+                {
+                    item.CombinedMeshes.SetTo(rhs.CombinedMeshes);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.CombinedMeshReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.CombinedMeshReferences);
+                try
+                {
+                    item.CombinedMeshReferences.SetTo(
+                        rhs.CombinedMeshReferences
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Landscape);
+                try
+                {
+                    if(rhs.Landscape is {} rhsLandscape)
+                    {
+                        item.Landscape = (Landscape)rhsLandscape.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Cell_FieldIndex.Landscape),
+                            errorMask: errorMask);
+                    }
+                    else
+                    {
+                        item.Landscape = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.NavigationMeshes);
+                try
+                {
+                    item.NavigationMeshes.SetTo(
+                        rhs.NavigationMeshes
+                        .Select(r =>
+                        {
+                            return (NavigationMesh)r.DeepCopy(
+                                copyMask: default(TranslationCrystal),
+                                errorMask: errorMask);
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            {
+                item.Timestamp = rhs.Timestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.UnknownGroupData) ?? true))
+            {
+                item.UnknownGroupData = rhs.UnknownGroupData;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            {
+                item.PersistentTimestamp = rhs.PersistentTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentUnknownGroupData) ?? true))
+            {
+                item.PersistentUnknownGroupData = rhs.PersistentUnknownGroupData;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
+                try
+                {
+                    item.Persistent.SetTo(
+                        rhs.Persistent
+                        .Select(r =>
+                        {
+                            return (r.DeepCopy() as IPlaced)!;
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            {
+                item.TemporaryTimestamp = rhs.TemporaryTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryUnknownGroupData) ?? true))
+            {
+                item.TemporaryUnknownGroupData = rhs.TemporaryUnknownGroupData;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
+                try
+                {
+                    item.Temporary.SetTo(
+                        rhs.Temporary
+                        .Select(r =>
+                        {
+                            return (r.DeepCopy() as IPlaced)!;
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +5846,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration StaticRegistration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +5864,219 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class CellBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
+        public new static readonly CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ICellGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            ICellGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 2,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreVisFilesTimestamp,
+                header: translationParams.ConvertToCustom(RecordTypes.VISI));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InPreVisFileOf,
+                header: translationParams.ConvertToCustom(RecordTypes.RVIS));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreCombinedFilesTimestamp,
+                header: translationParams.ConvertToCustom(RecordTypes.PCMB));
+            if (item.Grid is {} GridItem)
+            {
+                ((CellGridBinaryWriteTranslation)((IBinaryItem)GridItem).BinaryWriteTranslator).Write(
+                    item: GridItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Lighting is {} LightingItem)
+            {
+                ((CellLightingBinaryWriteTranslation)((IBinaryItem)LightingItem).BinaryWriteTranslator).Write(
+                    item: LightingItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.PrecombinedObjectLevelXY,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.PrecombinedObjectLevelZ,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.TVDT,
+                header: translationParams.ConvertToCustom(RecordTypes.TVDT));
+            if (item.MaxHeightData is {} MaxHeightDataItem)
+            {
+                ((CellMaxHeightDataBinaryWriteTranslation)((IBinaryItem)MaxHeightDataItem).BinaryWriteTranslator).Write(
+                    item: MaxHeightDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.LightingTemplate,
+                header: translationParams.ConvertToCustom(RecordTypes.LTMP));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.WaterHeight,
+                header: translationParams.ConvertToCustom(RecordTypes.XCLW));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Regions,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XCLR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Location,
+                header: translationParams.ConvertToCustom(RecordTypes.XLCN));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XWCN,
+                header: translationParams.ConvertToCustom(RecordTypes.XWCN));
+            if (item.WaterVelocity is {} WaterVelocityItem)
+            {
+                ((CellWaterVelocityBinaryWriteTranslation)((IBinaryItem)WaterVelocityItem).BinaryWriteTranslator).Write(
+                    item: WaterVelocityItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Water,
+                header: translationParams.ConvertToCustom(RecordTypes.XCWT));
+            if (item.Ownership is {} OwnershipItem)
+            {
+                ((OwnershipBinaryWriteTranslation)((IBinaryItem)OwnershipItem).BinaryWriteTranslator).Write(
+                    item: OwnershipItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.FactionRank,
+                header: translationParams.ConvertToCustom(RecordTypes.XRNK));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LockList,
+                header: translationParams.ConvertToCustom(RecordTypes.XILL));
+            if (item.ExteriorLod is {} ExteriorLodItem)
+            {
+                ((CellExteriorLodBinaryWriteTranslation)((IBinaryItem)ExteriorLodItem).BinaryWriteTranslator).Write(
+                    item: ExteriorLodItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WaterEnvironmentMap,
+                header: translationParams.ConvertToCustom(RecordTypes.XWEM),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SkyAndWeatherFromRegion,
+                header: translationParams.ConvertToCustom(RecordTypes.XCCM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AcousticSpace,
+                header: translationParams.ConvertToCustom(RecordTypes.XCAS));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EncounterZone,
+                header: translationParams.ConvertToCustom(RecordTypes.XEZN));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Music,
+                header: translationParams.ConvertToCustom(RecordTypes.XCMO));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpace,
+                header: translationParams.ConvertToCustom(RecordTypes.XCIM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.GodRays,
+                header: translationParams.ConvertToCustom(RecordTypes.XGDR));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedThingGetter>>.Instance.Write(
+                writer: writer,
+                items: item.PhysicsReferences,
+                recordType: translationParams.ConvertToCustom(RecordTypes.XPRI),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedThingGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            CellBinaryWriteTranslation.WriteBinaryCombinedMeshLogic(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCombinedMeshLogicCustom(
+            MutagenWriter writer,
+            ICellGetter item);
+
+        public static void WriteBinaryCombinedMeshLogic(
+            MutagenWriter writer,
+            ICellGetter item)
+        {
+            WriteBinaryCombinedMeshLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            ICellGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            ICellGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             ICellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1172,25 +6084,33 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
                     throw RecordException.Enrich(ex, item);
                 }
             }
+            CustomBinaryEndExportInternal(
+                writer: writer,
+                obj: item);
         }
 
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellGetter)item,
@@ -1201,7 +6121,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICellGetter)item,
@@ -1212,7 +6132,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICellGetter)item,
@@ -1222,9 +6142,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class CellBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class CellBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
+        public new static readonly CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CELL;
         public static void FillBinaryStructs(
@@ -1236,6 +6156,240 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ICellInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Cell_FieldIndex.Name;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Cell_FieldIndex.Flags;
+                }
+                case RecordTypeInts.VISI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreVisFilesTimestamp = frame.ReadUInt16();
+                    return (int)Cell_FieldIndex.PreVisFilesTimestamp;
+                }
+                case RecordTypeInts.RVIS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InPreVisFileOf.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.InPreVisFileOf;
+                }
+                case RecordTypeInts.PCMB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PreCombinedFilesTimestamp = frame.ReadUInt16();
+                    return (int)Cell_FieldIndex.PreCombinedFilesTimestamp;
+                }
+                case RecordTypeInts.XCLC:
+                {
+                    item.Grid = Mutagen.Bethesda.Fallout4.CellGrid.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.Grid;
+                }
+                case RecordTypeInts.XCLL:
+                {
+                    item.Lighting = Mutagen.Bethesda.Fallout4.CellLighting.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.Lighting;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PrecombinedObjectLevelXY = frame.ReadUInt8();
+                    return (int)Cell_FieldIndex.PrecombinedObjectLevelXY;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PrecombinedObjectLevelZ = frame.ReadUInt8();
+                    return (int)Cell_FieldIndex.PrecombinedObjectLevelZ;
+                }
+                case RecordTypeInts.TVDT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TVDT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Cell_FieldIndex.TVDT;
+                }
+                case RecordTypeInts.MHDT:
+                {
+                    item.MaxHeightData = Mutagen.Bethesda.Fallout4.CellMaxHeightData.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.MaxHeightData;
+                }
+                case RecordTypeInts.LTMP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LightingTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.LightingTemplate;
+                }
+                case RecordTypeInts.XCLW:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Cell_FieldIndex.WaterHeight;
+                }
+                case RecordTypeInts.XCLR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Regions = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IRegionGetter>>();
+                    return (int)Cell_FieldIndex.Regions;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.Location;
+                }
+                case RecordTypeInts.XWCN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XWCN = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Cell_FieldIndex.XWCN;
+                }
+                case RecordTypeInts.XWCU:
+                {
+                    item.WaterVelocity = Mutagen.Bethesda.Fallout4.CellWaterVelocity.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.WaterVelocity;
+                }
+                case RecordTypeInts.XCWT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.Water;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    item.Ownership = Mutagen.Bethesda.Fallout4.Ownership.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.Ownership;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FactionRank = frame.ReadInt32();
+                    return (int)Cell_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XILL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LockList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.LockList;
+                }
+                case RecordTypeInts.XILW:
+                {
+                    item.ExteriorLod = Mutagen.Bethesda.Fallout4.CellExteriorLod.CreateFromBinary(frame: frame);
+                    return (int)Cell_FieldIndex.ExteriorLod;
+                }
+                case RecordTypeInts.XWEM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WaterEnvironmentMap = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Cell_FieldIndex.WaterEnvironmentMap;
+                }
+                case RecordTypeInts.XCCM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SkyAndWeatherFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
+                }
+                case RecordTypeInts.XCAS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AcousticSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.AcousticSpace;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.EncounterZone;
+                }
+                case RecordTypeInts.XCMO:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.Music;
+                }
+                case RecordTypeInts.XCIM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.ImageSpace;
+                }
+                case RecordTypeInts.XGDR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GodRays.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Cell_FieldIndex.GodRays;
+                }
+                case RecordTypeInts.XPRI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PhysicsReferences = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedThingGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IPlacedThingGetter>>();
+                    return (int)Cell_FieldIndex.PhysicsReferences;
+                }
+                case RecordTypeInts.XCRI:
+                {
+                    return CellBinaryCreateTranslation.FillBinaryCombinedMeshLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial ParseResult FillBinaryCombinedMeshLogicCustom(
+            MutagenFrame frame,
+            ICellInternal item);
+
+        public static partial void CustomBinaryEndImport(
+            MutagenFrame frame,
+            ICellInternal obj);
+        public static void CustomBinaryEndImportPublic(
+            MutagenFrame frame,
+            ICellInternal obj)
+        {
+            CustomBinaryEndImport(
+                frame: frame,
+                obj: obj);
+        }
     }
 
 }
@@ -1249,16 +6403,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class CellBinaryOverlay :
+    internal partial class CellBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ICellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration StaticRegistration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +6420,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1281,36 +6442,169 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(ICell);
 
+        public Cell.MajorFlag MajorFlags => (Cell.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Cell.Flag Flags => _FlagsLocation.HasValue ? (Cell.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Cell.Flag);
+        #endregion
+        #region PreVisFilesTimestamp
+        private int? _PreVisFilesTimestampLocation;
+        public UInt16? PreVisFilesTimestamp => _PreVisFilesTimestampLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreVisFilesTimestampLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region InPreVisFileOf
+        private int? _InPreVisFileOfLocation;
+        public IFormLinkNullableGetter<ICellGetter> InPreVisFileOf => _InPreVisFileOfLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InPreVisFileOfLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        #endregion
+        #region PreCombinedFilesTimestamp
+        private int? _PreCombinedFilesTimestampLocation;
+        public UInt16? PreCombinedFilesTimestamp => _PreCombinedFilesTimestampLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreCombinedFilesTimestampLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region Grid
+        private RangeInt32? _GridLocation;
+        public ICellGridGetter? Grid => _GridLocation.HasValue ? CellGridBinaryOverlay.CellGridFactory(_recordData.Slice(_GridLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Lighting
+        private RangeInt32? _LightingLocation;
+        public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(_recordData.Slice(_LightingLocation!.Value.Min), _package) : default;
+        #endregion
+        #region PrecombinedObjectLevelXY
+        private int? _PrecombinedObjectLevelXYLocation;
+        public Byte? PrecombinedObjectLevelXY => _PrecombinedObjectLevelXYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecombinedObjectLevelXYLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
+        #region PrecombinedObjectLevelZ
+        private int? _PrecombinedObjectLevelZLocation;
+        public Byte? PrecombinedObjectLevelZ => _PrecombinedObjectLevelZLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecombinedObjectLevelZLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
+        #region TVDT
+        private int? _TVDTLocation;
+        public ReadOnlyMemorySlice<Byte>? TVDT => _TVDTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TVDTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region MaxHeightData
+        private RangeInt32? _MaxHeightDataLocation;
+        public ICellMaxHeightDataGetter? MaxHeightData => _MaxHeightDataLocation.HasValue ? CellMaxHeightDataBinaryOverlay.CellMaxHeightDataFactory(_recordData.Slice(_MaxHeightDataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region LightingTemplate
+        private int? _LightingTemplateLocation;
+        public IFormLinkGetter<ILightingTemplateGetter> LightingTemplate => _LightingTemplateLocation.HasValue ? new FormLink<ILightingTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightingTemplateLocation.Value, _package.MetaData.Constants)))) : FormLink<ILightingTemplateGetter>.Null;
+        #endregion
+        #region WaterHeight
+        private int? _WaterHeightLocation;
+        public Single? WaterHeight => _WaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
+        #region Location
+        private int? _LocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region XWCN
+        private int? _XWCNLocation;
+        public ReadOnlyMemorySlice<Byte>? XWCN => _XWCNLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XWCNLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region WaterVelocity
+        private RangeInt32? _WaterVelocityLocation;
+        public ICellWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? CellWaterVelocityBinaryOverlay.CellWaterVelocityFactory(_recordData.Slice(_WaterVelocityLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Water
+        private int? _WaterLocation;
+        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        #endregion
+        public IOwnershipGetter? Ownership { get; private set; }
+        #region FactionRank
+        private int? _FactionRankLocation;
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region LockList
+        private int? _LockListLocation;
+        public IFormLinkNullableGetter<ILockListGetter> LockList => _LockListLocation.HasValue ? new FormLinkNullable<ILockListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LockListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILockListGetter>.Null;
+        #endregion
+        #region ExteriorLod
+        private RangeInt32? _ExteriorLodLocation;
+        public ICellExteriorLodGetter? ExteriorLod => _ExteriorLodLocation.HasValue ? CellExteriorLodBinaryOverlay.CellExteriorLodFactory(_recordData.Slice(_ExteriorLodLocation!.Value.Min), _package) : default;
+        #endregion
+        #region WaterEnvironmentMap
+        private int? _WaterEnvironmentMapLocation;
+        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SkyAndWeatherFromRegion
+        private int? _SkyAndWeatherFromRegionLocation;
+        public IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion => _SkyAndWeatherFromRegionLocation.HasValue ? new FormLinkNullable<IRegionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkyAndWeatherFromRegionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRegionGetter>.Null;
+        #endregion
+        #region AcousticSpace
+        private int? _AcousticSpaceLocation;
+        public IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace => _AcousticSpaceLocation.HasValue ? new FormLinkNullable<IAcousticSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AcousticSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAcousticSpaceGetter>.Null;
+        #endregion
+        #region EncounterZone
+        private int? _EncounterZoneLocation;
+        public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
+        #endregion
+        #region Music
+        private int? _MusicLocation;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        #endregion
+        #region ImageSpace
+        private int? _ImageSpaceLocation;
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
+        #endregion
+        #region GodRays
+        private int? _GodRaysLocation;
+        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRaysGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; private set; }
+        #region CombinedMeshLogic
+        public partial ParseResult CombinedMeshLogicCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        partial void CustomEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
         protected CellBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CellBinaryOverlay CellFactory(
+        public static ICellGetter CellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            var origStream = stream;
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CellBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +6614,231 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
+            ret.CustomEnd(
+                stream: origStream,
+                finalPos: stream.Length,
+                offset: offset);
             return ret;
         }
 
-        public static CellBinaryOverlay CellFactory(
+        public static ICellGetter CellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.Name;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.Flags;
+                }
+                case RecordTypeInts.VISI:
+                {
+                    _PreVisFilesTimestampLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.PreVisFilesTimestamp;
+                }
+                case RecordTypeInts.RVIS:
+                {
+                    _InPreVisFileOfLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.InPreVisFileOf;
+                }
+                case RecordTypeInts.PCMB:
+                {
+                    _PreCombinedFilesTimestampLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.PreCombinedFilesTimestamp;
+                }
+                case RecordTypeInts.XCLC:
+                {
+                    _GridLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Cell_FieldIndex.Grid;
+                }
+                case RecordTypeInts.XCLL:
+                {
+                    _LightingLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Cell_FieldIndex.Lighting;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _PrecombinedObjectLevelXYLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.PrecombinedObjectLevelXY;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _PrecombinedObjectLevelZLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.PrecombinedObjectLevelZ;
+                }
+                case RecordTypeInts.TVDT:
+                {
+                    _TVDTLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.TVDT;
+                }
+                case RecordTypeInts.MHDT:
+                {
+                    _MaxHeightDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Cell_FieldIndex.MaxHeightData;
+                }
+                case RecordTypeInts.LTMP:
+                {
+                    _LightingTemplateLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.LightingTemplate;
+                }
+                case RecordTypeInts.XCLW:
+                {
+                    _WaterHeightLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.WaterHeight;
+                }
+                case RecordTypeInts.XCLR:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IRegionGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IRegionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Cell_FieldIndex.Regions;
+                }
+                case RecordTypeInts.XLCN:
+                {
+                    _LocationLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.Location;
+                }
+                case RecordTypeInts.XWCN:
+                {
+                    _XWCNLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.XWCN;
+                }
+                case RecordTypeInts.XWCU:
+                {
+                    _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Cell_FieldIndex.WaterVelocity;
+                }
+                case RecordTypeInts.XCWT:
+                {
+                    _WaterLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.Water;
+                }
+                case RecordTypeInts.XOWN:
+                {
+                    this.Ownership = OwnershipBinaryOverlay.OwnershipFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Cell_FieldIndex.Ownership;
+                }
+                case RecordTypeInts.XRNK:
+                {
+                    _FactionRankLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.FactionRank;
+                }
+                case RecordTypeInts.XILL:
+                {
+                    _LockListLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.LockList;
+                }
+                case RecordTypeInts.XILW:
+                {
+                    _ExteriorLodLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Cell_FieldIndex.ExteriorLod;
+                }
+                case RecordTypeInts.XWEM:
+                {
+                    _WaterEnvironmentMapLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.WaterEnvironmentMap;
+                }
+                case RecordTypeInts.XCCM:
+                {
+                    _SkyAndWeatherFromRegionLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
+                }
+                case RecordTypeInts.XCAS:
+                {
+                    _AcousticSpaceLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.AcousticSpace;
+                }
+                case RecordTypeInts.XEZN:
+                {
+                    _EncounterZoneLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.EncounterZone;
+                }
+                case RecordTypeInts.XCMO:
+                {
+                    _MusicLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.Music;
+                }
+                case RecordTypeInts.XCIM:
+                {
+                    _ImageSpaceLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.ImageSpace;
+                }
+                case RecordTypeInts.XGDR:
+                {
+                    _GodRaysLocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.GodRays;
+                }
+                case RecordTypeInts.XPRI:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.PhysicsReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedThingGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IPlacedThingGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Cell_FieldIndex.PhysicsReferences;
+                }
+                case RecordTypeInts.XCRI:
+                {
+                    return CombinedMeshLogicCustomParse(
+                        stream,
+                        offset);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellMixIn.ToString(
+            CellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

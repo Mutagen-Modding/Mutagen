@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +75,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcOwnerMixIn.ToString(
+            NpcOwnerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -200,34 +202,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NpcOwner.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NpcOwner.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NpcOwner.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NpcOwner.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NpcOwner.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcOwner.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Npc ?? true)
                     {
-                        fg.AppendItem(Npc, "Npc");
+                        sb.AppendItem(Npc, "Npc");
                     }
                     if (printMask?.Global ?? true)
                     {
-                        fg.AppendItem(Global, "Global");
+                        sb.AppendItem(Global, "Global");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -301,38 +298,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Npc, "Npc");
-                fg.AppendItem(Global, "Global");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Npc, "Npc");
+                }
+                {
+                    sb.AppendItem(Global, "Global");
+                }
             }
             #endregion
 
@@ -397,7 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcOwnerCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcOwnerCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcOwnerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -406,7 +398,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NpcOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -416,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static NpcOwner CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcOwner();
             ((NpcOwnerSetterCommon)((INpcOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -431,7 +423,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcOwner item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -441,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -500,26 +492,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcOwnerGetter item,
             string? name = null,
             NpcOwner.Mask<bool>? printMask = null)
         {
-            return ((NpcOwnerCommon)((INpcOwnerGetter)item).CommonInstance()!).ToString(
+            return ((NpcOwnerCommon)((INpcOwnerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcOwner.Mask<bool>? printMask = null)
         {
-            ((NpcOwnerCommon)((INpcOwnerGetter)item).CommonInstance()!).ToString(
+            ((NpcOwnerCommon)((INpcOwnerGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -600,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcOwnerSetterCommon)((INpcOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -615,10 +607,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcOwner_FieldIndex
+    internal enum NpcOwner_FieldIndex
     {
         Npc = 0,
         Global = 1,
@@ -626,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class NpcOwner_Registration : ILoquiRegistration
+    internal partial class NpcOwner_Registration : ILoquiRegistration
     {
         public static readonly NpcOwner_Registration Instance = new NpcOwner_Registration();
 
@@ -700,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcOwnerSetterCommon : OwnerTargetSetterCommon
+    internal partial class NpcOwnerSetterCommon : OwnerTargetSetterCommon
     {
         public new static readonly NpcOwnerSetterCommon Instance = new NpcOwnerSetterCommon();
 
@@ -733,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INpcOwner item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -745,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NpcOwner)item,
@@ -756,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcOwnerCommon : OwnerTargetCommon
+    internal partial class NpcOwnerCommon : OwnerTargetCommon
     {
         public new static readonly NpcOwnerCommon Instance = new NpcOwnerCommon();
 
@@ -780,67 +772,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcOwner.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Npc = item.Npc.Equals(rhs.Npc);
             ret.Global = item.Global.Equals(rhs.Global);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             INpcOwnerGetter item,
             string? name = null,
             NpcOwner.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcOwner.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcOwner =>");
+                sb.AppendLine($"NpcOwner =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcOwner) =>");
+                sb.AppendLine($"{name} (NpcOwner) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcOwnerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcOwner.Mask<bool>? printMask = null)
         {
             OwnerTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Npc ?? true)
             {
-                fg.AppendItem(item.Npc.FormKey, "Npc");
+                sb.AppendItem(item.Npc.FormKey, "Npc");
             }
             if (printMask?.Global ?? true)
             {
-                fg.AppendItem(item.Global.FormKey, "Global");
+                sb.AppendItem(item.Global.FormKey, "Global");
             }
         }
         
@@ -906,9 +895,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcOwnerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcOwnerGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -920,7 +909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
+    internal partial class NpcOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
     {
         public new static readonly NpcOwnerSetterTranslationCommon Instance = new NpcOwnerSetterTranslationCommon();
 
@@ -1024,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcOwner_Registration.Instance;
-        public new static NpcOwner_Registration StaticRegistration => NpcOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1042,13 +1031,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcOwnerBinaryWriteTranslation :
         OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NpcOwnerBinaryWriteTranslation Instance = new NpcOwnerBinaryWriteTranslation();
+        public new static readonly NpcOwnerBinaryWriteTranslation Instance = new NpcOwnerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INpcOwnerGetter item,
@@ -1065,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INpcOwnerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1075,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcOwnerGetter)item,
@@ -1086,7 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IOwnerTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcOwnerGetter)item,
@@ -1096,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
+    internal partial class NpcOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
-        public new readonly static NpcOwnerBinaryCreateTranslation Instance = new NpcOwnerBinaryCreateTranslation();
+        public new static readonly NpcOwnerBinaryCreateTranslation Instance = new NpcOwnerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcOwner item,
@@ -1121,16 +1110,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcOwnerBinaryOverlay :
+    internal partial class NpcOwnerBinaryOverlay :
         OwnerTargetBinaryOverlay,
         INpcOwnerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcOwner_Registration.Instance;
-        public new static NpcOwner_Registration StaticRegistration => NpcOwner_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcOwner_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcOwnerCommon.Instance;
         [DebuggerStepThrough]
@@ -1138,14 +1127,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcOwnerCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcOwnerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1153,8 +1142,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1162,24 +1151,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NpcOwnerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NpcOwnerBinaryOverlay NpcOwnerFactory(
+        public static INpcOwnerGetter NpcOwnerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NpcOwnerBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1188,25 +1183,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NpcOwnerBinaryOverlay NpcOwnerFactory(
+        public static INpcOwnerGetter NpcOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcOwnerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcOwnerMixIn.ToString(
+            NpcOwnerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

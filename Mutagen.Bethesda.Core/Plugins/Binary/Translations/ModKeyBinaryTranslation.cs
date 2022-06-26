@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -8,7 +7,8 @@ public class ModKeyBinaryTranslation
 {
     public static readonly ModKeyBinaryTranslation Instance = new();
 
-    public bool Parse(MutagenFrame reader, [MaybeNullWhen(false)]out ModKey item)
+    public bool Parse<TReader>(TReader reader, [MaybeNullWhen(false)]out ModKey item)
+        where TReader : IMutagenReadStream
     {
         if (!StringBinaryTranslation.Instance.Parse(reader, out var str))
         {
@@ -19,7 +19,8 @@ public class ModKeyBinaryTranslation
         return ModKey.TryFromNameAndExtension(str, out item!);
     }
 
-    public ModKey Parse(MutagenFrame reader)
+    public ModKey Parse<TReader>(TReader reader)
+        where TReader : IMutagenReadStream
     {
         if (!StringBinaryTranslation.Instance.Parse(reader, out var str))
         {

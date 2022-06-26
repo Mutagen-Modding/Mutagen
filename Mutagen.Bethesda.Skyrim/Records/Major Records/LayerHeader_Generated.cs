@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,18 +63,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
         #endregion
+        #region Unused
+        public Byte Unused { get; set; } = default;
+        #endregion
         #region LayerNumber
         public UInt16 LayerNumber { get; set; } = default;
         #endregion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LayerHeaderMixIn.ToString(
+            LayerHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -105,16 +110,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Texture = initialValue;
                 this.Quadrant = initialValue;
+                this.Unused = initialValue;
                 this.LayerNumber = initialValue;
             }
 
             public Mask(
                 TItem Texture,
                 TItem Quadrant,
+                TItem Unused,
                 TItem LayerNumber)
             {
                 this.Texture = Texture;
                 this.Quadrant = Quadrant;
+                this.Unused = Unused;
                 this.LayerNumber = LayerNumber;
             }
 
@@ -129,6 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem Texture;
             public TItem Quadrant;
+            public TItem Unused;
             public TItem LayerNumber;
             #endregion
 
@@ -144,6 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!object.Equals(this.Texture, rhs.Texture)) return false;
                 if (!object.Equals(this.Quadrant, rhs.Quadrant)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.LayerNumber, rhs.LayerNumber)) return false;
                 return true;
             }
@@ -152,6 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.Texture);
                 hash.Add(this.Quadrant);
+                hash.Add(this.Unused);
                 hash.Add(this.LayerNumber);
                 return hash.ToHashCode();
             }
@@ -163,6 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!eval(this.Texture)) return false;
                 if (!eval(this.Quadrant)) return false;
+                if (!eval(this.Unused)) return false;
                 if (!eval(this.LayerNumber)) return false;
                 return true;
             }
@@ -173,6 +185,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (eval(this.Texture)) return true;
                 if (eval(this.Quadrant)) return true;
+                if (eval(this.Unused)) return true;
                 if (eval(this.LayerNumber)) return true;
                 return false;
             }
@@ -190,43 +203,43 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 obj.Texture = eval(this.Texture);
                 obj.Quadrant = eval(this.Quadrant);
+                obj.Unused = eval(this.Unused);
                 obj.LayerNumber = eval(this.LayerNumber);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LayerHeader.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LayerHeader.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LayerHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LayerHeader.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LayerHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LayerHeader.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Texture ?? true)
                     {
-                        fg.AppendItem(Texture, "Texture");
+                        sb.AppendItem(Texture, "Texture");
                     }
                     if (printMask?.Quadrant ?? true)
                     {
-                        fg.AppendItem(Quadrant, "Quadrant");
+                        sb.AppendItem(Quadrant, "Quadrant");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.LayerNumber ?? true)
                     {
-                        fg.AppendItem(LayerNumber, "LayerNumber");
+                        sb.AppendItem(LayerNumber, "LayerNumber");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -252,6 +265,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             public Exception? Texture;
             public Exception? Quadrant;
+            public Exception? Unused;
             public Exception? LayerNumber;
             #endregion
 
@@ -265,6 +279,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Texture;
                     case LayerHeader_FieldIndex.Quadrant:
                         return Quadrant;
+                    case LayerHeader_FieldIndex.Unused:
+                        return Unused;
                     case LayerHeader_FieldIndex.LayerNumber:
                         return LayerNumber;
                     default:
@@ -282,6 +298,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case LayerHeader_FieldIndex.Quadrant:
                         this.Quadrant = ex;
+                        break;
+                    case LayerHeader_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case LayerHeader_FieldIndex.LayerNumber:
                         this.LayerNumber = ex;
@@ -302,6 +321,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case LayerHeader_FieldIndex.Quadrant:
                         this.Quadrant = (Exception?)obj;
                         break;
+                    case LayerHeader_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
                     case LayerHeader_FieldIndex.LayerNumber:
                         this.LayerNumber = (Exception?)obj;
                         break;
@@ -315,44 +337,45 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (Texture != null) return true;
                 if (Quadrant != null) return true;
+                if (Unused != null) return true;
                 if (LayerNumber != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Texture, "Texture");
-                fg.AppendItem(Quadrant, "Quadrant");
-                fg.AppendItem(LayerNumber, "LayerNumber");
+                {
+                    sb.AppendItem(Texture, "Texture");
+                }
+                {
+                    sb.AppendItem(Quadrant, "Quadrant");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(LayerNumber, "LayerNumber");
+                }
             }
             #endregion
 
@@ -363,6 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Texture = this.Texture.Combine(rhs.Texture);
                 ret.Quadrant = this.Quadrant.Combine(rhs.Quadrant);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.LayerNumber = this.LayerNumber.Combine(rhs.LayerNumber);
                 return ret;
             }
@@ -389,6 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool OnOverall;
             public bool Texture;
             public bool Quadrant;
+            public bool Unused;
             public bool LayerNumber;
             #endregion
 
@@ -401,6 +426,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.OnOverall = onOverall;
                 this.Texture = defaultOn;
                 this.Quadrant = defaultOn;
+                this.Unused = defaultOn;
                 this.LayerNumber = defaultOn;
             }
 
@@ -419,6 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ret.Add((Texture, null));
                 ret.Add((Quadrant, null));
+                ret.Add((Unused, null));
                 ret.Add((LayerNumber, null));
             }
 
@@ -431,8 +458,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LayerHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerHeaderCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LayerHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -443,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LayerHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LayerHeader();
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LayerHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -478,7 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -501,6 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IFormLink<ILandscapeTextureGetter> Texture { get; set; }
         new Quadrant Quadrant { get; set; }
+        new Byte Unused { get; set; }
         new UInt16 LayerNumber { get; set; }
     }
 
@@ -519,6 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         IFormLinkGetter<ILandscapeTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
+        Byte Unused { get; }
         UInt16 LayerNumber { get; }
 
     }
@@ -544,26 +572,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILayerHeaderGetter item,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).ToString(
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).ToString(
+            ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -669,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILayerHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LayerHeaderSetterCommon)((ILayerHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -684,19 +712,20 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LayerHeader_FieldIndex
+    internal enum LayerHeader_FieldIndex
     {
         Texture = 0,
         Quadrant = 1,
-        LayerNumber = 2,
+        Unused = 2,
+        LayerNumber = 3,
     }
     #endregion
 
     #region Registration
-    public partial class LayerHeader_Registration : ILoquiRegistration
+    internal partial class LayerHeader_Registration : ILoquiRegistration
     {
         public static readonly LayerHeader_Registration Instance = new LayerHeader_Registration();
 
@@ -709,9 +738,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "6d96352d-8353-4eb9-b1dd-658a76b55abf";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(LayerHeader.Mask<>);
 
@@ -738,6 +767,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.BTXT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.BTXT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LayerHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -771,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LayerHeaderSetterCommon
+    internal partial class LayerHeaderSetterCommon
     {
         public static readonly LayerHeaderSetterCommon Instance = new LayerHeaderSetterCommon();
 
@@ -782,6 +817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Texture.Clear();
             item.Quadrant = default;
+            item.Unused = default;
             item.LayerNumber = default;
         }
         
@@ -797,12 +833,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILayerHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.BTXT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -813,7 +849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LayerHeaderCommon
+    internal partial class LayerHeaderCommon
     {
         public static readonly LayerHeaderCommon Instance = new LayerHeaderCommon();
 
@@ -837,67 +873,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LayerHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Texture = item.Texture.Equals(rhs.Texture);
             ret.Quadrant = item.Quadrant == rhs.Quadrant;
+            ret.Unused = item.Unused == rhs.Unused;
             ret.LayerNumber = item.LayerNumber == rhs.LayerNumber;
         }
         
-        public string ToString(
+        public string Print(
             ILayerHeaderGetter item,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LayerHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LayerHeader =>");
+                sb.AppendLine($"LayerHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LayerHeader) =>");
+                sb.AppendLine($"{name} (LayerHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILayerHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LayerHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Texture ?? true)
             {
-                fg.AppendItem(item.Texture.FormKey, "Texture");
+                sb.AppendItem(item.Texture.FormKey, "Texture");
             }
             if (printMask?.Quadrant ?? true)
             {
-                fg.AppendItem(item.Quadrant, "Quadrant");
+                sb.AppendItem(item.Quadrant, "Quadrant");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.LayerNumber ?? true)
             {
-                fg.AppendItem(item.LayerNumber, "LayerNumber");
+                sb.AppendItem(item.LayerNumber, "LayerNumber");
             }
         }
         
@@ -916,6 +954,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.Quadrant != rhs.Quadrant) return false;
             }
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
             if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
             {
                 if (lhs.LayerNumber != rhs.LayerNumber) return false;
@@ -928,6 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var hash = new HashCode();
             hash.Add(item.Texture);
             hash.Add(item.Quadrant);
+            hash.Add(item.Unused);
             hash.Add(item.LayerNumber);
             return hash.ToHashCode();
         }
@@ -941,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILayerHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILayerHeaderGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Texture);
             yield break;
@@ -950,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LayerHeaderSetterTranslationCommon
+    internal partial class LayerHeaderSetterTranslationCommon
     {
         public static readonly LayerHeaderSetterTranslationCommon Instance = new LayerHeaderSetterTranslationCommon();
 
@@ -969,6 +1012,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
                 item.Quadrant = rhs.Quadrant;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
             {
@@ -1036,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1060,11 +1107,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LayerHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
+        public static readonly LayerHeaderBinaryWriteTranslation Instance = new LayerHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILayerHeaderGetter item,
@@ -1076,19 +1123,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EnumBinaryTranslation<Quadrant, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Quadrant,
-                length: 2);
+                length: 1);
+            writer.Write(item.Unused);
             writer.Write(item.LayerNumber);
         }
 
         public void Write(
             MutagenWriter writer,
             ILayerHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.BTXT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1100,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILayerHeaderGetter)item,
@@ -1110,9 +1158,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LayerHeaderBinaryCreateTranslation
+    internal partial class LayerHeaderBinaryCreateTranslation
     {
-        public readonly static LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
+        public static readonly LayerHeaderBinaryCreateTranslation Instance = new LayerHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILayerHeader item,
@@ -1121,7 +1169,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Quadrant = EnumBinaryTranslation<Quadrant, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                length: 2);
+                length: 1);
+            item.Unused = frame.ReadUInt8();
             item.LayerNumber = frame.ReadUInt16();
         }
 
@@ -1136,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILayerHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1149,16 +1198,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LayerHeaderBinaryOverlay :
+    internal partial class LayerHeaderBinaryOverlay :
         PluginBinaryOverlay,
         ILayerHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LayerHeader_Registration.Instance;
-        public static LayerHeader_Registration StaticRegistration => LayerHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LayerHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LayerHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -1172,16 +1221,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LayerHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LayerHeaderCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LayerHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LayerHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,9 +1238,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
-        public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public IFormLinkGetter<ILandscapeTextureGetter> Texture => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Quadrant Quadrant => (Quadrant)_structData.Span.Slice(0x4, 0x1)[0];
+        public Byte Unused => _structData.Span[0x5];
+        public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1199,25 +1249,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LayerHeaderBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LayerHeaderBinaryOverlay LayerHeaderFactory(
+        public static ILayerHeaderGetter LayerHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LayerHeaderBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1226,25 +1281,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LayerHeaderBinaryOverlay LayerHeaderFactory(
+        public static ILayerHeaderGetter LayerHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LayerHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LayerHeaderMixIn.ToString(
+            LayerHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

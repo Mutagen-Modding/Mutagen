@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -60,12 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ClassTrainingMixIn.ToString(
+            ClassTrainingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -187,38 +190,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ClassTraining.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ClassTraining.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ClassTraining.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ClassTraining.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ClassTraining.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ClassTraining.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.TrainedSkill ?? true)
                     {
-                        fg.AppendItem(TrainedSkill, "TrainedSkill");
+                        sb.AppendItem(TrainedSkill, "TrainedSkill");
                     }
                     if (printMask?.MaximumTrainingLevel ?? true)
                     {
-                        fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                        sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -313,38 +311,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(TrainedSkill, "TrainedSkill");
-                fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(TrainedSkill, "TrainedSkill");
+                }
+                {
+                    sb.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -429,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -439,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ClassTraining CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ClassTraining();
             ((ClassTrainingSetterCommon)((IClassTrainingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -454,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ClassTraining item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -464,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -528,26 +523,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IClassTrainingGetter item,
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
-            return ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).ToString(
+            return ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IClassTrainingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
-            ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).ToString(
+            ((ClassTrainingCommon)((IClassTrainingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -653,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IClassTraining item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ClassTrainingSetterCommon)((IClassTrainingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -668,10 +663,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ClassTraining_FieldIndex
+    internal enum ClassTraining_FieldIndex
     {
         TrainedSkill = 0,
         MaximumTrainingLevel = 1,
@@ -680,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ClassTraining_Registration : ILoquiRegistration
+    internal partial class ClassTraining_Registration : ILoquiRegistration
     {
         public static readonly ClassTraining_Registration Instance = new ClassTraining_Registration();
 
@@ -754,7 +749,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ClassTrainingSetterCommon
+    internal partial class ClassTrainingSetterCommon
     {
         public static readonly ClassTrainingSetterCommon Instance = new ClassTrainingSetterCommon();
 
@@ -779,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IClassTraining item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -791,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClassTrainingCommon
+    internal partial class ClassTrainingCommon
     {
         public static readonly ClassTrainingCommon Instance = new ClassTrainingCommon();
 
@@ -815,67 +810,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClassTraining.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
-        public string ToString(
+        public string Print(
             IClassTrainingGetter item,
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IClassTrainingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ClassTraining.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ClassTraining =>");
+                sb.AppendLine($"ClassTraining =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ClassTraining) =>");
+                sb.AppendLine($"{name} (ClassTraining) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IClassTrainingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ClassTraining.Mask<bool>? printMask = null)
         {
             if (printMask?.TrainedSkill ?? true)
             {
-                fg.AppendItem(item.TrainedSkill, "TrainedSkill");
+                sb.AppendItem(item.TrainedSkill, "TrainedSkill");
             }
             if (printMask?.MaximumTrainingLevel ?? true)
             {
-                fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
+                sb.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -919,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IClassTrainingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IClassTrainingGetter obj)
         {
             yield break;
         }
@@ -927,7 +919,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ClassTrainingSetterTranslationCommon
+    internal partial class ClassTrainingSetterTranslationCommon
     {
         public static readonly ClassTrainingSetterTranslationCommon Instance = new ClassTrainingSetterTranslationCommon();
 
@@ -1013,7 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
-        public static ClassTraining_Registration StaticRegistration => ClassTraining_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClassTraining_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClassTrainingCommon.Instance;
         [DebuggerStepThrough]
@@ -1037,11 +1029,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ClassTrainingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ClassTrainingBinaryWriteTranslation Instance = new ClassTrainingBinaryWriteTranslation();
+        public static readonly ClassTrainingBinaryWriteTranslation Instance = new ClassTrainingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IClassTrainingGetter item,
@@ -1058,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IClassTrainingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1068,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IClassTrainingGetter)item,
@@ -1078,9 +1070,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ClassTrainingBinaryCreateTranslation
+    internal partial class ClassTrainingBinaryCreateTranslation
     {
-        public readonly static ClassTrainingBinaryCreateTranslation Instance = new ClassTrainingBinaryCreateTranslation();
+        public static readonly ClassTrainingBinaryCreateTranslation Instance = new ClassTrainingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IClassTraining item,
@@ -1104,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IClassTrainingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClassTrainingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1117,16 +1109,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ClassTrainingBinaryOverlay :
+    internal partial class ClassTrainingBinaryOverlay :
         PluginBinaryOverlay,
         IClassTrainingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClassTraining_Registration.Instance;
-        public static ClassTraining_Registration StaticRegistration => ClassTraining_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ClassTraining_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ClassTrainingCommon.Instance;
         [DebuggerStepThrough]
@@ -1140,7 +1132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ClassTrainingBinaryWriteTranslation.Instance;
@@ -1148,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ClassTrainingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1156,9 +1148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Skill TrainedSkill => (Skill)_data.Span.Slice(0x0, 0x1)[0];
-        public Byte MaximumTrainingLevel => _data.Span[0x1];
-        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public Skill TrainedSkill => (Skill)_structData.Span.Slice(0x0, 0x1)[0];
+        public Byte MaximumTrainingLevel => _structData.Span[0x1];
+        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1166,24 +1158,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected ClassTrainingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ClassTrainingBinaryOverlay ClassTrainingFactory(
+        public static IClassTrainingGetter ClassTrainingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ClassTrainingBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1192,25 +1190,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static ClassTrainingBinaryOverlay ClassTrainingFactory(
+        public static IClassTrainingGetter ClassTrainingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ClassTrainingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ClassTrainingMixIn.ToString(
+            ClassTrainingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

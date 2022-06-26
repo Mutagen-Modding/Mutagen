@@ -14,7 +14,7 @@
   <Object name="MessageButton" objType="Subrecord" GUID="34cf38b7-fac2-462c-90d9-55e7d57d8e08" ID="447">
     <Fields>
       <String name="Text" recordType="ITXT" translated="Normal" />
-      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

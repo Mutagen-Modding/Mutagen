@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -132,12 +134,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterDataMixIn.ToString(
+            WaterDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -475,134 +478,129 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WaterData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WaterData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WaterData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WaterData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WaterData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WaterData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.WindVelocity ?? true)
                     {
-                        fg.AppendItem(WindVelocity, "WindVelocity");
+                        sb.AppendItem(WindVelocity, "WindVelocity");
                     }
                     if (printMask?.WindDirection ?? true)
                     {
-                        fg.AppendItem(WindDirection, "WindDirection");
+                        sb.AppendItem(WindDirection, "WindDirection");
                     }
                     if (printMask?.WaveAmplitude ?? true)
                     {
-                        fg.AppendItem(WaveAmplitude, "WaveAmplitude");
+                        sb.AppendItem(WaveAmplitude, "WaveAmplitude");
                     }
                     if (printMask?.WaveFrequency ?? true)
                     {
-                        fg.AppendItem(WaveFrequency, "WaveFrequency");
+                        sb.AppendItem(WaveFrequency, "WaveFrequency");
                     }
                     if (printMask?.SunPower ?? true)
                     {
-                        fg.AppendItem(SunPower, "SunPower");
+                        sb.AppendItem(SunPower, "SunPower");
                     }
                     if (printMask?.ReflectivityAmount ?? true)
                     {
-                        fg.AppendItem(ReflectivityAmount, "ReflectivityAmount");
+                        sb.AppendItem(ReflectivityAmount, "ReflectivityAmount");
                     }
                     if (printMask?.FresnelAmount ?? true)
                     {
-                        fg.AppendItem(FresnelAmount, "FresnelAmount");
+                        sb.AppendItem(FresnelAmount, "FresnelAmount");
                     }
                     if (printMask?.ScrollXSpeed ?? true)
                     {
-                        fg.AppendItem(ScrollXSpeed, "ScrollXSpeed");
+                        sb.AppendItem(ScrollXSpeed, "ScrollXSpeed");
                     }
                     if (printMask?.ScrollYSpeed ?? true)
                     {
-                        fg.AppendItem(ScrollYSpeed, "ScrollYSpeed");
+                        sb.AppendItem(ScrollYSpeed, "ScrollYSpeed");
                     }
                     if (printMask?.FogDistanceNearPlane ?? true)
                     {
-                        fg.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
+                        sb.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
                     }
                     if (printMask?.FogDistanceFarPlane ?? true)
                     {
-                        fg.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
+                        sb.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
                     }
                     if (printMask?.ShallowColor ?? true)
                     {
-                        fg.AppendItem(ShallowColor, "ShallowColor");
+                        sb.AppendItem(ShallowColor, "ShallowColor");
                     }
                     if (printMask?.DeepColor ?? true)
                     {
-                        fg.AppendItem(DeepColor, "DeepColor");
+                        sb.AppendItem(DeepColor, "DeepColor");
                     }
                     if (printMask?.ReflectionColor ?? true)
                     {
-                        fg.AppendItem(ReflectionColor, "ReflectionColor");
+                        sb.AppendItem(ReflectionColor, "ReflectionColor");
                     }
                     if (printMask?.TextureBlend ?? true)
                     {
-                        fg.AppendItem(TextureBlend, "TextureBlend");
+                        sb.AppendItem(TextureBlend, "TextureBlend");
                     }
                     if (printMask?.RainSimulatorForce ?? true)
                     {
-                        fg.AppendItem(RainSimulatorForce, "RainSimulatorForce");
+                        sb.AppendItem(RainSimulatorForce, "RainSimulatorForce");
                     }
                     if (printMask?.RainSimulatorVelocity ?? true)
                     {
-                        fg.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
+                        sb.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
                     }
                     if (printMask?.RainSimulatorFalloff ?? true)
                     {
-                        fg.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
+                        sb.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
                     }
                     if (printMask?.RainSimulatorDampner ?? true)
                     {
-                        fg.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
+                        sb.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
                     }
                     if (printMask?.RainSimulatorStartingSize ?? true)
                     {
-                        fg.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
+                        sb.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
                     }
                     if (printMask?.DisplacementSimulatorForce ?? true)
                     {
-                        fg.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
+                        sb.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
                     }
                     if (printMask?.DisplacementSimulatorVelocity ?? true)
                     {
-                        fg.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
+                        sb.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
                     }
                     if (printMask?.DisplacementSimulatorFalloff ?? true)
                     {
-                        fg.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
+                        sb.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
                     }
                     if (printMask?.DisplacementSimulatorDampner ?? true)
                     {
-                        fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
+                        sb.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
                     }
                     if (printMask?.DisplacementSimulatorStartingSize ?? true)
                     {
-                        fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
+                        sb.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
                     }
                     if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(Damage, "Damage");
+                        sb.AppendItem(Damage, "Damage");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -937,62 +935,107 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(WindVelocity, "WindVelocity");
-                fg.AppendItem(WindDirection, "WindDirection");
-                fg.AppendItem(WaveAmplitude, "WaveAmplitude");
-                fg.AppendItem(WaveFrequency, "WaveFrequency");
-                fg.AppendItem(SunPower, "SunPower");
-                fg.AppendItem(ReflectivityAmount, "ReflectivityAmount");
-                fg.AppendItem(FresnelAmount, "FresnelAmount");
-                fg.AppendItem(ScrollXSpeed, "ScrollXSpeed");
-                fg.AppendItem(ScrollYSpeed, "ScrollYSpeed");
-                fg.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
-                fg.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
-                fg.AppendItem(ShallowColor, "ShallowColor");
-                fg.AppendItem(DeepColor, "DeepColor");
-                fg.AppendItem(ReflectionColor, "ReflectionColor");
-                fg.AppendItem(TextureBlend, "TextureBlend");
-                fg.AppendItem(RainSimulatorForce, "RainSimulatorForce");
-                fg.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
-                fg.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
-                fg.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
-                fg.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
-                fg.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
-                fg.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
-                fg.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
-                fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
-                fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
-                fg.AppendItem(Damage, "Damage");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(WindVelocity, "WindVelocity");
+                }
+                {
+                    sb.AppendItem(WindDirection, "WindDirection");
+                }
+                {
+                    sb.AppendItem(WaveAmplitude, "WaveAmplitude");
+                }
+                {
+                    sb.AppendItem(WaveFrequency, "WaveFrequency");
+                }
+                {
+                    sb.AppendItem(SunPower, "SunPower");
+                }
+                {
+                    sb.AppendItem(ReflectivityAmount, "ReflectivityAmount");
+                }
+                {
+                    sb.AppendItem(FresnelAmount, "FresnelAmount");
+                }
+                {
+                    sb.AppendItem(ScrollXSpeed, "ScrollXSpeed");
+                }
+                {
+                    sb.AppendItem(ScrollYSpeed, "ScrollYSpeed");
+                }
+                {
+                    sb.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
+                }
+                {
+                    sb.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
+                }
+                {
+                    sb.AppendItem(ShallowColor, "ShallowColor");
+                }
+                {
+                    sb.AppendItem(DeepColor, "DeepColor");
+                }
+                {
+                    sb.AppendItem(ReflectionColor, "ReflectionColor");
+                }
+                {
+                    sb.AppendItem(TextureBlend, "TextureBlend");
+                }
+                {
+                    sb.AppendItem(RainSimulatorForce, "RainSimulatorForce");
+                }
+                {
+                    sb.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
+                }
+                {
+                    sb.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
+                }
+                {
+                    sb.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
+                }
+                {
+                    sb.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
+                }
+                {
+                    sb.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
+                }
+                {
+                    sb.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
+                }
+                {
+                    sb.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
+                }
+                {
+                    sb.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
+                }
+                {
+                    sb.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
+                }
             }
             #endregion
 
@@ -1167,7 +1210,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WaterData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -1185,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1195,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static WaterData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WaterData();
             ((WaterDataSetterCommon)((IWaterDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1210,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WaterData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1220,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1332,26 +1374,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWaterDataGetter item,
             string? name = null,
             WaterData.Mask<bool>? printMask = null)
         {
-            return ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).ToString(
+            return ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWaterDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WaterData.Mask<bool>? printMask = null)
         {
-            ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).ToString(
+            ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1457,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWaterData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WaterDataSetterCommon)((IWaterDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1472,10 +1514,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WaterData_FieldIndex
+    internal enum WaterData_FieldIndex
     {
         Versioning = 0,
         WindVelocity = 1,
@@ -1508,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WaterData_Registration : ILoquiRegistration
+    internal partial class WaterData_Registration : ILoquiRegistration
     {
         public static readonly WaterData_Registration Instance = new WaterData_Registration();
 
@@ -1550,6 +1592,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WaterDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1583,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WaterDataSetterCommon
+    internal partial class WaterDataSetterCommon
     {
         public static readonly WaterDataSetterCommon Instance = new WaterDataSetterCommon();
 
@@ -1632,12 +1680,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IWaterData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1648,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterDataCommon
+    internal partial class WaterDataCommon
     {
         public static readonly WaterDataCommon Instance = new WaterDataCommon();
 
@@ -1672,7 +1720,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.WindVelocity = item.WindVelocity.EqualsWithin(rhs.WindVelocity);
             ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
@@ -1702,157 +1749,155 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Damage = item.Damage == rhs.Damage;
         }
         
-        public string ToString(
+        public string Print(
             IWaterDataGetter item,
             string? name = null,
             WaterData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWaterDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WaterData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WaterData =>");
+                sb.AppendLine($"WaterData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WaterData) =>");
+                sb.AppendLine($"{name} (WaterData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWaterDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WaterData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.WindVelocity ?? true)
             {
-                fg.AppendItem(item.WindVelocity, "WindVelocity");
+                sb.AppendItem(item.WindVelocity, "WindVelocity");
             }
             if (printMask?.WindDirection ?? true)
             {
-                fg.AppendItem(item.WindDirection, "WindDirection");
+                sb.AppendItem(item.WindDirection, "WindDirection");
             }
             if (printMask?.WaveAmplitude ?? true)
             {
-                fg.AppendItem(item.WaveAmplitude, "WaveAmplitude");
+                sb.AppendItem(item.WaveAmplitude, "WaveAmplitude");
             }
             if (printMask?.WaveFrequency ?? true)
             {
-                fg.AppendItem(item.WaveFrequency, "WaveFrequency");
+                sb.AppendItem(item.WaveFrequency, "WaveFrequency");
             }
             if (printMask?.SunPower ?? true)
             {
-                fg.AppendItem(item.SunPower, "SunPower");
+                sb.AppendItem(item.SunPower, "SunPower");
             }
             if (printMask?.ReflectivityAmount ?? true)
             {
-                fg.AppendItem(item.ReflectivityAmount, "ReflectivityAmount");
+                sb.AppendItem(item.ReflectivityAmount, "ReflectivityAmount");
             }
             if (printMask?.FresnelAmount ?? true)
             {
-                fg.AppendItem(item.FresnelAmount, "FresnelAmount");
+                sb.AppendItem(item.FresnelAmount, "FresnelAmount");
             }
             if (printMask?.ScrollXSpeed ?? true)
             {
-                fg.AppendItem(item.ScrollXSpeed, "ScrollXSpeed");
+                sb.AppendItem(item.ScrollXSpeed, "ScrollXSpeed");
             }
             if (printMask?.ScrollYSpeed ?? true)
             {
-                fg.AppendItem(item.ScrollYSpeed, "ScrollYSpeed");
+                sb.AppendItem(item.ScrollYSpeed, "ScrollYSpeed");
             }
             if (printMask?.FogDistanceNearPlane ?? true)
             {
-                fg.AppendItem(item.FogDistanceNearPlane, "FogDistanceNearPlane");
+                sb.AppendItem(item.FogDistanceNearPlane, "FogDistanceNearPlane");
             }
             if (printMask?.FogDistanceFarPlane ?? true)
             {
-                fg.AppendItem(item.FogDistanceFarPlane, "FogDistanceFarPlane");
+                sb.AppendItem(item.FogDistanceFarPlane, "FogDistanceFarPlane");
             }
             if (printMask?.ShallowColor ?? true)
             {
-                fg.AppendItem(item.ShallowColor, "ShallowColor");
+                sb.AppendItem(item.ShallowColor, "ShallowColor");
             }
             if (printMask?.DeepColor ?? true)
             {
-                fg.AppendItem(item.DeepColor, "DeepColor");
+                sb.AppendItem(item.DeepColor, "DeepColor");
             }
             if (printMask?.ReflectionColor ?? true)
             {
-                fg.AppendItem(item.ReflectionColor, "ReflectionColor");
+                sb.AppendItem(item.ReflectionColor, "ReflectionColor");
             }
             if (printMask?.TextureBlend ?? true)
             {
-                fg.AppendItem(item.TextureBlend, "TextureBlend");
+                sb.AppendItem(item.TextureBlend, "TextureBlend");
             }
             if (printMask?.RainSimulatorForce ?? true)
             {
-                fg.AppendItem(item.RainSimulatorForce, "RainSimulatorForce");
+                sb.AppendItem(item.RainSimulatorForce, "RainSimulatorForce");
             }
             if (printMask?.RainSimulatorVelocity ?? true)
             {
-                fg.AppendItem(item.RainSimulatorVelocity, "RainSimulatorVelocity");
+                sb.AppendItem(item.RainSimulatorVelocity, "RainSimulatorVelocity");
             }
             if (printMask?.RainSimulatorFalloff ?? true)
             {
-                fg.AppendItem(item.RainSimulatorFalloff, "RainSimulatorFalloff");
+                sb.AppendItem(item.RainSimulatorFalloff, "RainSimulatorFalloff");
             }
             if (printMask?.RainSimulatorDampner ?? true)
             {
-                fg.AppendItem(item.RainSimulatorDampner, "RainSimulatorDampner");
+                sb.AppendItem(item.RainSimulatorDampner, "RainSimulatorDampner");
             }
             if (printMask?.RainSimulatorStartingSize ?? true)
             {
-                fg.AppendItem(item.RainSimulatorStartingSize, "RainSimulatorStartingSize");
+                sb.AppendItem(item.RainSimulatorStartingSize, "RainSimulatorStartingSize");
             }
             if (printMask?.DisplacementSimulatorForce ?? true)
             {
-                fg.AppendItem(item.DisplacementSimulatorForce, "DisplacementSimulatorForce");
+                sb.AppendItem(item.DisplacementSimulatorForce, "DisplacementSimulatorForce");
             }
             if (printMask?.DisplacementSimulatorVelocity ?? true)
             {
-                fg.AppendItem(item.DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
+                sb.AppendItem(item.DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
             }
             if (printMask?.DisplacementSimulatorFalloff ?? true)
             {
-                fg.AppendItem(item.DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
+                sb.AppendItem(item.DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
             }
             if (printMask?.DisplacementSimulatorDampner ?? true)
             {
-                fg.AppendItem(item.DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
+                sb.AppendItem(item.DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
             }
             if (printMask?.DisplacementSimulatorStartingSize ?? true)
             {
-                fg.AppendItem(item.DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
+                sb.AppendItem(item.DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
             }
             if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.Damage, "Damage");
+                sb.AppendItem(item.Damage, "Damage");
             }
         }
         
@@ -2016,7 +2061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWaterDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterDataGetter obj)
         {
             yield break;
         }
@@ -2024,7 +2069,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WaterDataSetterTranslationCommon
+    internal partial class WaterDataSetterTranslationCommon
     {
         public static readonly WaterDataSetterTranslationCommon Instance = new WaterDataSetterTranslationCommon();
 
@@ -2210,7 +2255,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WaterData_Registration.Instance;
-        public static WaterData_Registration StaticRegistration => WaterData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WaterData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WaterDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2234,11 +2279,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WaterDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WaterDataBinaryWriteTranslation Instance = new WaterDataBinaryWriteTranslation();
+        public static readonly WaterDataBinaryWriteTranslation Instance = new WaterDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWaterDataGetter item,
@@ -2384,12 +2429,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IWaterDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -2401,7 +2446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWaterDataGetter)item,
@@ -2411,9 +2456,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WaterDataBinaryCreateTranslation
+    internal partial class WaterDataBinaryCreateTranslation
     {
-        public readonly static WaterDataBinaryCreateTranslation Instance = new WaterDataBinaryCreateTranslation();
+        public static readonly WaterDataBinaryCreateTranslation Instance = new WaterDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWaterData item,
@@ -2500,7 +2545,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IWaterDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2513,7 +2558,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
 }
 #endregion

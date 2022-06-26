@@ -1,8 +1,7 @@
 using Loqui;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Noggog.StructuredStrings;
 using static Loqui.EqualsMaskHelper;
 
 namespace Mutagen.Bethesda.Plugins.Records
@@ -59,8 +58,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         public GenderedItem(T male, T female)
         {
-            this.Male = male;
-            this.Female = female;
+            Male = male;
+            Female = female;
         }
 
         /// <summary>
@@ -72,16 +71,16 @@ namespace Mutagen.Bethesda.Plugins.Records
             yield return Female;
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Prints the male and female items to the stream
         /// </summary>
-        /// <param name="fg">Stream to print into</param>
+        /// <param name="sb">Stream to print into</param>
         /// <param name="name">Optional name to include</param>
-        public void ToString(FileGeneration fg, string? name)
+        public void Print(StructuredStringBuilder sb, string? name)
         {
-            GenderedItem.ToString(this, fg, name);
+            GenderedItem.Print(this, sb, name);
         }
     }
 
@@ -89,32 +88,32 @@ namespace Mutagen.Bethesda.Plugins.Records
     {
         public static class GenderedItem
         {
-            public static void ToString<TItem>(IGenderedItemGetter<TItem> item, FileGeneration fg, string? name)
+            public static void Print<TItem>(IGenderedItemGetter<TItem> item, StructuredStringBuilder sb, string? name)
             {
-                fg.AppendLine($"{name} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{name} =>");
+                sb.AppendLine("[");
+                using (sb.IncreaseDepth())
                 {
                     var male = item.Male;
                     if (male is IPrintable mp)
                     {
-                        mp.ToString(fg, "Male");
+                        mp.Print(sb, "Male");
                     }
                     else if (male != null)
                     {
-                        fg.AppendLine($"Male => {male}");
+                        sb.AppendLine($"Male => {male}");
                     }
                     var female = item.Female;
                     if (female is IPrintable fp)
                     {
-                        fp.ToString(fg, "Female");
+                        fp.Print(sb, "Female");
                     }
                     else if (female != null)
                     {
-                        fg.AppendLine($"Female => {female}");
+                        sb.AppendLine($"Female => {female}");
                     }
                 }
-                fg.AppendLine("]");
+                sb.AppendLine("]");
             }
 
             public static GenderedItem<Exception?>? Combine(GenderedItem<Exception?>? lhs, GenderedItem<Exception?>? rhs)
@@ -130,7 +129,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 IGenderedItemGetter<TItem>? lhs,
                 IGenderedItemGetter<TItem>? rhs,
                 Func<TItem, TItem, Include, TMask> maskGetter,
-                EqualsMaskHelper.Include include)
+                Include include)
                 where TMask : class, IMask<bool>
             {
                 if (lhs == null || rhs == null)
@@ -164,7 +163,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 IGenderedItemGetter<TItem>? lhs,
                 IGenderedItemGetter<TItem>? rhs,
                 Func<TItem, TItem, Include, MaskItem<bool, TMask?>?> maskGetter,
-                EqualsMaskHelper.Include include)
+                Include include)
                 where TMask : class, IMask<bool>
             {
                 if (lhs == null || rhs == null)
@@ -198,7 +197,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 IGenderedItemGetter<TItem>? lhs,
                 IGenderedItemGetter<TItem>? rhs,
                 Func<TItem, TItem, Include, bool> maskGetter,
-                EqualsMaskHelper.Include include)
+                Include include)
             {
                 if (lhs == null || rhs == null)
                 {

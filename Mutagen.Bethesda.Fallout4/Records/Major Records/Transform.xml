@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Transform" recordType="TRNS" objType="Record" baseClass="Fallout4MajorRecord" GUID="2957e8d6-f4f9-4ed0-8244-a771d9d30460" ID="35">
+  <Object name="Transform" recordType="TRNS" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="2957e8d6-f4f9-4ed0-8244-a771d9d30460" ID="35">
     <Fields>
       <Data recordType="DATA">
-        <Interface>IPositionRotation</Interface>
         <Fields>
           <P3Float name="Position" />
           <P3Float name="Rotation" />

@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -76,12 +77,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PointToReferenceMappingMixIn.ToString(
+            PointToReferenceMappingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -216,9 +218,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Points.Specific = l;
-                        foreach (var item in Points.Specific.WithIndex())
+                        foreach (var item in Points.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -227,53 +229,46 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PointToReferenceMapping.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PointToReferenceMapping.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PointToReferenceMapping.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PointToReferenceMapping.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PointToReferenceMapping.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PointToReferenceMapping.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Reference ?? true)
                     {
-                        fg.AppendItem(Reference, "Reference");
+                        sb.AppendItem(Reference, "Reference");
                     }
                     if ((printMask?.Points?.Overall ?? true)
                         && Points is {} PointsItem)
                     {
-                        fg.AppendLine("Points =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Points =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PointsItem.Overall);
+                            sb.AppendItem(PointsItem.Overall);
                             if (PointsItem.Specific != null)
                             {
                                 foreach (var subItem in PointsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -358,57 +353,48 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Reference, "Reference");
+                {
+                    sb.AppendItem(Reference, "Reference");
+                }
                 if (Points is {} PointsItem)
                 {
-                    fg.AppendLine("Points =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Points =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PointsItem.Overall);
+                        sb.AppendItem(PointsItem.Overall);
                         if (PointsItem.Specific != null)
                         {
                             foreach (var subItem in PointsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -484,8 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PointToReferenceMapping_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PointToReferenceMappingCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -496,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PointToReferenceMappingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -506,7 +491,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static PointToReferenceMapping CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PointToReferenceMapping();
             ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -521,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PointToReferenceMapping item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -531,7 +516,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -595,26 +580,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPointToReferenceMappingGetter item,
             string? name = null,
             PointToReferenceMapping.Mask<bool>? printMask = null)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).ToString(
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPointToReferenceMappingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PointToReferenceMapping.Mask<bool>? printMask = null)
         {
-            ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).ToString(
+            ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -720,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IPointToReferenceMapping item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PointToReferenceMappingSetterCommon)((IPointToReferenceMappingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -735,10 +720,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum PointToReferenceMapping_FieldIndex
+    internal enum PointToReferenceMapping_FieldIndex
     {
         Reference = 0,
         Points = 1,
@@ -746,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class PointToReferenceMapping_Registration : ILoquiRegistration
+    internal partial class PointToReferenceMapping_Registration : ILoquiRegistration
     {
         public static readonly PointToReferenceMapping_Registration Instance = new PointToReferenceMapping_Registration();
 
@@ -788,6 +773,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PGRL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PGRL);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PointToReferenceMappingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -821,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PointToReferenceMappingSetterCommon
+    internal partial class PointToReferenceMappingSetterCommon
     {
         public static readonly PointToReferenceMappingSetterCommon Instance = new PointToReferenceMappingSetterCommon();
 
@@ -846,12 +837,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IPointToReferenceMapping item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PGRL),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -862,7 +853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PointToReferenceMappingCommon
+    internal partial class PointToReferenceMappingCommon
     {
         public static readonly PointToReferenceMappingCommon Instance = new PointToReferenceMappingCommon();
 
@@ -886,7 +877,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PointToReferenceMapping.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Points = item.Points.CollectionEqualsHelper(
                 rhs.Points,
@@ -894,71 +884,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IPointToReferenceMappingGetter item,
             string? name = null,
             PointToReferenceMapping.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPointToReferenceMappingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PointToReferenceMapping.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PointToReferenceMapping =>");
+                sb.AppendLine($"PointToReferenceMapping =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PointToReferenceMapping) =>");
+                sb.AppendLine($"{name} (PointToReferenceMapping) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPointToReferenceMappingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PointToReferenceMapping.Mask<bool>? printMask = null)
         {
             if (printMask?.Reference ?? true)
             {
-                fg.AppendItem(item.Reference.FormKey, "Reference");
+                sb.AppendItem(item.Reference.FormKey, "Reference");
             }
             if (printMask?.Points?.Overall ?? true)
             {
-                fg.AppendLine("Points =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Points =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Points)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -997,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPointToReferenceMappingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPointToReferenceMappingGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
@@ -1006,7 +990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PointToReferenceMappingSetterTranslationCommon
+    internal partial class PointToReferenceMappingSetterTranslationCommon
     {
         public static readonly PointToReferenceMappingSetterTranslationCommon Instance = new PointToReferenceMappingSetterTranslationCommon();
 
@@ -1101,7 +1085,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration StaticRegistration => PointToReferenceMapping_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         [DebuggerStepThrough]
@@ -1125,11 +1109,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class PointToReferenceMappingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PointToReferenceMappingBinaryWriteTranslation Instance = new PointToReferenceMappingBinaryWriteTranslation();
+        public static readonly PointToReferenceMappingBinaryWriteTranslation Instance = new PointToReferenceMappingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPointToReferenceMappingGetter item,
@@ -1147,12 +1131,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IPointToReferenceMappingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PGRL),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1164,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPointToReferenceMappingGetter)item,
@@ -1174,9 +1158,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PointToReferenceMappingBinaryCreateTranslation
+    internal partial class PointToReferenceMappingBinaryCreateTranslation
     {
-        public readonly static PointToReferenceMappingBinaryCreateTranslation Instance = new PointToReferenceMappingBinaryCreateTranslation();
+        public static readonly PointToReferenceMappingBinaryCreateTranslation Instance = new PointToReferenceMappingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPointToReferenceMapping item,
@@ -1200,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IPointToReferenceMappingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PointToReferenceMappingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1213,16 +1197,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class PointToReferenceMappingBinaryOverlay :
+    internal partial class PointToReferenceMappingBinaryOverlay :
         PluginBinaryOverlay,
         IPointToReferenceMappingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PointToReferenceMapping_Registration.Instance;
-        public static PointToReferenceMapping_Registration StaticRegistration => PointToReferenceMapping_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PointToReferenceMapping_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PointToReferenceMappingCommon.Instance;
         [DebuggerStepThrough]
@@ -1236,16 +1220,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PointToReferenceMappingCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PointToReferenceMappingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PointToReferenceMappingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1253,9 +1237,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         #region Points
-        public IReadOnlyList<Int16> Points => BinaryOverlayList.FactoryByStartIndex<Int16>(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
+        public IReadOnlyList<Int16> Points => BinaryOverlayList.FactoryByStartIndex<Int16>(_structData.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int PointsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1265,26 +1249,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected PointToReferenceMappingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
+        public static IPointToReferenceMappingGetter PointToReferenceMappingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PointToReferenceMappingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            ret.PointsEndingPos = ret._data.Length;
+            ret.PointsEndingPos = ret._structData.Length;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1292,25 +1281,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static PointToReferenceMappingBinaryOverlay PointToReferenceMappingFactory(
+        public static IPointToReferenceMappingGetter PointToReferenceMappingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PointToReferenceMappingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PointToReferenceMappingMixIn.ToString(
+            PointToReferenceMappingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

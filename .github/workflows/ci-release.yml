@@ -9,7 +9,22 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        sln:
+          - Mutagen.Records.sln
+          - Mutagen.Records.Linux.sln
+        exclude:
+          - os: ubuntu-latest
+            sln: Mutagen.Records.sln
+          - os: macos-latest
+            sln: Mutagen.Records.sln
+          - os: windows-latest
+            sln: Mutagen.Records.Linux.sln
 
     steps:
     - uses: actions/checkout@v2
@@ -19,9 +34,9 @@ jobs:
         dotnet-version: 6.0.*
     - name: Install dependencies
       run: |
-        dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
-        dotnet restore Mutagen.Records.sln
+        dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
+        dotnet restore ${{ matrix.sln }}
     - name: Build
-      run: dotnet build Mutagen.Records.sln -c Release --no-restore
+      run: dotnet build ${{ matrix.sln }} -c Release --no-restore
     - name: Test
-      run: dotnet test Mutagen.Records.sln -c Release --no-build
+      run: dotnet test ${{ matrix.sln }} -c Release --no-build

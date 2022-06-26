@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,22 +17,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -52,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public ImageSpaceAdapter.Flag Flags { get; set; } = default;
+        #region Animatable
+        public Boolean Animatable { get; set; } = default;
         #endregion
         #region Duration
         public Single Duration { get; set; } = default;
         #endregion
-        #region RadialBlurFlags
-        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; } = default;
+        #region RadialBlurUseTarget
+        public Boolean RadialBlurUseTarget { get; set; } = default;
         #endregion
         #region RadialBlurCenter
         public P2Float RadialBlurCenter { get; set; } = default;
@@ -843,12 +844,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceAdapterMixIn.ToString(
+            ImageSpaceAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -864,9 +866,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Flags = initialValue;
+                this.Animatable = initialValue;
                 this.Duration = initialValue;
-                this.RadialBlurFlags = initialValue;
+                this.RadialBlurUseTarget = initialValue;
                 this.RadialBlurCenter = initialValue;
                 this.DepthOfFieldFlags = initialValue;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
@@ -934,9 +936,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Flags,
+                TItem Animatable,
                 TItem Duration,
-                TItem RadialBlurFlags,
+                TItem RadialBlurUseTarget,
                 TItem RadialBlurCenter,
                 TItem DepthOfFieldFlags,
                 TItem BlurRadius,
@@ -1003,9 +1005,9 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Flags = Flags;
+                this.Animatable = Animatable;
                 this.Duration = Duration;
-                this.RadialBlurFlags = RadialBlurFlags;
+                this.RadialBlurUseTarget = RadialBlurUseTarget;
                 this.RadialBlurCenter = RadialBlurCenter;
                 this.DepthOfFieldFlags = DepthOfFieldFlags;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, Enumerable.Empty<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>());
@@ -1075,9 +1077,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Flags;
+            public TItem Animatable;
             public TItem Duration;
-            public TItem RadialBlurFlags;
+            public TItem RadialBlurUseTarget;
             public TItem RadialBlurCenter;
             public TItem DepthOfFieldFlags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? BlurRadius;
@@ -1149,9 +1151,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Animatable, rhs.Animatable)) return false;
                 if (!object.Equals(this.Duration, rhs.Duration)) return false;
-                if (!object.Equals(this.RadialBlurFlags, rhs.RadialBlurFlags)) return false;
+                if (!object.Equals(this.RadialBlurUseTarget, rhs.RadialBlurUseTarget)) return false;
                 if (!object.Equals(this.RadialBlurCenter, rhs.RadialBlurCenter)) return false;
                 if (!object.Equals(this.DepthOfFieldFlags, rhs.DepthOfFieldFlags)) return false;
                 if (!object.Equals(this.BlurRadius, rhs.BlurRadius)) return false;
@@ -1215,9 +1217,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
+                hash.Add(this.Animatable);
                 hash.Add(this.Duration);
-                hash.Add(this.RadialBlurFlags);
+                hash.Add(this.RadialBlurUseTarget);
                 hash.Add(this.RadialBlurCenter);
                 hash.Add(this.DepthOfFieldFlags);
                 hash.Add(this.BlurRadius);
@@ -1286,9 +1288,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.Animatable)) return false;
                 if (!eval(this.Duration)) return false;
-                if (!eval(this.RadialBlurFlags)) return false;
+                if (!eval(this.RadialBlurUseTarget)) return false;
                 if (!eval(this.RadialBlurCenter)) return false;
                 if (!eval(this.DepthOfFieldFlags)) return false;
                 if (this.BlurRadius != null)
@@ -1960,9 +1962,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.Animatable)) return true;
                 if (eval(this.Duration)) return true;
-                if (eval(this.RadialBlurFlags)) return true;
+                if (eval(this.RadialBlurUseTarget)) return true;
                 if (eval(this.RadialBlurCenter)) return true;
                 if (eval(this.DepthOfFieldFlags)) return true;
                 if (this.BlurRadius != null)
@@ -2641,9 +2643,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Flags = eval(this.Flags);
+                obj.Animatable = eval(this.Animatable);
                 obj.Duration = eval(this.Duration);
-                obj.RadialBlurFlags = eval(this.RadialBlurFlags);
+                obj.RadialBlurUseTarget = eval(this.RadialBlurUseTarget);
                 obj.RadialBlurCenter = eval(this.RadialBlurCenter);
                 obj.DepthOfFieldFlags = eval(this.DepthOfFieldFlags);
                 if (BlurRadius != null)
@@ -2653,9 +2655,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.BlurRadius.Specific = l;
-                        foreach (var item in BlurRadius.Specific.WithIndex())
+                        foreach (var item in BlurRadius.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2668,9 +2670,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DoubleVisionStrength.Specific = l;
-                        foreach (var item in DoubleVisionStrength.Specific.WithIndex())
+                        foreach (var item in DoubleVisionStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2683,9 +2685,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
                         obj.TintColor.Specific = l;
-                        foreach (var item in TintColor.Specific.WithIndex())
+                        foreach (var item in TintColor.Specific)
                         {
-                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2698,9 +2700,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, ColorFrame.Mask<R>?>>();
                         obj.FadeColor.Specific = l;
-                        foreach (var item in FadeColor.Specific.WithIndex())
+                        foreach (var item in FadeColor.Specific)
                         {
-                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ColorFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ColorFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2713,9 +2715,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurStrength.Specific = l;
-                        foreach (var item in RadialBlurStrength.Specific.WithIndex())
+                        foreach (var item in RadialBlurStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2728,9 +2730,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurRampUp.Specific = l;
-                        foreach (var item in RadialBlurRampUp.Specific.WithIndex())
+                        foreach (var item in RadialBlurRampUp.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2743,9 +2745,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurStart.Specific = l;
-                        foreach (var item in RadialBlurStart.Specific.WithIndex())
+                        foreach (var item in RadialBlurStart.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2758,9 +2760,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurRampDown.Specific = l;
-                        foreach (var item in RadialBlurRampDown.Specific.WithIndex())
+                        foreach (var item in RadialBlurRampDown.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2773,9 +2775,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.RadialBlurDownStart.Specific = l;
-                        foreach (var item in RadialBlurDownStart.Specific.WithIndex())
+                        foreach (var item in RadialBlurDownStart.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2788,9 +2790,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldStrength.Specific = l;
-                        foreach (var item in DepthOfFieldStrength.Specific.WithIndex())
+                        foreach (var item in DepthOfFieldStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2803,9 +2805,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldDistance.Specific = l;
-                        foreach (var item in DepthOfFieldDistance.Specific.WithIndex())
+                        foreach (var item in DepthOfFieldDistance.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2818,9 +2820,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.DepthOfFieldRange.Specific = l;
-                        foreach (var item in DepthOfFieldRange.Specific.WithIndex())
+                        foreach (var item in DepthOfFieldRange.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2833,9 +2835,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.MotionBlurStrength.Specific = l;
-                        foreach (var item in MotionBlurStrength.Specific.WithIndex())
+                        foreach (var item in MotionBlurStrength.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2848,9 +2850,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrEyeAdaptSpeedMult.Specific = l;
-                        foreach (var item in HdrEyeAdaptSpeedMult.Specific.WithIndex())
+                        foreach (var item in HdrEyeAdaptSpeedMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2863,9 +2865,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrEyeAdaptSpeedAdd.Specific = l;
-                        foreach (var item in HdrEyeAdaptSpeedAdd.Specific.WithIndex())
+                        foreach (var item in HdrEyeAdaptSpeedAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2878,9 +2880,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomBlurRadiusMult.Specific = l;
-                        foreach (var item in HdrBloomBlurRadiusMult.Specific.WithIndex())
+                        foreach (var item in HdrBloomBlurRadiusMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2893,9 +2895,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomBlurRadiusAdd.Specific = l;
-                        foreach (var item in HdrBloomBlurRadiusAdd.Specific.WithIndex())
+                        foreach (var item in HdrBloomBlurRadiusAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2908,9 +2910,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomThresholdMult.Specific = l;
-                        foreach (var item in HdrBloomThresholdMult.Specific.WithIndex())
+                        foreach (var item in HdrBloomThresholdMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2923,9 +2925,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomThresholdAdd.Specific = l;
-                        foreach (var item in HdrBloomThresholdAdd.Specific.WithIndex())
+                        foreach (var item in HdrBloomThresholdAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2938,9 +2940,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomScaleMult.Specific = l;
-                        foreach (var item in HdrBloomScaleMult.Specific.WithIndex())
+                        foreach (var item in HdrBloomScaleMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2953,9 +2955,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrBloomScaleAdd.Specific = l;
-                        foreach (var item in HdrBloomScaleAdd.Specific.WithIndex())
+                        foreach (var item in HdrBloomScaleAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2968,9 +2970,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMinMult.Specific = l;
-                        foreach (var item in HdrTargetLumMinMult.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMinMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2983,9 +2985,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMinAdd.Specific = l;
-                        foreach (var item in HdrTargetLumMinAdd.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMinAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -2998,9 +3000,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMaxMult.Specific = l;
-                        foreach (var item in HdrTargetLumMaxMult.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMaxMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3013,9 +3015,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrTargetLumMaxAdd.Specific = l;
-                        foreach (var item in HdrTargetLumMaxAdd.Specific.WithIndex())
+                        foreach (var item in HdrTargetLumMaxAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3028,9 +3030,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSunlightScaleMult.Specific = l;
-                        foreach (var item in HdrSunlightScaleMult.Specific.WithIndex())
+                        foreach (var item in HdrSunlightScaleMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3043,9 +3045,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSunlightScaleAdd.Specific = l;
-                        foreach (var item in HdrSunlightScaleAdd.Specific.WithIndex())
+                        foreach (var item in HdrSunlightScaleAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3058,9 +3060,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSkyScaleMult.Specific = l;
-                        foreach (var item in HdrSkyScaleMult.Specific.WithIndex())
+                        foreach (var item in HdrSkyScaleMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3073,9 +3075,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.HdrSkyScaleAdd.Specific = l;
-                        foreach (var item in HdrSkyScaleAdd.Specific.WithIndex())
+                        foreach (var item in HdrSkyScaleAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3088,9 +3090,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown08.Specific = l;
-                        foreach (var item in Unknown08.Specific.WithIndex())
+                        foreach (var item in Unknown08.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3103,9 +3105,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown48.Specific = l;
-                        foreach (var item in Unknown48.Specific.WithIndex())
+                        foreach (var item in Unknown48.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3118,9 +3120,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown09.Specific = l;
-                        foreach (var item in Unknown09.Specific.WithIndex())
+                        foreach (var item in Unknown09.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3133,9 +3135,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown49.Specific = l;
-                        foreach (var item in Unknown49.Specific.WithIndex())
+                        foreach (var item in Unknown49.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3148,9 +3150,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0A.Specific = l;
-                        foreach (var item in Unknown0A.Specific.WithIndex())
+                        foreach (var item in Unknown0A.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3163,9 +3165,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4A.Specific = l;
-                        foreach (var item in Unknown4A.Specific.WithIndex())
+                        foreach (var item in Unknown4A.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3178,9 +3180,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0B.Specific = l;
-                        foreach (var item in Unknown0B.Specific.WithIndex())
+                        foreach (var item in Unknown0B.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3193,9 +3195,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4B.Specific = l;
-                        foreach (var item in Unknown4B.Specific.WithIndex())
+                        foreach (var item in Unknown4B.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3208,9 +3210,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0C.Specific = l;
-                        foreach (var item in Unknown0C.Specific.WithIndex())
+                        foreach (var item in Unknown0C.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3223,9 +3225,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4C.Specific = l;
-                        foreach (var item in Unknown4C.Specific.WithIndex())
+                        foreach (var item in Unknown4C.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3238,9 +3240,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0D.Specific = l;
-                        foreach (var item in Unknown0D.Specific.WithIndex())
+                        foreach (var item in Unknown0D.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3253,9 +3255,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4D.Specific = l;
-                        foreach (var item in Unknown4D.Specific.WithIndex())
+                        foreach (var item in Unknown4D.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3268,9 +3270,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0E.Specific = l;
-                        foreach (var item in Unknown0E.Specific.WithIndex())
+                        foreach (var item in Unknown0E.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3283,9 +3285,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4E.Specific = l;
-                        foreach (var item in Unknown4E.Specific.WithIndex())
+                        foreach (var item in Unknown4E.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3298,9 +3300,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown0F.Specific = l;
-                        foreach (var item in Unknown0F.Specific.WithIndex())
+                        foreach (var item in Unknown0F.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3313,9 +3315,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown4F.Specific = l;
-                        foreach (var item in Unknown4F.Specific.WithIndex())
+                        foreach (var item in Unknown4F.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3328,9 +3330,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown10.Specific = l;
-                        foreach (var item in Unknown10.Specific.WithIndex())
+                        foreach (var item in Unknown10.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3343,9 +3345,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown50.Specific = l;
-                        foreach (var item in Unknown50.Specific.WithIndex())
+                        foreach (var item in Unknown50.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3358,9 +3360,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicSaturationMult.Specific = l;
-                        foreach (var item in CinematicSaturationMult.Specific.WithIndex())
+                        foreach (var item in CinematicSaturationMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3373,9 +3375,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicSaturationAdd.Specific = l;
-                        foreach (var item in CinematicSaturationAdd.Specific.WithIndex())
+                        foreach (var item in CinematicSaturationAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3388,9 +3390,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicBrightnessMult.Specific = l;
-                        foreach (var item in CinematicBrightnessMult.Specific.WithIndex())
+                        foreach (var item in CinematicBrightnessMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3403,9 +3405,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicBrightnessAdd.Specific = l;
-                        foreach (var item in CinematicBrightnessAdd.Specific.WithIndex())
+                        foreach (var item in CinematicBrightnessAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3418,9 +3420,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicContrastMult.Specific = l;
-                        foreach (var item in CinematicContrastMult.Specific.WithIndex())
+                        foreach (var item in CinematicContrastMult.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3433,9 +3435,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.CinematicContrastAdd.Specific = l;
-                        foreach (var item in CinematicContrastAdd.Specific.WithIndex())
+                        foreach (var item in CinematicContrastAdd.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3448,9 +3450,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown14.Specific = l;
-                        foreach (var item in Unknown14.Specific.WithIndex())
+                        foreach (var item in Unknown14.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3463,9 +3465,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, KeyFrame.Mask<R>?>>();
                         obj.Unknown54.Specific = l;
-                        foreach (var item in Unknown54.Specific.WithIndex())
+                        foreach (var item in Unknown54.Specific)
                         {
-                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, KeyFrame.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, KeyFrame.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -3476,1315 +3478,1090 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ImageSpaceAdapter.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ImageSpaceAdapter.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ImageSpaceAdapter.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ImageSpaceAdapter.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ImageSpaceAdapter.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpaceAdapter.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Animatable ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Animatable, "Animatable");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
-                    if (printMask?.RadialBlurFlags ?? true)
+                    if (printMask?.RadialBlurUseTarget ?? true)
                     {
-                        fg.AppendItem(RadialBlurFlags, "RadialBlurFlags");
+                        sb.AppendItem(RadialBlurUseTarget, "RadialBlurUseTarget");
                     }
                     if (printMask?.RadialBlurCenter ?? true)
                     {
-                        fg.AppendItem(RadialBlurCenter, "RadialBlurCenter");
+                        sb.AppendItem(RadialBlurCenter, "RadialBlurCenter");
                     }
                     if (printMask?.DepthOfFieldFlags ?? true)
                     {
-                        fg.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                        sb.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
                     }
                     if ((printMask?.BlurRadius?.Overall ?? true)
                         && BlurRadius is {} BlurRadiusItem)
                     {
-                        fg.AppendLine("BlurRadius =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("BlurRadius =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(BlurRadiusItem.Overall);
+                            sb.AppendItem(BlurRadiusItem.Overall);
                             if (BlurRadiusItem.Specific != null)
                             {
                                 foreach (var subItem in BlurRadiusItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.DoubleVisionStrength?.Overall ?? true)
                         && DoubleVisionStrength is {} DoubleVisionStrengthItem)
                     {
-                        fg.AppendLine("DoubleVisionStrength =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DoubleVisionStrength =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(DoubleVisionStrengthItem.Overall);
+                            sb.AppendItem(DoubleVisionStrengthItem.Overall);
                             if (DoubleVisionStrengthItem.Specific != null)
                             {
                                 foreach (var subItem in DoubleVisionStrengthItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.TintColor?.Overall ?? true)
                         && TintColor is {} TintColorItem)
                     {
-                        fg.AppendLine("TintColor =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("TintColor =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TintColorItem.Overall);
+                            sb.AppendItem(TintColorItem.Overall);
                             if (TintColorItem.Specific != null)
                             {
                                 foreach (var subItem in TintColorItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.FadeColor?.Overall ?? true)
                         && FadeColor is {} FadeColorItem)
                     {
-                        fg.AppendLine("FadeColor =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("FadeColor =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FadeColorItem.Overall);
+                            sb.AppendItem(FadeColorItem.Overall);
                             if (FadeColorItem.Specific != null)
                             {
                                 foreach (var subItem in FadeColorItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurStrength?.Overall ?? true)
                         && RadialBlurStrength is {} RadialBlurStrengthItem)
                     {
-                        fg.AppendLine("RadialBlurStrength =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RadialBlurStrength =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RadialBlurStrengthItem.Overall);
+                            sb.AppendItem(RadialBlurStrengthItem.Overall);
                             if (RadialBlurStrengthItem.Specific != null)
                             {
                                 foreach (var subItem in RadialBlurStrengthItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurRampUp?.Overall ?? true)
                         && RadialBlurRampUp is {} RadialBlurRampUpItem)
                     {
-                        fg.AppendLine("RadialBlurRampUp =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RadialBlurRampUp =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RadialBlurRampUpItem.Overall);
+                            sb.AppendItem(RadialBlurRampUpItem.Overall);
                             if (RadialBlurRampUpItem.Specific != null)
                             {
                                 foreach (var subItem in RadialBlurRampUpItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurStart?.Overall ?? true)
                         && RadialBlurStart is {} RadialBlurStartItem)
                     {
-                        fg.AppendLine("RadialBlurStart =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RadialBlurStart =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RadialBlurStartItem.Overall);
+                            sb.AppendItem(RadialBlurStartItem.Overall);
                             if (RadialBlurStartItem.Specific != null)
                             {
                                 foreach (var subItem in RadialBlurStartItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurRampDown?.Overall ?? true)
                         && RadialBlurRampDown is {} RadialBlurRampDownItem)
                     {
-                        fg.AppendLine("RadialBlurRampDown =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RadialBlurRampDown =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RadialBlurRampDownItem.Overall);
+                            sb.AppendItem(RadialBlurRampDownItem.Overall);
                             if (RadialBlurRampDownItem.Specific != null)
                             {
                                 foreach (var subItem in RadialBlurRampDownItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.RadialBlurDownStart?.Overall ?? true)
                         && RadialBlurDownStart is {} RadialBlurDownStartItem)
                     {
-                        fg.AppendLine("RadialBlurDownStart =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RadialBlurDownStart =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RadialBlurDownStartItem.Overall);
+                            sb.AppendItem(RadialBlurDownStartItem.Overall);
                             if (RadialBlurDownStartItem.Specific != null)
                             {
                                 foreach (var subItem in RadialBlurDownStartItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.DepthOfFieldStrength?.Overall ?? true)
                         && DepthOfFieldStrength is {} DepthOfFieldStrengthItem)
                     {
-                        fg.AppendLine("DepthOfFieldStrength =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DepthOfFieldStrength =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(DepthOfFieldStrengthItem.Overall);
+                            sb.AppendItem(DepthOfFieldStrengthItem.Overall);
                             if (DepthOfFieldStrengthItem.Specific != null)
                             {
                                 foreach (var subItem in DepthOfFieldStrengthItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.DepthOfFieldDistance?.Overall ?? true)
                         && DepthOfFieldDistance is {} DepthOfFieldDistanceItem)
                     {
-                        fg.AppendLine("DepthOfFieldDistance =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DepthOfFieldDistance =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(DepthOfFieldDistanceItem.Overall);
+                            sb.AppendItem(DepthOfFieldDistanceItem.Overall);
                             if (DepthOfFieldDistanceItem.Specific != null)
                             {
                                 foreach (var subItem in DepthOfFieldDistanceItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.DepthOfFieldRange?.Overall ?? true)
                         && DepthOfFieldRange is {} DepthOfFieldRangeItem)
                     {
-                        fg.AppendLine("DepthOfFieldRange =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("DepthOfFieldRange =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(DepthOfFieldRangeItem.Overall);
+                            sb.AppendItem(DepthOfFieldRangeItem.Overall);
                             if (DepthOfFieldRangeItem.Specific != null)
                             {
                                 foreach (var subItem in DepthOfFieldRangeItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.MotionBlurStrength?.Overall ?? true)
                         && MotionBlurStrength is {} MotionBlurStrengthItem)
                     {
-                        fg.AppendLine("MotionBlurStrength =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MotionBlurStrength =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MotionBlurStrengthItem.Overall);
+                            sb.AppendItem(MotionBlurStrengthItem.Overall);
                             if (MotionBlurStrengthItem.Specific != null)
                             {
                                 foreach (var subItem in MotionBlurStrengthItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrEyeAdaptSpeedMult?.Overall ?? true)
                         && HdrEyeAdaptSpeedMult is {} HdrEyeAdaptSpeedMultItem)
                     {
-                        fg.AppendLine("HdrEyeAdaptSpeedMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrEyeAdaptSpeedMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrEyeAdaptSpeedMultItem.Overall);
+                            sb.AppendItem(HdrEyeAdaptSpeedMultItem.Overall);
                             if (HdrEyeAdaptSpeedMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrEyeAdaptSpeedMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrEyeAdaptSpeedAdd?.Overall ?? true)
                         && HdrEyeAdaptSpeedAdd is {} HdrEyeAdaptSpeedAddItem)
                     {
-                        fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrEyeAdaptSpeedAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrEyeAdaptSpeedAddItem.Overall);
+                            sb.AppendItem(HdrEyeAdaptSpeedAddItem.Overall);
                             if (HdrEyeAdaptSpeedAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrEyeAdaptSpeedAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomBlurRadiusMult?.Overall ?? true)
                         && HdrBloomBlurRadiusMult is {} HdrBloomBlurRadiusMultItem)
                     {
-                        fg.AppendLine("HdrBloomBlurRadiusMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrBloomBlurRadiusMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrBloomBlurRadiusMultItem.Overall);
+                            sb.AppendItem(HdrBloomBlurRadiusMultItem.Overall);
                             if (HdrBloomBlurRadiusMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrBloomBlurRadiusMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomBlurRadiusAdd?.Overall ?? true)
                         && HdrBloomBlurRadiusAdd is {} HdrBloomBlurRadiusAddItem)
                     {
-                        fg.AppendLine("HdrBloomBlurRadiusAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrBloomBlurRadiusAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrBloomBlurRadiusAddItem.Overall);
+                            sb.AppendItem(HdrBloomBlurRadiusAddItem.Overall);
                             if (HdrBloomBlurRadiusAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrBloomBlurRadiusAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomThresholdMult?.Overall ?? true)
                         && HdrBloomThresholdMult is {} HdrBloomThresholdMultItem)
                     {
-                        fg.AppendLine("HdrBloomThresholdMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrBloomThresholdMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrBloomThresholdMultItem.Overall);
+                            sb.AppendItem(HdrBloomThresholdMultItem.Overall);
                             if (HdrBloomThresholdMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrBloomThresholdMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomThresholdAdd?.Overall ?? true)
                         && HdrBloomThresholdAdd is {} HdrBloomThresholdAddItem)
                     {
-                        fg.AppendLine("HdrBloomThresholdAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrBloomThresholdAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrBloomThresholdAddItem.Overall);
+                            sb.AppendItem(HdrBloomThresholdAddItem.Overall);
                             if (HdrBloomThresholdAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrBloomThresholdAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomScaleMult?.Overall ?? true)
                         && HdrBloomScaleMult is {} HdrBloomScaleMultItem)
                     {
-                        fg.AppendLine("HdrBloomScaleMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrBloomScaleMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrBloomScaleMultItem.Overall);
+                            sb.AppendItem(HdrBloomScaleMultItem.Overall);
                             if (HdrBloomScaleMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrBloomScaleMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrBloomScaleAdd?.Overall ?? true)
                         && HdrBloomScaleAdd is {} HdrBloomScaleAddItem)
                     {
-                        fg.AppendLine("HdrBloomScaleAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrBloomScaleAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrBloomScaleAddItem.Overall);
+                            sb.AppendItem(HdrBloomScaleAddItem.Overall);
                             if (HdrBloomScaleAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrBloomScaleAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMinMult?.Overall ?? true)
                         && HdrTargetLumMinMult is {} HdrTargetLumMinMultItem)
                     {
-                        fg.AppendLine("HdrTargetLumMinMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrTargetLumMinMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrTargetLumMinMultItem.Overall);
+                            sb.AppendItem(HdrTargetLumMinMultItem.Overall);
                             if (HdrTargetLumMinMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrTargetLumMinMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMinAdd?.Overall ?? true)
                         && HdrTargetLumMinAdd is {} HdrTargetLumMinAddItem)
                     {
-                        fg.AppendLine("HdrTargetLumMinAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrTargetLumMinAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrTargetLumMinAddItem.Overall);
+                            sb.AppendItem(HdrTargetLumMinAddItem.Overall);
                             if (HdrTargetLumMinAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrTargetLumMinAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMaxMult?.Overall ?? true)
                         && HdrTargetLumMaxMult is {} HdrTargetLumMaxMultItem)
                     {
-                        fg.AppendLine("HdrTargetLumMaxMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrTargetLumMaxMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrTargetLumMaxMultItem.Overall);
+                            sb.AppendItem(HdrTargetLumMaxMultItem.Overall);
                             if (HdrTargetLumMaxMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrTargetLumMaxMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrTargetLumMaxAdd?.Overall ?? true)
                         && HdrTargetLumMaxAdd is {} HdrTargetLumMaxAddItem)
                     {
-                        fg.AppendLine("HdrTargetLumMaxAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrTargetLumMaxAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrTargetLumMaxAddItem.Overall);
+                            sb.AppendItem(HdrTargetLumMaxAddItem.Overall);
                             if (HdrTargetLumMaxAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrTargetLumMaxAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSunlightScaleMult?.Overall ?? true)
                         && HdrSunlightScaleMult is {} HdrSunlightScaleMultItem)
                     {
-                        fg.AppendLine("HdrSunlightScaleMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrSunlightScaleMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrSunlightScaleMultItem.Overall);
+                            sb.AppendItem(HdrSunlightScaleMultItem.Overall);
                             if (HdrSunlightScaleMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrSunlightScaleMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSunlightScaleAdd?.Overall ?? true)
                         && HdrSunlightScaleAdd is {} HdrSunlightScaleAddItem)
                     {
-                        fg.AppendLine("HdrSunlightScaleAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrSunlightScaleAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrSunlightScaleAddItem.Overall);
+                            sb.AppendItem(HdrSunlightScaleAddItem.Overall);
                             if (HdrSunlightScaleAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrSunlightScaleAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSkyScaleMult?.Overall ?? true)
                         && HdrSkyScaleMult is {} HdrSkyScaleMultItem)
                     {
-                        fg.AppendLine("HdrSkyScaleMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrSkyScaleMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrSkyScaleMultItem.Overall);
+                            sb.AppendItem(HdrSkyScaleMultItem.Overall);
                             if (HdrSkyScaleMultItem.Specific != null)
                             {
                                 foreach (var subItem in HdrSkyScaleMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.HdrSkyScaleAdd?.Overall ?? true)
                         && HdrSkyScaleAdd is {} HdrSkyScaleAddItem)
                     {
-                        fg.AppendLine("HdrSkyScaleAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HdrSkyScaleAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HdrSkyScaleAddItem.Overall);
+                            sb.AppendItem(HdrSkyScaleAddItem.Overall);
                             if (HdrSkyScaleAddItem.Specific != null)
                             {
                                 foreach (var subItem in HdrSkyScaleAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown08?.Overall ?? true)
                         && Unknown08 is {} Unknown08Item)
                     {
-                        fg.AppendLine("Unknown08 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown08 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown08Item.Overall);
+                            sb.AppendItem(Unknown08Item.Overall);
                             if (Unknown08Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown08Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown48?.Overall ?? true)
                         && Unknown48 is {} Unknown48Item)
                     {
-                        fg.AppendLine("Unknown48 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown48 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown48Item.Overall);
+                            sb.AppendItem(Unknown48Item.Overall);
                             if (Unknown48Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown48Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown09?.Overall ?? true)
                         && Unknown09 is {} Unknown09Item)
                     {
-                        fg.AppendLine("Unknown09 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown09 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown09Item.Overall);
+                            sb.AppendItem(Unknown09Item.Overall);
                             if (Unknown09Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown09Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown49?.Overall ?? true)
                         && Unknown49 is {} Unknown49Item)
                     {
-                        fg.AppendLine("Unknown49 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown49 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown49Item.Overall);
+                            sb.AppendItem(Unknown49Item.Overall);
                             if (Unknown49Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown49Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0A?.Overall ?? true)
                         && Unknown0A is {} Unknown0AItem)
                     {
-                        fg.AppendLine("Unknown0A =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown0A =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown0AItem.Overall);
+                            sb.AppendItem(Unknown0AItem.Overall);
                             if (Unknown0AItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown0AItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4A?.Overall ?? true)
                         && Unknown4A is {} Unknown4AItem)
                     {
-                        fg.AppendLine("Unknown4A =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown4A =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown4AItem.Overall);
+                            sb.AppendItem(Unknown4AItem.Overall);
                             if (Unknown4AItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown4AItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0B?.Overall ?? true)
                         && Unknown0B is {} Unknown0BItem)
                     {
-                        fg.AppendLine("Unknown0B =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown0B =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown0BItem.Overall);
+                            sb.AppendItem(Unknown0BItem.Overall);
                             if (Unknown0BItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown0BItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4B?.Overall ?? true)
                         && Unknown4B is {} Unknown4BItem)
                     {
-                        fg.AppendLine("Unknown4B =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown4B =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown4BItem.Overall);
+                            sb.AppendItem(Unknown4BItem.Overall);
                             if (Unknown4BItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown4BItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0C?.Overall ?? true)
                         && Unknown0C is {} Unknown0CItem)
                     {
-                        fg.AppendLine("Unknown0C =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown0C =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown0CItem.Overall);
+                            sb.AppendItem(Unknown0CItem.Overall);
                             if (Unknown0CItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown0CItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4C?.Overall ?? true)
                         && Unknown4C is {} Unknown4CItem)
                     {
-                        fg.AppendLine("Unknown4C =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown4C =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown4CItem.Overall);
+                            sb.AppendItem(Unknown4CItem.Overall);
                             if (Unknown4CItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown4CItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0D?.Overall ?? true)
                         && Unknown0D is {} Unknown0DItem)
                     {
-                        fg.AppendLine("Unknown0D =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown0D =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown0DItem.Overall);
+                            sb.AppendItem(Unknown0DItem.Overall);
                             if (Unknown0DItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown0DItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4D?.Overall ?? true)
                         && Unknown4D is {} Unknown4DItem)
                     {
-                        fg.AppendLine("Unknown4D =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown4D =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown4DItem.Overall);
+                            sb.AppendItem(Unknown4DItem.Overall);
                             if (Unknown4DItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown4DItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0E?.Overall ?? true)
                         && Unknown0E is {} Unknown0EItem)
                     {
-                        fg.AppendLine("Unknown0E =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown0E =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown0EItem.Overall);
+                            sb.AppendItem(Unknown0EItem.Overall);
                             if (Unknown0EItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown0EItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4E?.Overall ?? true)
                         && Unknown4E is {} Unknown4EItem)
                     {
-                        fg.AppendLine("Unknown4E =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown4E =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown4EItem.Overall);
+                            sb.AppendItem(Unknown4EItem.Overall);
                             if (Unknown4EItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown4EItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown0F?.Overall ?? true)
                         && Unknown0F is {} Unknown0FItem)
                     {
-                        fg.AppendLine("Unknown0F =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown0F =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown0FItem.Overall);
+                            sb.AppendItem(Unknown0FItem.Overall);
                             if (Unknown0FItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown0FItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown4F?.Overall ?? true)
                         && Unknown4F is {} Unknown4FItem)
                     {
-                        fg.AppendLine("Unknown4F =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown4F =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown4FItem.Overall);
+                            sb.AppendItem(Unknown4FItem.Overall);
                             if (Unknown4FItem.Specific != null)
                             {
                                 foreach (var subItem in Unknown4FItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown10?.Overall ?? true)
                         && Unknown10 is {} Unknown10Item)
                     {
-                        fg.AppendLine("Unknown10 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown10 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown10Item.Overall);
+                            sb.AppendItem(Unknown10Item.Overall);
                             if (Unknown10Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown10Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown50?.Overall ?? true)
                         && Unknown50 is {} Unknown50Item)
                     {
-                        fg.AppendLine("Unknown50 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown50 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown50Item.Overall);
+                            sb.AppendItem(Unknown50Item.Overall);
                             if (Unknown50Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown50Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicSaturationMult?.Overall ?? true)
                         && CinematicSaturationMult is {} CinematicSaturationMultItem)
                     {
-                        fg.AppendLine("CinematicSaturationMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CinematicSaturationMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CinematicSaturationMultItem.Overall);
+                            sb.AppendItem(CinematicSaturationMultItem.Overall);
                             if (CinematicSaturationMultItem.Specific != null)
                             {
                                 foreach (var subItem in CinematicSaturationMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicSaturationAdd?.Overall ?? true)
                         && CinematicSaturationAdd is {} CinematicSaturationAddItem)
                     {
-                        fg.AppendLine("CinematicSaturationAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CinematicSaturationAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CinematicSaturationAddItem.Overall);
+                            sb.AppendItem(CinematicSaturationAddItem.Overall);
                             if (CinematicSaturationAddItem.Specific != null)
                             {
                                 foreach (var subItem in CinematicSaturationAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicBrightnessMult?.Overall ?? true)
                         && CinematicBrightnessMult is {} CinematicBrightnessMultItem)
                     {
-                        fg.AppendLine("CinematicBrightnessMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CinematicBrightnessMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CinematicBrightnessMultItem.Overall);
+                            sb.AppendItem(CinematicBrightnessMultItem.Overall);
                             if (CinematicBrightnessMultItem.Specific != null)
                             {
                                 foreach (var subItem in CinematicBrightnessMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicBrightnessAdd?.Overall ?? true)
                         && CinematicBrightnessAdd is {} CinematicBrightnessAddItem)
                     {
-                        fg.AppendLine("CinematicBrightnessAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CinematicBrightnessAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CinematicBrightnessAddItem.Overall);
+                            sb.AppendItem(CinematicBrightnessAddItem.Overall);
                             if (CinematicBrightnessAddItem.Specific != null)
                             {
                                 foreach (var subItem in CinematicBrightnessAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicContrastMult?.Overall ?? true)
                         && CinematicContrastMult is {} CinematicContrastMultItem)
                     {
-                        fg.AppendLine("CinematicContrastMult =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CinematicContrastMult =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CinematicContrastMultItem.Overall);
+                            sb.AppendItem(CinematicContrastMultItem.Overall);
                             if (CinematicContrastMultItem.Specific != null)
                             {
                                 foreach (var subItem in CinematicContrastMultItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.CinematicContrastAdd?.Overall ?? true)
                         && CinematicContrastAdd is {} CinematicContrastAddItem)
                     {
-                        fg.AppendLine("CinematicContrastAdd =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("CinematicContrastAdd =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CinematicContrastAddItem.Overall);
+                            sb.AppendItem(CinematicContrastAddItem.Overall);
                             if (CinematicContrastAddItem.Specific != null)
                             {
                                 foreach (var subItem in CinematicContrastAddItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown14?.Overall ?? true)
                         && Unknown14 is {} Unknown14Item)
                     {
-                        fg.AppendLine("Unknown14 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown14 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown14Item.Overall);
+                            sb.AppendItem(Unknown14Item.Overall);
                             if (Unknown14Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown14Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Unknown54?.Overall ?? true)
                         && Unknown54 is {} Unknown54Item)
                     {
-                        fg.AppendLine("Unknown54 =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Unknown54 =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(Unknown54Item.Overall);
+                            sb.AppendItem(Unknown54Item.Overall);
                             if (Unknown54Item.Specific != null)
                             {
                                 foreach (var subItem in Unknown54Item.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -4795,9 +4572,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Flags;
+            public Exception? Animatable;
             public Exception? Duration;
-            public Exception? RadialBlurFlags;
+            public Exception? RadialBlurUseTarget;
             public Exception? RadialBlurCenter;
             public Exception? DepthOfFieldFlags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? BlurRadius;
@@ -4864,12 +4641,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        return Flags;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        return Animatable;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         return Duration;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        return RadialBlurFlags;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        return RadialBlurUseTarget;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         return RadialBlurCenter;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
@@ -4996,14 +4773,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        this.Animatable = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         this.Duration = ex;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        this.RadialBlurFlags = ex;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        this.RadialBlurUseTarget = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         this.RadialBlurCenter = ex;
@@ -5190,14 +4967,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ImageSpaceAdapter_FieldIndex enu = (ImageSpaceAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpaceAdapter_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.Animatable:
+                        this.Animatable = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.Duration:
                         this.Duration = (Exception?)obj;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.RadialBlurFlags:
-                        this.RadialBlurFlags = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget:
+                        this.RadialBlurUseTarget = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.RadialBlurCenter:
                         this.RadialBlurCenter = (Exception?)obj;
@@ -5382,9 +5159,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
+                if (Animatable != null) return true;
                 if (Duration != null) return true;
-                if (RadialBlurFlags != null) return true;
+                if (RadialBlurUseTarget != null) return true;
                 if (RadialBlurCenter != null) return true;
                 if (DepthOfFieldFlags != null) return true;
                 if (BlurRadius != null) return true;
@@ -5448,1252 +5225,1035 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Duration, "Duration");
-                fg.AppendItem(RadialBlurFlags, "RadialBlurFlags");
-                fg.AppendItem(RadialBlurCenter, "RadialBlurCenter");
-                fg.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Animatable, "Animatable");
+                }
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
+                {
+                    sb.AppendItem(RadialBlurUseTarget, "RadialBlurUseTarget");
+                }
+                {
+                    sb.AppendItem(RadialBlurCenter, "RadialBlurCenter");
+                }
+                {
+                    sb.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
+                }
                 if (BlurRadius is {} BlurRadiusItem)
                 {
-                    fg.AppendLine("BlurRadius =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("BlurRadius =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(BlurRadiusItem.Overall);
+                        sb.AppendItem(BlurRadiusItem.Overall);
                         if (BlurRadiusItem.Specific != null)
                         {
                             foreach (var subItem in BlurRadiusItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (DoubleVisionStrength is {} DoubleVisionStrengthItem)
                 {
-                    fg.AppendLine("DoubleVisionStrength =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DoubleVisionStrength =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(DoubleVisionStrengthItem.Overall);
+                        sb.AppendItem(DoubleVisionStrengthItem.Overall);
                         if (DoubleVisionStrengthItem.Specific != null)
                         {
                             foreach (var subItem in DoubleVisionStrengthItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (TintColor is {} TintColorItem)
                 {
-                    fg.AppendLine("TintColor =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("TintColor =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TintColorItem.Overall);
+                        sb.AppendItem(TintColorItem.Overall);
                         if (TintColorItem.Specific != null)
                         {
                             foreach (var subItem in TintColorItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (FadeColor is {} FadeColorItem)
                 {
-                    fg.AppendLine("FadeColor =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("FadeColor =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FadeColorItem.Overall);
+                        sb.AppendItem(FadeColorItem.Overall);
                         if (FadeColorItem.Specific != null)
                         {
                             foreach (var subItem in FadeColorItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (RadialBlurStrength is {} RadialBlurStrengthItem)
                 {
-                    fg.AppendLine("RadialBlurStrength =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RadialBlurStrength =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RadialBlurStrengthItem.Overall);
+                        sb.AppendItem(RadialBlurStrengthItem.Overall);
                         if (RadialBlurStrengthItem.Specific != null)
                         {
                             foreach (var subItem in RadialBlurStrengthItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (RadialBlurRampUp is {} RadialBlurRampUpItem)
                 {
-                    fg.AppendLine("RadialBlurRampUp =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RadialBlurRampUp =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RadialBlurRampUpItem.Overall);
+                        sb.AppendItem(RadialBlurRampUpItem.Overall);
                         if (RadialBlurRampUpItem.Specific != null)
                         {
                             foreach (var subItem in RadialBlurRampUpItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (RadialBlurStart is {} RadialBlurStartItem)
                 {
-                    fg.AppendLine("RadialBlurStart =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RadialBlurStart =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RadialBlurStartItem.Overall);
+                        sb.AppendItem(RadialBlurStartItem.Overall);
                         if (RadialBlurStartItem.Specific != null)
                         {
                             foreach (var subItem in RadialBlurStartItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (RadialBlurRampDown is {} RadialBlurRampDownItem)
                 {
-                    fg.AppendLine("RadialBlurRampDown =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RadialBlurRampDown =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RadialBlurRampDownItem.Overall);
+                        sb.AppendItem(RadialBlurRampDownItem.Overall);
                         if (RadialBlurRampDownItem.Specific != null)
                         {
                             foreach (var subItem in RadialBlurRampDownItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (RadialBlurDownStart is {} RadialBlurDownStartItem)
                 {
-                    fg.AppendLine("RadialBlurDownStart =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RadialBlurDownStart =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RadialBlurDownStartItem.Overall);
+                        sb.AppendItem(RadialBlurDownStartItem.Overall);
                         if (RadialBlurDownStartItem.Specific != null)
                         {
                             foreach (var subItem in RadialBlurDownStartItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (DepthOfFieldStrength is {} DepthOfFieldStrengthItem)
                 {
-                    fg.AppendLine("DepthOfFieldStrength =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DepthOfFieldStrength =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(DepthOfFieldStrengthItem.Overall);
+                        sb.AppendItem(DepthOfFieldStrengthItem.Overall);
                         if (DepthOfFieldStrengthItem.Specific != null)
                         {
                             foreach (var subItem in DepthOfFieldStrengthItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (DepthOfFieldDistance is {} DepthOfFieldDistanceItem)
                 {
-                    fg.AppendLine("DepthOfFieldDistance =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DepthOfFieldDistance =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(DepthOfFieldDistanceItem.Overall);
+                        sb.AppendItem(DepthOfFieldDistanceItem.Overall);
                         if (DepthOfFieldDistanceItem.Specific != null)
                         {
                             foreach (var subItem in DepthOfFieldDistanceItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (DepthOfFieldRange is {} DepthOfFieldRangeItem)
                 {
-                    fg.AppendLine("DepthOfFieldRange =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("DepthOfFieldRange =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(DepthOfFieldRangeItem.Overall);
+                        sb.AppendItem(DepthOfFieldRangeItem.Overall);
                         if (DepthOfFieldRangeItem.Specific != null)
                         {
                             foreach (var subItem in DepthOfFieldRangeItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (MotionBlurStrength is {} MotionBlurStrengthItem)
                 {
-                    fg.AppendLine("MotionBlurStrength =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MotionBlurStrength =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MotionBlurStrengthItem.Overall);
+                        sb.AppendItem(MotionBlurStrengthItem.Overall);
                         if (MotionBlurStrengthItem.Specific != null)
                         {
                             foreach (var subItem in MotionBlurStrengthItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrEyeAdaptSpeedMult is {} HdrEyeAdaptSpeedMultItem)
                 {
-                    fg.AppendLine("HdrEyeAdaptSpeedMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrEyeAdaptSpeedMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrEyeAdaptSpeedMultItem.Overall);
+                        sb.AppendItem(HdrEyeAdaptSpeedMultItem.Overall);
                         if (HdrEyeAdaptSpeedMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrEyeAdaptSpeedMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrEyeAdaptSpeedAdd is {} HdrEyeAdaptSpeedAddItem)
                 {
-                    fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrEyeAdaptSpeedAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrEyeAdaptSpeedAddItem.Overall);
+                        sb.AppendItem(HdrEyeAdaptSpeedAddItem.Overall);
                         if (HdrEyeAdaptSpeedAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrEyeAdaptSpeedAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrBloomBlurRadiusMult is {} HdrBloomBlurRadiusMultItem)
                 {
-                    fg.AppendLine("HdrBloomBlurRadiusMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrBloomBlurRadiusMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrBloomBlurRadiusMultItem.Overall);
+                        sb.AppendItem(HdrBloomBlurRadiusMultItem.Overall);
                         if (HdrBloomBlurRadiusMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrBloomBlurRadiusMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrBloomBlurRadiusAdd is {} HdrBloomBlurRadiusAddItem)
                 {
-                    fg.AppendLine("HdrBloomBlurRadiusAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrBloomBlurRadiusAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrBloomBlurRadiusAddItem.Overall);
+                        sb.AppendItem(HdrBloomBlurRadiusAddItem.Overall);
                         if (HdrBloomBlurRadiusAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrBloomBlurRadiusAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrBloomThresholdMult is {} HdrBloomThresholdMultItem)
                 {
-                    fg.AppendLine("HdrBloomThresholdMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrBloomThresholdMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrBloomThresholdMultItem.Overall);
+                        sb.AppendItem(HdrBloomThresholdMultItem.Overall);
                         if (HdrBloomThresholdMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrBloomThresholdMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrBloomThresholdAdd is {} HdrBloomThresholdAddItem)
                 {
-                    fg.AppendLine("HdrBloomThresholdAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrBloomThresholdAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrBloomThresholdAddItem.Overall);
+                        sb.AppendItem(HdrBloomThresholdAddItem.Overall);
                         if (HdrBloomThresholdAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrBloomThresholdAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrBloomScaleMult is {} HdrBloomScaleMultItem)
                 {
-                    fg.AppendLine("HdrBloomScaleMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrBloomScaleMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrBloomScaleMultItem.Overall);
+                        sb.AppendItem(HdrBloomScaleMultItem.Overall);
                         if (HdrBloomScaleMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrBloomScaleMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrBloomScaleAdd is {} HdrBloomScaleAddItem)
                 {
-                    fg.AppendLine("HdrBloomScaleAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrBloomScaleAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrBloomScaleAddItem.Overall);
+                        sb.AppendItem(HdrBloomScaleAddItem.Overall);
                         if (HdrBloomScaleAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrBloomScaleAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrTargetLumMinMult is {} HdrTargetLumMinMultItem)
                 {
-                    fg.AppendLine("HdrTargetLumMinMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrTargetLumMinMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrTargetLumMinMultItem.Overall);
+                        sb.AppendItem(HdrTargetLumMinMultItem.Overall);
                         if (HdrTargetLumMinMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrTargetLumMinMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrTargetLumMinAdd is {} HdrTargetLumMinAddItem)
                 {
-                    fg.AppendLine("HdrTargetLumMinAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrTargetLumMinAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrTargetLumMinAddItem.Overall);
+                        sb.AppendItem(HdrTargetLumMinAddItem.Overall);
                         if (HdrTargetLumMinAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrTargetLumMinAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrTargetLumMaxMult is {} HdrTargetLumMaxMultItem)
                 {
-                    fg.AppendLine("HdrTargetLumMaxMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrTargetLumMaxMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrTargetLumMaxMultItem.Overall);
+                        sb.AppendItem(HdrTargetLumMaxMultItem.Overall);
                         if (HdrTargetLumMaxMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrTargetLumMaxMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrTargetLumMaxAdd is {} HdrTargetLumMaxAddItem)
                 {
-                    fg.AppendLine("HdrTargetLumMaxAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrTargetLumMaxAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrTargetLumMaxAddItem.Overall);
+                        sb.AppendItem(HdrTargetLumMaxAddItem.Overall);
                         if (HdrTargetLumMaxAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrTargetLumMaxAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrSunlightScaleMult is {} HdrSunlightScaleMultItem)
                 {
-                    fg.AppendLine("HdrSunlightScaleMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrSunlightScaleMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrSunlightScaleMultItem.Overall);
+                        sb.AppendItem(HdrSunlightScaleMultItem.Overall);
                         if (HdrSunlightScaleMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrSunlightScaleMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrSunlightScaleAdd is {} HdrSunlightScaleAddItem)
                 {
-                    fg.AppendLine("HdrSunlightScaleAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrSunlightScaleAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrSunlightScaleAddItem.Overall);
+                        sb.AppendItem(HdrSunlightScaleAddItem.Overall);
                         if (HdrSunlightScaleAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrSunlightScaleAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrSkyScaleMult is {} HdrSkyScaleMultItem)
                 {
-                    fg.AppendLine("HdrSkyScaleMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrSkyScaleMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrSkyScaleMultItem.Overall);
+                        sb.AppendItem(HdrSkyScaleMultItem.Overall);
                         if (HdrSkyScaleMultItem.Specific != null)
                         {
                             foreach (var subItem in HdrSkyScaleMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (HdrSkyScaleAdd is {} HdrSkyScaleAddItem)
                 {
-                    fg.AppendLine("HdrSkyScaleAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HdrSkyScaleAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HdrSkyScaleAddItem.Overall);
+                        sb.AppendItem(HdrSkyScaleAddItem.Overall);
                         if (HdrSkyScaleAddItem.Specific != null)
                         {
                             foreach (var subItem in HdrSkyScaleAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown08 is {} Unknown08Item)
                 {
-                    fg.AppendLine("Unknown08 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown08 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown08Item.Overall);
+                        sb.AppendItem(Unknown08Item.Overall);
                         if (Unknown08Item.Specific != null)
                         {
                             foreach (var subItem in Unknown08Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown48 is {} Unknown48Item)
                 {
-                    fg.AppendLine("Unknown48 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown48 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown48Item.Overall);
+                        sb.AppendItem(Unknown48Item.Overall);
                         if (Unknown48Item.Specific != null)
                         {
                             foreach (var subItem in Unknown48Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown09 is {} Unknown09Item)
                 {
-                    fg.AppendLine("Unknown09 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown09 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown09Item.Overall);
+                        sb.AppendItem(Unknown09Item.Overall);
                         if (Unknown09Item.Specific != null)
                         {
                             foreach (var subItem in Unknown09Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown49 is {} Unknown49Item)
                 {
-                    fg.AppendLine("Unknown49 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown49 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown49Item.Overall);
+                        sb.AppendItem(Unknown49Item.Overall);
                         if (Unknown49Item.Specific != null)
                         {
                             foreach (var subItem in Unknown49Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown0A is {} Unknown0AItem)
                 {
-                    fg.AppendLine("Unknown0A =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown0A =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown0AItem.Overall);
+                        sb.AppendItem(Unknown0AItem.Overall);
                         if (Unknown0AItem.Specific != null)
                         {
                             foreach (var subItem in Unknown0AItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown4A is {} Unknown4AItem)
                 {
-                    fg.AppendLine("Unknown4A =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown4A =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown4AItem.Overall);
+                        sb.AppendItem(Unknown4AItem.Overall);
                         if (Unknown4AItem.Specific != null)
                         {
                             foreach (var subItem in Unknown4AItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown0B is {} Unknown0BItem)
                 {
-                    fg.AppendLine("Unknown0B =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown0B =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown0BItem.Overall);
+                        sb.AppendItem(Unknown0BItem.Overall);
                         if (Unknown0BItem.Specific != null)
                         {
                             foreach (var subItem in Unknown0BItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown4B is {} Unknown4BItem)
                 {
-                    fg.AppendLine("Unknown4B =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown4B =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown4BItem.Overall);
+                        sb.AppendItem(Unknown4BItem.Overall);
                         if (Unknown4BItem.Specific != null)
                         {
                             foreach (var subItem in Unknown4BItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown0C is {} Unknown0CItem)
                 {
-                    fg.AppendLine("Unknown0C =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown0C =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown0CItem.Overall);
+                        sb.AppendItem(Unknown0CItem.Overall);
                         if (Unknown0CItem.Specific != null)
                         {
                             foreach (var subItem in Unknown0CItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown4C is {} Unknown4CItem)
                 {
-                    fg.AppendLine("Unknown4C =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown4C =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown4CItem.Overall);
+                        sb.AppendItem(Unknown4CItem.Overall);
                         if (Unknown4CItem.Specific != null)
                         {
                             foreach (var subItem in Unknown4CItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown0D is {} Unknown0DItem)
                 {
-                    fg.AppendLine("Unknown0D =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown0D =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown0DItem.Overall);
+                        sb.AppendItem(Unknown0DItem.Overall);
                         if (Unknown0DItem.Specific != null)
                         {
                             foreach (var subItem in Unknown0DItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown4D is {} Unknown4DItem)
                 {
-                    fg.AppendLine("Unknown4D =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown4D =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown4DItem.Overall);
+                        sb.AppendItem(Unknown4DItem.Overall);
                         if (Unknown4DItem.Specific != null)
                         {
                             foreach (var subItem in Unknown4DItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown0E is {} Unknown0EItem)
                 {
-                    fg.AppendLine("Unknown0E =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown0E =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown0EItem.Overall);
+                        sb.AppendItem(Unknown0EItem.Overall);
                         if (Unknown0EItem.Specific != null)
                         {
                             foreach (var subItem in Unknown0EItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown4E is {} Unknown4EItem)
                 {
-                    fg.AppendLine("Unknown4E =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown4E =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown4EItem.Overall);
+                        sb.AppendItem(Unknown4EItem.Overall);
                         if (Unknown4EItem.Specific != null)
                         {
                             foreach (var subItem in Unknown4EItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown0F is {} Unknown0FItem)
                 {
-                    fg.AppendLine("Unknown0F =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown0F =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown0FItem.Overall);
+                        sb.AppendItem(Unknown0FItem.Overall);
                         if (Unknown0FItem.Specific != null)
                         {
                             foreach (var subItem in Unknown0FItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown4F is {} Unknown4FItem)
                 {
-                    fg.AppendLine("Unknown4F =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown4F =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown4FItem.Overall);
+                        sb.AppendItem(Unknown4FItem.Overall);
                         if (Unknown4FItem.Specific != null)
                         {
                             foreach (var subItem in Unknown4FItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown10 is {} Unknown10Item)
                 {
-                    fg.AppendLine("Unknown10 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown10 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown10Item.Overall);
+                        sb.AppendItem(Unknown10Item.Overall);
                         if (Unknown10Item.Specific != null)
                         {
                             foreach (var subItem in Unknown10Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown50 is {} Unknown50Item)
                 {
-                    fg.AppendLine("Unknown50 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown50 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown50Item.Overall);
+                        sb.AppendItem(Unknown50Item.Overall);
                         if (Unknown50Item.Specific != null)
                         {
                             foreach (var subItem in Unknown50Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (CinematicSaturationMult is {} CinematicSaturationMultItem)
                 {
-                    fg.AppendLine("CinematicSaturationMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CinematicSaturationMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CinematicSaturationMultItem.Overall);
+                        sb.AppendItem(CinematicSaturationMultItem.Overall);
                         if (CinematicSaturationMultItem.Specific != null)
                         {
                             foreach (var subItem in CinematicSaturationMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (CinematicSaturationAdd is {} CinematicSaturationAddItem)
                 {
-                    fg.AppendLine("CinematicSaturationAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CinematicSaturationAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CinematicSaturationAddItem.Overall);
+                        sb.AppendItem(CinematicSaturationAddItem.Overall);
                         if (CinematicSaturationAddItem.Specific != null)
                         {
                             foreach (var subItem in CinematicSaturationAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (CinematicBrightnessMult is {} CinematicBrightnessMultItem)
                 {
-                    fg.AppendLine("CinematicBrightnessMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CinematicBrightnessMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CinematicBrightnessMultItem.Overall);
+                        sb.AppendItem(CinematicBrightnessMultItem.Overall);
                         if (CinematicBrightnessMultItem.Specific != null)
                         {
                             foreach (var subItem in CinematicBrightnessMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (CinematicBrightnessAdd is {} CinematicBrightnessAddItem)
                 {
-                    fg.AppendLine("CinematicBrightnessAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CinematicBrightnessAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CinematicBrightnessAddItem.Overall);
+                        sb.AppendItem(CinematicBrightnessAddItem.Overall);
                         if (CinematicBrightnessAddItem.Specific != null)
                         {
                             foreach (var subItem in CinematicBrightnessAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (CinematicContrastMult is {} CinematicContrastMultItem)
                 {
-                    fg.AppendLine("CinematicContrastMult =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CinematicContrastMult =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CinematicContrastMultItem.Overall);
+                        sb.AppendItem(CinematicContrastMultItem.Overall);
                         if (CinematicContrastMultItem.Specific != null)
                         {
                             foreach (var subItem in CinematicContrastMultItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (CinematicContrastAdd is {} CinematicContrastAddItem)
                 {
-                    fg.AppendLine("CinematicContrastAdd =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("CinematicContrastAdd =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CinematicContrastAddItem.Overall);
+                        sb.AppendItem(CinematicContrastAddItem.Overall);
                         if (CinematicContrastAddItem.Specific != null)
                         {
                             foreach (var subItem in CinematicContrastAddItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown14 is {} Unknown14Item)
                 {
-                    fg.AppendLine("Unknown14 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown14 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown14Item.Overall);
+                        sb.AppendItem(Unknown14Item.Overall);
                         if (Unknown14Item.Specific != null)
                         {
                             foreach (var subItem in Unknown14Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Unknown54 is {} Unknown54Item)
                 {
-                    fg.AppendLine("Unknown54 =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Unknown54 =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(Unknown54Item.Overall);
+                        sb.AppendItem(Unknown54Item.Overall);
                         if (Unknown54Item.Specific != null)
                         {
                             foreach (var subItem in Unknown54Item.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -6702,9 +6262,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Animatable = this.Animatable.Combine(rhs.Animatable);
                 ret.Duration = this.Duration.Combine(rhs.Duration);
-                ret.RadialBlurFlags = this.RadialBlurFlags.Combine(rhs.RadialBlurFlags);
+                ret.RadialBlurUseTarget = this.RadialBlurUseTarget.Combine(rhs.RadialBlurUseTarget);
                 ret.RadialBlurCenter = this.RadialBlurCenter.Combine(rhs.RadialBlurCenter);
                 ret.DepthOfFieldFlags = this.DepthOfFieldFlags.Combine(rhs.DepthOfFieldFlags);
                 ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
@@ -6785,9 +6345,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool Flags;
+            public bool Animatable;
             public bool Duration;
-            public bool RadialBlurFlags;
+            public bool RadialBlurUseTarget;
             public bool RadialBlurCenter;
             public bool DepthOfFieldFlags;
             public KeyFrame.TranslationMask? BlurRadius;
@@ -6854,9 +6414,9 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
+                this.Animatable = defaultOn;
                 this.Duration = defaultOn;
-                this.RadialBlurFlags = defaultOn;
+                this.RadialBlurUseTarget = defaultOn;
                 this.RadialBlurCenter = defaultOn;
                 this.DepthOfFieldFlags = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
@@ -6867,9 +6427,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Flags, null));
+                ret.Add((Animatable, null));
                 ret.Add((Duration, null));
-                ret.Add((RadialBlurFlags, null));
+                ret.Add((RadialBlurUseTarget, null));
                 ret.Add((RadialBlurCenter, null));
                 ret.Add((DepthOfFieldFlags, null));
                 ret.Add((BlurRadius == null ? DefaultOn : !BlurRadius.GetCrystal().CopyNothing, BlurRadius?.GetCrystal()));
@@ -7020,7 +6580,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -7030,7 +6590,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static ImageSpaceAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceAdapter();
             ((ImageSpaceAdapterSetterCommon)((IImageSpaceAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -7045,7 +6605,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -7055,7 +6615,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -7076,9 +6636,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IImageSpaceAdapterInternal>,
         ISkyrimMajorRecordInternal
     {
-        new ImageSpaceAdapter.Flag Flags { get; set; }
+        new Boolean Animatable { get; set; }
         new Single Duration { get; set; }
-        new ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; set; }
+        new Boolean RadialBlurUseTarget { get; set; }
         new P2Float RadialBlurCenter { get; set; }
         new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
         new ExtendedList<KeyFrame>? BlurRadius { get; set; }
@@ -7154,9 +6714,9 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IImageSpaceAdapterGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
-        ImageSpaceAdapter.Flag Flags { get; }
+        Boolean Animatable { get; }
         Single Duration { get; }
-        ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }
+        Boolean RadialBlurUseTarget { get; }
         P2Float RadialBlurCenter { get; }
         ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; }
         IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; }
@@ -7239,26 +6799,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IImageSpaceAdapterGetter item,
             string? name = null,
             ImageSpaceAdapter.Mask<bool>? printMask = null)
         {
-            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).ToString(
+            return ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IImageSpaceAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceAdapter.Mask<bool>? printMask = null)
         {
-            ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).ToString(
+            ((ImageSpaceAdapterCommon)((IImageSpaceAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -7353,7 +6913,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceAdapterInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceAdapterSetterCommon)((IImageSpaceAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -7368,10 +6928,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceAdapter_FieldIndex
+    internal enum ImageSpaceAdapter_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -7379,9 +6939,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Flags = 6,
+        Animatable = 6,
         Duration = 7,
-        RadialBlurFlags = 8,
+        RadialBlurUseTarget = 8,
         RadialBlurCenter = 9,
         DepthOfFieldFlags = 10,
         BlurRadius = 11,
@@ -7444,7 +7004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceAdapter_Registration : ILoquiRegistration
+    internal partial class ImageSpaceAdapter_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceAdapter_Registration Instance = new ImageSpaceAdapter_Registration();
 
@@ -7486,6 +7046,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.IMAD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.IMAD);
+            var all = RecordCollection.Factory(
+                RecordTypes.IMAD,
+                RecordTypes.DNAM,
+                RecordTypes.BNAM,
+                RecordTypes.VNAM,
+                RecordTypes.TNAM,
+                RecordTypes.NAM3,
+                RecordTypes.RNAM,
+                RecordTypes.SNAM,
+                RecordTypes.UNAM,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.WNAM,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM,
+                RecordTypes.NAM4,
+                RecordTypes._0_IAD,
+                RecordTypes.@IAD,
+                RecordTypes._1_IAD,
+                RecordTypes.AIAD,
+                RecordTypes._2_IAD,
+                RecordTypes.BIAD,
+                RecordTypes._3_IAD,
+                RecordTypes.CIAD,
+                RecordTypes._4_IAD,
+                RecordTypes.DIAD,
+                RecordTypes._5_IAD,
+                RecordTypes.EIAD,
+                RecordTypes._6_IAD,
+                RecordTypes.FIAD,
+                RecordTypes._7_IAD,
+                RecordTypes.GIAD,
+                RecordTypes._8_IAD,
+                RecordTypes.HIAD,
+                RecordTypes._9_IAD,
+                RecordTypes.IIAD,
+                RecordTypes._A_IAD,
+                RecordTypes.JIAD,
+                RecordTypes._B_IAD,
+                RecordTypes.KIAD,
+                RecordTypes._C_IAD,
+                RecordTypes.LIAD,
+                RecordTypes._D_IAD,
+                RecordTypes.MIAD,
+                RecordTypes._E_IAD,
+                RecordTypes.NIAD,
+                RecordTypes._F_IAD,
+                RecordTypes.OIAD,
+                RecordTypes._10_IAD,
+                RecordTypes.PIAD,
+                RecordTypes._11_IAD,
+                RecordTypes.QIAD,
+                RecordTypes._12_IAD,
+                RecordTypes.RIAD,
+                RecordTypes._13_IAD,
+                RecordTypes.SIAD,
+                RecordTypes._14_IAD,
+                RecordTypes.TIAD);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -7519,7 +7143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceAdapterSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImageSpaceAdapterSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImageSpaceAdapterSetterCommon Instance = new ImageSpaceAdapterSetterCommon();
 
@@ -7528,9 +7152,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IImageSpaceAdapterInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.Animatable = default;
             item.Duration = default;
-            item.RadialBlurFlags = default;
+            item.RadialBlurUseTarget = default;
             item.RadialBlurCenter = default;
             item.DepthOfFieldFlags = default;
             item.BlurRadius = null;
@@ -7614,7 +7238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IImageSpaceAdapterInternal>(
                 record: item,
@@ -7627,7 +7251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpaceAdapter)item,
@@ -7638,7 +7262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ImageSpaceAdapter)item,
@@ -7649,7 +7273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceAdapterCommon : SkyrimMajorRecordCommon
+    internal partial class ImageSpaceAdapterCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImageSpaceAdapterCommon Instance = new ImageSpaceAdapterCommon();
 
@@ -7673,10 +7297,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Animatable = item.Animatable == rhs.Animatable;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
-            ret.RadialBlurFlags = item.RadialBlurFlags == rhs.RadialBlurFlags;
+            ret.RadialBlurUseTarget = item.RadialBlurUseTarget == rhs.RadialBlurUseTarget;
             ret.RadialBlurCenter = item.RadialBlurCenter.Equals(rhs.RadialBlurCenter);
             ret.DepthOfFieldFlags = item.DepthOfFieldFlags == rhs.DepthOfFieldFlags;
             ret.BlurRadius = item.BlurRadius.CollectionEqualsHelper(
@@ -7903,1122 +7526,900 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IImageSpaceAdapterGetter item,
             string? name = null,
             ImageSpaceAdapter.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IImageSpaceAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceAdapter.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpaceAdapter =>");
+                sb.AppendLine($"ImageSpaceAdapter =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpaceAdapter) =>");
+                sb.AppendLine($"{name} (ImageSpaceAdapter) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpaceAdapter.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
-            if (printMask?.Flags ?? true)
+            if (printMask?.Animatable ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Animatable, "Animatable");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendItem(item.Duration, "Duration");
+                sb.AppendItem(item.Duration, "Duration");
             }
-            if (printMask?.RadialBlurFlags ?? true)
+            if (printMask?.RadialBlurUseTarget ?? true)
             {
-                fg.AppendItem(item.RadialBlurFlags, "RadialBlurFlags");
+                sb.AppendItem(item.RadialBlurUseTarget, "RadialBlurUseTarget");
             }
             if (printMask?.RadialBlurCenter ?? true)
             {
-                fg.AppendItem(item.RadialBlurCenter, "RadialBlurCenter");
+                sb.AppendItem(item.RadialBlurCenter, "RadialBlurCenter");
             }
             if (printMask?.DepthOfFieldFlags ?? true)
             {
-                fg.AppendItem(item.DepthOfFieldFlags, "DepthOfFieldFlags");
+                sb.AppendItem(item.DepthOfFieldFlags, "DepthOfFieldFlags");
             }
             if ((printMask?.BlurRadius?.Overall ?? true)
                 && item.BlurRadius is {} BlurRadiusItem)
             {
-                fg.AppendLine("BlurRadius =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("BlurRadius =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in BlurRadiusItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.DoubleVisionStrength?.Overall ?? true)
                 && item.DoubleVisionStrength is {} DoubleVisionStrengthItem)
             {
-                fg.AppendLine("DoubleVisionStrength =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DoubleVisionStrength =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in DoubleVisionStrengthItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.TintColor?.Overall ?? true)
                 && item.TintColor is {} TintColorItem)
             {
-                fg.AppendLine("TintColor =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("TintColor =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in TintColorItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.FadeColor?.Overall ?? true)
                 && item.FadeColor is {} FadeColorItem)
             {
-                fg.AppendLine("FadeColor =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("FadeColor =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in FadeColorItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurStrength?.Overall ?? true)
                 && item.RadialBlurStrength is {} RadialBlurStrengthItem)
             {
-                fg.AppendLine("RadialBlurStrength =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RadialBlurStrength =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in RadialBlurStrengthItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurRampUp?.Overall ?? true)
                 && item.RadialBlurRampUp is {} RadialBlurRampUpItem)
             {
-                fg.AppendLine("RadialBlurRampUp =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RadialBlurRampUp =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in RadialBlurRampUpItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurStart?.Overall ?? true)
                 && item.RadialBlurStart is {} RadialBlurStartItem)
             {
-                fg.AppendLine("RadialBlurStart =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RadialBlurStart =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in RadialBlurStartItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurRampDown?.Overall ?? true)
                 && item.RadialBlurRampDown is {} RadialBlurRampDownItem)
             {
-                fg.AppendLine("RadialBlurRampDown =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RadialBlurRampDown =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in RadialBlurRampDownItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.RadialBlurDownStart?.Overall ?? true)
                 && item.RadialBlurDownStart is {} RadialBlurDownStartItem)
             {
-                fg.AppendLine("RadialBlurDownStart =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RadialBlurDownStart =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in RadialBlurDownStartItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.DepthOfFieldStrength?.Overall ?? true)
                 && item.DepthOfFieldStrength is {} DepthOfFieldStrengthItem)
             {
-                fg.AppendLine("DepthOfFieldStrength =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DepthOfFieldStrength =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in DepthOfFieldStrengthItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.DepthOfFieldDistance?.Overall ?? true)
                 && item.DepthOfFieldDistance is {} DepthOfFieldDistanceItem)
             {
-                fg.AppendLine("DepthOfFieldDistance =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DepthOfFieldDistance =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in DepthOfFieldDistanceItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.DepthOfFieldRange?.Overall ?? true)
                 && item.DepthOfFieldRange is {} DepthOfFieldRangeItem)
             {
-                fg.AppendLine("DepthOfFieldRange =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("DepthOfFieldRange =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in DepthOfFieldRangeItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.MotionBlurStrength?.Overall ?? true)
                 && item.MotionBlurStrength is {} MotionBlurStrengthItem)
             {
-                fg.AppendLine("MotionBlurStrength =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MotionBlurStrength =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in MotionBlurStrengthItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrEyeAdaptSpeedMult?.Overall ?? true)
                 && item.HdrEyeAdaptSpeedMult is {} HdrEyeAdaptSpeedMultItem)
             {
-                fg.AppendLine("HdrEyeAdaptSpeedMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrEyeAdaptSpeedMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrEyeAdaptSpeedMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrEyeAdaptSpeedAdd?.Overall ?? true)
                 && item.HdrEyeAdaptSpeedAdd is {} HdrEyeAdaptSpeedAddItem)
             {
-                fg.AppendLine("HdrEyeAdaptSpeedAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrEyeAdaptSpeedAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrEyeAdaptSpeedAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomBlurRadiusMult?.Overall ?? true)
                 && item.HdrBloomBlurRadiusMult is {} HdrBloomBlurRadiusMultItem)
             {
-                fg.AppendLine("HdrBloomBlurRadiusMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrBloomBlurRadiusMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrBloomBlurRadiusMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomBlurRadiusAdd?.Overall ?? true)
                 && item.HdrBloomBlurRadiusAdd is {} HdrBloomBlurRadiusAddItem)
             {
-                fg.AppendLine("HdrBloomBlurRadiusAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrBloomBlurRadiusAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrBloomBlurRadiusAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomThresholdMult?.Overall ?? true)
                 && item.HdrBloomThresholdMult is {} HdrBloomThresholdMultItem)
             {
-                fg.AppendLine("HdrBloomThresholdMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrBloomThresholdMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrBloomThresholdMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomThresholdAdd?.Overall ?? true)
                 && item.HdrBloomThresholdAdd is {} HdrBloomThresholdAddItem)
             {
-                fg.AppendLine("HdrBloomThresholdAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrBloomThresholdAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrBloomThresholdAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomScaleMult?.Overall ?? true)
                 && item.HdrBloomScaleMult is {} HdrBloomScaleMultItem)
             {
-                fg.AppendLine("HdrBloomScaleMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrBloomScaleMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrBloomScaleMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrBloomScaleAdd?.Overall ?? true)
                 && item.HdrBloomScaleAdd is {} HdrBloomScaleAddItem)
             {
-                fg.AppendLine("HdrBloomScaleAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrBloomScaleAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrBloomScaleAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMinMult?.Overall ?? true)
                 && item.HdrTargetLumMinMult is {} HdrTargetLumMinMultItem)
             {
-                fg.AppendLine("HdrTargetLumMinMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrTargetLumMinMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrTargetLumMinMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMinAdd?.Overall ?? true)
                 && item.HdrTargetLumMinAdd is {} HdrTargetLumMinAddItem)
             {
-                fg.AppendLine("HdrTargetLumMinAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrTargetLumMinAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrTargetLumMinAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMaxMult?.Overall ?? true)
                 && item.HdrTargetLumMaxMult is {} HdrTargetLumMaxMultItem)
             {
-                fg.AppendLine("HdrTargetLumMaxMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrTargetLumMaxMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrTargetLumMaxMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrTargetLumMaxAdd?.Overall ?? true)
                 && item.HdrTargetLumMaxAdd is {} HdrTargetLumMaxAddItem)
             {
-                fg.AppendLine("HdrTargetLumMaxAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrTargetLumMaxAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrTargetLumMaxAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrSunlightScaleMult?.Overall ?? true)
                 && item.HdrSunlightScaleMult is {} HdrSunlightScaleMultItem)
             {
-                fg.AppendLine("HdrSunlightScaleMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrSunlightScaleMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrSunlightScaleMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrSunlightScaleAdd?.Overall ?? true)
                 && item.HdrSunlightScaleAdd is {} HdrSunlightScaleAddItem)
             {
-                fg.AppendLine("HdrSunlightScaleAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrSunlightScaleAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrSunlightScaleAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrSkyScaleMult?.Overall ?? true)
                 && item.HdrSkyScaleMult is {} HdrSkyScaleMultItem)
             {
-                fg.AppendLine("HdrSkyScaleMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrSkyScaleMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrSkyScaleMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.HdrSkyScaleAdd?.Overall ?? true)
                 && item.HdrSkyScaleAdd is {} HdrSkyScaleAddItem)
             {
-                fg.AppendLine("HdrSkyScaleAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HdrSkyScaleAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in HdrSkyScaleAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown08?.Overall ?? true)
                 && item.Unknown08 is {} Unknown08Item)
             {
-                fg.AppendLine("Unknown08 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown08 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown08Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown48?.Overall ?? true)
                 && item.Unknown48 is {} Unknown48Item)
             {
-                fg.AppendLine("Unknown48 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown48 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown48Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown09?.Overall ?? true)
                 && item.Unknown09 is {} Unknown09Item)
             {
-                fg.AppendLine("Unknown09 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown09 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown09Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown49?.Overall ?? true)
                 && item.Unknown49 is {} Unknown49Item)
             {
-                fg.AppendLine("Unknown49 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown49 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown49Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown0A?.Overall ?? true)
                 && item.Unknown0A is {} Unknown0AItem)
             {
-                fg.AppendLine("Unknown0A =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown0A =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown0AItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown4A?.Overall ?? true)
                 && item.Unknown4A is {} Unknown4AItem)
             {
-                fg.AppendLine("Unknown4A =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown4A =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown4AItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown0B?.Overall ?? true)
                 && item.Unknown0B is {} Unknown0BItem)
             {
-                fg.AppendLine("Unknown0B =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown0B =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown0BItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown4B?.Overall ?? true)
                 && item.Unknown4B is {} Unknown4BItem)
             {
-                fg.AppendLine("Unknown4B =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown4B =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown4BItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown0C?.Overall ?? true)
                 && item.Unknown0C is {} Unknown0CItem)
             {
-                fg.AppendLine("Unknown0C =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown0C =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown0CItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown4C?.Overall ?? true)
                 && item.Unknown4C is {} Unknown4CItem)
             {
-                fg.AppendLine("Unknown4C =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown4C =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown4CItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown0D?.Overall ?? true)
                 && item.Unknown0D is {} Unknown0DItem)
             {
-                fg.AppendLine("Unknown0D =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown0D =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown0DItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown4D?.Overall ?? true)
                 && item.Unknown4D is {} Unknown4DItem)
             {
-                fg.AppendLine("Unknown4D =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown4D =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown4DItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown0E?.Overall ?? true)
                 && item.Unknown0E is {} Unknown0EItem)
             {
-                fg.AppendLine("Unknown0E =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown0E =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown0EItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown4E?.Overall ?? true)
                 && item.Unknown4E is {} Unknown4EItem)
             {
-                fg.AppendLine("Unknown4E =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown4E =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown4EItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown0F?.Overall ?? true)
                 && item.Unknown0F is {} Unknown0FItem)
             {
-                fg.AppendLine("Unknown0F =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown0F =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown0FItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown4F?.Overall ?? true)
                 && item.Unknown4F is {} Unknown4FItem)
             {
-                fg.AppendLine("Unknown4F =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown4F =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown4FItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown10?.Overall ?? true)
                 && item.Unknown10 is {} Unknown10Item)
             {
-                fg.AppendLine("Unknown10 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown10 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown10Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown50?.Overall ?? true)
                 && item.Unknown50 is {} Unknown50Item)
             {
-                fg.AppendLine("Unknown50 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown50 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown50Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.CinematicSaturationMult?.Overall ?? true)
                 && item.CinematicSaturationMult is {} CinematicSaturationMultItem)
             {
-                fg.AppendLine("CinematicSaturationMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CinematicSaturationMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CinematicSaturationMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.CinematicSaturationAdd?.Overall ?? true)
                 && item.CinematicSaturationAdd is {} CinematicSaturationAddItem)
             {
-                fg.AppendLine("CinematicSaturationAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CinematicSaturationAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CinematicSaturationAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.CinematicBrightnessMult?.Overall ?? true)
                 && item.CinematicBrightnessMult is {} CinematicBrightnessMultItem)
             {
-                fg.AppendLine("CinematicBrightnessMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CinematicBrightnessMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CinematicBrightnessMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.CinematicBrightnessAdd?.Overall ?? true)
                 && item.CinematicBrightnessAdd is {} CinematicBrightnessAddItem)
             {
-                fg.AppendLine("CinematicBrightnessAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CinematicBrightnessAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CinematicBrightnessAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.CinematicContrastMult?.Overall ?? true)
                 && item.CinematicContrastMult is {} CinematicContrastMultItem)
             {
-                fg.AppendLine("CinematicContrastMult =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CinematicContrastMult =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CinematicContrastMultItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.CinematicContrastAdd?.Overall ?? true)
                 && item.CinematicContrastAdd is {} CinematicContrastAddItem)
             {
-                fg.AppendLine("CinematicContrastAdd =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("CinematicContrastAdd =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in CinematicContrastAddItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown14?.Overall ?? true)
                 && item.Unknown14 is {} Unknown14Item)
             {
-                fg.AppendLine("Unknown14 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown14 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown14Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Unknown54?.Overall ?? true)
                 && item.Unknown54 is {} Unknown54Item)
             {
-                fg.AppendLine("Unknown54 =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Unknown54 =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in Unknown54Item)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -9068,17 +8469,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.Animatable != rhs.Animatable) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
-                if (lhs.RadialBlurFlags != rhs.RadialBlurFlags) return false;
+                if (lhs.RadialBlurUseTarget != rhs.RadialBlurUseTarget) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
@@ -9090,223 +8491,223 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
-                if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius)) return false;
+                if (!lhs.BlurRadius.SequenceEqualNullable(rhs.BlurRadius, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.BlurRadius)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength) ?? true))
             {
-                if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength)) return false;
+                if (!lhs.DoubleVisionStrength.SequenceEqualNullable(rhs.DoubleVisionStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.TintColor) ?? true))
             {
-                if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor)) return false;
+                if (!lhs.TintColor.SequenceEqualNullable(rhs.TintColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.TintColor)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.FadeColor) ?? true))
             {
-                if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor)) return false;
+                if (!lhs.FadeColor.SequenceEqualNullable(rhs.FadeColor, (l, r) => ((ColorFrameCommon)((IColorFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.FadeColor)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength) ?? true))
             {
-                if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength)) return false;
+                if (!lhs.RadialBlurStrength.SequenceEqualNullable(rhs.RadialBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp) ?? true))
             {
-                if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp)) return false;
+                if (!lhs.RadialBlurRampUp.SequenceEqualNullable(rhs.RadialBlurRampUp, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart) ?? true))
             {
-                if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart)) return false;
+                if (!lhs.RadialBlurStart.SequenceEqualNullable(rhs.RadialBlurStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurStart)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown) ?? true))
             {
-                if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown)) return false;
+                if (!lhs.RadialBlurRampDown.SequenceEqualNullable(rhs.RadialBlurRampDown, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart) ?? true))
             {
-                if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart)) return false;
+                if (!lhs.RadialBlurDownStart.SequenceEqualNullable(rhs.RadialBlurDownStart, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength) ?? true))
             {
-                if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength)) return false;
+                if (!lhs.DepthOfFieldStrength.SequenceEqualNullable(rhs.DepthOfFieldStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance) ?? true))
             {
-                if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance)) return false;
+                if (!lhs.DepthOfFieldDistance.SequenceEqualNullable(rhs.DepthOfFieldDistance, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange) ?? true))
             {
-                if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange)) return false;
+                if (!lhs.DepthOfFieldRange.SequenceEqualNullable(rhs.DepthOfFieldRange, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength) ?? true))
             {
-                if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength)) return false;
+                if (!lhs.MotionBlurStrength.SequenceEqualNullable(rhs.MotionBlurStrength, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult) ?? true))
             {
-                if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult)) return false;
+                if (!lhs.HdrEyeAdaptSpeedMult.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd) ?? true))
             {
-                if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd)) return false;
+                if (!lhs.HdrEyeAdaptSpeedAdd.SequenceEqualNullable(rhs.HdrEyeAdaptSpeedAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult) ?? true))
             {
-                if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult)) return false;
+                if (!lhs.HdrBloomBlurRadiusMult.SequenceEqualNullable(rhs.HdrBloomBlurRadiusMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd) ?? true))
             {
-                if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd)) return false;
+                if (!lhs.HdrBloomBlurRadiusAdd.SequenceEqualNullable(rhs.HdrBloomBlurRadiusAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult) ?? true))
             {
-                if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult)) return false;
+                if (!lhs.HdrBloomThresholdMult.SequenceEqualNullable(rhs.HdrBloomThresholdMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd) ?? true))
             {
-                if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd)) return false;
+                if (!lhs.HdrBloomThresholdAdd.SequenceEqualNullable(rhs.HdrBloomThresholdAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult) ?? true))
             {
-                if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult)) return false;
+                if (!lhs.HdrBloomScaleMult.SequenceEqualNullable(rhs.HdrBloomScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd) ?? true))
             {
-                if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd)) return false;
+                if (!lhs.HdrBloomScaleAdd.SequenceEqualNullable(rhs.HdrBloomScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult) ?? true))
             {
-                if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult)) return false;
+                if (!lhs.HdrTargetLumMinMult.SequenceEqualNullable(rhs.HdrTargetLumMinMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd) ?? true))
             {
-                if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd)) return false;
+                if (!lhs.HdrTargetLumMinAdd.SequenceEqualNullable(rhs.HdrTargetLumMinAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult) ?? true))
             {
-                if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult)) return false;
+                if (!lhs.HdrTargetLumMaxMult.SequenceEqualNullable(rhs.HdrTargetLumMaxMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd) ?? true))
             {
-                if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd)) return false;
+                if (!lhs.HdrTargetLumMaxAdd.SequenceEqualNullable(rhs.HdrTargetLumMaxAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult) ?? true))
             {
-                if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult)) return false;
+                if (!lhs.HdrSunlightScaleMult.SequenceEqualNullable(rhs.HdrSunlightScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd) ?? true))
             {
-                if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd)) return false;
+                if (!lhs.HdrSunlightScaleAdd.SequenceEqualNullable(rhs.HdrSunlightScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult) ?? true))
             {
-                if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult)) return false;
+                if (!lhs.HdrSkyScaleMult.SequenceEqualNullable(rhs.HdrSkyScaleMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd) ?? true))
             {
-                if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd)) return false;
+                if (!lhs.HdrSkyScaleAdd.SequenceEqualNullable(rhs.HdrSkyScaleAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown08) ?? true))
             {
-                if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08)) return false;
+                if (!lhs.Unknown08.SequenceEqualNullable(rhs.Unknown08, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown08)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown48) ?? true))
             {
-                if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48)) return false;
+                if (!lhs.Unknown48.SequenceEqualNullable(rhs.Unknown48, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown48)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown09) ?? true))
             {
-                if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09)) return false;
+                if (!lhs.Unknown09.SequenceEqualNullable(rhs.Unknown09, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown09)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown49) ?? true))
             {
-                if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49)) return false;
+                if (!lhs.Unknown49.SequenceEqualNullable(rhs.Unknown49, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown49)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0A) ?? true))
             {
-                if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A)) return false;
+                if (!lhs.Unknown0A.SequenceEqualNullable(rhs.Unknown0A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0A)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4A) ?? true))
             {
-                if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A)) return false;
+                if (!lhs.Unknown4A.SequenceEqualNullable(rhs.Unknown4A, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4A)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0B) ?? true))
             {
-                if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B)) return false;
+                if (!lhs.Unknown0B.SequenceEqualNullable(rhs.Unknown0B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0B)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4B) ?? true))
             {
-                if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B)) return false;
+                if (!lhs.Unknown4B.SequenceEqualNullable(rhs.Unknown4B, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4B)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0C) ?? true))
             {
-                if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C)) return false;
+                if (!lhs.Unknown0C.SequenceEqualNullable(rhs.Unknown0C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0C)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4C) ?? true))
             {
-                if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C)) return false;
+                if (!lhs.Unknown4C.SequenceEqualNullable(rhs.Unknown4C, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4C)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0D) ?? true))
             {
-                if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D)) return false;
+                if (!lhs.Unknown0D.SequenceEqualNullable(rhs.Unknown0D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0D)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4D) ?? true))
             {
-                if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D)) return false;
+                if (!lhs.Unknown4D.SequenceEqualNullable(rhs.Unknown4D, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4D)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0E) ?? true))
             {
-                if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E)) return false;
+                if (!lhs.Unknown0E.SequenceEqualNullable(rhs.Unknown0E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0E)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4E) ?? true))
             {
-                if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E)) return false;
+                if (!lhs.Unknown4E.SequenceEqualNullable(rhs.Unknown4E, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4E)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown0F) ?? true))
             {
-                if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F)) return false;
+                if (!lhs.Unknown0F.SequenceEqualNullable(rhs.Unknown0F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown0F)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown4F) ?? true))
             {
-                if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F)) return false;
+                if (!lhs.Unknown4F.SequenceEqualNullable(rhs.Unknown4F, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown4F)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown10) ?? true))
             {
-                if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10)) return false;
+                if (!lhs.Unknown10.SequenceEqualNullable(rhs.Unknown10, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown10)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown50) ?? true))
             {
-                if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50)) return false;
+                if (!lhs.Unknown50.SequenceEqualNullable(rhs.Unknown50, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown50)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult) ?? true))
             {
-                if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult)) return false;
+                if (!lhs.CinematicSaturationMult.SequenceEqualNullable(rhs.CinematicSaturationMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd) ?? true))
             {
-                if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd)) return false;
+                if (!lhs.CinematicSaturationAdd.SequenceEqualNullable(rhs.CinematicSaturationAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult) ?? true))
             {
-                if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult)) return false;
+                if (!lhs.CinematicBrightnessMult.SequenceEqualNullable(rhs.CinematicBrightnessMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd) ?? true))
             {
-                if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd)) return false;
+                if (!lhs.CinematicBrightnessAdd.SequenceEqualNullable(rhs.CinematicBrightnessAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult) ?? true))
             {
-                if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult)) return false;
+                if (!lhs.CinematicContrastMult.SequenceEqualNullable(rhs.CinematicContrastMult, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd) ?? true))
             {
-                if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd)) return false;
+                if (!lhs.CinematicContrastAdd.SequenceEqualNullable(rhs.CinematicContrastAdd, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown14) ?? true))
             {
-                if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14)) return false;
+                if (!lhs.Unknown14.SequenceEqualNullable(rhs.Unknown14, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown14)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unknown54) ?? true))
             {
-                if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54)) return false;
+                if (!lhs.Unknown54.SequenceEqualNullable(rhs.Unknown54, (l, r) => ((KeyFrameCommon)((IKeyFrameGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)ImageSpaceAdapter_FieldIndex.Unknown54)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -9340,9 +8741,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IImageSpaceAdapterGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Flags);
+            hash.Add(item.Animatable);
             hash.Add(item.Duration);
-            hash.Add(item.RadialBlurFlags);
+            hash.Add(item.RadialBlurUseTarget);
             hash.Add(item.RadialBlurCenter);
             hash.Add(item.DepthOfFieldFlags);
             hash.Add(item.BlurRadius);
@@ -9424,9 +8825,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -9471,7 +8872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceAdapterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImageSpaceAdapterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImageSpaceAdapterSetterTranslationCommon Instance = new ImageSpaceAdapterSetterTranslationCommon();
 
@@ -9504,17 +8905,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Animatable) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Animatable = rhs.Animatable;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Duration) ?? true))
             {
                 item.Duration = rhs.Duration;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurUseTarget) ?? true))
             {
-                item.RadialBlurFlags = rhs.RadialBlurFlags;
+                item.RadialBlurUseTarget = rhs.RadialBlurUseTarget;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.RadialBlurCenter) ?? true))
             {
@@ -11410,7 +10811,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceAdapter_Registration.Instance;
-        public new static ImageSpaceAdapter_Registration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -11428,13 +10829,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceAdapterBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
+        public new static readonly ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceAdapterGetter item,
@@ -11448,7 +10849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IImageSpaceAdapterGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -11456,20 +10857,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
-                EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4);
+                writer.Write(item.Animatable, length: 4);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Duration);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
                     writer: writer,
                     item: item);
-                EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.RadialBlurFlags,
-                    length: 4);
+                writer.Write(item.RadialBlurUseTarget, length: 4);
                 P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RadialBlurCenter);
@@ -11488,7 +10883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.BlurRadius,
                 recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11500,7 +10895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.DoubleVisionStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.VNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11512,7 +10907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.TintColor,
                 recordType: translationParams.ConvertToCustom(RecordTypes.TNAM),
-                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11524,7 +10919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.FadeColor,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM3),
-                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IColorFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((ColorFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11536,7 +10931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.RadialBlurStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11548,7 +10943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.RadialBlurRampUp,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11560,7 +10955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.RadialBlurStart,
                 recordType: translationParams.ConvertToCustom(RecordTypes.UNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11572,7 +10967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.RadialBlurRampDown,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM1),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11584,7 +10979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.RadialBlurDownStart,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM2),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11596,7 +10991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.DepthOfFieldStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.WNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11608,7 +11003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.DepthOfFieldDistance,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11620,7 +11015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.DepthOfFieldRange,
                 recordType: translationParams.ConvertToCustom(RecordTypes.YNAM),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11632,7 +11027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.MotionBlurStrength,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NAM4),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11644,7 +11039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._0_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11656,7 +11051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.@IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11668,7 +11063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrBloomBlurRadiusMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._1_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11680,7 +11075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrBloomBlurRadiusAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.AIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11692,7 +11087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrBloomThresholdMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._2_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11704,7 +11099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrBloomThresholdAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.BIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11716,7 +11111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrBloomScaleMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._3_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11728,7 +11123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrBloomScaleAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.CIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11740,7 +11135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrTargetLumMinMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._4_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11752,7 +11147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrTargetLumMinAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.DIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11764,7 +11159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrTargetLumMaxMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._5_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11776,7 +11171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrTargetLumMaxAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.EIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11788,7 +11183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrSunlightScaleMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._6_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11800,7 +11195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrSunlightScaleAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11812,7 +11207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrSkyScaleMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._7_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11824,7 +11219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.HdrSkyScaleAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.GIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11836,7 +11231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown08,
                 recordType: translationParams.ConvertToCustom(RecordTypes._8_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11848,7 +11243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown48,
                 recordType: translationParams.ConvertToCustom(RecordTypes.HIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11860,7 +11255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown09,
                 recordType: translationParams.ConvertToCustom(RecordTypes._9_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11872,7 +11267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown49,
                 recordType: translationParams.ConvertToCustom(RecordTypes.IIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11884,7 +11279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown0A,
                 recordType: translationParams.ConvertToCustom(RecordTypes._A_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11896,7 +11291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown4A,
                 recordType: translationParams.ConvertToCustom(RecordTypes.JIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11908,7 +11303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown0B,
                 recordType: translationParams.ConvertToCustom(RecordTypes._B_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11920,7 +11315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown4B,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11932,7 +11327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown0C,
                 recordType: translationParams.ConvertToCustom(RecordTypes._C_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11944,7 +11339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown4C,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11956,7 +11351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown0D,
                 recordType: translationParams.ConvertToCustom(RecordTypes._D_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11968,7 +11363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown4D,
                 recordType: translationParams.ConvertToCustom(RecordTypes.MIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11980,7 +11375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown0E,
                 recordType: translationParams.ConvertToCustom(RecordTypes._E_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -11992,7 +11387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown4E,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12004,7 +11399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown0F,
                 recordType: translationParams.ConvertToCustom(RecordTypes._F_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12016,7 +11411,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown4F,
                 recordType: translationParams.ConvertToCustom(RecordTypes.OIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12028,7 +11423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown10,
                 recordType: translationParams.ConvertToCustom(RecordTypes._10_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12040,7 +11435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown50,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12052,7 +11447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.CinematicSaturationMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._11_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12064,7 +11459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.CinematicSaturationAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.QIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12076,7 +11471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.CinematicBrightnessMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._12_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12088,7 +11483,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.CinematicBrightnessAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12100,7 +11495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.CinematicContrastMult,
                 recordType: translationParams.ConvertToCustom(RecordTypes._13_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12112,7 +11507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.CinematicContrastAdd,
                 recordType: translationParams.ConvertToCustom(RecordTypes.SIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12124,7 +11519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown14,
                 recordType: translationParams.ConvertToCustom(RecordTypes._14_IAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12136,7 +11531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown54,
                 recordType: translationParams.ConvertToCustom(RecordTypes.TIAD),
-                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IKeyFrameGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((KeyFrameBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -12188,7 +11583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -12199,12 +11594,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -12216,7 +11614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
@@ -12227,7 +11625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
@@ -12238,7 +11636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImageSpaceAdapterGetter)item,
@@ -12248,9 +11646,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceAdapterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImageSpaceAdapterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
+        public new static readonly ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMAD;
         public static void FillBinaryStructs(
@@ -12269,7 +11667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -12278,16 +11676,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Animatable = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
+                        byteLength: 4);
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
-                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.RadialBlurUseTarget = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
+                        byteLength: 4);
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
@@ -12857,7 +12255,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -12886,16 +12285,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceAdapterBinaryOverlay :
+    internal partial class ImageSpaceAdapterBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImageSpaceAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceAdapter_Registration.Instance;
-        public new static ImageSpaceAdapter_Registration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImageSpaceAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImageSpaceAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -12903,13 +12302,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImageSpaceAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -12919,45 +12318,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected override Type LinkType => typeof(IImageSpaceAdapter);
 
 
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
-        #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.Flag Flags => _Flags_IsSet ? (ImageSpaceAdapter.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #region Animatable
+        private int _AnimatableLocation => _DNAMLocation!.Value.Min;
+        private bool _Animatable_IsSet => _DNAMLocation.HasValue;
+        public Boolean Animatable => _Animatable_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_AnimatableLocation, 4)) >= 1 : default;
         #endregion
         #region Duration
-        private int _DurationLocation => _DNAMLocation!.Value + 0x4;
+        private int _DurationLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Duration_IsSet => _DNAMLocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Counts1
-         partial void Counts1CustomParse(
+        private int _Counts1Location => _DNAMLocation!.Value.Min + 0x8;
+        private bool _Counts1_IsSet => _DNAMLocation.HasValue;
+        partial void Counts1CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        #region RadialBlurFlags
-        private int _RadialBlurFlagsLocation => _DNAMLocation!.Value + 0xC8;
-        private bool _RadialBlurFlags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags => _RadialBlurFlags_IsSet ? (ImageSpaceAdapter.RadialBlurFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_RadialBlurFlagsLocation, 0x4)) : default;
+        #region RadialBlurUseTarget
+        private int _RadialBlurUseTargetLocation => _DNAMLocation!.Value.Min + 0xC8;
+        private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue;
+        public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default;
         #endregion
         #region RadialBlurCenter
-        private int _RadialBlurCenterLocation => _DNAMLocation!.Value + 0xCC;
+        private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
         private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
-        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RadialBlurCenterLocation, 8)) : default;
+        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RadialBlurCenterLocation, 8)) : default;
         #endregion
         #region Counts2
-         partial void Counts2CustomParse(
+        private int _Counts2Location => _DNAMLocation!.Value.Min + 0xD4;
+        private bool _Counts2_IsSet => _DNAMLocation.HasValue;
+        partial void Counts2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region DepthOfFieldFlags
-        private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value + 0xE0;
+        private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value.Min + 0xE0;
         private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
         #endregion
         #region Counts3
-         partial void Counts3CustomParse(
+        private int _Counts3Location => _DNAMLocation!.Value.Min + 0xE4;
+        private bool _Counts3_IsSet => _DNAMLocation.HasValue;
+        partial void Counts3CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -13023,28 +12428,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ImageSpaceAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ImageSpaceAdapterBinaryOverlay ImageSpaceAdapterFactory(
+        public static IImageSpaceAdapterGetter ImageSpaceAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImageSpaceAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -13054,20 +12462,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ImageSpaceAdapterBinaryOverlay ImageSpaceAdapterFactory(
+        public static IImageSpaceAdapterGetter ImageSpaceAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceAdapterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -13077,21 +12485,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13101,9 +12509,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13113,9 +12521,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<IColorFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
@@ -13125,9 +12533,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<IColorFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
@@ -13137,9 +12545,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13149,9 +12557,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13161,9 +12569,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13173,9 +12581,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13185,9 +12593,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13197,9 +12605,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13209,9 +12617,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13221,9 +12629,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13233,9 +12641,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13245,9 +12653,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._0_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13257,9 +12665,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.@IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13269,9 +12677,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._1_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13281,9 +12689,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.AIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13293,9 +12701,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._2_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13305,9 +12713,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.BIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13317,9 +12725,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._3_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13329,9 +12737,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13341,9 +12749,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._4_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13353,9 +12761,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13365,9 +12773,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._5_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13377,9 +12785,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.EIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13389,9 +12797,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._6_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13401,9 +12809,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.FIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13413,9 +12821,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._7_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13425,9 +12833,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.GIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13437,9 +12845,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._8_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13449,9 +12857,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.HIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13461,9 +12869,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._9_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13473,9 +12881,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.IIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13485,9 +12893,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._A_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13497,9 +12905,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.JIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13509,9 +12917,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._B_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13521,9 +12929,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.KIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13533,9 +12941,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._C_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13545,9 +12953,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.LIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13557,9 +12965,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._D_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13569,9 +12977,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13581,9 +12989,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._E_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13593,9 +13001,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13605,9 +13013,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._F_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13617,9 +13025,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.OIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13629,9 +13037,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._10_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13641,9 +13049,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13653,9 +13061,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._11_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13665,9 +13073,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.QIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13677,9 +13085,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._12_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13689,9 +13097,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13701,9 +13109,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._13_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13713,9 +13121,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13725,9 +13133,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts._14_IAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13737,9 +13145,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TIAD:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<IKeyFrameGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -13754,17 +13162,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceAdapterMixIn.ToString(
+            ImageSpaceAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

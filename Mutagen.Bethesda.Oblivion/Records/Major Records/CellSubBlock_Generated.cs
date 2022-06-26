@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -76,12 +77,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellSubBlockMixIn.ToString(
+            CellSubBlockMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -236,9 +238,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, Cell.Mask<R>?>>();
                         obj.Cells.Specific = l;
-                        foreach (var item in Cells.Specific.WithIndex())
+                        foreach (var item in Cells.Specific)
                         {
-                            MaskItemIndexed<R, Cell.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Cell.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Cell.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Cell.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -248,61 +250,52 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CellSubBlock.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CellSubBlock.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CellSubBlock.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CellSubBlock.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CellSubBlock.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.BlockNumber ?? true)
                     {
-                        fg.AppendItem(BlockNumber, "BlockNumber");
+                        sb.AppendItem(BlockNumber, "BlockNumber");
                     }
                     if (printMask?.GroupType ?? true)
                     {
-                        fg.AppendItem(GroupType, "GroupType");
+                        sb.AppendItem(GroupType, "GroupType");
                     }
                     if (printMask?.LastModified ?? true)
                     {
-                        fg.AppendItem(LastModified, "LastModified");
+                        sb.AppendItem(LastModified, "LastModified");
                     }
                     if ((printMask?.Cells?.Overall ?? true)
                         && Cells is {} CellsItem)
                     {
-                        fg.AppendLine("Cells =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Cells =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(CellsItem.Overall);
+                            sb.AppendItem(CellsItem.Overall);
                             if (CellsItem.Specific != null)
                             {
                                 foreach (var subItem in CellsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -407,59 +400,52 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(BlockNumber, "BlockNumber");
-                fg.AppendItem(GroupType, "GroupType");
-                fg.AppendItem(LastModified, "LastModified");
+                {
+                    sb.AppendItem(BlockNumber, "BlockNumber");
+                }
+                {
+                    sb.AppendItem(GroupType, "GroupType");
+                }
+                {
+                    sb.AppendItem(LastModified, "LastModified");
+                }
                 if (Cells is {} CellsItem)
                 {
-                    fg.AppendLine("Cells =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Cells =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(CellsItem.Overall);
+                        sb.AppendItem(CellsItem.Overall);
                         if (CellsItem.Specific != null)
                         {
                             foreach (var subItem in CellsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -543,7 +529,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)Cell.GrupRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSubBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -588,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -598,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static CellSubBlock CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CellSubBlock();
             ((CellSubBlockSetterCommon)((ICellSubBlockGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -613,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CellSubBlock item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -623,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -693,26 +679,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellSubBlockGetter item,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellSubBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
-            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).ToString(
+            ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -825,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ICellSubBlockGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((CellSubBlockCommon)((ICellSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -855,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellSubBlock obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((CellSubBlockSetterCommon)((ICellSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1033,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICellSubBlock item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellSubBlockSetterCommon)((ICellSubBlockGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1048,10 +1034,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum CellSubBlock_FieldIndex
+    internal enum CellSubBlock_FieldIndex
     {
         BlockNumber = 0,
         GroupType = 1,
@@ -1061,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class CellSubBlock_Registration : ILoquiRegistration
+    internal partial class CellSubBlock_Registration : ILoquiRegistration
     {
         public static readonly CellSubBlock_Registration Instance = new CellSubBlock_Registration();
 
@@ -1136,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CellSubBlockSetterCommon
+    internal partial class CellSubBlockSetterCommon
     {
         public static readonly CellSubBlockSetterCommon Instance = new CellSubBlockSetterCommon();
 
@@ -1290,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ICellSubBlock item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.GroupParse(
                 record: item,
@@ -1303,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellSubBlockCommon
+    internal partial class CellSubBlockCommon
     {
         public static readonly CellSubBlockCommon Instance = new CellSubBlockCommon();
 
@@ -1327,7 +1313,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CellSubBlock.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified == rhs.LastModified;
@@ -1337,79 +1322,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             ICellSubBlockGetter item,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellSubBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CellSubBlock.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CellSubBlock =>");
+                sb.AppendLine($"CellSubBlock =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CellSubBlock) =>");
+                sb.AppendLine($"{name} (CellSubBlock) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellSubBlockGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CellSubBlock.Mask<bool>? printMask = null)
         {
             if (printMask?.BlockNumber ?? true)
             {
-                fg.AppendItem(item.BlockNumber, "BlockNumber");
+                sb.AppendItem(item.BlockNumber, "BlockNumber");
             }
             if (printMask?.GroupType ?? true)
             {
-                fg.AppendItem(item.GroupType, "GroupType");
+                sb.AppendItem(item.GroupType, "GroupType");
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendItem(item.LastModified, "LastModified");
+                sb.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.Cells?.Overall ?? true)
             {
-                fg.AppendLine("Cells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Cells =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Cells)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1434,7 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
             {
-                if (!lhs.Cells.SequenceEqualNullable(rhs.Cells)) return false;
+                if (!lhs.Cells.SequenceEqual(rhs.Cells, (l, r) => ((CellCommon)((ICellGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)CellSubBlock_FieldIndex.Cells)))) return false;
             }
             return true;
         }
@@ -1458,9 +1437,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellSubBlockGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellSubBlockGetter obj)
         {
-            foreach (var item in obj.Cells.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Cells.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1608,38 +1587,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     yield break;
-                case "IPlaced":
-                {
-                    if (!CellSubBlock_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
-                    foreach (var subItem in obj.Cells)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
-                case "IPlacedGetter":
-                {
-                    foreach (var subItem in obj.Cells)
-                    {
-                        if (type.IsAssignableFrom(subItem.GetType()))
-                        {
-                            yield return subItem;
-                        }
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                }
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -1654,7 +1610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellSubBlockSetterTranslationCommon
+    internal partial class CellSubBlockSetterTranslationCommon
     {
         public static readonly CellSubBlockSetterTranslationCommon Instance = new CellSubBlockSetterTranslationCommon();
 
@@ -1764,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration StaticRegistration => CellSubBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellSubBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1788,11 +1744,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellSubBlockBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CellSubBlockBinaryWriteTranslation Instance = new CellSubBlockBinaryWriteTranslation();
+        public static readonly CellSubBlockBinaryWriteTranslation Instance = new CellSubBlockBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICellSubBlockGetter item,
@@ -1809,12 +1765,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             ICellSubBlockGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ICellGetter>.Instance.Write(
                 writer: writer,
                 items: item.Cells,
-                transl: (MutagenWriter subWriter, ICellGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ICellGetter subItem, TypedWriteParams conv) =>
                 {
                     try
                     {
@@ -1834,7 +1790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ICellSubBlockGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Group(
                 writer: writer,
@@ -1853,7 +1809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellSubBlockGetter)item,
@@ -1863,9 +1819,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CellSubBlockBinaryCreateTranslation
+    internal partial class CellSubBlockBinaryCreateTranslation
     {
-        public readonly static CellSubBlockBinaryCreateTranslation Instance = new CellSubBlockBinaryCreateTranslation();
+        public static readonly CellSubBlockBinaryCreateTranslation Instance = new CellSubBlockBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICellSubBlock item,
@@ -1884,7 +1840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1894,7 +1850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Cells.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Cell>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.CELL,
+                            triggeringRecord: Cell_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: Cell.TryCreateFromBinary));
                     return (int)CellSubBlock_FieldIndex.Cells;
@@ -1916,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ICellSubBlockGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellSubBlockBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1929,16 +1885,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CellSubBlockBinaryOverlay :
+    internal partial class CellSubBlockBinaryOverlay :
         PluginBinaryOverlay,
         ICellSubBlockGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CellSubBlock_Registration.Instance;
-        public static CellSubBlock_Registration StaticRegistration => CellSubBlock_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CellSubBlock_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CellSubBlockCommon.Instance;
         [DebuggerStepThrough]
@@ -1952,9 +1908,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CellSubBlockCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellSubBlockCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -1967,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellSubBlockBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1975,9 +1931,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         #region Cells
         partial void CellsCustomParse(
             OverlayStream stream,
@@ -1993,26 +1949,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected CellSubBlockBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
+        public static ICellSubBlockGetter CellSubBlockFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractGroupMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CellSubBlockBinaryOverlay(
-                bytes: HeaderTranslation.ExtractGroupMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.MetaData.Constants.GroupConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2021,20 +1980,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static CellSubBlockBinaryOverlay CellSubBlockFactory(
+        public static ICellSubBlockGetter CellSubBlockFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellSubBlockFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -2044,9 +2003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CELL:
@@ -2065,12 +2024,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellSubBlockMixIn.ToString(
+            CellSubBlockMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

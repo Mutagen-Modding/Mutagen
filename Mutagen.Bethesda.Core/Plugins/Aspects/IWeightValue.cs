@@ -1,16 +1,15 @@
-using System;
+using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Plugins.Aspects
+namespace Mutagen.Bethesda.Plugins.Aspects;
+
+public interface IWeightValue : IWeightValueGetter, IMajorRecordQueryable
 {
-    public interface IWeightValue : IWeightValueGetter
-    {
-        new uint Value { get; set; }
-        new float Weight { get; set; }
-    }
+    new uint Value { get; set; }
+    new float Weight { get; set; }
+}
 
-    public interface IWeightValueGetter
-    {
-        uint Value { get; }
-        float Weight { get; }
-    }
+public interface IWeightValueGetter : IMajorRecordQueryableGetter
+{
+    uint Value { get; }
+    float Weight { get; }
 }

@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -163,12 +164,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            HeadDataMixIn.ToString(
+            HeadDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -450,9 +452,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, HeadPartReference.Mask<R>?>>();
                         obj.HeadParts.Specific = l;
-                        foreach (var item in HeadParts.Specific.WithIndex())
+                        foreach (var item in HeadParts.Specific)
                         {
-                            MaskItemIndexed<R, HeadPartReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, HeadPartReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, HeadPartReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, HeadPartReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -466,9 +468,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.RacePresets.Specific = l;
-                        foreach (var item in RacePresets.Specific.WithIndex())
+                        foreach (var item in RacePresets.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -480,9 +482,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.AvailableHairColors.Specific = l;
-                        foreach (var item in AvailableHairColors.Specific.WithIndex())
+                        foreach (var item in AvailableHairColors.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -494,9 +496,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.FaceDetails.Specific = l;
-                        foreach (var item in FaceDetails.Specific.WithIndex())
+                        foreach (var item in FaceDetails.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -509,9 +511,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, TintAssets.Mask<R>?>>();
                         obj.TintMasks.Specific = l;
-                        foreach (var item in TintMasks.Specific.WithIndex())
+                        foreach (var item in TintMasks.Specific)
                         {
-                            MaskItemIndexed<R, TintAssets.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, TintAssets.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, TintAssets.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TintAssets.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -522,153 +524,134 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(HeadData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(HeadData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, HeadData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, HeadData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(HeadData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(HeadData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.HeadParts?.Overall ?? true)
                         && HeadParts is {} HeadPartsItem)
                     {
-                        fg.AppendLine("HeadParts =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("HeadParts =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(HeadPartsItem.Overall);
+                            sb.AppendItem(HeadPartsItem.Overall);
                             if (HeadPartsItem.Specific != null)
                             {
                                 foreach (var subItem in HeadPartsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.AvailableMorphs?.Overall ?? true)
                     {
-                        AvailableMorphs?.ToString(fg);
+                        AvailableMorphs?.Print(sb);
                     }
                     if ((printMask?.RacePresets?.Overall ?? true)
                         && RacePresets is {} RacePresetsItem)
                     {
-                        fg.AppendLine("RacePresets =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("RacePresets =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RacePresetsItem.Overall);
+                            sb.AppendItem(RacePresetsItem.Overall);
                             if (RacePresetsItem.Specific != null)
                             {
                                 foreach (var subItem in RacePresetsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.AvailableHairColors?.Overall ?? true)
                         && AvailableHairColors is {} AvailableHairColorsItem)
                     {
-                        fg.AppendLine("AvailableHairColors =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("AvailableHairColors =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AvailableHairColorsItem.Overall);
+                            sb.AppendItem(AvailableHairColorsItem.Overall);
                             if (AvailableHairColorsItem.Specific != null)
                             {
                                 foreach (var subItem in AvailableHairColorsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.FaceDetails?.Overall ?? true)
                         && FaceDetails is {} FaceDetailsItem)
                     {
-                        fg.AppendLine("FaceDetails =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("FaceDetails =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FaceDetailsItem.Overall);
+                            sb.AppendItem(FaceDetailsItem.Overall);
                             if (FaceDetailsItem.Specific != null)
                             {
                                 foreach (var subItem in FaceDetailsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.DefaultFaceTexture ?? true)
                     {
-                        fg.AppendItem(DefaultFaceTexture, "DefaultFaceTexture");
+                        sb.AppendItem(DefaultFaceTexture, "DefaultFaceTexture");
                     }
                     if ((printMask?.TintMasks?.Overall ?? true)
                         && TintMasks is {} TintMasksItem)
                     {
-                        fg.AppendLine("TintMasks =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("TintMasks =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TintMasksItem.Overall);
+                            sb.AppendItem(TintMasksItem.Overall);
                             if (TintMasksItem.Specific != null)
                             {
                                 foreach (var subItem in TintMasksItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -813,148 +796,127 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 if (HeadParts is {} HeadPartsItem)
                 {
-                    fg.AppendLine("HeadParts =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("HeadParts =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(HeadPartsItem.Overall);
+                        sb.AppendItem(HeadPartsItem.Overall);
                         if (HeadPartsItem.Specific != null)
                         {
                             foreach (var subItem in HeadPartsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                AvailableMorphs?.ToString(fg);
+                AvailableMorphs?.Print(sb);
                 if (RacePresets is {} RacePresetsItem)
                 {
-                    fg.AppendLine("RacePresets =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("RacePresets =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RacePresetsItem.Overall);
+                        sb.AppendItem(RacePresetsItem.Overall);
                         if (RacePresetsItem.Specific != null)
                         {
                             foreach (var subItem in RacePresetsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (AvailableHairColors is {} AvailableHairColorsItem)
                 {
-                    fg.AppendLine("AvailableHairColors =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("AvailableHairColors =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AvailableHairColorsItem.Overall);
+                        sb.AppendItem(AvailableHairColorsItem.Overall);
                         if (AvailableHairColorsItem.Specific != null)
                         {
                             foreach (var subItem in AvailableHairColorsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (FaceDetails is {} FaceDetailsItem)
                 {
-                    fg.AppendLine("FaceDetails =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("FaceDetails =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FaceDetailsItem.Overall);
+                        sb.AppendItem(FaceDetailsItem.Overall);
                         if (FaceDetailsItem.Specific != null)
                         {
                             foreach (var subItem in FaceDetailsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(DefaultFaceTexture, "DefaultFaceTexture");
+                {
+                    sb.AppendItem(DefaultFaceTexture, "DefaultFaceTexture");
+                }
                 if (TintMasks is {} TintMasksItem)
                 {
-                    fg.AppendLine("TintMasks =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("TintMasks =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TintMasksItem.Overall);
+                        sb.AppendItem(TintMasksItem.Overall);
                         if (TintMasksItem.Specific != null)
                         {
                             foreach (var subItem in TintMasksItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                Model?.ToString(fg);
+                Model?.Print(sb);
             }
             #endregion
 
@@ -1049,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1060,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1070,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static HeadData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new HeadData();
             ((HeadDataSetterCommon)((IHeadDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1085,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out HeadData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1095,7 +1057,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1181,26 +1143,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IHeadDataGetter item,
             string? name = null,
             HeadData.Mask<bool>? printMask = null)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).ToString(
+            return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IHeadDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HeadData.Mask<bool>? printMask = null)
         {
-            ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).ToString(
+            ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1306,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IHeadData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((HeadDataSetterCommon)((IHeadDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1321,10 +1283,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum HeadData_FieldIndex
+    internal enum HeadData_FieldIndex
     {
         HeadParts = 0,
         AvailableMorphs = 1,
@@ -1338,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class HeadData_Registration : ILoquiRegistration
+    internal partial class HeadData_Registration : ILoquiRegistration
     {
         public static readonly HeadData_Registration Instance = new HeadData_Registration();
 
@@ -1379,30 +1341,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.INDX,
-                        RecordTypes.HEAD,
-                        RecordTypes.MPAI,
-                        RecordTypes.RPRM,
-                        RecordTypes.AHCM,
-                        RecordTypes.FTSM,
-                        RecordTypes.DFTM,
-                        RecordTypes.TINI,
-                        RecordTypes.TINT,
-                        RecordTypes.TINP,
-                        RecordTypes.TIND,
-                        RecordTypes.TINC,
-                        RecordTypes.TINV,
-                        RecordTypes.TIRS,
-                        RecordTypes.MODL
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.INDX,
+                RecordTypes.HEAD,
+                RecordTypes.MPAI,
+                RecordTypes.RPRM,
+                RecordTypes.AHCM,
+                RecordTypes.FTSM,
+                RecordTypes.DFTM,
+                RecordTypes.TINI,
+                RecordTypes.TINT,
+                RecordTypes.TINP,
+                RecordTypes.TIND,
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIRS,
+                RecordTypes.MODL);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
         #region Interface
@@ -1437,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class HeadDataSetterCommon
+    internal partial class HeadDataSetterCommon
     {
         public static readonly HeadDataSetterCommon Instance = new HeadDataSetterCommon();
 
@@ -1474,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IHeadData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1487,7 +1445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HeadDataCommon
+    internal partial class HeadDataCommon
     {
         public static readonly HeadDataCommon Instance = new HeadDataCommon();
 
@@ -1511,7 +1469,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             HeadData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.HeadParts = item.HeadParts.CollectionEqualsHelper(
                 rhs.HeadParts,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1545,153 +1502,131 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IHeadDataGetter item,
             string? name = null,
             HeadData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IHeadDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             HeadData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"HeadData =>");
+                sb.AppendLine($"HeadData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (HeadData) =>");
+                sb.AppendLine($"{name} (HeadData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IHeadDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             HeadData.Mask<bool>? printMask = null)
         {
             if (printMask?.HeadParts?.Overall ?? true)
             {
-                fg.AppendLine("HeadParts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("HeadParts =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.HeadParts)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.AvailableMorphs?.Overall ?? true)
                 && item.AvailableMorphs is {} AvailableMorphsItem)
             {
-                AvailableMorphsItem?.ToString(fg, "AvailableMorphs");
+                AvailableMorphsItem?.Print(sb, "AvailableMorphs");
             }
             if (printMask?.RacePresets?.Overall ?? true)
             {
-                fg.AppendLine("RacePresets =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("RacePresets =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.RacePresets)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.AvailableHairColors?.Overall ?? true)
             {
-                fg.AppendLine("AvailableHairColors =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("AvailableHairColors =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.AvailableHairColors)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.FaceDetails?.Overall ?? true)
             {
-                fg.AppendLine("FaceDetails =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("FaceDetails =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.FaceDetails)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.DefaultFaceTexture ?? true)
             {
-                fg.AppendItem(item.DefaultFaceTexture.FormKeyNullable, "DefaultFaceTexture");
+                sb.AppendItem(item.DefaultFaceTexture.FormKeyNullable, "DefaultFaceTexture");
             }
             if (printMask?.TintMasks?.Overall ?? true)
             {
-                fg.AppendLine("TintMasks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("TintMasks =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.TintMasks)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
         }
         
@@ -1704,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
             {
-                if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
+                if (!lhs.HeadParts.SequenceEqual(rhs.HeadParts, (l, r) => ((HeadPartReferenceCommon)((IHeadPartReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
             {
@@ -1732,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
-                if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
+                if (!lhs.TintMasks.SequenceEqual(rhs.TintMasks, (l, r) => ((TintAssetsCommon)((ITintAssetsGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)HeadData_FieldIndex.TintMasks)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
             {
@@ -1774,9 +1709,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHeadDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadDataGetter obj)
         {
-            foreach (var item in obj.HeadParts.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.HeadParts.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1792,17 +1727,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.DefaultFaceTexture.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.DefaultFaceTexture, out var DefaultFaceTextureInfo))
             {
-                yield return FormLinkInformation.Factory(obj.DefaultFaceTexture);
+                yield return DefaultFaceTextureInfo;
             }
-            foreach (var item in obj.TintMasks.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1813,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class HeadDataSetterTranslationCommon
+    internal partial class HeadDataSetterTranslationCommon
     {
         public static readonly HeadDataSetterTranslationCommon Instance = new HeadDataSetterTranslationCommon();
 
@@ -2048,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadData_Registration.Instance;
-        public static HeadData_Registration StaticRegistration => HeadData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HeadData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2072,21 +2007,21 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HeadDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static HeadDataBinaryWriteTranslation Instance = new HeadDataBinaryWriteTranslation();
+        public static readonly HeadDataBinaryWriteTranslation Instance = new HeadDataBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IHeadDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IHeadPartReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
-                transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((HeadPartReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2104,7 +2039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2114,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AvailableHairColors,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2124,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.FaceDetails,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2138,7 +2073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintAssetsGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintMasks,
-                transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((TintAssetsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2158,7 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IHeadDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -2169,7 +2104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IHeadDataGetter)item,
@@ -2179,9 +2114,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class HeadDataBinaryCreateTranslation
+    internal partial class HeadDataBinaryCreateTranslation
     {
-        public readonly static HeadDataBinaryCreateTranslation Instance = new HeadDataBinaryCreateTranslation();
+        public static readonly HeadDataBinaryCreateTranslation Instance = new HeadDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IHeadData item,
@@ -2196,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2204,24 +2139,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.HEAD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HeadParts, translationParams)) return ParseResult.Stop;
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
+                            triggeringRecord: HeadPartReference_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: HeadPartReference.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.AvailableMorphs) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.AvailableMorphs, translationParams)) return ParseResult.Stop;
                     item.AvailableMorphs = Mutagen.Bethesda.Skyrim.AvailableMorphs.CreateFromBinary(frame: frame);
                     return (int)HeadData_FieldIndex.AvailableMorphs;
                 }
                 case RecordTypeInts.RPRM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.RacePresets, translationParams)) return ParseResult.Stop;
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             reader: frame,
@@ -2231,7 +2166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.AHCM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.AvailableHairColors, translationParams)) return ParseResult.Stop;
                     item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
                             reader: frame,
@@ -2241,7 +2176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.FTSM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceDetails, translationParams)) return ParseResult.Stop;
                     item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
                             reader: frame,
@@ -2251,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DFTM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.DefaultFaceTexture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultFaceTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
@@ -2264,21 +2199,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintMasks) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.TintMasks, translationParams)) return ParseResult.Stop;
                     item.TintMasks.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintAssets>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
+                            triggeringRecord: TintAssets_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TintAssets.TryCreateFromBinary));
                     return (int)HeadData_FieldIndex.TintMasks;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadData_FieldIndex.Model;
                 }
                 default:
@@ -2297,7 +2232,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IHeadDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HeadDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2310,16 +2245,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class HeadDataBinaryOverlay :
+    internal partial class HeadDataBinaryOverlay :
         PluginBinaryOverlay,
         IHeadDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HeadData_Registration.Instance;
-        public static HeadData_Registration StaticRegistration => HeadData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HeadData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => HeadDataCommon.Instance;
         [DebuggerStepThrough]
@@ -2333,16 +2268,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2350,16 +2285,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();
+        public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = Array.Empty<IHeadPartReferenceGetter>();
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = ListExt.Empty<IFormLinkGetter<INpcGetter>>();
-        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = ListExt.Empty<IFormLinkGetter<IColorRecordGetter>>();
-        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = ListExt.Empty<IFormLinkGetter<ITextureSetGetter>>();
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = Array.Empty<IFormLinkGetter<IColorRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = Array.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
-        public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = ListExt.Empty<TintAssetsBinaryOverlay>();
+        public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = Array.Empty<ITintAssetsGetter>();
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2368,42 +2303,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected HeadDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static HeadDataBinaryOverlay HeadDataFactory(
+        public static IHeadDataGetter HeadDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new HeadDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static HeadDataBinaryOverlay HeadDataFactory(
+        public static IHeadDataGetter HeadDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return HeadDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -2413,34 +2354,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.HEAD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
-                    this.HeadParts = this.ParseRepeatedTypelessSubrecord<HeadPartReferenceBinaryOverlay>(
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HeadParts, translationParams)) return ParseResult.Stop;
+                    this.HeadParts = this.ParseRepeatedTypelessSubrecord<IHeadPartReferenceGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: HeadPartReference_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: HeadPartReference_Registration.TriggerSpecs,
                         factory: HeadPartReferenceBinaryOverlay.HeadPartReferenceFactory);
                     return (int)HeadData_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.AvailableMorphs) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.AvailableMorphs, translationParams)) return ParseResult.Stop;
                     this.AvailableMorphs = AvailableMorphsBinaryOverlay.AvailableMorphsFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadData_FieldIndex.AvailableMorphs;
                 }
                 case RecordTypeInts.RPRM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.RacePresets, translationParams)) return ParseResult.Stop;
                     this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2450,12 +2391,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)HeadData_FieldIndex.RacePresets;
                 }
                 case RecordTypeInts.AHCM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.AvailableHairColors, translationParams)) return ParseResult.Stop;
                     this.AvailableHairColors = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IColorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2465,12 +2406,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
                 }
                 case RecordTypeInts.FTSM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceDetails, translationParams)) return ParseResult.Stop;
                     this.FaceDetails = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ITextureSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2480,12 +2421,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)HeadData_FieldIndex.FaceDetails;
                 }
                 case RecordTypeInts.DFTM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.DefaultFaceTexture, translationParams)) return ParseResult.Stop;
                     _DefaultFaceTextureLocation = (stream.Position - offset);
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
@@ -2497,21 +2438,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.TintMasks) return ParseResult.Stop;
-                    this.TintMasks = this.ParseRepeatedTypelessSubrecord<TintAssetsBinaryOverlay>(
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.TintMasks, translationParams)) return ParseResult.Stop;
+                    this.TintMasks = this.ParseRepeatedTypelessSubrecord<ITintAssetsGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: TintAssets_Registration.TriggeringRecordTypes,
+                        translationParams: translationParams,
+                        trigger: TintAssets_Registration.TriggerSpecs,
                         factory: TintAssetsBinaryOverlay.TintAssetsFactory);
                     return (int)HeadData_FieldIndex.TintMasks;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)HeadData_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadData_FieldIndex.Model;
                 }
                 default:
@@ -2520,12 +2461,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            HeadDataMixIn.ToString(
+            HeadDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

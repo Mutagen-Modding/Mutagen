@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -133,12 +134,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogResponseMixIn.ToString(
+            DialogResponseMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -359,82 +361,77 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DialogResponse.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DialogResponse.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DialogResponse.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DialogResponse.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogResponse.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Emotion ?? true)
                     {
-                        fg.AppendItem(Emotion, "Emotion");
+                        sb.AppendItem(Emotion, "Emotion");
                     }
                     if (printMask?.EmotionValue ?? true)
                     {
-                        fg.AppendItem(EmotionValue, "EmotionValue");
+                        sb.AppendItem(EmotionValue, "EmotionValue");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.ResponseNumber ?? true)
                     {
-                        fg.AppendItem(ResponseNumber, "ResponseNumber");
+                        sb.AppendItem(ResponseNumber, "ResponseNumber");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.Sound ?? true)
                     {
-                        fg.AppendItem(Sound, "Sound");
+                        sb.AppendItem(Sound, "Sound");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.Text ?? true)
                     {
-                        fg.AppendItem(Text, "Text");
+                        sb.AppendItem(Text, "Text");
                     }
                     if (printMask?.ScriptNotes ?? true)
                     {
-                        fg.AppendItem(ScriptNotes, "ScriptNotes");
+                        sb.AppendItem(ScriptNotes, "ScriptNotes");
                     }
                     if (printMask?.Edits ?? true)
                     {
-                        fg.AppendItem(Edits, "Edits");
+                        sb.AppendItem(Edits, "Edits");
                     }
                     if (printMask?.SpeakerIdleAnimation ?? true)
                     {
-                        fg.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
+                        sb.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
                     }
                     if (printMask?.ListenerIdleAnimation ?? true)
                     {
-                        fg.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
+                        sb.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
                     }
                     if (printMask?.TRDTDataTypeState ?? true)
                     {
-                        fg.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
+                        sb.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -639,49 +636,68 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Emotion, "Emotion");
-                fg.AppendItem(EmotionValue, "EmotionValue");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(ResponseNumber, "ResponseNumber");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Text, "Text");
-                fg.AppendItem(ScriptNotes, "ScriptNotes");
-                fg.AppendItem(Edits, "Edits");
-                fg.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
-                fg.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
-                fg.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
+                {
+                    sb.AppendItem(Emotion, "Emotion");
+                }
+                {
+                    sb.AppendItem(EmotionValue, "EmotionValue");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(ResponseNumber, "ResponseNumber");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(Sound, "Sound");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(Text, "Text");
+                }
+                {
+                    sb.AppendItem(ScriptNotes, "ScriptNotes");
+                }
+                {
+                    sb.AppendItem(Edits, "Edits");
+                }
+                {
+                    sb.AppendItem(SpeakerIdleAnimation, "SpeakerIdleAnimation");
+                }
+                {
+                    sb.AppendItem(ListenerIdleAnimation, "ListenerIdleAnimation");
+                }
+                {
+                    sb.AppendItem(TRDTDataTypeState, "TRDTDataTypeState");
+                }
             }
             #endregion
 
@@ -804,8 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = DialogResponse_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponseCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogResponseSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum TRDTDataType
@@ -820,7 +835,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -830,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DialogResponse CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogResponse();
             ((DialogResponseSetterCommon)((IDialogResponseGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -845,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogResponse item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -855,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -943,26 +958,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDialogResponseGetter item,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
+            return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).ToString(
+            ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1068,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDialogResponse item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogResponseSetterCommon)((IDialogResponseGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1083,10 +1098,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DialogResponse_FieldIndex
+    internal enum DialogResponse_FieldIndex
     {
         Emotion = 0,
         EmotionValue = 1,
@@ -1106,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponse_Registration : ILoquiRegistration
+    internal partial class DialogResponse_Registration : ILoquiRegistration
     {
         public static readonly DialogResponse_Registration Instance = new DialogResponse_Registration();
 
@@ -1148,6 +1163,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TRDT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.TRDT);
+            var all = RecordCollection.Factory(
+                RecordTypes.TRDT,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.SNAM,
+                RecordTypes.LNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1181,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponseSetterCommon
+    internal partial class DialogResponseSetterCommon
     {
         public static readonly DialogResponseSetterCommon Instance = new DialogResponseSetterCommon();
 
@@ -1220,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IDialogResponse item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1233,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponseCommon
+    internal partial class DialogResponseCommon
     {
         public static readonly DialogResponseCommon Instance = new DialogResponseCommon();
 
@@ -1257,7 +1285,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DialogResponse.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
             ret.Unknown = item.Unknown == rhs.Unknown;
@@ -1274,105 +1301,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.TRDTDataTypeState = item.TRDTDataTypeState == rhs.TRDTDataTypeState;
         }
         
-        public string ToString(
+        public string Print(
             IDialogResponseGetter item,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogResponse.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogResponse =>");
+                sb.AppendLine($"DialogResponse =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogResponse) =>");
+                sb.AppendLine($"{name} (DialogResponse) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogResponseGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogResponse.Mask<bool>? printMask = null)
         {
             if (printMask?.Emotion ?? true)
             {
-                fg.AppendItem(item.Emotion, "Emotion");
+                sb.AppendItem(item.Emotion, "Emotion");
             }
             if (printMask?.EmotionValue ?? true)
             {
-                fg.AppendItem(item.EmotionValue, "EmotionValue");
+                sb.AppendItem(item.EmotionValue, "EmotionValue");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.ResponseNumber ?? true)
             {
-                fg.AppendItem(item.ResponseNumber, "ResponseNumber");
+                sb.AppendItem(item.ResponseNumber, "ResponseNumber");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+                sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
             if (printMask?.Sound ?? true)
             {
-                fg.AppendItem(item.Sound.FormKey, "Sound");
+                sb.AppendItem(item.Sound.FormKey, "Sound");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if (printMask?.Text ?? true)
             {
-                fg.AppendItem(item.Text, "Text");
+                sb.AppendItem(item.Text, "Text");
             }
             if (printMask?.ScriptNotes ?? true)
             {
-                fg.AppendItem(item.ScriptNotes, "ScriptNotes");
+                sb.AppendItem(item.ScriptNotes, "ScriptNotes");
             }
             if (printMask?.Edits ?? true)
             {
-                fg.AppendItem(item.Edits, "Edits");
+                sb.AppendItem(item.Edits, "Edits");
             }
             if (printMask?.SpeakerIdleAnimation ?? true)
             {
-                fg.AppendItem(item.SpeakerIdleAnimation.FormKeyNullable, "SpeakerIdleAnimation");
+                sb.AppendItem(item.SpeakerIdleAnimation.FormKeyNullable, "SpeakerIdleAnimation");
             }
             if (printMask?.ListenerIdleAnimation ?? true)
             {
-                fg.AppendItem(item.ListenerIdleAnimation.FormKeyNullable, "ListenerIdleAnimation");
+                sb.AppendItem(item.ListenerIdleAnimation.FormKeyNullable, "ListenerIdleAnimation");
             }
             if (printMask?.TRDTDataTypeState ?? true)
             {
-                fg.AppendItem(item.TRDTDataTypeState, "TRDTDataTypeState");
+                sb.AppendItem(item.TRDTDataTypeState, "TRDTDataTypeState");
             }
         }
         
@@ -1471,16 +1496,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogResponseGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogResponseGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sound);
-            if (obj.SpeakerIdleAnimation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SpeakerIdleAnimation, out var SpeakerIdleAnimationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SpeakerIdleAnimation);
+                yield return SpeakerIdleAnimationInfo;
             }
-            if (obj.ListenerIdleAnimation.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ListenerIdleAnimation, out var ListenerIdleAnimationInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ListenerIdleAnimation);
+                yield return ListenerIdleAnimationInfo;
             }
             yield break;
         }
@@ -1488,7 +1513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponseSetterTranslationCommon
+    internal partial class DialogResponseSetterTranslationCommon
     {
         public static readonly DialogResponseSetterTranslationCommon Instance = new DialogResponseSetterTranslationCommon();
 
@@ -1618,7 +1643,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration StaticRegistration => DialogResponse_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponse_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
         [DebuggerStepThrough]
@@ -1642,11 +1667,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DialogResponseBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogResponseBinaryWriteTranslation Instance = new DialogResponseBinaryWriteTranslation();
+        public static readonly DialogResponseBinaryWriteTranslation Instance = new DialogResponseBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDialogResponseGetter item,
@@ -1657,7 +1682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IDialogResponseGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TRDT)))
             {
@@ -1711,7 +1736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IDialogResponseGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1725,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogResponseGetter)item,
@@ -1735,9 +1760,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponseBinaryCreateTranslation
+    internal partial class DialogResponseBinaryCreateTranslation
     {
-        public readonly static DialogResponseBinaryCreateTranslation Instance = new DialogResponseBinaryCreateTranslation();
+        public static readonly DialogResponseBinaryCreateTranslation Instance = new DialogResponseBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogResponse item,
@@ -1752,14 +1777,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Unknown3, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Emotion = EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -1829,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDialogResponseGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1842,16 +1867,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponseBinaryOverlay :
+    internal partial class DialogResponseBinaryOverlay :
         PluginBinaryOverlay,
         IDialogResponseGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogResponse_Registration.Instance;
-        public static DialogResponse_Registration StaticRegistration => DialogResponse_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogResponse_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogResponseCommon.Instance;
         [DebuggerStepThrough]
@@ -1865,16 +1890,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogResponseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogResponseCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogResponseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogResponseBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1882,67 +1907,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        private int? _TRDTLocation;
+        private RangeInt32? _TRDTLocation;
         public DialogResponse.TRDTDataType TRDTDataTypeState { get; private set; }
         #region Emotion
-        private int _EmotionLocation => _TRDTLocation!.Value;
+        private int _EmotionLocation => _TRDTLocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
-        public Emotion Emotion => _Emotion_IsSet ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 0x4)) : default;
+        public Emotion Emotion => _Emotion_IsSet ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EmotionLocation, 0x4)) : default;
         #endregion
         #region EmotionValue
-        private int _EmotionValueLocation => _TRDTLocation!.Value + 0x4;
+        private int _EmotionValueLocation => _TRDTLocation!.Value.Min + 0x4;
         private bool _EmotionValue_IsSet => _TRDTLocation.HasValue;
-        public UInt32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EmotionValueLocation, 4)) : default;
+        public UInt32 EmotionValue => _EmotionValue_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_EmotionValueLocation, 4)) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _TRDTLocation!.Value + 0x8;
+        private int _UnknownLocation => _TRDTLocation!.Value.Min + 0x8;
         private bool _Unknown_IsSet => _TRDTLocation.HasValue;
-        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
         #endregion
         #region ResponseNumber
-        private int _ResponseNumberLocation => _TRDTLocation!.Value + 0xC;
+        private int _ResponseNumberLocation => _TRDTLocation!.Value.Min + 0xC;
         private bool _ResponseNumber_IsSet => _TRDTLocation.HasValue;
-        public Byte ResponseNumber => _ResponseNumber_IsSet ? _data.Span[_ResponseNumberLocation] : default;
+        public Byte ResponseNumber => _ResponseNumber_IsSet ? _recordData.Span[_ResponseNumberLocation] : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _TRDTLocation!.Value + 0xD;
+        private int _Unknown2Location => _TRDTLocation!.Value.Min + 0xD;
         private bool _Unknown2_IsSet => _TRDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _data.Span.Slice(_Unknown2Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region Sound
-        private int _SoundLocation => _TRDTLocation!.Value + 0x10;
+        private int _SoundLocation => _TRDTLocation!.Value.Min + 0x10;
         private bool _Sound_IsSet => _TRDTLocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region Flags
-        private int _FlagsLocation => _TRDTLocation!.Value + 0x14;
+        private int _FlagsLocation => _TRDTLocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _TRDTLocation.HasValue;
-        public DialogResponse.Flag Flags => _Flags_IsSet ? (DialogResponse.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public DialogResponse.Flag Flags => _Flags_IsSet ? (DialogResponse.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Unknown3
-        private int _Unknown3Location => _TRDTLocation!.Value + 0x15;
+        private int _Unknown3Location => _TRDTLocation!.Value.Min + 0x15;
         private bool _Unknown3_IsSet => _TRDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region Text
         private int? _TextLocation;
-        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         #region ScriptNotes
         private int? _ScriptNotesLocation;
-        public String ScriptNotes => _ScriptNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String ScriptNotes => _ScriptNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Edits
         private int? _EditsLocation;
-        public String Edits => _EditsLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditsLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String Edits => _EditsLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EditsLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region SpeakerIdleAnimation
         private int? _SpeakerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerIdleAnimation => _SpeakerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpeakerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region ListenerIdleAnimation
         private int? _ListenerIdleAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> ListenerIdleAnimation => _ListenerIdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListenerIdleAnimationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1951,42 +1976,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected DialogResponseBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DialogResponseBinaryOverlay DialogResponseFactory(
+        public static IDialogResponseGetter DialogResponseFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DialogResponseBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static DialogResponseBinaryOverlay DialogResponseFactory(
+        public static IDialogResponseGetter DialogResponseFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogResponseFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1996,15 +2027,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
-                    _TRDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    if (lastParsed.ShortCircuit((int)DialogResponse_FieldIndex.Unknown3, translationParams)) return ParseResult.Stop;
+                    _TRDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)DialogResponse_FieldIndex.Unknown3;
                 }
                 case RecordTypeInts.NAM1:
@@ -2038,12 +2069,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogResponseMixIn.ToString(
+            DialogResponseMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,82 +1,80 @@
 using Loqui.Internal;
 using Loqui.Xml;
 using Mutagen.Bethesda.Plugins.Records;
-using System;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Plugins.Xml
+namespace Mutagen.Bethesda.Plugins.Xml;
+
+public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
 {
-    public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
+    public readonly static RecordTypeXmlTranslation Instance = new RecordTypeXmlTranslation();
+
+    public bool Parse<T>(
+        XElement node,
+        out EDIDLink<T> item,
+        ErrorMaskBuilder? errorMask)
+        where T : class, IMajorRecordGetter
     {
-        public readonly static RecordTypeXmlTranslation Instance = new RecordTypeXmlTranslation();
-
-        public bool Parse<T>(
-            XElement node,
-            out EDIDLink<T> item,
-            ErrorMaskBuilder? errorMask)
-            where T : class, IMajorRecordGetter
+        if (Parse(node, out RecordType id, errorMask))
         {
-            if (Parse(node, out RecordType id, errorMask))
-            {
-                item = new EDIDLink<T>(id);
-                return true;
-            }
-            item = new EDIDLink<T>();
-            return false;
+            item = new EDIDLink<T>(id);
+            return true;
         }
+        item = new EDIDLink<T>();
+        return false;
+    }
 
-        public bool Parse<T>(
-            XElement node,
-            out IEDIDLinkGetter<T> item,
-            ErrorMaskBuilder? errorMask)
-            where T : class, IMajorRecordGetter
+    public bool Parse<T>(
+        XElement node,
+        out IEDIDLinkGetter<T> item,
+        ErrorMaskBuilder? errorMask)
+        where T : class, IMajorRecordGetter
+    {
+        if (Parse(node, out RecordType id, errorMask))
         {
-            if (Parse(node, out RecordType id, errorMask))
-            {
-                item = new EDIDLink<T>(id);
-                return true;
-            }
-            item = new EDIDLink<T>();
-            return false;
+            item = new EDIDLink<T>(id);
+            return true;
         }
+        item = new EDIDLink<T>();
+        return false;
+    }
 
-        public bool Parse<T>(
-            XElement node,
-            out EDIDLink<T> item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, IMajorRecordGetter
-        {
-            return this.Parse(
-                node: node,
-                item: out item,
-                errorMask: errorMask);
-        }
+    public bool Parse<T>(
+        XElement node,
+        out EDIDLink<T> item,
+        ErrorMaskBuilder? errorMask,
+        TranslationCrystal? translationMask)
+        where T : class, IMajorRecordGetter
+    {
+        return Parse(
+            node: node,
+            item: out item,
+            errorMask: errorMask);
+    }
 
-        public bool Parse<T>(
-            XElement node,
-            out IEDIDLinkGetter<T> item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-            where T : class, IMajorRecordGetter
-        {
-            return this.Parse(
-                node: node,
-                item: out item,
-                errorMask: errorMask);
-        }
+    public bool Parse<T>(
+        XElement node,
+        out IEDIDLinkGetter<T> item,
+        ErrorMaskBuilder? errorMask,
+        TranslationCrystal? translationMask)
+        where T : class, IMajorRecordGetter
+    {
+        return Parse(
+            node: node,
+            item: out item,
+            errorMask: errorMask);
+    }
 
-        protected override bool Parse(string str, out RecordType value, ErrorMaskBuilder? errorMask)
+    protected override bool Parse(string str, out RecordType value, ErrorMaskBuilder? errorMask)
+    {
+        if (RecordType.TryFactory(str, out RecordType parsed))
         {
-            if (RecordType.TryFactory(str, out RecordType parsed))
-            {
-                value = parsed;
-                return true;
-            }
-            errorMask.ReportExceptionOrThrow(
-                new ArgumentException($"Could not convert to {ElementName}: {str}"));
-            value = default;
-            return false;
+            value = parsed;
+            return true;
         }
+        errorMask.ReportExceptionOrThrow(
+            new ArgumentException($"Could not convert to {ElementName}: {str}"));
+        value = default;
+        return false;
     }
 }

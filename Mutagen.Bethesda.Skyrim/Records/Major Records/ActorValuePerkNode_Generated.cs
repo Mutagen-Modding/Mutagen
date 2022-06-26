@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -122,12 +123,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValuePerkNodeMixIn.ToString(
+            ActorValuePerkNodeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -324,9 +326,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.ConnectionLineToIndices.Specific = l;
-                        foreach (var item in ConnectionLineToIndices.Specific.WithIndex())
+                        foreach (var item in ConnectionLineToIndices.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -336,81 +338,74 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ActorValuePerkNode.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ActorValuePerkNode.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ActorValuePerkNode.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ActorValuePerkNode.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ActorValuePerkNode.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActorValuePerkNode.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Perk ?? true)
                     {
-                        fg.AppendItem(Perk, "Perk");
+                        sb.AppendItem(Perk, "Perk");
                     }
                     if (printMask?.FNAM ?? true)
                     {
-                        fg.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(FNAM, "FNAM");
                     }
                     if (printMask?.PerkGridX ?? true)
                     {
-                        fg.AppendItem(PerkGridX, "PerkGridX");
+                        sb.AppendItem(PerkGridX, "PerkGridX");
                     }
                     if (printMask?.PerkGridY ?? true)
                     {
-                        fg.AppendItem(PerkGridY, "PerkGridY");
+                        sb.AppendItem(PerkGridY, "PerkGridY");
                     }
                     if (printMask?.HorizontalPosition ?? true)
                     {
-                        fg.AppendItem(HorizontalPosition, "HorizontalPosition");
+                        sb.AppendItem(HorizontalPosition, "HorizontalPosition");
                     }
                     if (printMask?.VerticalPosition ?? true)
                     {
-                        fg.AppendItem(VerticalPosition, "VerticalPosition");
+                        sb.AppendItem(VerticalPosition, "VerticalPosition");
                     }
                     if (printMask?.AssociatedSkill ?? true)
                     {
-                        fg.AppendItem(AssociatedSkill, "AssociatedSkill");
+                        sb.AppendItem(AssociatedSkill, "AssociatedSkill");
                     }
                     if ((printMask?.ConnectionLineToIndices?.Overall ?? true)
                         && ConnectionLineToIndices is {} ConnectionLineToIndicesItem)
                     {
-                        fg.AppendLine("ConnectionLineToIndices =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("ConnectionLineToIndices =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConnectionLineToIndicesItem.Overall);
+                            sb.AppendItem(ConnectionLineToIndicesItem.Overall);
                             if (ConnectionLineToIndicesItem.Specific != null)
                             {
                                 foreach (var subItem in ConnectionLineToIndicesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -565,65 +560,70 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Perk, "Perk");
-                fg.AppendItem(FNAM, "FNAM");
-                fg.AppendItem(PerkGridX, "PerkGridX");
-                fg.AppendItem(PerkGridY, "PerkGridY");
-                fg.AppendItem(HorizontalPosition, "HorizontalPosition");
-                fg.AppendItem(VerticalPosition, "VerticalPosition");
-                fg.AppendItem(AssociatedSkill, "AssociatedSkill");
+                {
+                    sb.AppendItem(Perk, "Perk");
+                }
+                {
+                    sb.AppendItem(FNAM, "FNAM");
+                }
+                {
+                    sb.AppendItem(PerkGridX, "PerkGridX");
+                }
+                {
+                    sb.AppendItem(PerkGridY, "PerkGridY");
+                }
+                {
+                    sb.AppendItem(HorizontalPosition, "HorizontalPosition");
+                }
+                {
+                    sb.AppendItem(VerticalPosition, "VerticalPosition");
+                }
+                {
+                    sb.AppendItem(AssociatedSkill, "AssociatedSkill");
+                }
                 if (ConnectionLineToIndices is {} ConnectionLineToIndicesItem)
                 {
-                    fg.AppendLine("ConnectionLineToIndices =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("ConnectionLineToIndices =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConnectionLineToIndicesItem.Overall);
+                        sb.AppendItem(ConnectionLineToIndicesItem.Overall);
                         if (ConnectionLineToIndicesItem.Specific != null)
                         {
                             foreach (var subItem in ConnectionLineToIndicesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Index, "Index");
+                {
+                    sb.AppendItem(Index, "Index");
+                }
             }
             #endregion
 
@@ -726,8 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ActorValuePerkNode_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ActorValuePerkNodeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActorValuePerkNodeCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActorValuePerkNodeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -738,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -748,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ActorValuePerkNode CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValuePerkNode();
             ((ActorValuePerkNodeSetterCommon)((IActorValuePerkNodeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -763,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActorValuePerkNode item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -773,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -851,26 +850,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IActorValuePerkNodeGetter item,
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).ToString(
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IActorValuePerkNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
-            ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).ToString(
+            ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -976,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IActorValuePerkNode item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActorValuePerkNodeSetterCommon)((IActorValuePerkNodeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -991,10 +990,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ActorValuePerkNode_FieldIndex
+    internal enum ActorValuePerkNode_FieldIndex
     {
         Perk = 0,
         FNAM = 1,
@@ -1009,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ActorValuePerkNode_Registration : ILoquiRegistration
+    internal partial class ActorValuePerkNode_Registration : ILoquiRegistration
     {
         public static readonly ActorValuePerkNode_Registration Instance = new ActorValuePerkNode_Registration();
 
@@ -1051,6 +1050,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.PNAM);
+            var all = RecordCollection.Factory(
+                RecordTypes.PNAM,
+                RecordTypes.FNAM,
+                RecordTypes.XNAM,
+                RecordTypes.YNAM,
+                RecordTypes.HNAM,
+                RecordTypes.VNAM,
+                RecordTypes.SNAM,
+                RecordTypes.CNAM,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ActorValuePerkNodeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1084,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActorValuePerkNodeSetterCommon
+    internal partial class ActorValuePerkNodeSetterCommon
     {
         public static readonly ActorValuePerkNodeSetterCommon Instance = new ActorValuePerkNodeSetterCommon();
 
@@ -1117,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IActorValuePerkNode item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1130,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValuePerkNodeCommon
+    internal partial class ActorValuePerkNodeCommon
     {
         public static readonly ActorValuePerkNodeCommon Instance = new ActorValuePerkNodeCommon();
 
@@ -1154,7 +1169,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ActorValuePerkNode.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.PerkGridX = item.PerkGridX == rhs.PerkGridX;
@@ -1169,105 +1183,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Index = item.Index == rhs.Index;
         }
         
-        public string ToString(
+        public string Print(
             IActorValuePerkNodeGetter item,
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IActorValuePerkNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActorValuePerkNode =>");
+                sb.AppendLine($"ActorValuePerkNode =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActorValuePerkNode) =>");
+                sb.AppendLine($"{name} (ActorValuePerkNode) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActorValuePerkNodeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActorValuePerkNode.Mask<bool>? printMask = null)
         {
             if (printMask?.Perk ?? true)
             {
-                fg.AppendItem(item.Perk.FormKey, "Perk");
+                sb.AppendItem(item.Perk.FormKey, "Perk");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
             {
-                fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
             if ((printMask?.PerkGridX ?? true)
                 && item.PerkGridX is {} PerkGridXItem)
             {
-                fg.AppendItem(PerkGridXItem, "PerkGridX");
+                sb.AppendItem(PerkGridXItem, "PerkGridX");
             }
             if ((printMask?.PerkGridY ?? true)
                 && item.PerkGridY is {} PerkGridYItem)
             {
-                fg.AppendItem(PerkGridYItem, "PerkGridY");
+                sb.AppendItem(PerkGridYItem, "PerkGridY");
             }
             if ((printMask?.HorizontalPosition ?? true)
                 && item.HorizontalPosition is {} HorizontalPositionItem)
             {
-                fg.AppendItem(HorizontalPositionItem, "HorizontalPosition");
+                sb.AppendItem(HorizontalPositionItem, "HorizontalPosition");
             }
             if ((printMask?.VerticalPosition ?? true)
                 && item.VerticalPosition is {} VerticalPositionItem)
             {
-                fg.AppendItem(VerticalPositionItem, "VerticalPosition");
+                sb.AppendItem(VerticalPositionItem, "VerticalPosition");
             }
             if (printMask?.AssociatedSkill ?? true)
             {
-                fg.AppendItem(item.AssociatedSkill.FormKeyNullable, "AssociatedSkill");
+                sb.AppendItem(item.AssociatedSkill.FormKeyNullable, "AssociatedSkill");
             }
             if (printMask?.ConnectionLineToIndices?.Overall ?? true)
             {
-                fg.AppendLine("ConnectionLineToIndices =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("ConnectionLineToIndices =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.ConnectionLineToIndices)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
         }
         
@@ -1359,12 +1367,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActorValuePerkNodeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValuePerkNodeGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Perk);
-            if (obj.AssociatedSkill.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.AssociatedSkill, out var AssociatedSkillInfo))
             {
-                yield return FormLinkInformation.Factory(obj.AssociatedSkill);
+                yield return AssociatedSkillInfo;
             }
             yield break;
         }
@@ -1372,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValuePerkNodeSetterTranslationCommon
+    internal partial class ActorValuePerkNodeSetterTranslationCommon
     {
         public static readonly ActorValuePerkNodeSetterTranslationCommon Instance = new ActorValuePerkNodeSetterTranslationCommon();
 
@@ -1502,7 +1510,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1526,16 +1534,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValuePerkNodeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ActorValuePerkNodeBinaryWriteTranslation Instance = new ActorValuePerkNodeBinaryWriteTranslation();
+        public static readonly ActorValuePerkNodeBinaryWriteTranslation Instance = new ActorValuePerkNodeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IActorValuePerkNodeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1579,7 +1587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IActorValuePerkNodeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1590,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActorValuePerkNodeGetter)item,
@@ -1600,9 +1608,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActorValuePerkNodeBinaryCreateTranslation
+    internal partial class ActorValuePerkNodeBinaryCreateTranslation
     {
-        public readonly static ActorValuePerkNodeBinaryCreateTranslation Instance = new ActorValuePerkNodeBinaryCreateTranslation();
+        public static readonly ActorValuePerkNodeBinaryCreateTranslation Instance = new ActorValuePerkNodeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IActorValuePerkNode item,
@@ -1617,14 +1625,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.PNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValuePerkNode_FieldIndex.Perk, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
@@ -1696,7 +1704,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IActorValuePerkNodeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1709,16 +1717,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActorValuePerkNodeBinaryOverlay :
+    internal partial class ActorValuePerkNodeBinaryOverlay :
         PluginBinaryOverlay,
         IActorValuePerkNodeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValuePerkNode_Registration.Instance;
-        public static ActorValuePerkNode_Registration StaticRegistration => ActorValuePerkNode_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValuePerkNode_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValuePerkNodeCommon.Instance;
         [DebuggerStepThrough]
@@ -1732,16 +1740,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ActorValuePerkNodeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActorValuePerkNodeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActorValuePerkNodeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValuePerkNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1751,36 +1759,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Perk
         private int? _PerkLocation;
-        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region PerkGridX
         private int? _PerkGridXLocation;
-        public UInt32? PerkGridX => _PerkGridXLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkGridXLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? PerkGridX => _PerkGridXLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkGridXLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region PerkGridY
         private int? _PerkGridYLocation;
-        public UInt32? PerkGridY => _PerkGridYLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkGridYLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? PerkGridY => _PerkGridYLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkGridYLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region HorizontalPosition
         private int? _HorizontalPositionLocation;
-        public Single? HorizontalPosition => _HorizontalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HorizontalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? HorizontalPosition => _HorizontalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HorizontalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region VerticalPosition
         private int? _VerticalPositionLocation;
-        public Single? VerticalPosition => _VerticalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VerticalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? VerticalPosition => _VerticalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VerticalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
         #endregion
-        public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = ListExt.Empty<UInt32>();
+        public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = Array.Empty<UInt32>();
         #region Index
         private int? _IndexLocation;
-        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1789,42 +1797,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ActorValuePerkNodeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ActorValuePerkNodeBinaryOverlay ActorValuePerkNodeFactory(
+        public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ActorValuePerkNodeBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ActorValuePerkNodeBinaryOverlay ActorValuePerkNodeFactory(
+        public static IActorValuePerkNodeGetter ActorValuePerkNodeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActorValuePerkNodeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1834,14 +1848,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.PNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValuePerkNode_FieldIndex.Perk, translationParams)) return ParseResult.Stop;
                     _PerkLocation = (stream.Position - offset);
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
@@ -1886,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices;
                 }
                 case RecordTypeInts.INAM:
@@ -1900,12 +1914,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValuePerkNodeMixIn.ToString(
+            ActorValuePerkNodeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

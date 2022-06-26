@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SeasonalIngredientProductionMixIn.ToString(
+            SeasonalIngredientProductionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SeasonalIngredientProduction.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SeasonalIngredientProduction.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SeasonalIngredientProduction.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SeasonalIngredientProduction.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SeasonalIngredientProduction.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SeasonalIngredientProduction.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Spring ?? true)
                     {
-                        fg.AppendItem(Spring, "Spring");
+                        sb.AppendItem(Spring, "Spring");
                     }
                     if (printMask?.Summer ?? true)
                     {
-                        fg.AppendItem(Summer, "Summer");
+                        sb.AppendItem(Summer, "Summer");
                     }
                     if (printMask?.Fall ?? true)
                     {
-                        fg.AppendItem(Fall, "Fall");
+                        sb.AppendItem(Fall, "Fall");
                     }
                     if (printMask?.Winter ?? true)
                     {
-                        fg.AppendItem(Winter, "Winter");
+                        sb.AppendItem(Winter, "Winter");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Spring, "Spring");
-                fg.AppendItem(Summer, "Summer");
-                fg.AppendItem(Fall, "Fall");
-                fg.AppendItem(Winter, "Winter");
+                {
+                    sb.AppendItem(Spring, "Spring");
+                }
+                {
+                    sb.AppendItem(Summer, "Summer");
+                }
+                {
+                    sb.AppendItem(Fall, "Fall");
+                }
+                {
+                    sb.AppendItem(Winter, "Winter");
+                }
             }
             #endregion
 
@@ -452,10 +449,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = SeasonalIngredientProduction_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SeasonalIngredientProductionBinaryWriteTranslation.Instance;
@@ -463,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -473,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static SeasonalIngredientProduction CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SeasonalIngredientProduction();
             ((SeasonalIngredientProductionSetterCommon)((ISeasonalIngredientProductionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -488,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SeasonalIngredientProduction item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -498,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,26 +557,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISeasonalIngredientProductionGetter item,
             string? name = null,
             SeasonalIngredientProduction.Mask<bool>? printMask = null)
         {
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).ToString(
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISeasonalIngredientProductionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SeasonalIngredientProduction.Mask<bool>? printMask = null)
         {
-            ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).ToString(
+            ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -689,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISeasonalIngredientProduction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SeasonalIngredientProductionSetterCommon)((ISeasonalIngredientProductionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -704,10 +697,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SeasonalIngredientProduction_FieldIndex
+    internal enum SeasonalIngredientProduction_FieldIndex
     {
         Spring = 0,
         Summer = 1,
@@ -717,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SeasonalIngredientProduction_Registration : ILoquiRegistration
+    internal partial class SeasonalIngredientProduction_Registration : ILoquiRegistration
     {
         public static readonly SeasonalIngredientProduction_Registration Instance = new SeasonalIngredientProduction_Registration();
 
@@ -759,6 +752,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PFPC;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PFPC);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SeasonalIngredientProductionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -792,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SeasonalIngredientProductionSetterCommon
+    internal partial class SeasonalIngredientProductionSetterCommon
     {
         public static readonly SeasonalIngredientProductionSetterCommon Instance = new SeasonalIngredientProductionSetterCommon();
 
@@ -818,12 +817,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISeasonalIngredientProduction item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PFPC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SeasonalIngredientProductionCommon
+    internal partial class SeasonalIngredientProductionCommon
     {
         public static readonly SeasonalIngredientProductionCommon Instance = new SeasonalIngredientProductionCommon();
 
@@ -858,72 +857,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SeasonalIngredientProduction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Spring = item.Spring == rhs.Spring;
             ret.Summer = item.Summer == rhs.Summer;
             ret.Fall = item.Fall == rhs.Fall;
             ret.Winter = item.Winter == rhs.Winter;
         }
         
-        public string ToString(
+        public string Print(
             ISeasonalIngredientProductionGetter item,
             string? name = null,
             SeasonalIngredientProduction.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISeasonalIngredientProductionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SeasonalIngredientProduction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SeasonalIngredientProduction =>");
+                sb.AppendLine($"SeasonalIngredientProduction =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SeasonalIngredientProduction) =>");
+                sb.AppendLine($"{name} (SeasonalIngredientProduction) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISeasonalIngredientProductionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SeasonalIngredientProduction.Mask<bool>? printMask = null)
         {
             if (printMask?.Spring ?? true)
             {
-                fg.AppendItem(item.Spring, "Spring");
+                sb.AppendItem(item.Spring, "Spring");
             }
             if (printMask?.Summer ?? true)
             {
-                fg.AppendItem(item.Summer, "Summer");
+                sb.AppendItem(item.Summer, "Summer");
             }
             if (printMask?.Fall ?? true)
             {
-                fg.AppendItem(item.Fall, "Fall");
+                sb.AppendItem(item.Fall, "Fall");
             }
             if (printMask?.Winter ?? true)
             {
-                fg.AppendItem(item.Winter, "Winter");
+                sb.AppendItem(item.Winter, "Winter");
             }
         }
         
@@ -972,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISeasonalIngredientProductionGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISeasonalIngredientProductionGetter obj)
         {
             yield break;
         }
@@ -980,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SeasonalIngredientProductionSetterTranslationCommon
+    internal partial class SeasonalIngredientProductionSetterTranslationCommon
     {
         public static readonly SeasonalIngredientProductionSetterTranslationCommon Instance = new SeasonalIngredientProductionSetterTranslationCommon();
 
@@ -1070,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,11 +1090,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SeasonalIngredientProductionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SeasonalIngredientProductionBinaryWriteTranslation Instance = new SeasonalIngredientProductionBinaryWriteTranslation();
+        public static readonly SeasonalIngredientProductionBinaryWriteTranslation Instance = new SeasonalIngredientProductionBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISeasonalIngredientProductionGetter item,
@@ -1113,12 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISeasonalIngredientProductionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PFPC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1130,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISeasonalIngredientProductionGetter)item,
@@ -1140,9 +1136,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SeasonalIngredientProductionBinaryCreateTranslation
+    internal partial class SeasonalIngredientProductionBinaryCreateTranslation
     {
-        public readonly static SeasonalIngredientProductionBinaryCreateTranslation Instance = new SeasonalIngredientProductionBinaryCreateTranslation();
+        public static readonly SeasonalIngredientProductionBinaryCreateTranslation Instance = new SeasonalIngredientProductionBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISeasonalIngredientProduction item,
@@ -1165,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISeasonalIngredientProductionGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1178,16 +1174,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SeasonalIngredientProductionBinaryOverlay :
+    internal partial class SeasonalIngredientProductionBinaryOverlay :
         PluginBinaryOverlay,
         ISeasonalIngredientProductionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SeasonalIngredientProduction_Registration.Instance;
-        public static SeasonalIngredientProduction_Registration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SeasonalIngredientProduction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SeasonalIngredientProductionCommon.Instance;
         [DebuggerStepThrough]
@@ -1201,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SeasonalIngredientProductionBinaryWriteTranslation.Instance;
@@ -1209,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SeasonalIngredientProductionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1217,10 +1213,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Byte Spring => _data.Span[0x0];
-        public Byte Summer => _data.Span[0x1];
-        public Byte Fall => _data.Span[0x2];
-        public Byte Winter => _data.Span[0x3];
+        public Byte Spring => _structData.Span[0x0];
+        public Byte Summer => _structData.Span[0x1];
+        public Byte Fall => _structData.Span[0x2];
+        public Byte Winter => _structData.Span[0x3];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1228,25 +1224,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SeasonalIngredientProductionBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SeasonalIngredientProductionBinaryOverlay SeasonalIngredientProductionFactory(
+        public static ISeasonalIngredientProductionGetter SeasonalIngredientProductionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SeasonalIngredientProductionBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x4 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1255,25 +1256,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static SeasonalIngredientProductionBinaryOverlay SeasonalIngredientProductionFactory(
+        public static ISeasonalIngredientProductionGetter SeasonalIngredientProductionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SeasonalIngredientProductionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SeasonalIngredientProductionMixIn.ToString(
+            SeasonalIngredientProductionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

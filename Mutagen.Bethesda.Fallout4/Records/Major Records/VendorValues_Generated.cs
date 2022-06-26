@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +76,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            VendorValuesMixIn.ToString(
+            VendorValuesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -246,58 +249,53 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(VendorValues.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(VendorValues.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, VendorValues.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, VendorValues.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(VendorValues.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(VendorValues.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.StartHour ?? true)
                     {
-                        fg.AppendItem(StartHour, "StartHour");
+                        sb.AppendItem(StartHour, "StartHour");
                     }
                     if (printMask?.EndHour ?? true)
                     {
-                        fg.AppendItem(EndHour, "EndHour");
+                        sb.AppendItem(EndHour, "EndHour");
                     }
                     if (printMask?.Radius ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.BuysStolenItems ?? true)
                     {
-                        fg.AppendItem(BuysStolenItems, "BuysStolenItems");
+                        sb.AppendItem(BuysStolenItems, "BuysStolenItems");
                     }
                     if (printMask?.BuySellEverythingNotInList ?? true)
                     {
-                        fg.AppendItem(BuySellEverythingNotInList, "BuySellEverythingNotInList");
+                        sb.AppendItem(BuySellEverythingNotInList, "BuySellEverythingNotInList");
                     }
                     if (printMask?.BuysNonStolenItems ?? true)
                     {
-                        fg.AppendItem(BuysNonStolenItems, "BuysNonStolenItems");
+                        sb.AppendItem(BuysNonStolenItems, "BuysNonStolenItems");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -442,43 +440,50 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(StartHour, "StartHour");
-                fg.AppendItem(EndHour, "EndHour");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(BuysStolenItems, "BuysStolenItems");
-                fg.AppendItem(BuySellEverythingNotInList, "BuySellEverythingNotInList");
-                fg.AppendItem(BuysNonStolenItems, "BuysNonStolenItems");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(StartHour, "StartHour");
+                }
+                {
+                    sb.AppendItem(EndHour, "EndHour");
+                }
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(BuysStolenItems, "BuysStolenItems");
+                }
+                {
+                    sb.AppendItem(BuySellEverythingNotInList, "BuySellEverythingNotInList");
+                }
+                {
+                    sb.AppendItem(BuysNonStolenItems, "BuysNonStolenItems");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -576,10 +581,6 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = VendorValues_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => VendorValuesBinaryWriteTranslation.Instance;
@@ -587,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VendorValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -597,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static VendorValues CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VendorValues();
             ((VendorValuesSetterCommon)((IVendorValuesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -612,7 +613,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out VendorValues item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -622,7 +623,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -696,26 +697,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IVendorValuesGetter item,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
+            return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IVendorValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
-            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).ToString(
+            ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -821,7 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IVendorValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((VendorValuesSetterCommon)((IVendorValuesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -836,10 +837,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum VendorValues_FieldIndex
+    internal enum VendorValues_FieldIndex
     {
         StartHour = 0,
         EndHour = 1,
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class VendorValues_Registration : ILoquiRegistration
+    internal partial class VendorValues_Registration : ILoquiRegistration
     {
         public static readonly VendorValues_Registration Instance = new VendorValues_Registration();
 
@@ -895,6 +896,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VENV;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.VENV);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(VendorValuesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -928,7 +935,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class VendorValuesSetterCommon
+    internal partial class VendorValuesSetterCommon
     {
         public static readonly VendorValuesSetterCommon Instance = new VendorValuesSetterCommon();
 
@@ -958,12 +965,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IVendorValues item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VENV),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -974,7 +981,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class VendorValuesCommon
+    internal partial class VendorValuesCommon
     {
         public static readonly VendorValuesCommon Instance = new VendorValuesCommon();
 
@@ -998,7 +1005,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             VendorValues.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.StartHour = item.StartHour == rhs.StartHour;
             ret.EndHour = item.EndHour == rhs.EndHour;
             ret.Radius = item.Radius == rhs.Radius;
@@ -1009,81 +1015,79 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
-        public string ToString(
+        public string Print(
             IVendorValuesGetter item,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IVendorValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VendorValues.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VendorValues =>");
+                sb.AppendLine($"VendorValues =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VendorValues) =>");
+                sb.AppendLine($"{name} (VendorValues) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IVendorValuesGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             VendorValues.Mask<bool>? printMask = null)
         {
             if (printMask?.StartHour ?? true)
             {
-                fg.AppendItem(item.StartHour, "StartHour");
+                sb.AppendItem(item.StartHour, "StartHour");
             }
             if (printMask?.EndHour ?? true)
             {
-                fg.AppendItem(item.EndHour, "EndHour");
+                sb.AppendItem(item.EndHour, "EndHour");
             }
             if (printMask?.Radius ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                sb.AppendItem(item.Radius, "Radius");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.BuysStolenItems ?? true)
             {
-                fg.AppendItem(item.BuysStolenItems, "BuysStolenItems");
+                sb.AppendItem(item.BuysStolenItems, "BuysStolenItems");
             }
             if (printMask?.BuySellEverythingNotInList ?? true)
             {
-                fg.AppendItem(item.BuySellEverythingNotInList, "BuySellEverythingNotInList");
+                sb.AppendItem(item.BuySellEverythingNotInList, "BuySellEverythingNotInList");
             }
             if (printMask?.BuysNonStolenItems ?? true)
             {
-                fg.AppendItem(item.BuysNonStolenItems, "BuysNonStolenItems");
+                sb.AppendItem(item.BuysNonStolenItems, "BuysNonStolenItems");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1152,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVendorValuesGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVendorValuesGetter obj)
         {
             yield break;
         }
@@ -1160,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class VendorValuesSetterTranslationCommon
+    internal partial class VendorValuesSetterTranslationCommon
     {
         public static readonly VendorValuesSetterTranslationCommon Instance = new VendorValuesSetterTranslationCommon();
 
@@ -1266,7 +1270,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VendorValues_Registration.Instance;
-        public static VendorValues_Registration StaticRegistration => VendorValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => VendorValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => VendorValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1290,11 +1294,11 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class VendorValuesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static VendorValuesBinaryWriteTranslation Instance = new VendorValuesBinaryWriteTranslation();
+        public static readonly VendorValuesBinaryWriteTranslation Instance = new VendorValuesBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IVendorValuesGetter item,
@@ -1313,12 +1317,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IVendorValuesGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VENV),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1330,7 +1334,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IVendorValuesGetter)item,
@@ -1340,9 +1344,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class VendorValuesBinaryCreateTranslation
+    internal partial class VendorValuesBinaryCreateTranslation
     {
-        public readonly static VendorValuesBinaryCreateTranslation Instance = new VendorValuesBinaryCreateTranslation();
+        public static readonly VendorValuesBinaryCreateTranslation Instance = new VendorValuesBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IVendorValues item,
@@ -1369,7 +1373,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IVendorValuesGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VendorValuesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1382,16 +1386,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class VendorValuesBinaryOverlay :
+    internal partial class VendorValuesBinaryOverlay :
         PluginBinaryOverlay,
         IVendorValuesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VendorValues_Registration.Instance;
-        public static VendorValues_Registration StaticRegistration => VendorValues_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => VendorValues_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => VendorValuesCommon.Instance;
         [DebuggerStepThrough]
@@ -1405,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => VendorValuesBinaryWriteTranslation.Instance;
@@ -1413,7 +1417,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VendorValuesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1421,14 +1425,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public UInt16 StartHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Boolean BuysStolenItems => _data.Slice(0x8, 0x1)[0] == 1;
-        public Boolean BuySellEverythingNotInList => _data.Slice(0x9, 0x1)[0] == 1;
-        public Boolean BuysNonStolenItems => _data.Slice(0xA, 0x1)[0] == 1;
-        public Byte Unknown2 => _data.Span[0xB];
+        public UInt16 StartHour => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public Boolean BuysStolenItems => _structData.Slice(0x8, 0x1)[0] >= 1;
+        public Boolean BuySellEverythingNotInList => _structData.Slice(0x9, 0x1)[0] >= 1;
+        public Boolean BuysNonStolenItems => _structData.Slice(0xA, 0x1)[0] >= 1;
+        public Byte Unknown2 => _structData.Span[0xB];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1436,25 +1440,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected VendorValuesBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static VendorValuesBinaryOverlay VendorValuesFactory(
+        public static IVendorValuesGetter VendorValuesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new VendorValuesBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1463,25 +1472,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static VendorValuesBinaryOverlay VendorValuesFactory(
+        public static IVendorValuesGetter VendorValuesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return VendorValuesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            VendorValuesMixIn.ToString(
+            VendorValuesMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

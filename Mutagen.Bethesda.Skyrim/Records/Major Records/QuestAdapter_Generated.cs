@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -54,8 +55,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Versioning
         public QuestAdapter.VersioningBreaks Versioning { get; set; } = default;
         #endregion
-        #region Unknown
-        public Byte Unknown { get; set; } = default;
+        #region ExtraBindDataVersion
+        public readonly static Byte _ExtraBindDataVersion_Default = 2;
+        public Byte ExtraBindDataVersion { get; set; } = _ExtraBindDataVersion_Default;
         #endregion
         #region FileName
         public String FileName { get; set; } = string.Empty;
@@ -91,12 +93,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestAdapterMixIn.ToString(
+            QuestAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -129,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Versioning = initialValue;
-                this.Unknown = initialValue;
+                this.ExtraBindDataVersion = initialValue;
                 this.FileName = initialValue;
                 this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>());
@@ -140,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ObjectFormat,
                 TItem Scripts,
                 TItem Versioning,
-                TItem Unknown,
+                TItem ExtraBindDataVersion,
                 TItem FileName,
                 TItem Fragments,
                 TItem Aliases)
@@ -150,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Scripts: Scripts)
             {
                 this.Versioning = Versioning;
-                this.Unknown = Unknown;
+                this.ExtraBindDataVersion = ExtraBindDataVersion;
                 this.FileName = FileName;
                 this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>());
@@ -166,7 +169,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Versioning;
-            public TItem Unknown;
+            public TItem ExtraBindDataVersion;
             public TItem FileName;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestScriptFragment.Mask<TItem>?>>?>? Fragments;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestFragmentAlias.Mask<TItem>?>>?>? Aliases;
@@ -184,7 +187,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.ExtraBindDataVersion, rhs.ExtraBindDataVersion)) return false;
                 if (!object.Equals(this.FileName, rhs.FileName)) return false;
                 if (!object.Equals(this.Fragments, rhs.Fragments)) return false;
                 if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
@@ -194,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.Versioning);
-                hash.Add(this.Unknown);
+                hash.Add(this.ExtraBindDataVersion);
                 hash.Add(this.FileName);
                 hash.Add(this.Fragments);
                 hash.Add(this.Aliases);
@@ -209,7 +212,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Versioning)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.ExtraBindDataVersion)) return false;
                 if (!eval(this.FileName)) return false;
                 if (this.Fragments != null)
                 {
@@ -244,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Versioning)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.ExtraBindDataVersion)) return true;
                 if (eval(this.FileName)) return true;
                 if (this.Fragments != null)
                 {
@@ -286,7 +289,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Versioning = eval(this.Versioning);
-                obj.Unknown = eval(this.Unknown);
+                obj.ExtraBindDataVersion = eval(this.ExtraBindDataVersion);
                 obj.FileName = eval(this.FileName);
                 if (Fragments != null)
                 {
@@ -295,9 +298,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>>();
                         obj.Fragments.Specific = l;
-                        foreach (var item in Fragments.Specific.WithIndex())
+                        foreach (var item in Fragments.Specific)
                         {
-                            MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestScriptFragment.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -310,9 +313,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>>();
                         obj.Aliases.Specific = l;
-                        foreach (var item in Aliases.Specific.WithIndex())
+                        foreach (var item in Aliases.Specific)
                         {
-                            MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestFragmentAlias.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -322,84 +325,71 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(QuestAdapter.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(QuestAdapter.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, QuestAdapter.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, QuestAdapter.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(QuestAdapter.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(QuestAdapter.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.ExtraBindDataVersion ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
                     }
                     if (printMask?.FileName ?? true)
                     {
-                        fg.AppendItem(FileName, "FileName");
+                        sb.AppendItem(FileName, "FileName");
                     }
                     if ((printMask?.Fragments?.Overall ?? true)
                         && Fragments is {} FragmentsItem)
                     {
-                        fg.AppendLine("Fragments =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Fragments =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FragmentsItem.Overall);
+                            sb.AppendItem(FragmentsItem.Overall);
                             if (FragmentsItem.Specific != null)
                             {
                                 foreach (var subItem in FragmentsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.Aliases?.Overall ?? true)
                         && Aliases is {} AliasesItem)
                     {
-                        fg.AppendLine("Aliases =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Aliases =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(AliasesItem.Overall);
+                            sb.AppendItem(AliasesItem.Overall);
                             if (AliasesItem.Specific != null)
                             {
                                 foreach (var subItem in AliasesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -411,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? Versioning;
-            public Exception? Unknown;
+            public Exception? ExtraBindDataVersion;
             public Exception? FileName;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>? Fragments;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>? Aliases;
@@ -425,8 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case QuestAdapter_FieldIndex.Versioning:
                         return Versioning;
-                    case QuestAdapter_FieldIndex.Unknown:
-                        return Unknown;
+                    case QuestAdapter_FieldIndex.ExtraBindDataVersion:
+                        return ExtraBindDataVersion;
                     case QuestAdapter_FieldIndex.FileName:
                         return FileName;
                     case QuestAdapter_FieldIndex.Fragments:
@@ -446,8 +436,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAdapter_FieldIndex.Versioning:
                         this.Versioning = ex;
                         break;
-                    case QuestAdapter_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case QuestAdapter_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = ex;
                         break;
                     case QuestAdapter_FieldIndex.FileName:
                         this.FileName = ex;
@@ -472,8 +462,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case QuestAdapter_FieldIndex.Versioning:
                         this.Versioning = (Exception?)obj;
                         break;
-                    case QuestAdapter_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case QuestAdapter_FieldIndex.ExtraBindDataVersion:
+                        this.ExtraBindDataVersion = (Exception?)obj;
                         break;
                     case QuestAdapter_FieldIndex.FileName:
                         this.FileName = (Exception?)obj;
@@ -494,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Versioning != null) return true;
-                if (Unknown != null) return true;
+                if (ExtraBindDataVersion != null) return true;
                 if (FileName != null) return true;
                 if (Fragments != null) return true;
                 if (Aliases != null) return true;
@@ -503,82 +493,71 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(FileName, "FileName");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(ExtraBindDataVersion, "ExtraBindDataVersion");
+                }
+                {
+                    sb.AppendItem(FileName, "FileName");
+                }
                 if (Fragments is {} FragmentsItem)
                 {
-                    fg.AppendLine("Fragments =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Fragments =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FragmentsItem.Overall);
+                        sb.AppendItem(FragmentsItem.Overall);
                         if (FragmentsItem.Specific != null)
                         {
                             foreach (var subItem in FragmentsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (Aliases is {} AliasesItem)
                 {
-                    fg.AppendLine("Aliases =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Aliases =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(AliasesItem.Overall);
+                        sb.AppendItem(AliasesItem.Overall);
                         if (AliasesItem.Specific != null)
                         {
                             foreach (var subItem in AliasesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -589,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.ExtraBindDataVersion = this.ExtraBindDataVersion.Combine(rhs.ExtraBindDataVersion);
                 ret.FileName = this.FileName.Combine(rhs.FileName);
                 ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
                 ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestFragmentAlias.ErrorMask?>>?>(ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
@@ -616,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Versioning;
-            public bool Unknown;
+            public bool ExtraBindDataVersion;
             public bool FileName;
             public QuestScriptFragment.TranslationMask? Fragments;
             public QuestFragmentAlias.TranslationMask? Aliases;
@@ -629,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.Versioning = defaultOn;
-                this.Unknown = defaultOn;
+                this.ExtraBindDataVersion = defaultOn;
                 this.FileName = defaultOn;
             }
 
@@ -639,7 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Versioning, null));
-                ret.Add((Unknown, null));
+                ret.Add((ExtraBindDataVersion, null));
                 ret.Add((FileName, null));
                 ret.Add((Fragments == null ? DefaultOn : !Fragments.GetCrystal().CopyNothing, Fragments?.GetCrystal()));
                 ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
@@ -654,13 +633,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = QuestAdapter_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
             Break0 = 1
         }
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -669,7 +647,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -679,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static QuestAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new QuestAdapter();
             ((QuestAdapterSetterCommon)((IQuestAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -694,7 +672,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out QuestAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -704,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -727,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
         IQuestAdapterGetter
     {
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
-        new Byte Unknown { get; set; }
+        new Byte ExtraBindDataVersion { get; set; }
         new String FileName { get; set; }
         new ExtendedList<QuestScriptFragment> Fragments { get; }
         new ExtendedList<QuestFragmentAlias> Aliases { get; }
@@ -741,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }
-        Byte Unknown { get; }
+        Byte ExtraBindDataVersion { get; }
         String FileName { get; }
         IReadOnlyList<IQuestScriptFragmentGetter> Fragments { get; }
         IReadOnlyList<IQuestFragmentAliasGetter> Aliases { get; }
@@ -769,26 +747,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IQuestAdapterGetter item,
             string? name = null,
             QuestAdapter.Mask<bool>? printMask = null)
         {
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).ToString(
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IQuestAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestAdapter.Mask<bool>? printMask = null)
         {
-            ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).ToString(
+            ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -869,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IQuestAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((QuestAdapterSetterCommon)((IQuestAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -884,16 +862,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum QuestAdapter_FieldIndex
+    internal enum QuestAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
         Scripts = 2,
         Versioning = 3,
-        Unknown = 4,
+        ExtraBindDataVersion = 4,
         FileName = 5,
         Fragments = 6,
         Aliases = 7,
@@ -901,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class QuestAdapter_Registration : ILoquiRegistration
+    internal partial class QuestAdapter_Registration : ILoquiRegistration
     {
         public static readonly QuestAdapter_Registration Instance = new QuestAdapter_Registration();
 
@@ -943,6 +921,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.VMAD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(QuestAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -976,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class QuestAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class QuestAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly QuestAdapterSetterCommon Instance = new QuestAdapterSetterCommon();
 
@@ -986,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Unknown = default;
+            item.ExtraBindDataVersion = QuestAdapter._ExtraBindDataVersion_Default;
             item.FileName = string.Empty;
             item.Fragments.Clear();
             item.Aliases.Clear();
@@ -1011,12 +995,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IQuestAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1027,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (QuestAdapter)item,
@@ -1038,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class QuestAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly QuestAdapterCommon Instance = new QuestAdapterCommon();
 
@@ -1062,9 +1046,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.ExtraBindDataVersion = item.ExtraBindDataVersion == rhs.ExtraBindDataVersion;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
             ret.Fragments = item.Fragments.CollectionEqualsHelper(
                 rhs.Fragments,
@@ -1077,101 +1060,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IQuestAdapterGetter item,
             string? name = null,
             QuestAdapter.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IQuestAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             QuestAdapter.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"QuestAdapter =>");
+                sb.AppendLine($"QuestAdapter =>");
             }
             else
             {
-                fg.AppendLine($"{name} (QuestAdapter) =>");
+                sb.AppendLine($"{name} (QuestAdapter) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IQuestAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             QuestAdapter.Mask<bool>? printMask = null)
         {
             AVirtualMachineAdapterCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.ExtraBindDataVersion ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.ExtraBindDataVersion, "ExtraBindDataVersion");
             }
             if (printMask?.FileName ?? true)
             {
-                fg.AppendItem(item.FileName, "FileName");
+                sb.AppendItem(item.FileName, "FileName");
             }
             if (printMask?.Fragments?.Overall ?? true)
             {
-                fg.AppendLine("Fragments =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Fragments =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Fragments)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Aliases?.Overall ?? true)
             {
-                fg.AppendLine("Aliases =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Aliases =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Aliases)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1202,9 +1175,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Unknown) ?? true))
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.ExtraBindDataVersion != rhs.ExtraBindDataVersion) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.FileName) ?? true))
             {
@@ -1212,11 +1185,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Fragments) ?? true))
             {
-                if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
+                if (!lhs.Fragments.SequenceEqual(rhs.Fragments, (l, r) => ((QuestScriptFragmentCommon)((IQuestScriptFragmentGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Fragments)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
+                if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)QuestAdapter_FieldIndex.Aliases)))) return false;
             }
             return true;
         }
@@ -1236,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Versioning);
-            hash.Add(item.Unknown);
+            hash.Add(item.ExtraBindDataVersion);
             hash.Add(item.FileName);
             hash.Add(item.Fragments);
             hash.Add(item.Aliases);
@@ -1258,14 +1231,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             foreach (var item in obj.Aliases.WhereCastable<IQuestFragmentAliasGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1275,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class QuestAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class QuestAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly QuestAdapterSetterTranslationCommon Instance = new QuestAdapterSetterTranslationCommon();
 
@@ -1298,9 +1271,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning = rhs.Versioning;
             }
             if (rhs.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.ExtraBindDataVersion) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.ExtraBindDataVersion = rhs.ExtraBindDataVersion;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestAdapter_FieldIndex.FileName) ?? true))
             {
@@ -1432,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAdapter_Registration.Instance;
-        public new static QuestAdapter_Registration StaticRegistration => QuestAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1450,13 +1423,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class QuestAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
+        public new static readonly QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IQuestAdapterGetter item,
@@ -1467,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer);
             if (!item.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0))
             {
-                writer.Write(item.Unknown);
+                writer.Write(item.ExtraBindDataVersion);
                 QuestAdapterBinaryWriteTranslation.WriteBinaryFragmentCount(
                     writer: writer,
                     item: item);
@@ -1538,12 +1511,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IQuestAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1555,7 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IQuestAdapterGetter)item,
@@ -1566,7 +1539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IQuestAdapterGetter)item,
@@ -1576,9 +1549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class QuestAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class QuestAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static QuestAdapterBinaryCreateTranslation Instance = new QuestAdapterBinaryCreateTranslation();
+        public new static readonly QuestAdapterBinaryCreateTranslation Instance = new QuestAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IQuestAdapter item,
@@ -1592,7 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= QuestAdapter.VersioningBreaks.Break0;
                 return;
             }
-            item.Unknown = frame.ReadUInt8();
+            item.ExtraBindDataVersion = frame.ReadUInt8();
             QuestAdapterBinaryCreateTranslation.FillBinaryFragmentCountCustom(
                 frame: frame,
                 item: item);
@@ -1636,16 +1609,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class QuestAdapterBinaryOverlay :
+    internal partial class QuestAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IQuestAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => QuestAdapter_Registration.Instance;
-        public new static QuestAdapter_Registration StaticRegistration => QuestAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => QuestAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => QuestAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1653,14 +1626,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestAdapterCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((QuestAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1669,13 +1642,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public QuestAdapter.VersioningBreaks Versioning { get; private set; }
-        public Byte Unknown => _data.Span[ScriptsEndingPos + 0x0];
+        public Byte ExtraBindDataVersion => _structData.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
-         partial void FragmentCountCustomParse(
+        partial void FragmentCountCustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region FileName
+        public partial String GetFileNameCustom(int location);
         public String FileName => GetFileNameCustom(location: ScriptsEndingPos + 0x3);
         protected int FileNameEndingPos;
         partial void CustomFileNameEndPos();
@@ -1695,29 +1669,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected QuestAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static QuestAdapterBinaryOverlay QuestAdapterFactory(
+        public static IQuestAdapterGetter QuestAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new QuestAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomFileNameEndPos();
             ret.CustomFragmentsEndPos();
             ret.CustomAliasesEndPos();
-            if (ret._data.Length <= ret.ScriptsEndingPos)
+            if (ret._structData.Length <= ret.ScriptsEndingPos)
             {
                 ret.Versioning |= QuestAdapter.VersioningBreaks.Break0;
             }
@@ -1728,25 +1707,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static QuestAdapterBinaryOverlay QuestAdapterFactory(
+        public static IQuestAdapterGetter QuestAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return QuestAdapterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            QuestAdapterMixIn.ToString(
+            QuestAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

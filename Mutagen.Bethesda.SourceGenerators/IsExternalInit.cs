@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-#if NET_5
+#if NET_6
 #else
 namespace System.Runtime.CompilerServices
 {

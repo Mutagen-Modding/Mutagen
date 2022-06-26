@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -174,12 +175,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            Fallout4ModHeaderMixIn.ToString(
+            Fallout4ModHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -487,9 +489,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, MasterReference.Mask<R>?>>();
                         obj.MasterReferences.Specific = l;
-                        foreach (var item in MasterReferences.Specific.WithIndex())
+                        foreach (var item in MasterReferences.Specific)
                         {
-                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MasterReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MasterReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -502,9 +504,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.OverriddenForms.Specific = l;
-                        foreach (var item in OverriddenForms.Specific.WithIndex())
+                        foreach (var item in OverriddenForms.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -517,9 +519,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         var l = new List<MaskItemIndexed<R, TransientType.Mask<R>?>>();
                         obj.TransientTypes.Specific = l;
-                        foreach (var item in TransientTypes.Specific.WithIndex())
+                        foreach (var item in TransientTypes.Specific)
                         {
-                            MaskItemIndexed<R, TransientType.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, TransientType.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, TransientType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TransientType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -531,147 +533,132 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Fallout4ModHeader.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Fallout4ModHeader.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Fallout4ModHeader.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Fallout4ModHeader.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Fallout4ModHeader.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Fallout4ModHeader.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.FormID ?? true)
                     {
-                        fg.AppendItem(FormID, "FormID");
+                        sb.AppendItem(FormID, "FormID");
                     }
                     if (printMask?.Version ?? true)
                     {
-                        fg.AppendItem(Version, "Version");
+                        sb.AppendItem(Version, "Version");
                     }
                     if (printMask?.FormVersion ?? true)
                     {
-                        fg.AppendItem(FormVersion, "FormVersion");
+                        sb.AppendItem(FormVersion, "FormVersion");
                     }
                     if (printMask?.Version2 ?? true)
                     {
-                        fg.AppendItem(Version2, "Version2");
+                        sb.AppendItem(Version2, "Version2");
                     }
                     if (printMask?.Stats?.Overall ?? true)
                     {
-                        Stats?.ToString(fg);
+                        Stats?.Print(sb);
                     }
                     if (printMask?.TypeOffsets ?? true)
                     {
-                        fg.AppendItem(TypeOffsets, "TypeOffsets");
+                        sb.AppendItem(TypeOffsets, "TypeOffsets");
                     }
                     if (printMask?.Deleted ?? true)
                     {
-                        fg.AppendItem(Deleted, "Deleted");
+                        sb.AppendItem(Deleted, "Deleted");
                     }
                     if (printMask?.Author ?? true)
                     {
-                        fg.AppendItem(Author, "Author");
+                        sb.AppendItem(Author, "Author");
                     }
                     if (printMask?.Description ?? true)
                     {
-                        fg.AppendItem(Description, "Description");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.MasterReferences?.Overall ?? true)
                         && MasterReferences is {} MasterReferencesItem)
                     {
-                        fg.AppendLine("MasterReferences =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("MasterReferences =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(MasterReferencesItem.Overall);
+                            sb.AppendItem(MasterReferencesItem.Overall);
                             if (MasterReferencesItem.Specific != null)
                             {
                                 foreach (var subItem in MasterReferencesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.OverriddenForms?.Overall ?? true)
                         && OverriddenForms is {} OverriddenFormsItem)
                     {
-                        fg.AppendLine("OverriddenForms =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("OverriddenForms =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(OverriddenFormsItem.Overall);
+                            sb.AppendItem(OverriddenFormsItem.Overall);
                             if (OverriddenFormsItem.Specific != null)
                             {
                                 foreach (var subItem in OverriddenFormsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Screenshot ?? true)
                     {
-                        fg.AppendItem(Screenshot, "Screenshot");
+                        sb.AppendItem(Screenshot, "Screenshot");
                     }
                     if ((printMask?.TransientTypes?.Overall ?? true)
                         && TransientTypes is {} TransientTypesItem)
                     {
-                        fg.AppendLine("TransientTypes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("TransientTypes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TransientTypesItem.Overall);
+                            sb.AppendItem(TransientTypesItem.Overall);
                             if (TransientTypesItem.Specific != null)
                             {
                                 foreach (var subItem in TransientTypesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.INTV ?? true)
                     {
-                        fg.AppendItem(INTV, "INTV");
+                        sb.AppendItem(INTV, "INTV");
                     }
                     if (printMask?.INCC ?? true)
                     {
-                        fg.AppendItem(INCC, "INCC");
+                        sb.AppendItem(INCC, "INCC");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -896,114 +883,119 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FormID, "FormID");
-                fg.AppendItem(Version, "Version");
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
-                Stats?.ToString(fg);
-                fg.AppendItem(TypeOffsets, "TypeOffsets");
-                fg.AppendItem(Deleted, "Deleted");
-                fg.AppendItem(Author, "Author");
-                fg.AppendItem(Description, "Description");
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(FormID, "FormID");
+                }
+                {
+                    sb.AppendItem(Version, "Version");
+                }
+                {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
+                }
+                Stats?.Print(sb);
+                {
+                    sb.AppendItem(TypeOffsets, "TypeOffsets");
+                }
+                {
+                    sb.AppendItem(Deleted, "Deleted");
+                }
+                {
+                    sb.AppendItem(Author, "Author");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
                 if (MasterReferences is {} MasterReferencesItem)
                 {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("MasterReferences =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(MasterReferencesItem.Overall);
+                        sb.AppendItem(MasterReferencesItem.Overall);
                         if (MasterReferencesItem.Specific != null)
                         {
                             foreach (var subItem in MasterReferencesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (OverriddenForms is {} OverriddenFormsItem)
                 {
-                    fg.AppendLine("OverriddenForms =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("OverriddenForms =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(OverriddenFormsItem.Overall);
+                        sb.AppendItem(OverriddenFormsItem.Overall);
                         if (OverriddenFormsItem.Specific != null)
                         {
                             foreach (var subItem in OverriddenFormsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Screenshot, "Screenshot");
+                {
+                    sb.AppendItem(Screenshot, "Screenshot");
+                }
                 if (TransientTypes is {} TransientTypesItem)
                 {
-                    fg.AppendLine("TransientTypes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("TransientTypes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TransientTypesItem.Overall);
+                        sb.AppendItem(TransientTypesItem.Overall);
                         if (TransientTypesItem.Specific != null)
                         {
                             foreach (var subItem in TransientTypesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(INTV, "INTV");
-                fg.AppendItem(INCC, "INCC");
+                {
+                    sb.AppendItem(INTV, "INTV");
+                }
+                {
+                    sb.AppendItem(INCC, "INCC");
+                }
             }
             #endregion
 
@@ -1132,7 +1124,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4ModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1143,7 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1153,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public static Fallout4ModHeader CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Fallout4ModHeader();
             ((Fallout4ModHeaderSetterCommon)((IFallout4ModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1168,7 +1160,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Fallout4ModHeader item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1178,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1270,26 +1262,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFallout4ModHeaderGetter item,
             string? name = null,
             Fallout4ModHeader.Mask<bool>? printMask = null)
         {
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)item).CommonInstance()!).ToString(
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFallout4ModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4ModHeader.Mask<bool>? printMask = null)
         {
-            ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)item).CommonInstance()!).ToString(
+            ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1395,7 +1387,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFallout4ModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((Fallout4ModHeaderSetterCommon)((IFallout4ModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1410,10 +1402,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Fallout4ModHeader_FieldIndex
+    internal enum Fallout4ModHeader_FieldIndex
     {
         Flags = 0,
         FormID = 1,
@@ -1435,7 +1427,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Fallout4ModHeader_Registration : ILoquiRegistration
+    internal partial class Fallout4ModHeader_Registration : ILoquiRegistration
     {
         public static readonly Fallout4ModHeader_Registration Instance = new Fallout4ModHeader_Registration();
 
@@ -1477,6 +1469,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.TES4);
+            var all = RecordCollection.Factory(
+                RecordTypes.TES4,
+                RecordTypes.HEDR,
+                RecordTypes.OFST,
+                RecordTypes.DELE,
+                RecordTypes.CNAM,
+                RecordTypes.SNAM,
+                RecordTypes.MAST,
+                RecordTypes.DATA,
+                RecordTypes.ONAM,
+                RecordTypes.XXXX,
+                RecordTypes.SCRN,
+                RecordTypes.TNAM,
+                RecordTypes.INTV,
+                RecordTypes.INCC);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(Fallout4ModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1510,7 +1523,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class Fallout4ModHeaderSetterCommon
+    internal partial class Fallout4ModHeaderSetterCommon
     {
         public static readonly Fallout4ModHeaderSetterCommon Instance = new Fallout4ModHeaderSetterCommon();
 
@@ -1550,7 +1563,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IFallout4ModHeader item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
@@ -1566,7 +1579,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4ModHeaderCommon
+    internal partial class Fallout4ModHeaderCommon
     {
         public static readonly Fallout4ModHeaderCommon Instance = new Fallout4ModHeaderCommon();
 
@@ -1590,7 +1603,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4ModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Flags = item.Flags == rhs.Flags;
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
@@ -1618,163 +1630,149 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.INCC = item.INCC == rhs.INCC;
         }
         
-        public string ToString(
+        public string Print(
             IFallout4ModHeaderGetter item,
             string? name = null,
             Fallout4ModHeader.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFallout4ModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4ModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Fallout4ModHeader =>");
+                sb.AppendLine($"Fallout4ModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Fallout4ModHeader) =>");
+                sb.AppendLine($"{name} (Fallout4ModHeader) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFallout4ModHeaderGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Fallout4ModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.FormID ?? true)
             {
-                fg.AppendItem(item.FormID, "FormID");
+                sb.AppendItem(item.FormID, "FormID");
             }
             if (printMask?.Version ?? true)
             {
-                fg.AppendItem(item.Version, "Version");
+                sb.AppendItem(item.Version, "Version");
             }
             if (printMask?.FormVersion ?? true)
             {
-                fg.AppendItem(item.FormVersion, "FormVersion");
+                sb.AppendItem(item.FormVersion, "FormVersion");
             }
             if (printMask?.Version2 ?? true)
             {
-                fg.AppendItem(item.Version2, "Version2");
+                sb.AppendItem(item.Version2, "Version2");
             }
             if (printMask?.Stats?.Overall ?? true)
             {
-                item.Stats?.ToString(fg, "Stats");
+                item.Stats?.Print(sb, "Stats");
             }
             if ((printMask?.TypeOffsets ?? true)
                 && item.TypeOffsets is {} TypeOffsetsItem)
             {
-                fg.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
+                sb.AppendLine($"TypeOffsets => {SpanExt.ToHexString(TypeOffsetsItem)}");
             }
             if ((printMask?.Deleted ?? true)
                 && item.Deleted is {} DeletedItem)
             {
-                fg.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
+                sb.AppendLine($"Deleted => {SpanExt.ToHexString(DeletedItem)}");
             }
             if ((printMask?.Author ?? true)
                 && item.Author is {} AuthorItem)
             {
-                fg.AppendItem(AuthorItem, "Author");
+                sb.AppendItem(AuthorItem, "Author");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.MasterReferences?.Overall ?? true)
             {
-                fg.AppendLine("MasterReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("MasterReferences =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.MasterReferences)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.OverriddenForms?.Overall ?? true)
                 && item.OverriddenForms is {} OverriddenFormsItem)
             {
-                fg.AppendLine("OverriddenForms =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("OverriddenForms =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in OverriddenFormsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.Screenshot ?? true)
                 && item.Screenshot is {} ScreenshotItem)
             {
-                fg.AppendLine($"Screenshot => {SpanExt.ToHexString(ScreenshotItem)}");
+                sb.AppendLine($"Screenshot => {SpanExt.ToHexString(ScreenshotItem)}");
             }
             if (printMask?.TransientTypes?.Overall ?? true)
             {
-                fg.AppendLine("TransientTypes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("TransientTypes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.TransientTypes)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.INTV ?? true)
                 && item.INTV is {} INTVItem)
             {
-                fg.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
+                sb.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
             }
             if ((printMask?.INCC ?? true)
                 && item.INCC is {} INCCItem)
             {
-                fg.AppendItem(INCCItem, "INCC");
+                sb.AppendItem(INCCItem, "INCC");
             }
         }
         
@@ -1831,7 +1829,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+                if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences, (l, r) => ((MasterReferenceCommon)((IMasterReferenceGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Fallout4ModHeader_FieldIndex.MasterReferences)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.OverriddenForms) ?? true))
             {
@@ -1843,7 +1841,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TransientTypes) ?? true))
             {
-                if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
+                if (!lhs.TransientTypes.SequenceEqual(rhs.TransientTypes, (l, r) => ((TransientTypeCommon)((ITransientTypeGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)Fallout4ModHeader_FieldIndex.TransientTypes)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INTV) ?? true))
             {
@@ -1908,7 +1906,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4ModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4ModHeaderGetter obj)
         {
             if (obj.OverriddenForms is {} OverriddenFormsItem)
             {
@@ -1917,7 +1915,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.TransientTypes.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1927,7 +1925,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4ModHeaderSetterTranslationCommon
+    internal partial class Fallout4ModHeaderSetterTranslationCommon
     {
         public static readonly Fallout4ModHeaderSetterTranslationCommon Instance = new Fallout4ModHeaderSetterTranslationCommon();
 
@@ -2174,7 +2172,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4ModHeader_Registration.Instance;
-        public static Fallout4ModHeader_Registration StaticRegistration => Fallout4ModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -2198,11 +2196,11 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
+        public static readonly Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFallout4ModHeaderGetter item,
@@ -2221,7 +2219,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IFallout4ModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             var StatsItem = item.Stats;
             ((ModStatsBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
@@ -2254,7 +2252,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 items: item.OverriddenForms,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2267,7 +2265,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.TransientTypes,
-                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((TransientTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -2301,7 +2299,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IFallout4ModHeaderGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2320,7 +2318,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFallout4ModHeaderGetter)item,
@@ -2330,9 +2328,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class Fallout4ModHeaderBinaryCreateTranslation
+    internal partial class Fallout4ModHeaderBinaryCreateTranslation
     {
-        public readonly static Fallout4ModHeaderBinaryCreateTranslation Instance = new Fallout4ModHeaderBinaryCreateTranslation();
+        public static readonly Fallout4ModHeaderBinaryCreateTranslation Instance = new Fallout4ModHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFallout4ModHeader item,
@@ -2354,7 +2352,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2420,7 +2418,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.TransientTypes.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TransientType>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.TNAM,
+                            triggeringRecord: TransientType_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: TransientType.TryCreateFromBinary));
                     return (int)Fallout4ModHeader_FieldIndex.TransientTypes;
@@ -2439,7 +2437,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = frame.ReadSubrecordFrame();
+                    var overflowHeader = frame.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
@@ -2463,7 +2461,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFallout4ModHeaderGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2476,16 +2474,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class Fallout4ModHeaderBinaryOverlay :
+    internal partial class Fallout4ModHeaderBinaryOverlay :
         PluginBinaryOverlay,
         IFallout4ModHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4ModHeader_Registration.Instance;
-        public static Fallout4ModHeader_Registration StaticRegistration => Fallout4ModHeader_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Fallout4ModHeader_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => Fallout4ModHeaderCommon.Instance;
         [DebuggerStepThrough]
@@ -2499,16 +2497,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4ModHeaderCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Fallout4ModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2516,46 +2514,46 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public Fallout4ModHeader.HeaderFlag Flags => (Fallout4ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
+        public Fallout4ModHeader.HeaderFlag Flags => (Fallout4ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         #region Stats
         private RangeInt32? _StatsLocation;
-        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(new OverlayStream(_data.Slice(_StatsLocation!.Value.Min), _package), _package) : default;
+        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(_recordData.Slice(_StatsLocation!.Value.Min), _package) : default;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets
         private int? _TypeOffsetsLocation;
-        public ReadOnlyMemorySlice<Byte>? TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TypeOffsetsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TypeOffsets => _TypeOffsetsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeOffsetsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Deleted
         private int? _DeletedLocation;
-        public ReadOnlyMemorySlice<Byte>? Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DeletedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Deleted => _DeletedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeletedLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Author
         private int? _AuthorLocation;
-        public String? Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AuthorLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Author => _AuthorLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AuthorLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
+        public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
         private int? _ScreenshotLocation;
-        public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = ListExt.Empty<TransientTypeBinaryOverlay>();
+        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = Array.Empty<ITransientTypeGetter>();
         #region INTV
         private int? _INTVLocation;
-        public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region INCC
         private int? _INCCLocation;
-        public Int32? INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _INCCLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INCCLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2564,26 +2562,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected Fallout4ModHeaderBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static Fallout4ModHeaderBinaryOverlay Fallout4ModHeaderFactory(
+        public static IFallout4ModHeaderGetter Fallout4ModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new Fallout4ModHeaderBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2592,20 +2593,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static Fallout4ModHeaderBinaryOverlay Fallout4ModHeaderFactory(
+        public static IFallout4ModHeaderGetter Fallout4ModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return Fallout4ModHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -2615,9 +2616,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.HEDR:
@@ -2647,26 +2648,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.MAST:
                 {
-                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<MasterReferenceBinaryOverlay>(
+                    this.MasterReferences = this.ParseRepeatedTypelessSubrecord<IMasterReferenceGetter>(
                         stream: stream,
-                        parseParams: parseParams,
-                        trigger: RecordTypes.MAST,
+                        translationParams: translationParams,
+                        trigger: MasterReference_Registration.TriggerSpecs,
                         factory: MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)Fallout4ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    int subLen;
-                    if (subMeta.RecordType == RecordTypes.XXXX)
-                    {
-                        subLen = checked((int)stream.ReadUInt32());
-                        stream.ReadSubrecord();
-                    }
-                    else
-                    {
-                        subLen = subMeta.ContentLength;
-                    }
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -2682,14 +2674,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.TransientTypes = BinaryOverlayList.FactoryByArray<TransientTypeBinaryOverlay>(
+                    this.TransientTypes = BinaryOverlayList.FactoryByArray<ITransientTypeGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => TransientTypeBinaryOverlay.TransientTypeFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: TransientType_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Fallout4ModHeader_FieldIndex.TransientTypes;
@@ -2706,7 +2699,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.XXXX:
                 {
-                    var overflowHeader = stream.ReadSubrecordFrame();
+                    var overflowHeader = stream.ReadSubrecord();
                     return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
@@ -2715,12 +2708,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            Fallout4ModHeaderMixIn.ToString(
+            Fallout4ModHeaderMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

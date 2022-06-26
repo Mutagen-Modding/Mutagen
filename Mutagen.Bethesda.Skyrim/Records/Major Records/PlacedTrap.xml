@@ -5,7 +5,10 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
       <Float name="FavorCost" recordType="XFVC" />
       <RefList name="Reflections" refName="WaterReflection" />
@@ -31,6 +34,7 @@
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
+    <LinkInterface>ILocationTargetable</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledItem" recordType="LVLI" baseClass="Fallout4MajorRecord" objType="Record" GUID="9cdaa1e8-f70c-4b2a-b665-6002ce4f7cf2" ID="218">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <UInt8 name="MaxCount" recordType="LVLM" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="1" />
+      <FormLink name="Global" recordType="LVLG" refName="Global" />
+      <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
+      <RefList name="FilterKeywordChances" refName="FilterKeywordChance" recordType="LLKC" />
+      <FormLink name="EpicLootChance" recordType="LVSG" refName="Global" />
+      <String name="OverrideName" recordType="ONAM" translated="Normal" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IOutfitTarget</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+  <Object name="LeveledItemEntry" objType="Subrecord" GUID="dd7621bd-5dc8-442d-80ba-9ee8f28f13dc" ID="219">
+    <Fields>
+      <RefDirect name="Data" refName="LeveledItemEntryData" />
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledItemEntryData" objType="Subrecord" recordType="LVLO" GUID="38f07f8e-f780-4453-9f91-835576e7f96a" ID="220">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

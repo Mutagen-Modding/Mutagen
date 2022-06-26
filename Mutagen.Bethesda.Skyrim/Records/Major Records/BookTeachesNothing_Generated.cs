@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +57,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BookTeachesNothingMixIn.ToString(
+            BookTeachesNothingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -165,30 +168,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(BookTeachesNothing.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(BookTeachesNothing.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BookTeachesNothing.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, BookTeachesNothing.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(BookTeachesNothing.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BookTeachesNothing.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.RawContent ?? true)
                     {
-                        fg.AppendItem(RawContent, "RawContent");
+                        sb.AppendItem(RawContent, "RawContent");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -252,37 +250,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(RawContent, "RawContent");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(RawContent, "RawContent");
+                }
             }
             #endregion
 
@@ -347,7 +338,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => BookTeachesNothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachesNothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -357,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static BookTeachesNothing CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BookTeachesNothing();
             ((BookTeachesNothingSetterCommon)((IBookTeachesNothingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -372,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BookTeachesNothing item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -382,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -437,26 +428,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBookTeachesNothingGetter item,
             string? name = null,
             BookTeachesNothing.Mask<bool>? printMask = null)
         {
-            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).ToString(
+            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBookTeachesNothingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BookTeachesNothing.Mask<bool>? printMask = null)
         {
-            ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).ToString(
+            ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -537,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBookTeachesNothing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BookTeachesNothingSetterCommon)((IBookTeachesNothingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -552,17 +543,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BookTeachesNothing_FieldIndex
+    internal enum BookTeachesNothing_FieldIndex
     {
         RawContent = 0,
     }
     #endregion
 
     #region Registration
-    public partial class BookTeachesNothing_Registration : ILoquiRegistration
+    internal partial class BookTeachesNothing_Registration : ILoquiRegistration
     {
         public static readonly BookTeachesNothing_Registration Instance = new BookTeachesNothing_Registration();
 
@@ -636,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BookTeachesNothingSetterCommon : BookTeachTargetSetterCommon
+    internal partial class BookTeachesNothingSetterCommon : BookTeachTargetSetterCommon
     {
         public new static readonly BookTeachesNothingSetterCommon Instance = new BookTeachesNothingSetterCommon();
 
@@ -666,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IBookTeachesNothing item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -678,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IBookTeachTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (BookTeachesNothing)item,
@@ -689,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookTeachesNothingCommon : BookTeachTargetCommon
+    internal partial class BookTeachesNothingCommon : BookTeachTargetCommon
     {
         public new static readonly BookTeachesNothingCommon Instance = new BookTeachesNothingCommon();
 
@@ -713,62 +704,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BookTeachesNothing.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RawContent = item.RawContent == rhs.RawContent;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IBookTeachesNothingGetter item,
             string? name = null,
             BookTeachesNothing.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBookTeachesNothingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BookTeachesNothing.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BookTeachesNothing =>");
+                sb.AppendLine($"BookTeachesNothing =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BookTeachesNothing) =>");
+                sb.AppendLine($"{name} (BookTeachesNothing) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBookTeachesNothingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BookTeachesNothing.Mask<bool>? printMask = null)
         {
             BookTeachTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.RawContent ?? true)
             {
-                fg.AppendItem(item.RawContent, "RawContent");
+                sb.AppendItem(item.RawContent, "RawContent");
             }
         }
         
@@ -829,9 +817,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBookTeachesNothingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBookTeachesNothingGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -841,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BookTeachesNothingSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
+    internal partial class BookTeachesNothingSetterTranslationCommon : BookTeachTargetSetterTranslationCommon
     {
         public new static readonly BookTeachesNothingSetterTranslationCommon Instance = new BookTeachesNothingSetterTranslationCommon();
 
@@ -941,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachesNothing_Registration.Instance;
-        public new static BookTeachesNothing_Registration StaticRegistration => BookTeachesNothing_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookTeachesNothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookTeachesNothingCommon.Instance;
         [DebuggerStepThrough]
@@ -959,13 +947,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BookTeachesNothingBinaryWriteTranslation :
         BookTeachTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static BookTeachesNothingBinaryWriteTranslation Instance = new BookTeachesNothingBinaryWriteTranslation();
+        public new static readonly BookTeachesNothingBinaryWriteTranslation Instance = new BookTeachesNothingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBookTeachesNothingGetter item,
@@ -977,7 +965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IBookTeachesNothingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -987,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBookTeachesNothingGetter)item,
@@ -998,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IBookTeachTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IBookTeachesNothingGetter)item,
@@ -1008,9 +996,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BookTeachesNothingBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
+    internal partial class BookTeachesNothingBinaryCreateTranslation : BookTeachTargetBinaryCreateTranslation
     {
-        public new readonly static BookTeachesNothingBinaryCreateTranslation Instance = new BookTeachesNothingBinaryCreateTranslation();
+        public new static readonly BookTeachesNothingBinaryCreateTranslation Instance = new BookTeachesNothingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBookTeachesNothing item,
@@ -1032,16 +1020,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BookTeachesNothingBinaryOverlay :
+    internal partial class BookTeachesNothingBinaryOverlay :
         BookTeachTargetBinaryOverlay,
         IBookTeachesNothingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BookTeachesNothing_Registration.Instance;
-        public new static BookTeachesNothing_Registration StaticRegistration => BookTeachesNothing_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BookTeachesNothing_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => BookTeachesNothingCommon.Instance;
         [DebuggerStepThrough]
@@ -1049,13 +1037,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BookTeachesNothingBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BookTeachesNothingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1063,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public UInt32 RawContent => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public UInt32 RawContent => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1071,24 +1059,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected BookTeachesNothingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BookTeachesNothingBinaryOverlay BookTeachesNothingFactory(
+        public static IBookTeachesNothingGetter BookTeachesNothingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BookTeachesNothingBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1097,25 +1091,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static BookTeachesNothingBinaryOverlay BookTeachesNothingFactory(
+        public static IBookTeachesNothingGetter BookTeachesNothingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BookTeachesNothingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BookTeachesNothingMixIn.ToString(
+            BookTeachesNothingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

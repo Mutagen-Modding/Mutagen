@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,22 +17,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -60,18 +61,21 @@ namespace Mutagen.Bethesda.Skyrim
         public IGenderedItem<String?>? Title { get; set; }
         IGenderedItemGetter<String?>? IAssociationTypeGetter.Title => this.Title;
         #endregion
-        #region Flags
-        public AssociationType.Flag Flags { get; set; } = default;
+        #region IsFamily
+        public Boolean? IsFamily { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IAssociationTypeGetter.IsFamily => this.IsFamily;
         #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AssociationTypeMixIn.ToString(
+            AssociationTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -89,7 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
-                this.Flags = initialValue;
+                this.IsFamily = initialValue;
             }
 
             public Mask(
@@ -101,7 +105,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem ParentTitle,
                 TItem Title,
-                TItem Flags)
+                TItem IsFamily)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -112,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ParentTitle = new MaskItem<TItem, GenderedItem<TItem>?>(ParentTitle, default);
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
-                this.Flags = Flags;
+                this.IsFamily = IsFamily;
             }
 
             #pragma warning disable CS8618
@@ -126,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<TItem, GenderedItem<TItem>?>? ParentTitle;
             public MaskItem<TItem, GenderedItem<TItem>?>? Title;
-            public TItem Flags;
+            public TItem IsFamily;
             #endregion
 
             #region Equals
@@ -142,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ParentTitle, rhs.ParentTitle)) return false;
                 if (!object.Equals(this.Title, rhs.Title)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.IsFamily, rhs.IsFamily)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -150,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.ParentTitle);
                 hash.Add(this.Title);
-                hash.Add(this.Flags);
+                hash.Add(this.IsFamily);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -167,7 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!GenderedItem.All(
                     this.Title,
                     eval: eval)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.IsFamily)) return false;
                 return true;
             }
             #endregion
@@ -182,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (GenderedItem.Any(
                     this.Title,
                     eval: eval)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.IsFamily)) return true;
                 return false;
             }
             #endregion
@@ -204,45 +208,40 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Title = GenderedItem.TranslateHelper(
                     this.Title,
                     eval);
-                obj.Flags = eval(this.Flags);
+                obj.IsFamily = eval(this.IsFamily);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AssociationType.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AssociationType.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AssociationType.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AssociationType.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AssociationType.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AssociationType.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (ParentTitle != null
                         && (printMask?.ParentTitle?.Overall ?? true))
                     {
-                        fg.AppendLine($"ParentTitle => {ParentTitle}");
+                        sb.AppendLine($"ParentTitle => {ParentTitle}");
                     }
                     if (Title != null
                         && (printMask?.Title?.Overall ?? true))
                     {
-                        fg.AppendLine($"Title => {Title}");
+                        sb.AppendLine($"Title => {Title}");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.IsFamily ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(IsFamily, "IsFamily");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -255,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<Exception?, GenderedItem<Exception?>?>? ParentTitle;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Title;
-            public Exception? Flags;
+            public Exception? IsFamily;
             #endregion
 
             #region IErrorMask
@@ -268,8 +267,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return ParentTitle;
                     case AssociationType_FieldIndex.Title:
                         return Title;
-                    case AssociationType_FieldIndex.Flags:
-                        return Flags;
+                    case AssociationType_FieldIndex.IsFamily:
+                        return IsFamily;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -286,8 +285,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AssociationType_FieldIndex.Title:
                         this.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case AssociationType_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case AssociationType_FieldIndex.IsFamily:
+                        this.IsFamily = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -306,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case AssociationType_FieldIndex.Title:
                         this.Title = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case AssociationType_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case AssociationType_FieldIndex.IsFamily:
+                        this.IsFamily = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -320,51 +319,44 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (ParentTitle != null) return true;
                 if (Title != null) return true;
-                if (Flags != null) return true;
+                if (IsFamily != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
                 if (ParentTitle != null)
                 {
-                    fg.AppendLine($"ParentTitle => {ParentTitle}");
+                    sb.AppendLine($"ParentTitle => {ParentTitle}");
                 }
                 if (Title != null)
                 {
-                    fg.AppendLine($"Title => {Title}");
+                    sb.AppendLine($"Title => {Title}");
                 }
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(IsFamily, "IsFamily");
+                }
             }
             #endregion
 
@@ -375,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ParentTitle = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.ParentTitle?.Overall, rhs.ParentTitle?.Overall), GenderedItem.Combine(this.ParentTitle?.Specific, rhs.ParentTitle?.Specific));
                 ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.IsFamily = this.IsFamily.Combine(rhs.IsFamily);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -400,7 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public GenderedItem<bool>? ParentTitle;
             public GenderedItem<bool>? Title;
-            public bool Flags;
+            public bool IsFamily;
             #endregion
 
             #region Ctors
@@ -409,7 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
+                this.IsFamily = defaultOn;
             }
 
             #endregion
@@ -419,7 +411,7 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((ParentTitle != null || DefaultOn, null));
                 ret.Add((Title != null || DefaultOn, null));
-                ret.Add((Flags, null));
+                ret.Add((IsFamily, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -508,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => AssociationTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AssociationTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -518,7 +510,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static AssociationType CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AssociationType();
             ((AssociationTypeSetterCommon)((IAssociationTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -533,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AssociationType item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -543,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -566,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IGenderedItem<String?>? ParentTitle { get; set; }
         new IGenderedItem<String?>? Title { get; set; }
-        new AssociationType.Flag Flags { get; set; }
+        new Boolean? IsFamily { get; set; }
     }
 
     public partial interface IAssociationTypeInternal :
@@ -588,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         IGenderedItemGetter<String?>? ParentTitle { get; }
         IGenderedItemGetter<String?>? Title { get; }
-        AssociationType.Flag Flags { get; }
+        Boolean? IsFamily { get; }
 
     }
 
@@ -613,26 +605,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAssociationTypeGetter item,
             string? name = null,
             AssociationType.Mask<bool>? printMask = null)
         {
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).ToString(
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAssociationTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AssociationType.Mask<bool>? printMask = null)
         {
-            ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).ToString(
+            ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -727,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAssociationTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AssociationTypeSetterCommon)((IAssociationTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -742,10 +734,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AssociationType_FieldIndex
+    internal enum AssociationType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -755,12 +747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         ParentTitle = 6,
         Title = 7,
-        Flags = 8,
+        IsFamily = 8,
     }
     #endregion
 
     #region Registration
-    public partial class AssociationType_Registration : ILoquiRegistration
+    internal partial class AssociationType_Registration : ILoquiRegistration
     {
         public static readonly AssociationType_Registration Instance = new AssociationType_Registration();
 
@@ -802,6 +794,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ASTP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.ASTP);
+            var all = RecordCollection.Factory(
+                RecordTypes.ASTP,
+                RecordTypes.MPRT,
+                RecordTypes.FPRT,
+                RecordTypes.MCHT,
+                RecordTypes.FCHT,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AssociationTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -835,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AssociationTypeSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class AssociationTypeSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly AssociationTypeSetterCommon Instance = new AssociationTypeSetterCommon();
 
@@ -846,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.ParentTitle = null;
             item.Title = null;
-            item.Flags = default;
+            item.IsFamily = default;
             base.Clear(item);
         }
         
@@ -872,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAssociationTypeInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
                 record: item,
@@ -885,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AssociationType)item,
@@ -896,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AssociationType)item,
@@ -907,7 +912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AssociationTypeCommon : SkyrimMajorRecordCommon
+    internal partial class AssociationTypeCommon : SkyrimMajorRecordCommon
     {
         public new static readonly AssociationTypeCommon Instance = new AssociationTypeCommon();
 
@@ -931,7 +936,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AssociationType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ParentTitle = GenderedItem.EqualityMaskHelper(
                 lhs: item.ParentTitle,
                 rhs: rhs.ParentTitle,
@@ -942,71 +946,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs: rhs.Title,
                 maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
                 include: include);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.IsFamily = item.IsFamily == rhs.IsFamily;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAssociationTypeGetter item,
             string? name = null,
             AssociationType.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAssociationTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AssociationType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AssociationType =>");
+                sb.AppendLine($"AssociationType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AssociationType) =>");
+                sb.AppendLine($"{name} (AssociationType) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAssociationTypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AssociationType.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ParentTitle?.Overall ?? true)
                 && item.ParentTitle is {} ParentTitleItem)
             {
-                ParentTitleItem?.ToString(fg, "ParentTitle");
+                ParentTitleItem?.Print(sb, "ParentTitle");
             }
             if ((printMask?.Title?.Overall ?? true)
                 && item.Title is {} TitleItem)
             {
-                TitleItem?.ToString(fg, "Title");
+                TitleItem?.Print(sb, "Title");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.IsFamily ?? true)
+                && item.IsFamily is {} IsFamilyItem)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(IsFamilyItem, "IsFamily");
             }
         }
         
@@ -1064,9 +1067,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!Equals(lhs.Title, rhs.Title)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.IsFamily != rhs.IsFamily) return false;
             }
             return true;
         }
@@ -1104,7 +1107,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            hash.Add(item.Flags);
+            if (item.IsFamily is {} IsFamilyitem)
+            {
+                hash.Add(IsFamilyitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1128,9 +1134,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAssociationTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAssociationTypeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1175,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AssociationTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class AssociationTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly AssociationTypeSetterTranslationCommon Instance = new AssociationTypeSetterTranslationCommon();
 
@@ -1228,9 +1234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     male: rhsTitleitem.Male,
                     female: rhsTitleitem.Female);
             }
-            if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.IsFamily = rhs.IsFamily;
             }
         }
         
@@ -1354,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AssociationType_Registration.Instance;
-        public new static AssociationType_Registration StaticRegistration => AssociationType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AssociationTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1372,18 +1378,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AssociationTypeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AssociationTypeBinaryWriteTranslation Instance = new AssociationTypeBinaryWriteTranslation();
+        public new static readonly AssociationTypeBinaryWriteTranslation Instance = new AssociationTypeBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAssociationTypeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1401,17 +1407,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleMarker: RecordTypes.MCHT,
                 femaleMarker: RecordTypes.FCHT,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
-            EnumBinaryTranslation<AssociationType.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4,
-                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.IsFamily,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA),
+                byteLength: 4);
         }
 
         public void Write(
             MutagenWriter writer,
             IAssociationTypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1422,12 +1428,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1439,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAssociationTypeGetter)item,
@@ -1450,7 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAssociationTypeGetter)item,
@@ -1461,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAssociationTypeGetter)item,
@@ -1471,9 +1480,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AssociationTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class AssociationTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
+        public new static readonly AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ASTP;
         public static void FillBinaryStructs(
@@ -1492,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1522,10 +1531,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<AssociationType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)AssociationType_FieldIndex.Flags;
+                    item.IsFamily = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        byteLength: 4);
+                    return (int)AssociationType_FieldIndex.IsFamily;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1534,7 +1543,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1551,16 +1561,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AssociationTypeBinaryOverlay :
+    internal partial class AssociationTypeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IAssociationTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AssociationType_Registration.Instance;
-        public new static AssociationType_Registration StaticRegistration => AssociationType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AssociationType_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AssociationTypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1568,13 +1578,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AssociationTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AssociationTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1592,9 +1602,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGenderedItemGetter<String?>? _TitleOverlay;
         public IGenderedItemGetter<String?>? Title => _TitleOverlay;
         #endregion
-        #region Flags
-        private int? _FlagsLocation;
-        public AssociationType.Flag Flags => _FlagsLocation.HasValue ? (AssociationType.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AssociationType.Flag);
+        #region IsFamily
+        private int? _IsFamilyLocation;
+        public Boolean? IsFamily => _IsFamilyLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IsFamilyLocation.Value, _package.MetaData.Constants)) >= 1 : default(Boolean?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1603,28 +1613,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AssociationTypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AssociationTypeBinaryOverlay AssociationTypeFactory(
+        public static IAssociationTypeGetter AssociationTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AssociationTypeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1634,20 +1647,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static AssociationTypeBinaryOverlay AssociationTypeFactory(
+        public static IAssociationTypeGetter AssociationTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AssociationTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1657,9 +1670,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MPRT:
@@ -1686,8 +1699,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)AssociationType_FieldIndex.Flags;
+                    _IsFamilyLocation = (stream.Position - offset);
+                    return (int)AssociationType_FieldIndex.IsFamily;
                 }
                 default:
                     return base.FillRecordType(
@@ -1696,17 +1709,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AssociationTypeMixIn.ToString(
+            AssociationTypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

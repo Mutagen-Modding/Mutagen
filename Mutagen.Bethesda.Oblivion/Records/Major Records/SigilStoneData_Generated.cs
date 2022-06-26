@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -60,12 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SigilStoneDataMixIn.ToString(
+            SigilStoneDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -187,38 +190,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SigilStoneData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SigilStoneData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SigilStoneData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SigilStoneData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SigilStoneData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SigilStoneData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Uses ?? true)
                     {
-                        fg.AppendItem(Uses, "Uses");
+                        sb.AppendItem(Uses, "Uses");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -313,38 +311,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Uses, "Uses");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
+                {
+                    sb.AppendItem(Uses, "Uses");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
             }
             #endregion
 
@@ -422,10 +417,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = SigilStoneData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SigilStoneDataBinaryWriteTranslation.Instance;
@@ -433,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SigilStoneDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -443,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static SigilStoneData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SigilStoneData();
             ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -458,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SigilStoneData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -468,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -534,26 +525,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISigilStoneDataGetter item,
             string? name = null,
             SigilStoneData.Mask<bool>? printMask = null)
         {
-            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).ToString(
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISigilStoneDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SigilStoneData.Mask<bool>? printMask = null)
         {
-            ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).ToString(
+            ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -659,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ISigilStoneData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -674,10 +665,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum SigilStoneData_FieldIndex
+    internal enum SigilStoneData_FieldIndex
     {
         Uses = 0,
         Value = 1,
@@ -686,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class SigilStoneData_Registration : ILoquiRegistration
+    internal partial class SigilStoneData_Registration : ILoquiRegistration
     {
         public static readonly SigilStoneData_Registration Instance = new SigilStoneData_Registration();
 
@@ -728,6 +719,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SigilStoneDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -761,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SigilStoneDataSetterCommon
+    internal partial class SigilStoneDataSetterCommon
     {
         public static readonly SigilStoneDataSetterCommon Instance = new SigilStoneDataSetterCommon();
 
@@ -786,12 +783,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ISigilStoneData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -802,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneDataCommon
+    internal partial class SigilStoneDataCommon
     {
         public static readonly SigilStoneDataCommon Instance = new SigilStoneDataCommon();
 
@@ -826,67 +823,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SigilStoneData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Uses = item.Uses == rhs.Uses;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
-        public string ToString(
+        public string Print(
             ISigilStoneDataGetter item,
             string? name = null,
             SigilStoneData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISigilStoneDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SigilStoneData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SigilStoneData =>");
+                sb.AppendLine($"SigilStoneData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SigilStoneData) =>");
+                sb.AppendLine($"{name} (SigilStoneData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISigilStoneDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SigilStoneData.Mask<bool>? printMask = null)
         {
             if (printMask?.Uses ?? true)
             {
-                fg.AppendItem(item.Uses, "Uses");
+                sb.AppendItem(item.Uses, "Uses");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
         }
         
@@ -930,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISigilStoneDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISigilStoneDataGetter obj)
         {
             yield break;
         }
@@ -938,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneDataSetterTranslationCommon
+    internal partial class SigilStoneDataSetterTranslationCommon
     {
         public static readonly SigilStoneDataSetterTranslationCommon Instance = new SigilStoneDataSetterTranslationCommon();
 
@@ -1024,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStoneData_Registration.Instance;
-        public static SigilStoneData_Registration StaticRegistration => SigilStoneData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SigilStoneData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SigilStoneDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1048,11 +1042,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class SigilStoneDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static SigilStoneDataBinaryWriteTranslation Instance = new SigilStoneDataBinaryWriteTranslation();
+        public static readonly SigilStoneDataBinaryWriteTranslation Instance = new SigilStoneDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ISigilStoneDataGetter item,
@@ -1068,12 +1062,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ISigilStoneDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1085,7 +1079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISigilStoneDataGetter)item,
@@ -1095,9 +1089,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SigilStoneDataBinaryCreateTranslation
+    internal partial class SigilStoneDataBinaryCreateTranslation
     {
-        public readonly static SigilStoneDataBinaryCreateTranslation Instance = new SigilStoneDataBinaryCreateTranslation();
+        public static readonly SigilStoneDataBinaryCreateTranslation Instance = new SigilStoneDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ISigilStoneData item,
@@ -1119,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ISigilStoneDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SigilStoneDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1132,16 +1126,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class SigilStoneDataBinaryOverlay :
+    internal partial class SigilStoneDataBinaryOverlay :
         PluginBinaryOverlay,
         ISigilStoneDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SigilStoneData_Registration.Instance;
-        public static SigilStoneData_Registration StaticRegistration => SigilStoneData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SigilStoneData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => SigilStoneDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1155,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SigilStoneDataBinaryWriteTranslation.Instance;
@@ -1163,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SigilStoneDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1171,9 +1165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Byte Uses => _data.Span[0x0];
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x1, 0x4));
-        public Single Weight => _data.Slice(0x5, 0x4).Float();
+        public Byte Uses => _structData.Span[0x0];
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1, 0x4));
+        public Single Weight => _structData.Slice(0x5, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1181,25 +1175,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected SigilStoneDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SigilStoneDataBinaryOverlay SigilStoneDataFactory(
+        public static ISigilStoneDataGetter SigilStoneDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x9,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new SigilStoneDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x9 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1208,25 +1207,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static SigilStoneDataBinaryOverlay SigilStoneDataFactory(
+        public static ISigilStoneDataGetter SigilStoneDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SigilStoneDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SigilStoneDataMixIn.ToString(
+            SigilStoneDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,32 +5,34 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +53,37 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Radius
+        public Single Radius { get; set; } = default;
+        #endregion
+        #region MinDelay
+        public Single MinDelay { get; set; } = default;
+        #endregion
+        #region MaxDelay
+        public Single MaxDelay { get; set; } = default;
+        #endregion
+        #region RequiresLineOfSight
+        public Boolean RequiresLineOfSight { get; set; } = default;
+        #endregion
+        #region IsCombatTarget
+        public Boolean IsCombatTarget { get; set; } = default;
+        #endregion
+        #region Unused
+        public UInt16 Unused { get; set; } = default;
+        #endregion
+        #region AOR2DataTypeState
+        public AttractionRule.AOR2DataType AOR2DataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AttractionRuleMixIn.ToString(
+            AttractionRuleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +99,13 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Radius = initialValue;
+                this.MinDelay = initialValue;
+                this.MaxDelay = initialValue;
+                this.RequiresLineOfSight = initialValue;
+                this.IsCombatTarget = initialValue;
+                this.Unused = initialValue;
+                this.AOR2DataTypeState = initialValue;
             }
 
             public Mask(
@@ -83,7 +114,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Radius,
+                TItem MinDelay,
+                TItem MaxDelay,
+                TItem RequiresLineOfSight,
+                TItem IsCombatTarget,
+                TItem Unused,
+                TItem AOR2DataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +130,13 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Radius = Radius;
+                this.MinDelay = MinDelay;
+                this.MaxDelay = MaxDelay;
+                this.RequiresLineOfSight = RequiresLineOfSight;
+                this.IsCombatTarget = IsCombatTarget;
+                this.Unused = Unused;
+                this.AOR2DataTypeState = AOR2DataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -100,6 +145,16 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Radius;
+            public TItem MinDelay;
+            public TItem MaxDelay;
+            public TItem RequiresLineOfSight;
+            public TItem IsCombatTarget;
+            public TItem Unused;
+            public TItem AOR2DataTypeState;
             #endregion
 
             #region Equals
@@ -113,11 +168,25 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.MinDelay, rhs.MinDelay)) return false;
+                if (!object.Equals(this.MaxDelay, rhs.MaxDelay)) return false;
+                if (!object.Equals(this.RequiresLineOfSight, rhs.RequiresLineOfSight)) return false;
+                if (!object.Equals(this.IsCombatTarget, rhs.IsCombatTarget)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.AOR2DataTypeState, rhs.AOR2DataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Radius);
+                hash.Add(this.MinDelay);
+                hash.Add(this.MaxDelay);
+                hash.Add(this.RequiresLineOfSight);
+                hash.Add(this.IsCombatTarget);
+                hash.Add(this.Unused);
+                hash.Add(this.AOR2DataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +197,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.MinDelay)) return false;
+                if (!eval(this.MaxDelay)) return false;
+                if (!eval(this.RequiresLineOfSight)) return false;
+                if (!eval(this.IsCombatTarget)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.AOR2DataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -136,6 +212,13 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.MinDelay)) return true;
+                if (eval(this.MaxDelay)) return true;
+                if (eval(this.RequiresLineOfSight)) return true;
+                if (eval(this.IsCombatTarget)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.AOR2DataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -151,30 +234,60 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Radius = eval(this.Radius);
+                obj.MinDelay = eval(this.MinDelay);
+                obj.MaxDelay = eval(this.MaxDelay);
+                obj.RequiresLineOfSight = eval(this.RequiresLineOfSight);
+                obj.IsCombatTarget = eval(this.IsCombatTarget);
+                obj.Unused = eval(this.Unused);
+                obj.AOR2DataTypeState = eval(this.AOR2DataTypeState);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AttractionRule.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AttractionRule.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AttractionRule.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AttractionRule.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AttractionRule.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AttractionRule.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.Radius ?? true)
+                    {
+                        sb.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.MinDelay ?? true)
+                    {
+                        sb.AppendItem(MinDelay, "MinDelay");
+                    }
+                    if (printMask?.MaxDelay ?? true)
+                    {
+                        sb.AppendItem(MaxDelay, "MaxDelay");
+                    }
+                    if (printMask?.RequiresLineOfSight ?? true)
+                    {
+                        sb.AppendItem(RequiresLineOfSight, "RequiresLineOfSight");
+                    }
+                    if (printMask?.IsCombatTarget ?? true)
+                    {
+                        sb.AppendItem(IsCombatTarget, "IsCombatTarget");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.AOR2DataTypeState ?? true)
+                    {
+                        sb.AppendItem(AOR2DataTypeState, "AOR2DataTypeState");
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +297,36 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Radius;
+            public Exception? MinDelay;
+            public Exception? MaxDelay;
+            public Exception? RequiresLineOfSight;
+            public Exception? IsCombatTarget;
+            public Exception? Unused;
+            public Exception? AOR2DataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AttractionRule_FieldIndex enu = (AttractionRule_FieldIndex)index;
                 switch (enu)
                 {
+                    case AttractionRule_FieldIndex.Radius:
+                        return Radius;
+                    case AttractionRule_FieldIndex.MinDelay:
+                        return MinDelay;
+                    case AttractionRule_FieldIndex.MaxDelay:
+                        return MaxDelay;
+                    case AttractionRule_FieldIndex.RequiresLineOfSight:
+                        return RequiresLineOfSight;
+                    case AttractionRule_FieldIndex.IsCombatTarget:
+                        return IsCombatTarget;
+                    case AttractionRule_FieldIndex.Unused:
+                        return Unused;
+                    case AttractionRule_FieldIndex.AOR2DataTypeState:
+                        return AOR2DataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +337,27 @@ namespace Mutagen.Bethesda.Fallout4
                 AttractionRule_FieldIndex enu = (AttractionRule_FieldIndex)index;
                 switch (enu)
                 {
+                    case AttractionRule_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case AttractionRule_FieldIndex.MinDelay:
+                        this.MinDelay = ex;
+                        break;
+                    case AttractionRule_FieldIndex.MaxDelay:
+                        this.MaxDelay = ex;
+                        break;
+                    case AttractionRule_FieldIndex.RequiresLineOfSight:
+                        this.RequiresLineOfSight = ex;
+                        break;
+                    case AttractionRule_FieldIndex.IsCombatTarget:
+                        this.IsCombatTarget = ex;
+                        break;
+                    case AttractionRule_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case AttractionRule_FieldIndex.AOR2DataTypeState:
+                        this.AOR2DataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +369,27 @@ namespace Mutagen.Bethesda.Fallout4
                 AttractionRule_FieldIndex enu = (AttractionRule_FieldIndex)index;
                 switch (enu)
                 {
+                    case AttractionRule_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case AttractionRule_FieldIndex.MinDelay:
+                        this.MinDelay = (Exception?)obj;
+                        break;
+                    case AttractionRule_FieldIndex.MaxDelay:
+                        this.MaxDelay = (Exception?)obj;
+                        break;
+                    case AttractionRule_FieldIndex.RequiresLineOfSight:
+                        this.RequiresLineOfSight = (Exception?)obj;
+                        break;
+                    case AttractionRule_FieldIndex.IsCombatTarget:
+                        this.IsCombatTarget = (Exception?)obj;
+                        break;
+                    case AttractionRule_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case AttractionRule_FieldIndex.AOR2DataTypeState:
+                        this.AOR2DataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +399,60 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Radius != null) return true;
+                if (MinDelay != null) return true;
+                if (MaxDelay != null) return true;
+                if (RequiresLineOfSight != null) return true;
+                if (IsCombatTarget != null) return true;
+                if (Unused != null) return true;
+                if (AOR2DataTypeState != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Radius, "Radius");
+                }
+                {
+                    sb.AppendItem(MinDelay, "MinDelay");
+                }
+                {
+                    sb.AppendItem(MaxDelay, "MaxDelay");
+                }
+                {
+                    sb.AppendItem(RequiresLineOfSight, "RequiresLineOfSight");
+                }
+                {
+                    sb.AppendItem(IsCombatTarget, "IsCombatTarget");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(AOR2DataTypeState, "AOR2DataTypeState");
+                }
             }
             #endregion
 
@@ -263,6 +461,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.MinDelay = this.MinDelay.Combine(rhs.MinDelay);
+                ret.MaxDelay = this.MaxDelay.Combine(rhs.MaxDelay);
+                ret.RequiresLineOfSight = this.RequiresLineOfSight.Combine(rhs.RequiresLineOfSight);
+                ret.IsCombatTarget = this.IsCombatTarget.Combine(rhs.IsCombatTarget);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.AOR2DataTypeState = this.AOR2DataTypeState.Combine(rhs.AOR2DataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +489,44 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Radius;
+            public bool MinDelay;
+            public bool MaxDelay;
+            public bool RequiresLineOfSight;
+            public bool IsCombatTarget;
+            public bool Unused;
+            public bool AOR2DataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Radius = defaultOn;
+                this.MinDelay = defaultOn;
+                this.MaxDelay = defaultOn;
+                this.RequiresLineOfSight = defaultOn;
+                this.IsCombatTarget = defaultOn;
+                this.Unused = defaultOn;
+                this.AOR2DataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Radius, null));
+                ret.Add((MinDelay, null));
+                ret.Add((MaxDelay, null));
+                ret.Add((RequiresLineOfSight, null));
+                ret.Add((IsCombatTarget, null));
+                ret.Add((Unused, null));
+                ret.Add((AOR2DataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -346,6 +580,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IAttractionRule);
 
+        [Flags]
+        public enum AOR2DataType
+        {
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -373,7 +611,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => AttractionRuleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttractionRuleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +621,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static AttractionRule CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AttractionRule();
             ((AttractionRuleSetterCommon)((IAttractionRuleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +636,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AttractionRule item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +646,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -429,6 +667,13 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IAttractionRuleInternal>
     {
+        new Single Radius { get; set; }
+        new Single MinDelay { get; set; }
+        new Single MaxDelay { get; set; }
+        new Boolean RequiresLineOfSight { get; set; }
+        new Boolean IsCombatTarget { get; set; }
+        new UInt16 Unused { get; set; }
+        new AttractionRule.AOR2DataType AOR2DataTypeState { get; set; }
     }
 
     public partial interface IAttractionRuleInternal :
@@ -446,6 +691,13 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<IAttractionRuleGetter>
     {
         static new ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
+        Single Radius { get; }
+        Single MinDelay { get; }
+        Single MaxDelay { get; }
+        Boolean RequiresLineOfSight { get; }
+        Boolean IsCombatTarget { get; }
+        UInt16 Unused { get; }
+        AttractionRule.AOR2DataType AOR2DataTypeState { get; }
 
     }
 
@@ -470,26 +722,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAttractionRuleGetter item,
             string? name = null,
             AttractionRule.Mask<bool>? printMask = null)
         {
-            return ((AttractionRuleCommon)((IAttractionRuleGetter)item).CommonInstance()!).ToString(
+            return ((AttractionRuleCommon)((IAttractionRuleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAttractionRuleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AttractionRule.Mask<bool>? printMask = null)
         {
-            ((AttractionRuleCommon)((IAttractionRuleGetter)item).CommonInstance()!).ToString(
+            ((AttractionRuleCommon)((IAttractionRuleGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +836,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IAttractionRuleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AttractionRuleSetterCommon)((IAttractionRuleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +851,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum AttractionRule_FieldIndex
+    internal enum AttractionRule_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +862,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Radius = 6,
+        MinDelay = 7,
+        MaxDelay = 8,
+        RequiresLineOfSight = 9,
+        IsCombatTarget = 10,
+        Unused = 11,
+        AOR2DataTypeState = 12,
     }
     #endregion
 
     #region Registration
-    public partial class AttractionRule_Registration : ILoquiRegistration
+    internal partial class AttractionRule_Registration : ILoquiRegistration
     {
         public static readonly AttractionRule_Registration Instance = new AttractionRule_Registration();
 
@@ -627,9 +886,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "ef7fcf3c-9d9e-47a9-aaf1-f79e945aceee";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(AttractionRule.Mask<>);
 
@@ -656,6 +915,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AORU;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.AORU);
+            var all = RecordCollection.Factory(
+                RecordTypes.AORU,
+                RecordTypes.AOR2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AttractionRuleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +957,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class AttractionRuleSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class AttractionRuleSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly AttractionRuleSetterCommon Instance = new AttractionRuleSetterCommon();
 
@@ -698,6 +966,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IAttractionRuleInternal item)
         {
             ClearPartial();
+            item.Radius = default;
+            item.MinDelay = default;
+            item.MaxDelay = default;
+            item.RequiresLineOfSight = default;
+            item.IsCombatTarget = default;
+            item.Unused = default;
+            item.AOR2DataTypeState = default;
             base.Clear(item);
         }
         
@@ -723,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IAttractionRuleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IAttractionRuleInternal>(
                 record: item,
@@ -736,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AttractionRule)item,
@@ -747,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AttractionRule)item,
@@ -758,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AttractionRuleCommon : Fallout4MajorRecordCommon
+    internal partial class AttractionRuleCommon : Fallout4MajorRecordCommon
     {
         public new static readonly AttractionRuleCommon Instance = new AttractionRuleCommon();
 
@@ -782,58 +1057,90 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             AttractionRule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.MinDelay = item.MinDelay.EqualsWithin(rhs.MinDelay);
+            ret.MaxDelay = item.MaxDelay.EqualsWithin(rhs.MaxDelay);
+            ret.RequiresLineOfSight = item.RequiresLineOfSight == rhs.RequiresLineOfSight;
+            ret.IsCombatTarget = item.IsCombatTarget == rhs.IsCombatTarget;
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.AOR2DataTypeState = item.AOR2DataTypeState == rhs.AOR2DataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAttractionRuleGetter item,
             string? name = null,
             AttractionRule.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAttractionRuleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AttractionRule.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AttractionRule =>");
+                sb.AppendLine($"AttractionRule =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AttractionRule) =>");
+                sb.AppendLine($"{name} (AttractionRule) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAttractionRuleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AttractionRule.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if (printMask?.Radius ?? true)
+            {
+                sb.AppendItem(item.Radius, "Radius");
+            }
+            if (printMask?.MinDelay ?? true)
+            {
+                sb.AppendItem(item.MinDelay, "MinDelay");
+            }
+            if (printMask?.MaxDelay ?? true)
+            {
+                sb.AppendItem(item.MaxDelay, "MaxDelay");
+            }
+            if (printMask?.RequiresLineOfSight ?? true)
+            {
+                sb.AppendItem(item.RequiresLineOfSight, "RequiresLineOfSight");
+            }
+            if (printMask?.IsCombatTarget ?? true)
+            {
+                sb.AppendItem(item.IsCombatTarget, "IsCombatTarget");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendItem(item.Unused, "Unused");
+            }
+            if (printMask?.AOR2DataTypeState ?? true)
+            {
+                sb.AppendItem(item.AOR2DataTypeState, "AOR2DataTypeState");
+            }
         }
         
         public static AttractionRule_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1189,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.MinDelay) ?? true))
+            {
+                if (!lhs.MinDelay.EqualsWithin(rhs.MinDelay)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.MaxDelay) ?? true))
+            {
+                if (!lhs.MaxDelay.EqualsWithin(rhs.MaxDelay)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.RequiresLineOfSight) ?? true))
+            {
+                if (lhs.RequiresLineOfSight != rhs.RequiresLineOfSight) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.IsCombatTarget) ?? true))
+            {
+                if (lhs.IsCombatTarget != rhs.IsCombatTarget) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttractionRule_FieldIndex.AOR2DataTypeState) ?? true))
+            {
+                if (lhs.AOR2DataTypeState != rhs.AOR2DataTypeState) return false;
+            }
             return true;
         }
         
@@ -910,6 +1245,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IAttractionRuleGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Radius);
+            hash.Add(item.MinDelay);
+            hash.Add(item.MaxDelay);
+            hash.Add(item.RequiresLineOfSight);
+            hash.Add(item.IsCombatTarget);
+            hash.Add(item.Unused);
+            hash.Add(item.AOR2DataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,9 +1275,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAttractionRuleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAttractionRuleGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -980,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class AttractionRuleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class AttractionRuleSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly AttractionRuleSetterTranslationCommon Instance = new AttractionRuleSetterTranslationCommon();
 
@@ -1013,6 +1355,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.MinDelay) ?? true))
+            {
+                item.MinDelay = rhs.MinDelay;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.MaxDelay) ?? true))
+            {
+                item.MaxDelay = rhs.MaxDelay;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.RequiresLineOfSight) ?? true))
+            {
+                item.RequiresLineOfSight = rhs.RequiresLineOfSight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.IsCombatTarget) ?? true))
+            {
+                item.IsCombatTarget = rhs.IsCombatTarget;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AttractionRule_FieldIndex.AOR2DataTypeState) ?? true))
+            {
+                item.AOR2DataTypeState = rhs.AOR2DataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +1505,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +1523,53 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class AttractionRuleBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AttractionRuleBinaryWriteTranslation Instance = new AttractionRuleBinaryWriteTranslation();
+        public new static readonly AttractionRuleBinaryWriteTranslation Instance = new AttractionRuleBinaryWriteTranslation();
+
+        public static void WriteEmbedded(
+            IAttractionRuleGetter item,
+            MutagenWriter writer)
+        {
+            Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IAttractionRuleGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.AOR2)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Radius);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MinDelay);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MaxDelay);
+                writer.Write(item.RequiresLineOfSight);
+                writer.Write(item.IsCombatTarget);
+                writer.Write(item.Unused);
+            }
+        }
 
         public void Write(
             MutagenWriter writer,
             IAttractionRuleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1172,13 +1577,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 try
                 {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +1600,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAttractionRuleGetter)item,
@@ -1201,7 +1611,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAttractionRuleGetter)item,
@@ -1212,7 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAttractionRuleGetter)item,
@@ -1222,9 +1632,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class AttractionRuleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class AttractionRuleBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static AttractionRuleBinaryCreateTranslation Instance = new AttractionRuleBinaryCreateTranslation();
+        public new static readonly AttractionRuleBinaryCreateTranslation Instance = new AttractionRuleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AORU;
         public static void FillBinaryStructs(
@@ -1234,6 +1644,42 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IAttractionRuleInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.AOR2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MinDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MaxDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RequiresLineOfSight = dataFrame.ReadBoolean();
+                    item.IsCombatTarget = dataFrame.ReadBoolean();
+                    item.Unused = dataFrame.ReadUInt16();
+                    return (int)AttractionRule_FieldIndex.Unused;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
         }
 
     }
@@ -1249,16 +1695,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class AttractionRuleBinaryOverlay :
+    internal partial class AttractionRuleBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IAttractionRuleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AttractionRule_Registration.Instance;
-        public new static AttractionRule_Registration StaticRegistration => AttractionRule_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AttractionRule_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AttractionRuleCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +1712,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AttractionRuleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AttractionRuleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1282,6 +1728,38 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IAttractionRule);
 
 
+        private RangeInt32? _AOR2Location;
+        public AttractionRule.AOR2DataType AOR2DataTypeState { get; private set; }
+        #region Radius
+        private int _RadiusLocation => _AOR2Location!.Value.Min;
+        private bool _Radius_IsSet => _AOR2Location.HasValue;
+        public Single Radius => _Radius_IsSet ? _recordData.Slice(_RadiusLocation, 4).Float() : default;
+        #endregion
+        #region MinDelay
+        private int _MinDelayLocation => _AOR2Location!.Value.Min + 0x4;
+        private bool _MinDelay_IsSet => _AOR2Location.HasValue;
+        public Single MinDelay => _MinDelay_IsSet ? _recordData.Slice(_MinDelayLocation, 4).Float() : default;
+        #endregion
+        #region MaxDelay
+        private int _MaxDelayLocation => _AOR2Location!.Value.Min + 0x8;
+        private bool _MaxDelay_IsSet => _AOR2Location.HasValue;
+        public Single MaxDelay => _MaxDelay_IsSet ? _recordData.Slice(_MaxDelayLocation, 4).Float() : default;
+        #endregion
+        #region RequiresLineOfSight
+        private int _RequiresLineOfSightLocation => _AOR2Location!.Value.Min + 0xC;
+        private bool _RequiresLineOfSight_IsSet => _AOR2Location.HasValue;
+        public Boolean RequiresLineOfSight => _RequiresLineOfSight_IsSet ? _recordData.Slice(_RequiresLineOfSightLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region IsCombatTarget
+        private int _IsCombatTargetLocation => _AOR2Location!.Value.Min + 0xD;
+        private bool _IsCombatTarget_IsSet => _AOR2Location.HasValue;
+        public Boolean IsCombatTarget => _IsCombatTarget_IsSet ? _recordData.Slice(_IsCombatTargetLocation, 1)[0] >= 1 : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _AOR2Location!.Value.Min + 0xE;
+        private bool _Unused_IsSet => _AOR2Location.HasValue;
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +1767,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected AttractionRuleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AttractionRuleBinaryOverlay AttractionRuleFactory(
+        public static IAttractionRuleGetter AttractionRuleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AttractionRuleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +1801,59 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static AttractionRuleBinaryOverlay AttractionRuleFactory(
+        public static IAttractionRuleGetter AttractionRuleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AttractionRuleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.AOR2:
+                {
+                    _AOR2Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)AttractionRule_FieldIndex.Unused;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AttractionRuleMixIn.ToString(
+            AttractionRuleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

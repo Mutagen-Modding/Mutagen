@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +57,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TopicReferenceSubtypeMixIn.ToString(
+            TopicReferenceSubtypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -165,30 +168,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(TopicReferenceSubtype.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(TopicReferenceSubtype.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TopicReferenceSubtype.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, TopicReferenceSubtype.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(TopicReferenceSubtype.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TopicReferenceSubtype.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Subtype ?? true)
                     {
-                        fg.AppendItem(Subtype, "Subtype");
+                        sb.AppendItem(Subtype, "Subtype");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -252,37 +250,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Subtype, "Subtype");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Subtype, "Subtype");
+                }
             }
             #endregion
 
@@ -342,16 +333,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = TopicReferenceSubtype_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TopicReferenceSubtypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TopicReferenceSubtypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -361,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static TopicReferenceSubtype CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TopicReferenceSubtype();
             ((TopicReferenceSubtypeSetterCommon)((ITopicReferenceSubtypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -376,7 +363,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TopicReferenceSubtype item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -386,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -441,26 +428,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITopicReferenceSubtypeGetter item,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).ToString(
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITopicReferenceSubtypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
-            ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).ToString(
+            ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -541,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITopicReferenceSubtype item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TopicReferenceSubtypeSetterCommon)((ITopicReferenceSubtypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -556,17 +543,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TopicReferenceSubtype_FieldIndex
+    internal enum TopicReferenceSubtype_FieldIndex
     {
         Subtype = 0,
     }
     #endregion
 
     #region Registration
-    public partial class TopicReferenceSubtype_Registration : ILoquiRegistration
+    internal partial class TopicReferenceSubtype_Registration : ILoquiRegistration
     {
         public static readonly TopicReferenceSubtype_Registration Instance = new TopicReferenceSubtype_Registration();
 
@@ -608,6 +595,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PDTO;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PDTO);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TopicReferenceSubtypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -641,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TopicReferenceSubtypeSetterCommon : ATopicReferenceSetterCommon
+    internal partial class TopicReferenceSubtypeSetterCommon : ATopicReferenceSetterCommon
     {
         public new static readonly TopicReferenceSubtypeSetterCommon Instance = new TopicReferenceSubtypeSetterCommon();
 
@@ -671,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ITopicReferenceSubtype item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -683,7 +676,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IATopicReference item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (TopicReferenceSubtype)item,
@@ -694,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TopicReferenceSubtypeCommon : ATopicReferenceCommon
+    internal partial class TopicReferenceSubtypeCommon : ATopicReferenceCommon
     {
         public new static readonly TopicReferenceSubtypeCommon Instance = new TopicReferenceSubtypeCommon();
 
@@ -718,62 +711,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TopicReferenceSubtype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Subtype = item.Subtype == rhs.Subtype;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ITopicReferenceSubtypeGetter item,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITopicReferenceSubtypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TopicReferenceSubtype =>");
+                sb.AppendLine($"TopicReferenceSubtype =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TopicReferenceSubtype) =>");
+                sb.AppendLine($"{name} (TopicReferenceSubtype) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITopicReferenceSubtypeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TopicReferenceSubtype.Mask<bool>? printMask = null)
         {
             ATopicReferenceCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Subtype ?? true)
             {
-                fg.AppendItem(item.Subtype, "Subtype");
+                sb.AppendItem(item.Subtype, "Subtype");
             }
         }
         
@@ -834,9 +824,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITopicReferenceSubtypeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITopicReferenceSubtypeGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -846,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TopicReferenceSubtypeSetterTranslationCommon : ATopicReferenceSetterTranslationCommon
+    internal partial class TopicReferenceSubtypeSetterTranslationCommon : ATopicReferenceSetterTranslationCommon
     {
         public new static readonly TopicReferenceSubtypeSetterTranslationCommon Instance = new TopicReferenceSubtypeSetterTranslationCommon();
 
@@ -946,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TopicReferenceSubtype_Registration.Instance;
-        public new static TopicReferenceSubtype_Registration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TopicReferenceSubtypeCommon.Instance;
         [DebuggerStepThrough]
@@ -964,13 +954,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TopicReferenceSubtypeBinaryWriteTranslation :
         ATopicReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TopicReferenceSubtypeBinaryWriteTranslation Instance = new TopicReferenceSubtypeBinaryWriteTranslation();
+        public new static readonly TopicReferenceSubtypeBinaryWriteTranslation Instance = new TopicReferenceSubtypeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITopicReferenceSubtypeGetter item,
@@ -984,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ITopicReferenceSubtypeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -994,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITopicReferenceSubtypeGetter)item,
@@ -1005,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IATopicReferenceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITopicReferenceSubtypeGetter)item,
@@ -1015,9 +1005,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TopicReferenceSubtypeBinaryCreateTranslation : ATopicReferenceBinaryCreateTranslation
+    internal partial class TopicReferenceSubtypeBinaryCreateTranslation : ATopicReferenceBinaryCreateTranslation
     {
-        public new readonly static TopicReferenceSubtypeBinaryCreateTranslation Instance = new TopicReferenceSubtypeBinaryCreateTranslation();
+        public new static readonly TopicReferenceSubtypeBinaryCreateTranslation Instance = new TopicReferenceSubtypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITopicReferenceSubtype item,
@@ -1039,16 +1029,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TopicReferenceSubtypeBinaryOverlay :
+    internal partial class TopicReferenceSubtypeBinaryOverlay :
         ATopicReferenceBinaryOverlay,
         ITopicReferenceSubtypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TopicReferenceSubtype_Registration.Instance;
-        public new static TopicReferenceSubtype_Registration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => TopicReferenceSubtype_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TopicReferenceSubtypeCommon.Instance;
         [DebuggerStepThrough]
@@ -1056,13 +1046,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TopicReferenceSubtypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TopicReferenceSubtypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1070,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public RecordType Subtype => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4)));
+        public RecordType Subtype => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4)));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1078,24 +1068,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected TopicReferenceSubtypeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TopicReferenceSubtypeBinaryOverlay TopicReferenceSubtypeFactory(
+        public static ITopicReferenceSubtypeGetter TopicReferenceSubtypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new TopicReferenceSubtypeBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1104,25 +1100,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static TopicReferenceSubtypeBinaryOverlay TopicReferenceSubtypeFactory(
+        public static ITopicReferenceSubtypeGetter TopicReferenceSubtypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TopicReferenceSubtypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TopicReferenceSubtypeMixIn.ToString(
+            TopicReferenceSubtypeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

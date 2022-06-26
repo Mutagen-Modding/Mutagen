@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Loqui.Generation;
 using Noggog;
@@ -17,6 +16,5 @@ public class BufferType : ByteArrayType
         await base.Load(node, requireName);
         this.IntegrateField = false;
         this.Static = node.GetAttribute<bool>("static");
-        this.NotifyingProperty.OnNext((Loqui.NotifyingType.None, true));
     }
 }

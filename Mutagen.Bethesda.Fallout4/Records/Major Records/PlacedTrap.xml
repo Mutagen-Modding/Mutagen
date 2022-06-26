@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="APlacedTrap" baseClass="Fallout4MajorRecord" abstract="true" objType="Record" majorFlag="true" GUID="31d1155a-457d-4775-ab46-54c028d5613e" ID="474">
+    <Interface>IPositionRotation</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
+      <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
+      <Float name="HeadTrackingWeight" recordType="XHTW" />
+      <Float name="FavorCost" recordType="XFVC" />
+      <RefList name="Reflections" refName="WaterReflection" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <FormLink name="UnknownReference" refName="PlacedObject" recordType="XASP" />
+      <ByteArray name="XATP" recordType="XATP" />
+      <UInt32 name="AmmoCount" recordType="XAMC" />
+      <Bool name="IsLinkedRefTransient" boolAsMarker="true" recordType="XLKT" />
+      <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <FormLink name="MaterialSwap" refName="MaterialSwap" recordType="XMSP" />
+      <FormLink name="ReferenceGroup" refName="ReferenceGroup" recordType="XRFG" />
+      <ByteArray name="XCVR" recordType="XCVR" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
+      <Bool name="IsIgnoredBySandbox" recordType="XIS2" boolAsMarker="true" />
+      <List name="LocationRefTypes" recordType="XLRT">
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <FormLink name="LocationReference" recordType="XLRL">
+        <Interface>ILocationRecord</Interface>
+      </FormLink>
+      <Float name="Scale" recordType="XSCL" />
+      <List name="DistantLodData" recordType="XLOD">
+        <Float />
+      </List>
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+      <String name="Comments" recordType="MNAM" />
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedThing</LinkInterface>
+    <LinkInterface>ILocationTargetable</LinkInterface>
+    <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
+  </Object>
+  <Object name="PlacedArrow" recordType="PARW" baseClass="APlacedTrap" objType="Record" GUID="8eb29d22-bd75-4741-bb4c-f15bf25d2a8e" ID="475">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedBeam" recordType="PBEA" baseClass="APlacedTrap" objType="Record" GUID="80294c3f-3681-45f5-9ae6-e6af2a05e949" ID="476">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedFlame" recordType="PFLA" baseClass="APlacedTrap" objType="Record" GUID="b82409a6-0b72-42da-abcc-6b4fa587d835" ID="477">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedCone" recordType="PCON" baseClass="APlacedTrap" objType="Record" GUID="2fe3d18f-5631-4009-8e6d-aa91a16be2fb" ID="478">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedBarrier" recordType="PBAR" baseClass="APlacedTrap" objType="Record" GUID="149ef5f2-369d-4e48-aa21-f15468186da8" ID="479">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedTrap" recordType="PGRE" baseClass="APlacedTrap" objType="Record" GUID="43bb50c7-7a42-495c-a2e9-e32e1e57538e" ID="480">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedHazard" recordType="PHZD" baseClass="APlacedTrap" objType="Record" GUID="b7c6af30-491a-44fe-baae-d0eb338ec3f9" ID="481">
+    <Fields>
+      <FormLink name="Hazard" refName="Hazard" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedMissile" recordType="PMIS" baseClass="APlacedTrap" objType="Record" GUID="717745b3-3244-439d-89c0-37a9f2d14cd8" ID="482">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+</Loqui>

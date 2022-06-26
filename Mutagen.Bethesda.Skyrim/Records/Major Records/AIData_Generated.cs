@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -83,12 +85,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AIDataMixIn.ToString(
+            AIDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -282,70 +285,65 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AIData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AIData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AIData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AIData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AIData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AIData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Aggression ?? true)
                     {
-                        fg.AppendItem(Aggression, "Aggression");
+                        sb.AppendItem(Aggression, "Aggression");
                     }
                     if (printMask?.Confidence ?? true)
                     {
-                        fg.AppendItem(Confidence, "Confidence");
+                        sb.AppendItem(Confidence, "Confidence");
                     }
                     if (printMask?.EnergyLevel ?? true)
                     {
-                        fg.AppendItem(EnergyLevel, "EnergyLevel");
+                        sb.AppendItem(EnergyLevel, "EnergyLevel");
                     }
                     if (printMask?.Responsibility ?? true)
                     {
-                        fg.AppendItem(Responsibility, "Responsibility");
+                        sb.AppendItem(Responsibility, "Responsibility");
                     }
                     if (printMask?.Mood ?? true)
                     {
-                        fg.AppendItem(Mood, "Mood");
+                        sb.AppendItem(Mood, "Mood");
                     }
                     if (printMask?.Assistance ?? true)
                     {
-                        fg.AppendItem(Assistance, "Assistance");
+                        sb.AppendItem(Assistance, "Assistance");
                     }
                     if (printMask?.AggroRadiusBehavior ?? true)
                     {
-                        fg.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
+                        sb.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Warn ?? true)
                     {
-                        fg.AppendItem(Warn, "Warn");
+                        sb.AppendItem(Warn, "Warn");
                     }
                     if (printMask?.WarnOrAttack ?? true)
                     {
-                        fg.AppendItem(WarnOrAttack, "WarnOrAttack");
+                        sb.AppendItem(WarnOrAttack, "WarnOrAttack");
                     }
                     if (printMask?.Attack ?? true)
                     {
-                        fg.AppendItem(Attack, "Attack");
+                        sb.AppendItem(Attack, "Attack");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -520,46 +518,59 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Aggression, "Aggression");
-                fg.AppendItem(Confidence, "Confidence");
-                fg.AppendItem(EnergyLevel, "EnergyLevel");
-                fg.AppendItem(Responsibility, "Responsibility");
-                fg.AppendItem(Mood, "Mood");
-                fg.AppendItem(Assistance, "Assistance");
-                fg.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Warn, "Warn");
-                fg.AppendItem(WarnOrAttack, "WarnOrAttack");
-                fg.AppendItem(Attack, "Attack");
+                {
+                    sb.AppendItem(Aggression, "Aggression");
+                }
+                {
+                    sb.AppendItem(Confidence, "Confidence");
+                }
+                {
+                    sb.AppendItem(EnergyLevel, "EnergyLevel");
+                }
+                {
+                    sb.AppendItem(Responsibility, "Responsibility");
+                }
+                {
+                    sb.AppendItem(Mood, "Mood");
+                }
+                {
+                    sb.AppendItem(Assistance, "Assistance");
+                }
+                {
+                    sb.AppendItem(AggroRadiusBehavior, "AggroRadiusBehavior");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Warn, "Warn");
+                }
+                {
+                    sb.AppendItem(WarnOrAttack, "WarnOrAttack");
+                }
+                {
+                    sb.AppendItem(Attack, "Attack");
+                }
             }
             #endregion
 
@@ -669,10 +680,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = AIData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIDataBinaryWriteTranslation.Instance;
@@ -680,7 +687,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -690,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static AIData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIData();
             ((AIDataSetterCommon)((IAIDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -705,7 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AIData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -715,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -795,26 +802,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAIDataGetter item,
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
-            return ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).ToString(
+            return ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
-            ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).ToString(
+            ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -920,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAIData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AIDataSetterCommon)((IAIDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -935,10 +942,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AIData_FieldIndex
+    internal enum AIData_FieldIndex
     {
         Aggression = 0,
         Confidence = 1,
@@ -955,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AIData_Registration : ILoquiRegistration
+    internal partial class AIData_Registration : ILoquiRegistration
     {
         public static readonly AIData_Registration Instance = new AIData_Registration();
 
@@ -997,6 +1004,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AIDT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.AIDT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AIDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1030,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AIDataSetterCommon
+    internal partial class AIDataSetterCommon
     {
         public static readonly AIDataSetterCommon Instance = new AIDataSetterCommon();
 
@@ -1063,12 +1076,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAIData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.AIDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1079,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AIDataCommon
+    internal partial class AIDataCommon
     {
         public static readonly AIDataCommon Instance = new AIDataCommon();
 
@@ -1103,7 +1116,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AIData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Aggression = item.Aggression == rhs.Aggression;
             ret.Confidence = item.Confidence == rhs.Confidence;
             ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
@@ -1117,93 +1129,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Attack = item.Attack == rhs.Attack;
         }
         
-        public string ToString(
+        public string Print(
             IAIDataGetter item,
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AIData =>");
+                sb.AppendLine($"AIData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AIData) =>");
+                sb.AppendLine($"{name} (AIData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAIDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AIData.Mask<bool>? printMask = null)
         {
             if (printMask?.Aggression ?? true)
             {
-                fg.AppendItem(item.Aggression, "Aggression");
+                sb.AppendItem(item.Aggression, "Aggression");
             }
             if (printMask?.Confidence ?? true)
             {
-                fg.AppendItem(item.Confidence, "Confidence");
+                sb.AppendItem(item.Confidence, "Confidence");
             }
             if (printMask?.EnergyLevel ?? true)
             {
-                fg.AppendItem(item.EnergyLevel, "EnergyLevel");
+                sb.AppendItem(item.EnergyLevel, "EnergyLevel");
             }
             if (printMask?.Responsibility ?? true)
             {
-                fg.AppendItem(item.Responsibility, "Responsibility");
+                sb.AppendItem(item.Responsibility, "Responsibility");
             }
             if (printMask?.Mood ?? true)
             {
-                fg.AppendItem(item.Mood, "Mood");
+                sb.AppendItem(item.Mood, "Mood");
             }
             if (printMask?.Assistance ?? true)
             {
-                fg.AppendItem(item.Assistance, "Assistance");
+                sb.AppendItem(item.Assistance, "Assistance");
             }
             if (printMask?.AggroRadiusBehavior ?? true)
             {
-                fg.AppendItem(item.AggroRadiusBehavior, "AggroRadiusBehavior");
+                sb.AppendItem(item.AggroRadiusBehavior, "AggroRadiusBehavior");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.Warn ?? true)
             {
-                fg.AppendItem(item.Warn, "Warn");
+                sb.AppendItem(item.Warn, "Warn");
             }
             if (printMask?.WarnOrAttack ?? true)
             {
-                fg.AppendItem(item.WarnOrAttack, "WarnOrAttack");
+                sb.AppendItem(item.WarnOrAttack, "WarnOrAttack");
             }
             if (printMask?.Attack ?? true)
             {
-                fg.AppendItem(item.Attack, "Attack");
+                sb.AppendItem(item.Attack, "Attack");
             }
         }
         
@@ -1287,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIDataGetter obj)
         {
             yield break;
         }
@@ -1295,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AIDataSetterTranslationCommon
+    internal partial class AIDataSetterTranslationCommon
     {
         public static readonly AIDataSetterTranslationCommon Instance = new AIDataSetterTranslationCommon();
 
@@ -1413,7 +1423,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIData_Registration.Instance;
-        public static AIData_Registration StaticRegistration => AIData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1437,11 +1447,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AIDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIDataBinaryWriteTranslation Instance = new AIDataBinaryWriteTranslation();
+        public static readonly AIDataBinaryWriteTranslation Instance = new AIDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAIDataGetter item,
@@ -1478,12 +1488,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAIDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.AIDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1495,7 +1505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAIDataGetter)item,
@@ -1505,9 +1515,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AIDataBinaryCreateTranslation
+    internal partial class AIDataBinaryCreateTranslation
     {
-        public readonly static AIDataBinaryCreateTranslation Instance = new AIDataBinaryCreateTranslation();
+        public static readonly AIDataBinaryCreateTranslation Instance = new AIDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAIData item,
@@ -1547,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IAIDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1560,16 +1570,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AIDataBinaryOverlay :
+    internal partial class AIDataBinaryOverlay :
         PluginBinaryOverlay,
         IAIDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIData_Registration.Instance;
-        public static AIData_Registration StaticRegistration => AIData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1583,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIDataBinaryWriteTranslation.Instance;
@@ -1591,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1599,17 +1609,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Aggression Aggression => (Aggression)_data.Span.Slice(0x0, 0x1)[0];
-        public Confidence Confidence => (Confidence)_data.Span.Slice(0x1, 0x1)[0];
-        public Byte EnergyLevel => _data.Span[0x2];
-        public Responsibility Responsibility => (Responsibility)_data.Span.Slice(0x3, 0x1)[0];
-        public Mood Mood => (Mood)_data.Span.Slice(0x4, 0x1)[0];
-        public Assistance Assistance => (Assistance)_data.Span.Slice(0x5, 0x1)[0];
-        public Boolean AggroRadiusBehavior => _data.Slice(0x6, 0x1)[0] == 1;
-        public Byte Unused => _data.Span[0x7];
-        public UInt32 Warn => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
-        public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public UInt32 Attack => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
+        public Aggression Aggression => (Aggression)_structData.Span.Slice(0x0, 0x1)[0];
+        public Confidence Confidence => (Confidence)_structData.Span.Slice(0x1, 0x1)[0];
+        public Byte EnergyLevel => _structData.Span[0x2];
+        public Responsibility Responsibility => (Responsibility)_structData.Span.Slice(0x3, 0x1)[0];
+        public Mood Mood => (Mood)_structData.Span.Slice(0x4, 0x1)[0];
+        public Assistance Assistance => (Assistance)_structData.Span.Slice(0x5, 0x1)[0];
+        public Boolean AggroRadiusBehavior => _structData.Slice(0x6, 0x1)[0] >= 1;
+        public Byte Unused => _structData.Span[0x7];
+        public UInt32 Warn => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt32 WarnOrAttack => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public UInt32 Attack => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1617,25 +1627,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AIDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AIDataBinaryOverlay AIDataFactory(
+        public static IAIDataGetter AIDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AIDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1644,25 +1659,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static AIDataBinaryOverlay AIDataFactory(
+        public static IAIDataGetter AIDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AIDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AIDataMixIn.ToString(
+            AIDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

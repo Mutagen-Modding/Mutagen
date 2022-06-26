@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -67,12 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceMaxHeightMixIn.ToString(
+            WorldspaceMaxHeightMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -194,38 +197,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WorldspaceMaxHeight.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WorldspaceMaxHeight.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceMaxHeight.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WorldspaceMaxHeight.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WorldspaceMaxHeight.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WorldspaceMaxHeight.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Min ?? true)
                     {
-                        fg.AppendItem(Min, "Min");
+                        sb.AppendItem(Min, "Min");
                     }
                     if (printMask?.Max ?? true)
                     {
-                        fg.AppendItem(Max, "Max");
+                        sb.AppendItem(Max, "Max");
                     }
                     if (printMask?.CellData ?? true)
                     {
-                        fg.AppendItem(CellData, "CellData");
+                        sb.AppendItem(CellData, "CellData");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -320,38 +318,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Min, "Min");
-                fg.AppendItem(Max, "Max");
-                fg.AppendItem(CellData, "CellData");
+                {
+                    sb.AppendItem(Min, "Min");
+                }
+                {
+                    sb.AppendItem(Max, "Max");
+                }
+                {
+                    sb.AppendItem(CellData, "CellData");
+                }
             }
             #endregion
 
@@ -429,10 +424,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = WorldspaceMaxHeight_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceMaxHeightBinaryWriteTranslation.Instance;
@@ -440,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -450,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceMaxHeight CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceMaxHeight();
             ((WorldspaceMaxHeightSetterCommon)((IWorldspaceMaxHeightGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -465,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceMaxHeight item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -475,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -539,26 +530,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWorldspaceMaxHeightGetter item,
             string? name = null,
             WorldspaceMaxHeight.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWorldspaceMaxHeightGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceMaxHeight.Mask<bool>? printMask = null)
         {
-            ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -664,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceMaxHeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceMaxHeightSetterCommon)((IWorldspaceMaxHeightGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -679,10 +670,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceMaxHeight_FieldIndex
+    internal enum WorldspaceMaxHeight_FieldIndex
     {
         Min = 0,
         Max = 1,
@@ -691,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceMaxHeight_Registration : ILoquiRegistration
+    internal partial class WorldspaceMaxHeight_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceMaxHeight_Registration Instance = new WorldspaceMaxHeight_Registration();
 
@@ -733,6 +724,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MHDT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.MHDT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMaxHeightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -766,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceMaxHeightSetterCommon
+    internal partial class WorldspaceMaxHeightSetterCommon
     {
         public static readonly WorldspaceMaxHeightSetterCommon Instance = new WorldspaceMaxHeightSetterCommon();
 
@@ -791,12 +788,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWorldspaceMaxHeight item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MHDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -807,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMaxHeightCommon
+    internal partial class WorldspaceMaxHeightCommon
     {
         public static readonly WorldspaceMaxHeightCommon Instance = new WorldspaceMaxHeightCommon();
 
@@ -831,67 +828,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceMaxHeight.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Min = item.Min.Equals(rhs.Min);
             ret.Max = item.Max.Equals(rhs.Max);
             ret.CellData = MemoryExtensions.SequenceEqual(item.CellData.Span, rhs.CellData.Span);
         }
         
-        public string ToString(
+        public string Print(
             IWorldspaceMaxHeightGetter item,
             string? name = null,
             WorldspaceMaxHeight.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWorldspaceMaxHeightGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceMaxHeight.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceMaxHeight =>");
+                sb.AppendLine($"WorldspaceMaxHeight =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceMaxHeight) =>");
+                sb.AppendLine($"{name} (WorldspaceMaxHeight) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceMaxHeightGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WorldspaceMaxHeight.Mask<bool>? printMask = null)
         {
             if (printMask?.Min ?? true)
             {
-                fg.AppendItem(item.Min, "Min");
+                sb.AppendItem(item.Min, "Min");
             }
             if (printMask?.Max ?? true)
             {
-                fg.AppendItem(item.Max, "Max");
+                sb.AppendItem(item.Max, "Max");
             }
             if (printMask?.CellData ?? true)
             {
-                fg.AppendLine($"CellData => {SpanExt.ToHexString(item.CellData)}");
+                sb.AppendLine($"CellData => {SpanExt.ToHexString(item.CellData)}");
             }
         }
         
@@ -935,7 +929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceMaxHeightGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceMaxHeightGetter obj)
         {
             yield break;
         }
@@ -943,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMaxHeightSetterTranslationCommon
+    internal partial class WorldspaceMaxHeightSetterTranslationCommon
     {
         public static readonly WorldspaceMaxHeightSetterTranslationCommon Instance = new WorldspaceMaxHeightSetterTranslationCommon();
 
@@ -1029,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMaxHeight_Registration.Instance;
-        public static WorldspaceMaxHeight_Registration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMaxHeightCommon.Instance;
         [DebuggerStepThrough]
@@ -1053,11 +1047,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceMaxHeightBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceMaxHeightBinaryWriteTranslation Instance = new WorldspaceMaxHeightBinaryWriteTranslation();
+        public static readonly WorldspaceMaxHeightBinaryWriteTranslation Instance = new WorldspaceMaxHeightBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceMaxHeightGetter item,
@@ -1077,12 +1071,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceMaxHeightGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MHDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1094,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceMaxHeightGetter)item,
@@ -1104,9 +1098,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceMaxHeightBinaryCreateTranslation
+    internal partial class WorldspaceMaxHeightBinaryCreateTranslation
     {
-        public readonly static WorldspaceMaxHeightBinaryCreateTranslation Instance = new WorldspaceMaxHeightBinaryCreateTranslation();
+        public static readonly WorldspaceMaxHeightBinaryCreateTranslation Instance = new WorldspaceMaxHeightBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceMaxHeight item,
@@ -1128,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceMaxHeightGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1141,16 +1135,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceMaxHeightBinaryOverlay :
+    internal partial class WorldspaceMaxHeightBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceMaxHeightGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMaxHeight_Registration.Instance;
-        public static WorldspaceMaxHeight_Registration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMaxHeight_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMaxHeightCommon.Instance;
         [DebuggerStepThrough]
@@ -1164,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceMaxHeightBinaryWriteTranslation.Instance;
@@ -1172,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMaxHeightBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1180,10 +1174,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public P2Int16 Min => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
-        public P2Int16 Max => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0x4));
+        public P2Int16 Min => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x4));
+        public P2Int16 Max => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0x4));
         #region CellData
-        public ReadOnlyMemorySlice<Byte> CellData => _data.Span.Slice(0x8).ToArray();
+        public ReadOnlyMemorySlice<Byte> CellData => _structData.Span.Slice(0x8).ToArray();
         protected int CellDataEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1193,25 +1187,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WorldspaceMaxHeightBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WorldspaceMaxHeightBinaryOverlay WorldspaceMaxHeightFactory(
+        public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceMaxHeightBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1219,25 +1218,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WorldspaceMaxHeightBinaryOverlay WorldspaceMaxHeightFactory(
+        public static IWorldspaceMaxHeightGetter WorldspaceMaxHeightFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceMaxHeightFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceMaxHeightMixIn.ToString(
+            WorldspaceMaxHeightMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

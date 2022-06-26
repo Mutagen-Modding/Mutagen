@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -70,12 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GetEventDataMixIn.ToString(
+            GetEventDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -211,38 +213,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(GetEventData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(GetEventData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, GetEventData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, GetEventData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(GetEventData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(GetEventData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.EventFunction ?? true)
                     {
-                        fg.AppendItem(EventFunction, "EventFunction");
+                        sb.AppendItem(EventFunction, "EventFunction");
                     }
                     if (printMask?.EventMember ?? true)
                     {
-                        fg.AppendItem(EventMember, "EventMember");
+                        sb.AppendItem(EventMember, "EventMember");
                     }
                     if (printMask?.Parameter3 ?? true)
                     {
-                        fg.AppendItem(Parameter3, "Parameter3");
+                        sb.AppendItem(Parameter3, "Parameter3");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -326,39 +323,36 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(EventFunction, "EventFunction");
-                fg.AppendItem(EventMember, "EventMember");
-                fg.AppendItem(Parameter3, "Parameter3");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(EventFunction, "EventFunction");
+                }
+                {
+                    sb.AppendItem(EventMember, "EventMember");
+                }
+                {
+                    sb.AppendItem(Parameter3, "Parameter3");
+                }
             }
             #endregion
 
@@ -427,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => GetEventDataCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetEventDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -436,7 +430,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => GetEventDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -446,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static GetEventData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new GetEventData();
             ((GetEventDataSetterCommon)((IGetEventDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -461,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out GetEventData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -471,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -532,26 +526,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IGetEventDataGetter item,
             string? name = null,
             GetEventData.Mask<bool>? printMask = null)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).ToString(
+            return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IGetEventDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GetEventData.Mask<bool>? printMask = null)
         {
-            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).ToString(
+            ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -632,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IGetEventData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((GetEventDataSetterCommon)((IGetEventDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -647,10 +641,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum GetEventData_FieldIndex
+    internal enum GetEventData_FieldIndex
     {
         RunOnType = 0,
         Reference = 1,
@@ -662,7 +656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class GetEventData_Registration : ILoquiRegistration
+    internal partial class GetEventData_Registration : ILoquiRegistration
     {
         public static readonly GetEventData_Registration Instance = new GetEventData_Registration();
 
@@ -736,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class GetEventDataSetterCommon : ConditionDataSetterCommon
+    internal partial class GetEventDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly GetEventDataSetterCommon Instance = new GetEventDataSetterCommon();
 
@@ -769,7 +763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IGetEventData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -781,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (GetEventData)item,
@@ -792,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GetEventDataCommon : ConditionDataCommon
+    internal partial class GetEventDataCommon : ConditionDataCommon
     {
         public new static readonly GetEventDataCommon Instance = new GetEventDataCommon();
 
@@ -816,72 +810,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             GetEventData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EventFunction = item.EventFunction == rhs.EventFunction;
             ret.EventMember = item.EventMember == rhs.EventMember;
             ret.Parameter3 = item.Parameter3.Equals(rhs.Parameter3);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IGetEventDataGetter item,
             string? name = null,
             GetEventData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IGetEventDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             GetEventData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"GetEventData =>");
+                sb.AppendLine($"GetEventData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (GetEventData) =>");
+                sb.AppendLine($"{name} (GetEventData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IGetEventDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             GetEventData.Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.EventFunction ?? true)
             {
-                fg.AppendItem(item.EventFunction, "EventFunction");
+                sb.AppendItem(item.EventFunction, "EventFunction");
             }
             if (printMask?.EventMember ?? true)
             {
-                fg.AppendItem(item.EventMember, "EventMember");
+                sb.AppendItem(item.EventMember, "EventMember");
             }
             if (printMask?.Parameter3 ?? true)
             {
-                fg.AppendItem(item.Parameter3.FormKey, "Parameter3");
+                sb.AppendItem(item.Parameter3.FormKey, "Parameter3");
             }
         }
         
@@ -958,9 +949,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGetEventDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetEventDataGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -971,7 +962,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class GetEventDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
+    internal partial class GetEventDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly GetEventDataSetterTranslationCommon Instance = new GetEventDataSetterTranslationCommon();
 
@@ -1079,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GetEventData_Registration.Instance;
-        public new static GetEventData_Registration StaticRegistration => GetEventData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GetEventData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GetEventDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1097,13 +1088,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GetEventDataBinaryWriteTranslation :
         ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
+        public new static readonly GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IGetEventDataGetter item,
@@ -1138,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IGetEventDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1148,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -1159,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IGetEventDataGetter)item,
@@ -1169,9 +1160,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class GetEventDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
+    internal partial class GetEventDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
-        public new readonly static GetEventDataBinaryCreateTranslation Instance = new GetEventDataBinaryCreateTranslation();
+        public new static readonly GetEventDataBinaryCreateTranslation Instance = new GetEventDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IGetEventData item,
@@ -1205,16 +1196,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GetEventDataBinaryOverlay :
+    internal partial class GetEventDataBinaryOverlay :
         ConditionDataBinaryOverlay,
         IGetEventDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GetEventData_Registration.Instance;
-        public new static GetEventData_Registration StaticRegistration => GetEventData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GetEventData_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => GetEventDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1222,14 +1213,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => GetEventDataCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetEventDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetEventDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((GetEventDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1237,11 +1228,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
+        public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         #region ParameterParsing
-         partial void ParameterParsingCustomParse(
+        partial void ParameterParsingCustomParse(
             OverlayStream stream,
             int offset);
         protected int ParameterParsingEndingPos;
@@ -1253,24 +1244,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected GetEventDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static GetEventDataBinaryOverlay GetEventDataFactory(
+        public static IGetEventDataGetter GetEventDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new GetEventDataBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1279,25 +1276,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static GetEventDataBinaryOverlay GetEventDataFactory(
+        public static IGetEventDataGetter GetEventDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return GetEventDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            GetEventDataMixIn.ToString(
+            GetEventDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

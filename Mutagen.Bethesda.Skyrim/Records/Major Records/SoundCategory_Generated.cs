@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,16 +27,15 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -119,12 +120,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundCategoryMixIn.ToString(
+            SoundCategoryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -268,46 +270,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SoundCategory.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SoundCategory.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SoundCategory.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SoundCategory.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SoundCategory.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundCategory.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Parent, "Parent");
+                        sb.AppendItem(Parent, "Parent");
                     }
                     if (printMask?.StaticVolumeMultiplier ?? true)
                     {
-                        fg.AppendItem(StaticVolumeMultiplier, "StaticVolumeMultiplier");
+                        sb.AppendItem(StaticVolumeMultiplier, "StaticVolumeMultiplier");
                     }
                     if (printMask?.DefaultMenuVolume ?? true)
                     {
-                        fg.AppendItem(DefaultMenuVolume, "DefaultMenuVolume");
+                        sb.AppendItem(DefaultMenuVolume, "DefaultMenuVolume");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -411,41 +408,42 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Parent, "Parent");
-                fg.AppendItem(StaticVolumeMultiplier, "StaticVolumeMultiplier");
-                fg.AppendItem(DefaultMenuVolume, "DefaultMenuVolume");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(StaticVolumeMultiplier, "StaticVolumeMultiplier");
+                }
+                {
+                    sb.AppendItem(DefaultMenuVolume, "DefaultMenuVolume");
+                }
             }
             #endregion
 
@@ -523,7 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundCategory_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoundCategoryCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundCategoryCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategorySetterCommon.Instance.RemapLinks(this, mapping);
         public SoundCategory(
             FormKey formKey,
@@ -601,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundCategoryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -611,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static SoundCategory CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundCategory();
             ((SoundCategorySetterCommon)((ISoundCategoryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -626,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundCategory item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -636,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -726,26 +724,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISoundCategoryGetter item,
             string? name = null,
             SoundCategory.Mask<bool>? printMask = null)
         {
-            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).ToString(
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISoundCategoryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundCategory.Mask<bool>? printMask = null)
         {
-            ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).ToString(
+            ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -840,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISoundCategoryInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundCategorySetterCommon)((ISoundCategoryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -855,10 +853,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum SoundCategory_FieldIndex
+    internal enum SoundCategory_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -875,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SoundCategory_Registration : ILoquiRegistration
+    internal partial class SoundCategory_Registration : ILoquiRegistration
     {
         public static readonly SoundCategory_Registration Instance = new SoundCategory_Registration();
 
@@ -917,6 +915,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SNCT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.SNCT);
+            var all = RecordCollection.Factory(
+                RecordTypes.SNCT,
+                RecordTypes.FULL,
+                RecordTypes.FNAM,
+                RecordTypes.PNAM,
+                RecordTypes.VNAM,
+                RecordTypes.UNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SoundCategoryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -950,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SoundCategorySetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class SoundCategorySetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly SoundCategorySetterCommon Instance = new SoundCategorySetterCommon();
 
@@ -990,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISoundCategoryInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISoundCategoryInternal>(
                 record: item,
@@ -1003,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundCategory)item,
@@ -1014,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundCategory)item,
@@ -1025,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundCategoryCommon : SkyrimMajorRecordCommon
+    internal partial class SoundCategoryCommon : SkyrimMajorRecordCommon
     {
         public new static readonly SoundCategoryCommon Instance = new SoundCategoryCommon();
 
@@ -1049,7 +1060,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoundCategory.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Parent = item.Parent.Equals(rhs.Parent);
@@ -1058,77 +1068,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISoundCategoryGetter item,
             string? name = null,
             SoundCategory.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISoundCategoryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundCategory.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundCategory =>");
+                sb.AppendLine($"SoundCategory =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundCategory) =>");
+                sb.AppendLine($"{name} (SoundCategory) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundCategoryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundCategory.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Parent.FormKeyNullable, "Parent");
+                sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
             if ((printMask?.StaticVolumeMultiplier ?? true)
                 && item.StaticVolumeMultiplier is {} StaticVolumeMultiplierItem)
             {
-                fg.AppendItem(StaticVolumeMultiplierItem, "StaticVolumeMultiplier");
+                sb.AppendItem(StaticVolumeMultiplierItem, "StaticVolumeMultiplier");
             }
             if ((printMask?.DefaultMenuVolume ?? true)
                 && item.DefaultMenuVolume is {} DefaultMenuVolumeItem)
             {
-                fg.AppendItem(DefaultMenuVolumeItem, "DefaultMenuVolume");
+                sb.AppendItem(DefaultMenuVolumeItem, "DefaultMenuVolume");
             }
         }
         
@@ -1266,15 +1274,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundCategoryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundCategoryGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Parent.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Parent, out var ParentInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Parent);
+                yield return ParentInfo;
             }
             yield break;
         }
@@ -1317,7 +1325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SoundCategorySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class SoundCategorySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly SoundCategorySetterTranslationCommon Instance = new SoundCategorySetterTranslationCommon();
 
@@ -1492,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundCategory_Registration.Instance;
-        public new static SoundCategory_Registration StaticRegistration => SoundCategory_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundCategory_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCategoryCommon.Instance;
         [DebuggerStepThrough]
@@ -1510,18 +1518,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SoundCategoryBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundCategoryBinaryWriteTranslation Instance = new SoundCategoryBinaryWriteTranslation();
+        public new static readonly SoundCategoryBinaryWriteTranslation Instance = new SoundCategoryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ISoundCategoryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1559,7 +1567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ISoundCategoryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1570,12 +1578,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1587,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundCategoryGetter)item,
@@ -1598,7 +1609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundCategoryGetter)item,
@@ -1609,7 +1620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundCategoryGetter)item,
@@ -1619,9 +1630,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SoundCategoryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class SoundCategoryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
+        public new static readonly SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SNCT;
         public static void FillBinaryStructs(
@@ -1640,7 +1651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1693,7 +1704,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1710,16 +1722,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SoundCategoryBinaryOverlay :
+    internal partial class SoundCategoryBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ISoundCategoryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundCategory_Registration.Instance;
-        public new static SoundCategory_Registration StaticRegistration => SoundCategory_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundCategory_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundCategoryCommon.Instance;
         [DebuggerStepThrough]
@@ -1727,14 +1739,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => SoundCategoryCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundCategoryCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundCategoryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1746,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -1758,19 +1770,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SoundCategory.Flag? Flags => _FlagsLocation.HasValue ? (SoundCategory.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SoundCategory.Flag?);
+        public SoundCategory.Flag? Flags => _FlagsLocation.HasValue ? (SoundCategory.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SoundCategory.Flag?);
         #endregion
         #region Parent
         private int? _ParentLocation;
-        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;
-        public Single? StaticVolumeMultiplier => _StaticVolumeMultiplierLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticVolumeMultiplierLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
+        public Single? StaticVolumeMultiplier => _StaticVolumeMultiplierLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticVolumeMultiplierLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
         #endregion
         #region DefaultMenuVolume
         private int? _DefaultMenuVolumeLocation;
-        public Single? DefaultMenuVolume => _DefaultMenuVolumeLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultMenuVolumeLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
+        public Single? DefaultMenuVolume => _DefaultMenuVolumeLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultMenuVolumeLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1779,28 +1791,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected SoundCategoryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SoundCategoryBinaryOverlay SoundCategoryFactory(
+        public static ISoundCategoryGetter SoundCategoryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundCategoryBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1810,20 +1825,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static SoundCategoryBinaryOverlay SoundCategoryFactory(
+        public static ISoundCategoryGetter SoundCategoryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundCategoryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1833,9 +1848,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -1870,17 +1885,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundCategoryMixIn.ToString(
+            SoundCategoryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

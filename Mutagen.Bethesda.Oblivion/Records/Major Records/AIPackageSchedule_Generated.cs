@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +67,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AIPackageScheduleMixIn.ToString(
+            AIPackageScheduleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -210,46 +213,41 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AIPackageSchedule.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AIPackageSchedule.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AIPackageSchedule.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AIPackageSchedule.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AIPackageSchedule.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AIPackageSchedule.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Month ?? true)
                     {
-                        fg.AppendItem(Month, "Month");
+                        sb.AppendItem(Month, "Month");
                     }
                     if (printMask?.DayOfWeek ?? true)
                     {
-                        fg.AppendItem(DayOfWeek, "DayOfWeek");
+                        sb.AppendItem(DayOfWeek, "DayOfWeek");
                     }
                     if (printMask?.Day ?? true)
                     {
-                        fg.AppendItem(Day, "Day");
+                        sb.AppendItem(Day, "Day");
                     }
                     if (printMask?.Time ?? true)
                     {
-                        fg.AppendItem(Time, "Time");
+                        sb.AppendItem(Time, "Time");
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -364,40 +362,41 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Month, "Month");
-                fg.AppendItem(DayOfWeek, "DayOfWeek");
-                fg.AppendItem(Day, "Day");
-                fg.AppendItem(Time, "Time");
-                fg.AppendItem(Duration, "Duration");
+                {
+                    sb.AppendItem(Month, "Month");
+                }
+                {
+                    sb.AppendItem(DayOfWeek, "DayOfWeek");
+                }
+                {
+                    sb.AppendItem(Day, "Day");
+                }
+                {
+                    sb.AppendItem(Time, "Time");
+                }
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
             }
             #endregion
 
@@ -483,10 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = AIPackageSchedule_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageScheduleBinaryWriteTranslation.Instance;
@@ -494,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -504,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AIPackageSchedule CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AIPackageSchedule();
             ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -519,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AIPackageSchedule item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -529,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -597,26 +592,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAIPackageScheduleGetter item,
             string? name = null,
             AIPackageSchedule.Mask<bool>? printMask = null)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).ToString(
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAIPackageScheduleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIPackageSchedule.Mask<bool>? printMask = null)
         {
-            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).ToString(
+            ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -722,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAIPackageSchedule item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AIPackageScheduleSetterCommon)((IAIPackageScheduleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -737,10 +732,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AIPackageSchedule_FieldIndex
+    internal enum AIPackageSchedule_FieldIndex
     {
         Month = 0,
         DayOfWeek = 1,
@@ -751,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AIPackageSchedule_Registration : ILoquiRegistration
+    internal partial class AIPackageSchedule_Registration : ILoquiRegistration
     {
         public static readonly AIPackageSchedule_Registration Instance = new AIPackageSchedule_Registration();
 
@@ -793,6 +788,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PSDT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.PSDT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AIPackageScheduleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AIPackageScheduleSetterCommon
+    internal partial class AIPackageScheduleSetterCommon
     {
         public static readonly AIPackageScheduleSetterCommon Instance = new AIPackageScheduleSetterCommon();
 
@@ -853,12 +854,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IAIPackageSchedule item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.PSDT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -869,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageScheduleCommon
+    internal partial class AIPackageScheduleCommon
     {
         public static readonly AIPackageScheduleCommon Instance = new AIPackageScheduleCommon();
 
@@ -893,7 +894,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AIPackageSchedule.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Month = item.Month == rhs.Month;
             ret.DayOfWeek = item.DayOfWeek == rhs.DayOfWeek;
             ret.Day = item.Day == rhs.Day;
@@ -901,69 +901,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = item.Duration == rhs.Duration;
         }
         
-        public string ToString(
+        public string Print(
             IAIPackageScheduleGetter item,
             string? name = null,
             AIPackageSchedule.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAIPackageScheduleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AIPackageSchedule.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AIPackageSchedule =>");
+                sb.AppendLine($"AIPackageSchedule =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AIPackageSchedule) =>");
+                sb.AppendLine($"{name} (AIPackageSchedule) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAIPackageScheduleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AIPackageSchedule.Mask<bool>? printMask = null)
         {
             if (printMask?.Month ?? true)
             {
-                fg.AppendItem(item.Month, "Month");
+                sb.AppendItem(item.Month, "Month");
             }
             if (printMask?.DayOfWeek ?? true)
             {
-                fg.AppendItem(item.DayOfWeek, "DayOfWeek");
+                sb.AppendItem(item.DayOfWeek, "DayOfWeek");
             }
             if (printMask?.Day ?? true)
             {
-                fg.AppendItem(item.Day, "Day");
+                sb.AppendItem(item.Day, "Day");
             }
             if (printMask?.Time ?? true)
             {
-                fg.AppendItem(item.Time, "Time");
+                sb.AppendItem(item.Time, "Time");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendItem(item.Duration, "Duration");
+                sb.AppendItem(item.Duration, "Duration");
             }
         }
         
@@ -1017,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIPackageScheduleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAIPackageScheduleGetter obj)
         {
             yield break;
         }
@@ -1025,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AIPackageScheduleSetterTranslationCommon
+    internal partial class AIPackageScheduleSetterTranslationCommon
     {
         public static readonly AIPackageScheduleSetterTranslationCommon Instance = new AIPackageScheduleSetterTranslationCommon();
 
@@ -1119,7 +1117,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]
@@ -1143,11 +1141,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AIPackageScheduleBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AIPackageScheduleBinaryWriteTranslation Instance = new AIPackageScheduleBinaryWriteTranslation();
+        public static readonly AIPackageScheduleBinaryWriteTranslation Instance = new AIPackageScheduleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAIPackageScheduleGetter item,
@@ -1169,12 +1167,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IAIPackageScheduleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.PSDT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1186,7 +1184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAIPackageScheduleGetter)item,
@@ -1196,9 +1194,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AIPackageScheduleBinaryCreateTranslation
+    internal partial class AIPackageScheduleBinaryCreateTranslation
     {
-        public readonly static AIPackageScheduleBinaryCreateTranslation Instance = new AIPackageScheduleBinaryCreateTranslation();
+        public static readonly AIPackageScheduleBinaryCreateTranslation Instance = new AIPackageScheduleBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAIPackageSchedule item,
@@ -1226,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAIPackageScheduleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageScheduleBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1239,16 +1237,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AIPackageScheduleBinaryOverlay :
+    internal partial class AIPackageScheduleBinaryOverlay :
         PluginBinaryOverlay,
         IAIPackageScheduleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackageSchedule_Registration.Instance;
-        public static AIPackageSchedule_Registration StaticRegistration => AIPackageSchedule_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AIPackageSchedule_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AIPackageScheduleCommon.Instance;
         [DebuggerStepThrough]
@@ -1262,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AIPackageScheduleBinaryWriteTranslation.Instance;
@@ -1270,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AIPackageScheduleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1278,11 +1276,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Month Month => (Month)_data.Span.Slice(0x0, 0x1)[0];
-        public Weekday DayOfWeek => (Weekday)_data.Span.Slice(0x1, 0x1)[0];
-        public Byte Day => _data.Span[0x2];
-        public Byte Time => _data.Span[0x3];
-        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Month Month => (Month)_structData.Span.Slice(0x0, 0x1)[0];
+        public Weekday DayOfWeek => (Weekday)_structData.Span.Slice(0x1, 0x1)[0];
+        public Byte Day => _structData.Span[0x2];
+        public Byte Time => _structData.Span[0x3];
+        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1290,25 +1288,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected AIPackageScheduleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
+        public static IAIPackageScheduleGetter AIPackageScheduleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AIPackageScheduleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1317,25 +1320,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static AIPackageScheduleBinaryOverlay AIPackageScheduleFactory(
+        public static IAIPackageScheduleGetter AIPackageScheduleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AIPackageScheduleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AIPackageScheduleMixIn.ToString(
+            AIPackageScheduleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

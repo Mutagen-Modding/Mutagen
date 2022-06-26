@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,20 +20,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -100,12 +101,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledCreatureMixIn.ToString(
+            LeveledCreatureMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -269,9 +271,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>>();
                         obj.Entries.Specific = l;
-                        foreach (var item in Entries.Specific.WithIndex())
+                        foreach (var item in Entries.Specific)
                         {
-                            MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LeveledCreatureEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -283,65 +285,56 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LeveledCreature.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LeveledCreature.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LeveledCreature.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LeveledCreature.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LeveledCreature.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LeveledCreature.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ChanceNone ?? true)
                     {
-                        fg.AppendItem(ChanceNone, "ChanceNone");
+                        sb.AppendItem(ChanceNone, "ChanceNone");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
                         && Entries is {} EntriesItem)
                     {
-                        fg.AppendLine("Entries =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Entries =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(EntriesItem.Overall);
+                            sb.AppendItem(EntriesItem.Overall);
                             if (EntriesItem.Specific != null)
                             {
                                 foreach (var subItem in EntriesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Script ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
+                        sb.AppendItem(Script, "Script");
                     }
                     if (printMask?.Template ?? true)
                     {
-                        fg.AppendItem(Template, "Template");
+                        sb.AppendItem(Template, "Template");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -445,62 +438,57 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(ChanceNone, "ChanceNone");
-                fg.AppendItem(Flags, "Flags");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ChanceNone, "ChanceNone");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
                 if (Entries is {} EntriesItem)
                 {
-                    fg.AppendLine("Entries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Entries =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(EntriesItem.Overall);
+                        sb.AppendItem(EntriesItem.Overall);
                         if (EntriesItem.Specific != null)
                         {
                             foreach (var subItem in EntriesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Script, "Script");
-                fg.AppendItem(Template, "Template");
+                {
+                    sb.AppendItem(Script, "Script");
+                }
+                {
+                    sb.AppendItem(Template, "Template");
+                }
             }
             #endregion
 
@@ -577,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledCreature_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledCreatureCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledCreatureCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledCreatureSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledCreature(FormKey formKey)
         {
@@ -638,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -648,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static LeveledCreature CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LeveledCreature();
             ((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -663,7 +651,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LeveledCreature item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -673,7 +661,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -749,26 +737,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILeveledCreatureGetter item,
             string? name = null,
             LeveledCreature.Mask<bool>? printMask = null)
         {
-            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).ToString(
+            return ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILeveledCreatureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledCreature.Mask<bool>? printMask = null)
         {
-            ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).ToString(
+            ((LeveledCreatureCommon)((ILeveledCreatureGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -863,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILeveledCreatureInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LeveledCreatureSetterCommon)((ILeveledCreatureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -878,10 +866,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LeveledCreature_FieldIndex
+    internal enum LeveledCreature_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -897,7 +885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LeveledCreature_Registration : ILoquiRegistration
+    internal partial class LeveledCreature_Registration : ILoquiRegistration
     {
         public static readonly LeveledCreature_Registration Instance = new LeveledCreature_Registration();
 
@@ -939,6 +927,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.LVLC;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.LVLC);
+            var all = RecordCollection.Factory(
+                RecordTypes.LVLC,
+                RecordTypes.LVLD,
+                RecordTypes.LVLF,
+                RecordTypes.LVLO,
+                RecordTypes.SCRI,
+                RecordTypes.TNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledCreatureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -972,7 +973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledCreatureSetterCommon : OblivionMajorRecordSetterCommon
+    internal partial class LeveledCreatureSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly LeveledCreatureSetterCommon Instance = new LeveledCreatureSetterCommon();
 
@@ -1014,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILeveledCreatureInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ILeveledCreatureInternal>(
                 record: item,
@@ -1027,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LeveledCreature)item,
@@ -1038,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LeveledCreature)item,
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledCreatureCommon : OblivionMajorRecordCommon
+    internal partial class LeveledCreatureCommon : OblivionMajorRecordCommon
     {
         public new static readonly LeveledCreatureCommon Instance = new LeveledCreatureCommon();
 
@@ -1073,7 +1074,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LeveledCreature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Entries = item.Entries.CollectionEqualsHelper(
@@ -1085,89 +1085,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILeveledCreatureGetter item,
             string? name = null,
             LeveledCreature.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILeveledCreatureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LeveledCreature.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LeveledCreature =>");
+                sb.AppendLine($"LeveledCreature =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LeveledCreature) =>");
+                sb.AppendLine($"{name} (LeveledCreature) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILeveledCreatureGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LeveledCreature.Mask<bool>? printMask = null)
         {
             OblivionMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.ChanceNone ?? true)
                 && item.ChanceNone is {} ChanceNoneItem)
             {
-                fg.AppendItem(ChanceNoneItem, "ChanceNone");
+                sb.AppendItem(ChanceNoneItem, "ChanceNone");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.Entries?.Overall ?? true)
             {
-                fg.AppendLine("Entries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Entries =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Entries)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Script ?? true)
             {
-                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+                sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
             if (printMask?.Template ?? true)
             {
-                fg.AppendItem(item.Template.FormKeyNullable, "Template");
+                sb.AppendItem(item.Template.FormKeyNullable, "Template");
             }
         }
         
@@ -1225,7 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
-                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
+                if (!lhs.Entries.SequenceEqual(rhs.Entries, (l, r) => ((LeveledCreatureEntryCommon)((ILeveledCreatureEntryGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
@@ -1297,23 +1291,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILeveledCreatureGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILeveledCreatureGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Entries.SelectMany(f => f.ContainedFormLinks))
+            foreach (var item in obj.Entries.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Script.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Script);
+                yield return ScriptInfo;
             }
-            if (obj.Template.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Template, out var TemplateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Template);
+                yield return TemplateInfo;
             }
             yield break;
         }
@@ -1356,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledCreatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
+    internal partial class LeveledCreatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly LeveledCreatureSetterTranslationCommon Instance = new LeveledCreatureSetterTranslationCommon();
 
@@ -1551,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration StaticRegistration => LeveledCreature_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1569,18 +1563,18 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LeveledCreatureBinaryWriteTranslation :
         OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LeveledCreatureBinaryWriteTranslation Instance = new LeveledCreatureBinaryWriteTranslation();
+        public new static readonly LeveledCreatureBinaryWriteTranslation Instance = new LeveledCreatureBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ILeveledCreatureGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1598,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledCreatureEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
-                transl: (MutagenWriter subWriter, ILeveledCreatureEntryGetter subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledCreatureEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
                     ((LeveledCreatureEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
@@ -1619,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILeveledCreatureGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1630,12 +1624,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1647,7 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -1658,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -1669,7 +1666,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILeveledCreatureGetter)item,
@@ -1679,9 +1676,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledCreatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
+    internal partial class LeveledCreatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LeveledCreatureBinaryCreateTranslation Instance = new LeveledCreatureBinaryCreateTranslation();
+        public new static readonly LeveledCreatureBinaryCreateTranslation Instance = new LeveledCreatureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLC;
         public static void FillBinaryStructs(
@@ -1700,7 +1697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1724,7 +1721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Entries.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledCreatureEntry>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: RecordTypes.LVLO,
+                            triggeringRecord: LeveledCreatureEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: LeveledCreatureEntry.TryCreateFromBinary));
                     return (int)LeveledCreature_FieldIndex.Entries;
@@ -1748,7 +1745,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1765,16 +1763,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LeveledCreatureBinaryOverlay :
+    internal partial class LeveledCreatureBinaryOverlay :
         OblivionMajorRecordBinaryOverlay,
         ILeveledCreatureGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
-        public new static LeveledCreature_Registration StaticRegistration => LeveledCreature_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LeveledCreatureCommon.Instance;
         [DebuggerStepThrough]
@@ -1782,14 +1780,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledCreatureCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledCreatureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledCreatureBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LeveledCreatureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1801,20 +1799,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledFlag? Flags => _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
+        public LeveledFlag? Flags => _FlagsLocation.HasValue ? (LeveledFlag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = ListExt.Empty<LeveledCreatureEntryBinaryOverlay>();
+        public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledCreatureEntryGetter>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<INpcRecordGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcRecordGetter>.Null;
+        public IFormLinkNullableGetter<INpcRecordGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcRecordGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1823,28 +1821,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected LeveledCreatureBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LeveledCreatureBinaryOverlay LeveledCreatureFactory(
+        public static ILeveledCreatureGetter LeveledCreatureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LeveledCreatureBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1854,20 +1855,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static LeveledCreatureBinaryOverlay LeveledCreatureFactory(
+        public static ILeveledCreatureGetter LeveledCreatureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LeveledCreatureFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1877,9 +1878,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.LVLD:
@@ -1894,14 +1895,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledCreatureEntryBinaryOverlay>(
+                    this.Entries = BinaryOverlayList.FactoryByArray<ILeveledCreatureEntryGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        parseParams: parseParams,
+                        translationParams: translationParams,
                         getter: (s, p, recConv) => LeveledCreatureEntryBinaryOverlay.LeveledCreatureEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: type,
+                            trigger: LeveledCreatureEntry_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)LeveledCreature_FieldIndex.Entries;
@@ -1923,17 +1925,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LeveledCreatureMixIn.ToString(
+            LeveledCreatureMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

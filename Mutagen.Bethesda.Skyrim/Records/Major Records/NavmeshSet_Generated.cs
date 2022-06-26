@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,27 +52,28 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
             init => this._Navmeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
         #endregion
 
         #endregion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshSetMixIn.ToString(
+            NavmeshSetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -191,9 +193,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Navmeshes.Specific = l;
-                        foreach (var item in Navmeshes.Specific.WithIndex())
+                        foreach (var item in Navmeshes.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -202,49 +204,42 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NavmeshSet.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NavmeshSet.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavmeshSet.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NavmeshSet.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NavmeshSet.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavmeshSet.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if ((printMask?.Navmeshes?.Overall ?? true)
                         && Navmeshes is {} NavmeshesItem)
                     {
-                        fg.AppendLine("Navmeshes =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Navmeshes =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(NavmeshesItem.Overall);
+                            sb.AppendItem(NavmeshesItem.Overall);
                             if (NavmeshesItem.Specific != null)
                             {
                                 foreach (var subItem in NavmeshesItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -319,56 +314,45 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 if (Navmeshes is {} NavmeshesItem)
                 {
-                    fg.AppendLine("Navmeshes =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Navmeshes =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(NavmeshesItem.Overall);
+                        sb.AppendItem(NavmeshesItem.Overall);
                         if (NavmeshesItem.Specific != null)
                         {
                             foreach (var subItem in NavmeshesItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -440,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshSetCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshSetCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavmeshSetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -451,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -461,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NavmeshSet CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavmeshSet();
             ((NavmeshSetSetterCommon)((INavmeshSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -476,7 +460,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavmeshSet item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -486,7 +470,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -507,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshSet>,
         INavmeshSetGetter
     {
-        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :
@@ -523,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
-        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes { get; }
 
     }
 
@@ -548,26 +532,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavmeshSetGetter item,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
-            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).ToString(
+            return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavmeshSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
-            ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).ToString(
+            ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -673,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavmeshSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavmeshSetSetterCommon)((INavmeshSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -688,17 +672,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavmeshSet_FieldIndex
+    internal enum NavmeshSet_FieldIndex
     {
         Navmeshes = 0,
     }
     #endregion
 
     #region Registration
-    public partial class NavmeshSet_Registration : ILoquiRegistration
+    internal partial class NavmeshSet_Registration : ILoquiRegistration
     {
         public static readonly NavmeshSet_Registration Instance = new NavmeshSet_Registration();
 
@@ -772,7 +756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavmeshSetSetterCommon
+    internal partial class NavmeshSetSetterCommon
     {
         public static readonly NavmeshSetSetterCommon Instance = new NavmeshSetSetterCommon();
 
@@ -796,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INavmeshSet item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -808,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshSetCommon
+    internal partial class NavmeshSetCommon
     {
         public static readonly NavmeshSetCommon Instance = new NavmeshSetCommon();
 
@@ -832,74 +816,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NavmeshSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Navmeshes = item.Navmeshes.CollectionEqualsHelper(
                 rhs.Navmeshes,
                 (l, r) => object.Equals(l, r),
                 include);
         }
         
-        public string ToString(
+        public string Print(
             INavmeshSetGetter item,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavmeshSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavmeshSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavmeshSet =>");
+                sb.AppendLine($"NavmeshSet =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavmeshSet) =>");
+                sb.AppendLine($"{name} (NavmeshSet) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavmeshSetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavmeshSet.Mask<bool>? printMask = null)
         {
             if (printMask?.Navmeshes?.Overall ?? true)
             {
-                fg.AppendLine("Navmeshes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Navmeshes =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Navmeshes)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -933,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavmeshSetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshSetGetter obj)
         {
             foreach (var item in obj.Navmeshes)
             {
@@ -945,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavmeshSetSetterTranslationCommon
+    internal partial class NavmeshSetSetterTranslationCommon
     {
         public static readonly NavmeshSetSetterTranslationCommon Instance = new NavmeshSetSetterTranslationCommon();
 
@@ -964,7 +941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1038,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
-        public static NavmeshSet_Registration StaticRegistration => NavmeshSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1062,21 +1039,21 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavmeshSetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavmeshSetBinaryWriteTranslation Instance = new NavmeshSetBinaryWriteTranslation();
+        public static readonly NavmeshSetBinaryWriteTranslation Instance = new NavmeshSetBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavmeshSetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Navmeshes,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1087,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INavmeshSetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1097,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavmeshSetGetter)item,
@@ -1107,16 +1084,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavmeshSetBinaryCreateTranslation
+    internal partial class NavmeshSetBinaryCreateTranslation
     {
-        public readonly static NavmeshSetBinaryCreateTranslation Instance = new NavmeshSetBinaryCreateTranslation();
+        public static readonly NavmeshSetBinaryCreateTranslation Instance = new NavmeshSetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavmeshSet item,
             MutagenFrame frame)
         {
             item.Navmeshes.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1133,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INavmeshSetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshSetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1146,16 +1123,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavmeshSetBinaryOverlay :
+    internal partial class NavmeshSetBinaryOverlay :
         PluginBinaryOverlay,
         INavmeshSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavmeshSet_Registration.Instance;
-        public static NavmeshSet_Registration StaticRegistration => NavmeshSet_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshSet_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavmeshSetCommon.Instance;
         [DebuggerStepThrough]
@@ -1169,16 +1146,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavmeshSetCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavmeshSetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavmeshSetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavmeshSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1187,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Navmeshes
-        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int NavmeshesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1197,25 +1174,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NavmeshSetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NavmeshSetBinaryOverlay NavmeshSetFactory(
+        public static INavmeshSetGetter NavmeshSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NavmeshSetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) * 4 + 4;
+            ret.NavmeshesEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) * 4 + 4;
             stream.Position += ret.NavmeshesEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1224,25 +1207,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NavmeshSetBinaryOverlay NavmeshSetFactory(
+        public static INavmeshSetGetter NavmeshSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavmeshSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavmeshSetMixIn.ToString(
+            NavmeshSetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

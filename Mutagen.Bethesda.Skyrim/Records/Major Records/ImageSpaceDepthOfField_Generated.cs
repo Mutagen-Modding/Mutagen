@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -72,12 +74,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceDepthOfFieldMixIn.ToString(
+            ImageSpaceDepthOfFieldMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -235,54 +238,49 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ImageSpaceDepthOfField.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ImageSpaceDepthOfField.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ImageSpaceDepthOfField.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ImageSpaceDepthOfField.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ImageSpaceDepthOfField.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ImageSpaceDepthOfField.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.Strength ?? true)
                     {
-                        fg.AppendItem(Strength, "Strength");
+                        sb.AppendItem(Strength, "Strength");
                     }
                     if (printMask?.Distance ?? true)
                     {
-                        fg.AppendItem(Distance, "Distance");
+                        sb.AppendItem(Distance, "Distance");
                     }
                     if (printMask?.Range ?? true)
                     {
-                        fg.AppendItem(Range, "Range");
+                        sb.AppendItem(Range, "Range");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.BlurRadius ?? true)
                     {
-                        fg.AppendItem(BlurRadius, "BlurRadius");
+                        sb.AppendItem(BlurRadius, "BlurRadius");
                     }
                     if (printMask?.Sky ?? true)
                     {
-                        fg.AppendItem(Sky, "Sky");
+                        sb.AppendItem(Sky, "Sky");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -417,42 +415,47 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Distance, "Distance");
-                fg.AppendItem(Range, "Range");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(BlurRadius, "BlurRadius");
-                fg.AppendItem(Sky, "Sky");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Distance, "Distance");
+                }
+                {
+                    sb.AppendItem(Range, "Range");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(BlurRadius, "BlurRadius");
+                }
+                {
+                    sb.AppendItem(Sky, "Sky");
+                }
             }
             #endregion
 
@@ -547,7 +550,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ImageSpaceDepthOfField_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -562,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -572,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ImageSpaceDepthOfField CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ImageSpaceDepthOfField();
             ((ImageSpaceDepthOfFieldSetterCommon)((IImageSpaceDepthOfFieldGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -587,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ImageSpaceDepthOfField item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -597,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -669,26 +671,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IImageSpaceDepthOfFieldGetter item,
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
-            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).ToString(
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IImageSpaceDepthOfFieldGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
-            ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).ToString(
+            ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -794,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImageSpaceDepthOfField item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldSetterCommon)((IImageSpaceDepthOfFieldGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -809,10 +811,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ImageSpaceDepthOfField_FieldIndex
+    internal enum ImageSpaceDepthOfField_FieldIndex
     {
         Versioning = 0,
         Strength = 1,
@@ -825,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ImageSpaceDepthOfField_Registration : ILoquiRegistration
+    internal partial class ImageSpaceDepthOfField_Registration : ILoquiRegistration
     {
         public static readonly ImageSpaceDepthOfField_Registration Instance = new ImageSpaceDepthOfField_Registration();
 
@@ -867,6 +869,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceDepthOfFieldBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -900,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImageSpaceDepthOfFieldSetterCommon
+    internal partial class ImageSpaceDepthOfFieldSetterCommon
     {
         public static readonly ImageSpaceDepthOfFieldSetterCommon Instance = new ImageSpaceDepthOfFieldSetterCommon();
 
@@ -929,12 +937,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IImageSpaceDepthOfField item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -945,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceDepthOfFieldCommon
+    internal partial class ImageSpaceDepthOfFieldCommon
     {
         public static readonly ImageSpaceDepthOfFieldCommon Instance = new ImageSpaceDepthOfFieldCommon();
 
@@ -969,7 +977,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ImageSpaceDepthOfField.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Strength = item.Strength.EqualsWithin(rhs.Strength);
             ret.Distance = item.Distance.EqualsWithin(rhs.Distance);
@@ -979,77 +986,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Sky = item.Sky == rhs.Sky;
         }
         
-        public string ToString(
+        public string Print(
             IImageSpaceDepthOfFieldGetter item,
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IImageSpaceDepthOfFieldGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ImageSpaceDepthOfField =>");
+                sb.AppendLine($"ImageSpaceDepthOfField =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ImageSpaceDepthOfField) =>");
+                sb.AppendLine($"{name} (ImageSpaceDepthOfField) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImageSpaceDepthOfFieldGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ImageSpaceDepthOfField.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.Strength ?? true)
             {
-                fg.AppendItem(item.Strength, "Strength");
+                sb.AppendItem(item.Strength, "Strength");
             }
             if (printMask?.Distance ?? true)
             {
-                fg.AppendItem(item.Distance, "Distance");
+                sb.AppendItem(item.Distance, "Distance");
             }
             if (printMask?.Range ?? true)
             {
-                fg.AppendItem(item.Range, "Range");
+                sb.AppendItem(item.Range, "Range");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.BlurRadius ?? true)
             {
-                fg.AppendItem(item.BlurRadius, "BlurRadius");
+                sb.AppendItem(item.BlurRadius, "BlurRadius");
             }
             if (printMask?.Sky ?? true)
             {
-                fg.AppendItem(item.Sky, "Sky");
+                sb.AppendItem(item.Sky, "Sky");
             }
         }
         
@@ -1113,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceDepthOfFieldGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImageSpaceDepthOfFieldGetter obj)
         {
             yield break;
         }
@@ -1121,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImageSpaceDepthOfFieldSetterTranslationCommon
+    internal partial class ImageSpaceDepthOfFieldSetterTranslationCommon
     {
         public static readonly ImageSpaceDepthOfFieldSetterTranslationCommon Instance = new ImageSpaceDepthOfFieldSetterTranslationCommon();
 
@@ -1224,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceDepthOfField_Registration.Instance;
-        public static ImageSpaceDepthOfField_Registration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceDepthOfFieldCommon.Instance;
         [DebuggerStepThrough]
@@ -1248,11 +1253,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImageSpaceDepthOfFieldBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
+        public static readonly ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImageSpaceDepthOfFieldGetter item,
@@ -1308,12 +1313,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IImageSpaceDepthOfFieldGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1325,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImageSpaceDepthOfFieldGetter)item,
@@ -1335,9 +1340,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImageSpaceDepthOfFieldBinaryCreateTranslation
+    internal partial class ImageSpaceDepthOfFieldBinaryCreateTranslation
     {
-        public readonly static ImageSpaceDepthOfFieldBinaryCreateTranslation Instance = new ImageSpaceDepthOfFieldBinaryCreateTranslation();
+        public static readonly ImageSpaceDepthOfFieldBinaryCreateTranslation Instance = new ImageSpaceDepthOfFieldBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IImageSpaceDepthOfField item,
@@ -1379,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IImageSpaceDepthOfFieldGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1392,16 +1397,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImageSpaceDepthOfFieldBinaryOverlay :
+    internal partial class ImageSpaceDepthOfFieldBinaryOverlay :
         PluginBinaryOverlay,
         IImageSpaceDepthOfFieldGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ImageSpaceDepthOfField_Registration.Instance;
-        public static ImageSpaceDepthOfField_Registration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ImageSpaceDepthOfField_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ImageSpaceDepthOfFieldCommon.Instance;
         [DebuggerStepThrough]
@@ -1415,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ImageSpaceDepthOfFieldBinaryWriteTranslation.Instance;
@@ -1423,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImageSpaceDepthOfFieldBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1432,16 +1437,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; private set; }
-        public Single Strength => _data.Slice(0x0, 0x4).Float();
-        public Single Distance => _data.Slice(0x4, 0x4).Float();
-        public Single Range => _data.Slice(0x8, 0x4).Float();
-        public Int16 Unknown => _data.Length <= 0xC ? default : BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xC, 0x2));
+        public Single Strength => _structData.Slice(0x0, 0x4).Float();
+        public Single Distance => _structData.Slice(0x4, 0x4).Float();
+        public Single Range => _structData.Slice(0x8, 0x4).Float();
+        public Int16 Unknown => _structData.Length <= 0xC ? default : BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xC, 0x2));
         #region BlurRadius
+        public partial Byte GetBlurRadiusCustom(int location);
         public Byte BlurRadius => GetBlurRadiusCustom(location: 0xE);
         protected int BlurRadiusEndingPos;
         partial void CustomBlurRadiusEndPos();
         #endregion
         #region Sky
+        public partial Boolean GetSkyCustom(int location);
         public Boolean Sky => GetSkyCustom(location: BlurRadiusEndingPos);
         protected int SkyEndingPos;
         partial void CustomSkyEndPos();
@@ -1453,26 +1460,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ImageSpaceDepthOfFieldBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ImageSpaceDepthOfFieldBinaryOverlay ImageSpaceDepthOfFieldFactory(
+        public static IImageSpaceDepthOfFieldGetter ImageSpaceDepthOfFieldFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImageSpaceDepthOfFieldBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0xC)
+            if (ret._structData.Length <= 0xC)
             {
                 ret.Versioning |= ImageSpaceDepthOfField.VersioningBreaks.Break0;
             }
@@ -1483,25 +1495,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ImageSpaceDepthOfFieldBinaryOverlay ImageSpaceDepthOfFieldFactory(
+        public static IImageSpaceDepthOfFieldGetter ImageSpaceDepthOfFieldFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImageSpaceDepthOfFieldFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImageSpaceDepthOfFieldMixIn.ToString(
+            ImageSpaceDepthOfFieldMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

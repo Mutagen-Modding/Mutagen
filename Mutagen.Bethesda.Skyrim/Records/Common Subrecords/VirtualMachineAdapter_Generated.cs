@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -52,12 +54,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            VirtualMachineAdapterMixIn.ToString(
+            VirtualMachineAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -163,26 +166,21 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(VirtualMachineAdapter.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(VirtualMachineAdapter.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, VirtualMachineAdapter.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, VirtualMachineAdapter.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(VirtualMachineAdapter.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(VirtualMachineAdapter.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -233,36 +231,27 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
             }
             #endregion
 
@@ -311,7 +300,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = VirtualMachineAdapter_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => VirtualMachineAdapterCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => VirtualMachineAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -319,7 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -329,7 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static VirtualMachineAdapter CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new VirtualMachineAdapter();
             ((VirtualMachineAdapterSetterCommon)((IVirtualMachineAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -344,7 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out VirtualMachineAdapter item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -354,7 +344,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -407,26 +397,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IVirtualMachineAdapterGetter item,
             string? name = null,
             VirtualMachineAdapter.Mask<bool>? printMask = null)
         {
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).ToString(
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IVirtualMachineAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VirtualMachineAdapter.Mask<bool>? printMask = null)
         {
-            ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).ToString(
+            ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -507,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((VirtualMachineAdapterSetterCommon)((IVirtualMachineAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -522,10 +512,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum VirtualMachineAdapter_FieldIndex
+    internal enum VirtualMachineAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -534,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class VirtualMachineAdapter_Registration : ILoquiRegistration
+    internal partial class VirtualMachineAdapter_Registration : ILoquiRegistration
     {
         public static readonly VirtualMachineAdapter_Registration Instance = new VirtualMachineAdapter_Registration();
 
@@ -576,6 +566,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.VMAD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(VirtualMachineAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -609,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VirtualMachineAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    internal partial class VirtualMachineAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
         public new static readonly VirtualMachineAdapterSetterCommon Instance = new VirtualMachineAdapterSetterCommon();
 
@@ -638,12 +634,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.VMAD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -654,7 +650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAVirtualMachineAdapter item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (VirtualMachineAdapter)item,
@@ -665,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterCommon : AVirtualMachineAdapterCommon
+    internal partial class VirtualMachineAdapterCommon : AVirtualMachineAdapterCommon
     {
         public new static readonly VirtualMachineAdapterCommon Instance = new VirtualMachineAdapterCommon();
 
@@ -689,57 +685,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             VirtualMachineAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IVirtualMachineAdapterGetter item,
             string? name = null,
             VirtualMachineAdapter.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IVirtualMachineAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             VirtualMachineAdapter.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VirtualMachineAdapter =>");
+                sb.AppendLine($"VirtualMachineAdapter =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VirtualMachineAdapter) =>");
+                sb.AppendLine($"{name} (VirtualMachineAdapter) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IVirtualMachineAdapterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             VirtualMachineAdapter.Mask<bool>? printMask = null)
         {
             AVirtualMachineAdapterCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
         }
         
@@ -801,9 +794,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IVirtualMachineAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVirtualMachineAdapterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -813,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    internal partial class VirtualMachineAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
         public new static readonly VirtualMachineAdapterSetterTranslationCommon Instance = new VirtualMachineAdapterSetterTranslationCommon();
 
@@ -909,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapter_Registration.Instance;
-        public new static VirtualMachineAdapter_Registration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -927,23 +920,23 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class VirtualMachineAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
+        public new static readonly VirtualMachineAdapterBinaryWriteTranslation Instance = new VirtualMachineAdapterBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
             IVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.VMAD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
@@ -955,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IVirtualMachineAdapterGetter)item,
@@ -966,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IVirtualMachineAdapterGetter)item,
@@ -976,9 +969,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class VirtualMachineAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    internal partial class VirtualMachineAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
+        public new static readonly VirtualMachineAdapterBinaryCreateTranslation Instance = new VirtualMachineAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IVirtualMachineAdapter item,
@@ -1002,16 +995,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VirtualMachineAdapterBinaryOverlay :
+    internal partial class VirtualMachineAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
         IVirtualMachineAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => VirtualMachineAdapter_Registration.Instance;
-        public new static VirtualMachineAdapter_Registration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VirtualMachineAdapter_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => VirtualMachineAdapterCommon.Instance;
         [DebuggerStepThrough]
@@ -1019,13 +1012,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => VirtualMachineAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((VirtualMachineAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1040,25 +1033,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected VirtualMachineAdapterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static VirtualMachineAdapterBinaryOverlay VirtualMachineAdapterFactory(
+        public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new VirtualMachineAdapterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x0 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1067,25 +1065,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static VirtualMachineAdapterBinaryOverlay VirtualMachineAdapterFactory(
+        public static IVirtualMachineAdapterGetter VirtualMachineAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return VirtualMachineAdapterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            VirtualMachineAdapterMixIn.ToString(
+            VirtualMachineAdapterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

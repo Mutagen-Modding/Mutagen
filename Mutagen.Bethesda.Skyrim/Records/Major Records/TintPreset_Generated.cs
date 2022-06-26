@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -72,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TintPresetMixIn.ToString(
+            TintPresetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -199,38 +201,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(TintPreset.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(TintPreset.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TintPreset.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, TintPreset.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(TintPreset.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TintPreset.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.DefaultValue ?? true)
                     {
-                        fg.AppendItem(DefaultValue, "DefaultValue");
+                        sb.AppendItem(DefaultValue, "DefaultValue");
                     }
                     if (printMask?.Index ?? true)
                     {
-                        fg.AppendItem(Index, "Index");
+                        sb.AppendItem(Index, "Index");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -325,38 +322,35 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(DefaultValue, "DefaultValue");
-                fg.AppendItem(Index, "Index");
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(DefaultValue, "DefaultValue");
+                }
+                {
+                    sb.AppendItem(Index, "Index");
+                }
             }
             #endregion
 
@@ -435,7 +429,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintPresetCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintPresetCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintPresetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -446,7 +440,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -456,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static TintPreset CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TintPreset();
             ((TintPresetSetterCommon)((ITintPresetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -471,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TintPreset item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -481,7 +475,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -547,26 +541,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITintPresetGetter item,
             string? name = null,
             TintPreset.Mask<bool>? printMask = null)
         {
-            return ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).ToString(
+            return ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITintPresetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintPreset.Mask<bool>? printMask = null)
         {
-            ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).ToString(
+            ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -672,7 +666,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ITintPreset item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TintPresetSetterCommon)((ITintPresetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -687,10 +681,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum TintPreset_FieldIndex
+    internal enum TintPreset_FieldIndex
     {
         Color = 0,
         DefaultValue = 1,
@@ -699,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class TintPreset_Registration : ILoquiRegistration
+    internal partial class TintPreset_Registration : ILoquiRegistration
     {
         public static readonly TintPreset_Registration Instance = new TintPreset_Registration();
 
@@ -740,18 +734,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.TINC,
-                        RecordTypes.TINV,
-                        RecordTypes.TIRS
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.TINC,
+                RecordTypes.TINV,
+                RecordTypes.TIRS);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TintPresetBinaryWriteTranslation);
         #region Interface
@@ -786,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TintPresetSetterCommon
+    internal partial class TintPresetSetterCommon
     {
         public static readonly TintPresetSetterCommon Instance = new TintPresetSetterCommon();
 
@@ -812,7 +802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ITintPreset item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -825,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintPresetCommon
+    internal partial class TintPresetCommon
     {
         public static readonly TintPresetCommon Instance = new TintPresetCommon();
 
@@ -849,69 +839,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TintPreset.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Color = item.Color.Equals(rhs.Color);
             ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
             ret.Index = item.Index == rhs.Index;
         }
         
-        public string ToString(
+        public string Print(
             ITintPresetGetter item,
             string? name = null,
             TintPreset.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITintPresetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TintPreset.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TintPreset =>");
+                sb.AppendLine($"TintPreset =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TintPreset) =>");
+                sb.AppendLine($"{name} (TintPreset) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITintPresetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TintPreset.Mask<bool>? printMask = null)
         {
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color.FormKeyNullable, "Color");
+                sb.AppendItem(item.Color.FormKeyNullable, "Color");
             }
             if ((printMask?.DefaultValue ?? true)
                 && item.DefaultValue is {} DefaultValueItem)
             {
-                fg.AppendItem(DefaultValueItem, "DefaultValue");
+                sb.AppendItem(DefaultValueItem, "DefaultValue");
             }
             if ((printMask?.Index ?? true)
                 && item.Index is {} IndexItem)
             {
-                fg.AppendItem(IndexItem, "Index");
+                sb.AppendItem(IndexItem, "Index");
             }
         }
         
@@ -961,11 +948,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITintPresetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITintPresetGetter obj)
         {
-            if (obj.Color.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Color, out var ColorInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Color);
+                yield return ColorInfo;
             }
             yield break;
         }
@@ -973,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TintPresetSetterTranslationCommon
+    internal partial class TintPresetSetterTranslationCommon
     {
         public static readonly TintPresetSetterTranslationCommon Instance = new TintPresetSetterTranslationCommon();
 
@@ -1059,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]
@@ -1083,16 +1070,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TintPresetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TintPresetBinaryWriteTranslation Instance = new TintPresetBinaryWriteTranslation();
+        public static readonly TintPresetBinaryWriteTranslation Instance = new TintPresetBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             ITintPresetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1111,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ITintPresetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1122,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITintPresetGetter)item,
@@ -1132,9 +1119,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TintPresetBinaryCreateTranslation
+    internal partial class TintPresetBinaryCreateTranslation
     {
-        public readonly static TintPresetBinaryCreateTranslation Instance = new TintPresetBinaryCreateTranslation();
+        public static readonly TintPresetBinaryCreateTranslation Instance = new TintPresetBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITintPreset item,
@@ -1149,28 +1136,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.TINC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintPreset_FieldIndex.Color) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Color, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TintPreset_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintPreset_FieldIndex.DefaultValue) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.DefaultValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)TintPreset_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintPreset_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
                     return (int)TintPreset_FieldIndex.Index;
@@ -1191,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ITintPresetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintPresetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1204,16 +1191,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TintPresetBinaryOverlay :
+    internal partial class TintPresetBinaryOverlay :
         PluginBinaryOverlay,
         ITintPresetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TintPreset_Registration.Instance;
-        public static TintPreset_Registration StaticRegistration => TintPreset_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TintPreset_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TintPresetCommon.Instance;
         [DebuggerStepThrough]
@@ -1227,16 +1214,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintPresetCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TintPresetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintPresetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TintPresetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1246,15 +1233,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Color
         private int? _ColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;
-        public Single? DefaultValue => _DefaultValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? DefaultValue => _DefaultValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Index
         private int? _IndexLocation;
-        public UInt16? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1263,42 +1250,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected TintPresetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TintPresetBinaryOverlay TintPresetFactory(
+        public static ITintPresetGetter TintPresetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TintPresetBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static TintPresetBinaryOverlay TintPresetFactory(
+        public static ITintPresetGetter TintPresetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TintPresetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1308,26 +1301,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.TINC:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintPreset_FieldIndex.Color) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Color, translationParams)) return ParseResult.Stop;
                     _ColorLocation = (stream.Position - offset);
                     return (int)TintPreset_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintPreset_FieldIndex.DefaultValue) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.DefaultValue, translationParams)) return ParseResult.Stop;
                     _DefaultValueLocation = (stream.Position - offset);
                     return (int)TintPreset_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)TintPreset_FieldIndex.Index) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
                     return (int)TintPreset_FieldIndex.Index;
                 }
@@ -1337,12 +1330,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TintPresetMixIn.ToString(
+            TintPresetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

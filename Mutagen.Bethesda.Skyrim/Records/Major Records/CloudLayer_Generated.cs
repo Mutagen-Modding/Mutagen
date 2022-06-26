@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -88,12 +90,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CloudLayerMixIn.ToString(
+            CloudLayerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -249,46 +252,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CloudLayer.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CloudLayer.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CloudLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CloudLayer.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CloudLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CloudLayer.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Enabled ?? true)
                     {
-                        fg.AppendItem(Enabled, "Enabled");
+                        sb.AppendItem(Enabled, "Enabled");
                     }
                     if (printMask?.XSpeed ?? true)
                     {
-                        fg.AppendItem(XSpeed, "XSpeed");
+                        sb.AppendItem(XSpeed, "XSpeed");
                     }
                     if (printMask?.YSpeed ?? true)
                     {
-                        fg.AppendItem(YSpeed, "YSpeed");
+                        sb.AppendItem(YSpeed, "YSpeed");
                     }
                     if (printMask?.Colors?.Overall ?? true)
                     {
-                        Colors?.ToString(fg);
+                        Colors?.Print(sb);
                     }
                     if (printMask?.Alphas?.Overall ?? true)
                     {
-                        Alphas?.ToString(fg);
+                        Alphas?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -403,40 +401,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Enabled, "Enabled");
-                fg.AppendItem(XSpeed, "XSpeed");
-                fg.AppendItem(YSpeed, "YSpeed");
-                Colors?.ToString(fg);
-                Alphas?.ToString(fg);
+                {
+                    sb.AppendItem(Enabled, "Enabled");
+                }
+                {
+                    sb.AppendItem(XSpeed, "XSpeed");
+                }
+                {
+                    sb.AppendItem(YSpeed, "YSpeed");
+                }
+                Colors?.Print(sb);
+                Alphas?.Print(sb);
             }
             #endregion
 
@@ -527,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CloudLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -537,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CloudLayer CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CloudLayer();
             ((CloudLayerSetterCommon)((ICloudLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -552,7 +547,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CloudLayer item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -562,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -630,26 +625,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICloudLayerGetter item,
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
-            return ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).ToString(
+            return ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICloudLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
-            ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).ToString(
+            ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -755,7 +750,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICloudLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CloudLayerSetterCommon)((ICloudLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -770,10 +765,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CloudLayer_FieldIndex
+    internal enum CloudLayer_FieldIndex
     {
         Enabled = 0,
         XSpeed = 1,
@@ -784,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CloudLayer_Registration : ILoquiRegistration
+    internal partial class CloudLayer_Registration : ILoquiRegistration
     {
         public static readonly CloudLayer_Registration Instance = new CloudLayer_Registration();
 
@@ -858,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CloudLayerSetterCommon
+    internal partial class CloudLayerSetterCommon
     {
         public static readonly CloudLayerSetterCommon Instance = new CloudLayerSetterCommon();
 
@@ -885,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ICloudLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -897,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CloudLayerCommon
+    internal partial class CloudLayerCommon
     {
         public static readonly CloudLayerCommon Instance = new CloudLayerCommon();
 
@@ -921,7 +916,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CloudLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Enabled = item.Enabled == rhs.Enabled;
             ret.XSpeed = item.XSpeed.EqualsWithin(rhs.XSpeed);
             ret.YSpeed = item.YSpeed.EqualsWithin(rhs.YSpeed);
@@ -937,74 +931,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             ICloudLayerGetter item,
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICloudLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CloudLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CloudLayer =>");
+                sb.AppendLine($"CloudLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CloudLayer) =>");
+                sb.AppendLine($"{name} (CloudLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICloudLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CloudLayer.Mask<bool>? printMask = null)
         {
             if ((printMask?.Enabled ?? true)
                 && item.Enabled is {} EnabledItem)
             {
-                fg.AppendItem(EnabledItem, "Enabled");
+                sb.AppendItem(EnabledItem, "Enabled");
             }
             if ((printMask?.XSpeed ?? true)
                 && item.XSpeed is {} XSpeedItem)
             {
-                fg.AppendItem(XSpeedItem, "XSpeed");
+                sb.AppendItem(XSpeedItem, "XSpeed");
             }
             if ((printMask?.YSpeed ?? true)
                 && item.YSpeed is {} YSpeedItem)
             {
-                fg.AppendItem(YSpeedItem, "YSpeed");
+                sb.AppendItem(YSpeedItem, "YSpeed");
             }
             if ((printMask?.Colors?.Overall ?? true)
                 && item.Colors is {} ColorsItem)
             {
-                ColorsItem?.ToString(fg, "Colors");
+                ColorsItem?.Print(sb, "Colors");
             }
             if ((printMask?.Alphas?.Overall ?? true)
                 && item.Alphas is {} AlphasItem)
             {
-                AlphasItem?.ToString(fg, "Alphas");
+                AlphasItem?.Print(sb, "Alphas");
             }
         }
         
@@ -1081,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICloudLayerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICloudLayerGetter obj)
         {
             yield break;
         }
@@ -1089,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CloudLayerSetterTranslationCommon
+    internal partial class CloudLayerSetterTranslationCommon
     {
         public static readonly CloudLayerSetterTranslationCommon Instance = new CloudLayerSetterTranslationCommon();
 
@@ -1227,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CloudLayer_Registration.Instance;
-        public static CloudLayer_Registration StaticRegistration => CloudLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CloudLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CloudLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1251,11 +1243,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CloudLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CloudLayerBinaryWriteTranslation Instance = new CloudLayerBinaryWriteTranslation();
+        public static readonly CloudLayerBinaryWriteTranslation Instance = new CloudLayerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICloudLayerGetter item,
@@ -1266,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ICloudLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1276,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICloudLayerGetter)item,
@@ -1286,9 +1278,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CloudLayerBinaryCreateTranslation
+    internal partial class CloudLayerBinaryCreateTranslation
     {
-        public readonly static CloudLayerBinaryCreateTranslation Instance = new CloudLayerBinaryCreateTranslation();
+        public static readonly CloudLayerBinaryCreateTranslation Instance = new CloudLayerBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICloudLayer item,
@@ -1307,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICloudLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CloudLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1320,16 +1312,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CloudLayerBinaryOverlay :
+    internal partial class CloudLayerBinaryOverlay :
         PluginBinaryOverlay,
         ICloudLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CloudLayer_Registration.Instance;
-        public static CloudLayer_Registration StaticRegistration => CloudLayer_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CloudLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CloudLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1343,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CloudLayerBinaryWriteTranslation.Instance;
@@ -1351,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CloudLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1366,24 +1358,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected CloudLayerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CloudLayerBinaryOverlay CloudLayerFactory(
+        public static ICloudLayerGetter CloudLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CloudLayerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1391,25 +1389,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static CloudLayerBinaryOverlay CloudLayerFactory(
+        public static ICloudLayerGetter CloudLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CloudLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CloudLayerMixIn.ToString(
+            CloudLayerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,18 +1,17 @@
-﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters
+﻿namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
+
+/// <summary>
+/// Flag to specify what logic to use to ensure a mod's formIDs are unique
+/// </summary>
+public enum FormIDUniquenessOption
 {
     /// <summary>
-    /// Flag to specify what logic to use to ensure a mod's formIDs are unique
+    /// Do no check
     /// </summary>
-    public enum FormIDUniquenessOption
-    {
-        /// <summary>
-        /// Do no check
-        /// </summary>
-        NoCheck,
+    NoCheck,
 
-        /// <summary>
-        /// Iterate source mod
-        /// </summary>
-        Iterate,
-    }
+    /// <summary>
+    /// Iterate source mod
+    /// </summary>
+    Iterate,
 }

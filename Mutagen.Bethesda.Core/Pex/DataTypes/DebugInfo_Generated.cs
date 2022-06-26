@@ -7,14 +7,10 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -82,12 +78,13 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebugInfoMixIn.ToString(
+            DebugInfoMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -284,9 +281,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, DebugFunction.Mask<R>?>>();
                         obj.Functions.Specific = l;
-                        foreach (var item in Functions.Specific.WithIndex())
+                        foreach (var item in Functions.Specific)
                         {
-                            MaskItemIndexed<R, DebugFunction.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebugFunction.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DebugFunction.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebugFunction.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -299,9 +296,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>>();
                         obj.PropertyGroups.Specific = l;
-                        foreach (var item in PropertyGroups.Specific.WithIndex())
+                        foreach (var item in PropertyGroups.Specific)
                         {
-                            MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebugPropertyGroup.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -314,9 +311,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<MaskItemIndexed<R, DebugStructOrder.Mask<R>?>>();
                         obj.StructOrders.Specific = l;
-                        foreach (var item in StructOrders.Specific.WithIndex())
+                        foreach (var item in StructOrders.Specific)
                         {
-                            MaskItemIndexed<R, DebugStructOrder.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DebugStructOrder.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, DebugStructOrder.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebugStructOrder.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -326,99 +323,82 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DebugInfo.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DebugInfo.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DebugInfo.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DebugInfo.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DebugInfo.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DebugInfo.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ModificationTime ?? true)
                     {
-                        fg.AppendItem(ModificationTime, "ModificationTime");
+                        sb.AppendItem(ModificationTime, "ModificationTime");
                     }
                     if ((printMask?.Functions?.Overall ?? true)
                         && Functions is {} FunctionsItem)
                     {
-                        fg.AppendLine("Functions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Functions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(FunctionsItem.Overall);
+                            sb.AppendItem(FunctionsItem.Overall);
                             if (FunctionsItem.Specific != null)
                             {
                                 foreach (var subItem in FunctionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.PropertyGroups?.Overall ?? true)
                         && PropertyGroups is {} PropertyGroupsItem)
                     {
-                        fg.AppendLine("PropertyGroups =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("PropertyGroups =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PropertyGroupsItem.Overall);
+                            sb.AppendItem(PropertyGroupsItem.Overall);
                             if (PropertyGroupsItem.Specific != null)
                             {
                                 foreach (var subItem in PropertyGroupsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if ((printMask?.StructOrders?.Overall ?? true)
                         && StructOrders is {} StructOrdersItem)
                     {
-                        fg.AppendLine("StructOrders =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("StructOrders =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(StructOrdersItem.Overall);
+                            sb.AppendItem(StructOrdersItem.Overall);
                             if (StructOrdersItem.Specific != null)
                             {
                                 foreach (var subItem in StructOrdersItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -523,101 +503,82 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ModificationTime, "ModificationTime");
+                {
+                    sb.AppendItem(ModificationTime, "ModificationTime");
+                }
                 if (Functions is {} FunctionsItem)
                 {
-                    fg.AppendLine("Functions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Functions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(FunctionsItem.Overall);
+                        sb.AppendItem(FunctionsItem.Overall);
                         if (FunctionsItem.Specific != null)
                         {
                             foreach (var subItem in FunctionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (PropertyGroups is {} PropertyGroupsItem)
                 {
-                    fg.AppendLine("PropertyGroups =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("PropertyGroups =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PropertyGroupsItem.Overall);
+                        sb.AppendItem(PropertyGroupsItem.Overall);
                         if (PropertyGroupsItem.Specific != null)
                         {
                             foreach (var subItem in PropertyGroupsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
                 if (StructOrders is {} StructOrdersItem)
                 {
-                    fg.AppendLine("StructOrders =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("StructOrders =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(StructOrdersItem.Overall);
+                        sb.AppendItem(StructOrdersItem.Overall);
                         if (StructOrdersItem.Specific != null)
                         {
                             foreach (var subItem in StructOrdersItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -697,7 +658,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -762,26 +723,26 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebugInfoGetter item,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
-            return ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).ToString(
+            return ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebugInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
-            ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).ToString(
+            ((DebugInfoCommon)((IDebugInfoGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -888,10 +849,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugInfo_FieldIndex
+    internal enum DebugInfo_FieldIndex
     {
         ModificationTime = 0,
         Functions = 1,
@@ -901,7 +862,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugInfo_Registration : ILoquiRegistration
+    internal partial class DebugInfo_Registration : ILoquiRegistration
     {
         public static readonly DebugInfo_Registration Instance = new DebugInfo_Registration();
 
@@ -974,7 +935,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugInfoSetterCommon
+    internal partial class DebugInfoSetterCommon
     {
         public static readonly DebugInfoSetterCommon Instance = new DebugInfoSetterCommon();
 
@@ -990,7 +951,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugInfoCommon
+    internal partial class DebugInfoCommon
     {
         public static readonly DebugInfoCommon Instance = new DebugInfoCommon();
 
@@ -1014,7 +975,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             DebugInfo.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ModificationTime = item.ModificationTime == rhs.ModificationTime;
             ret.Functions = item.Functions.CollectionEqualsHelper(
                 rhs.Functions,
@@ -1030,107 +990,93 @@ namespace Mutagen.Bethesda.Pex.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDebugInfoGetter item,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebugInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugInfo.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DebugInfo =>");
+                sb.AppendLine($"DebugInfo =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DebugInfo) =>");
+                sb.AppendLine($"{name} (DebugInfo) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebugInfoGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DebugInfo.Mask<bool>? printMask = null)
         {
             if (printMask?.ModificationTime ?? true)
             {
-                fg.AppendItem(item.ModificationTime, "ModificationTime");
+                sb.AppendItem(item.ModificationTime, "ModificationTime");
             }
             if (printMask?.Functions?.Overall ?? true)
             {
-                fg.AppendLine("Functions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Functions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Functions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.PropertyGroups?.Overall ?? true)
             {
-                fg.AppendLine("PropertyGroups =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("PropertyGroups =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.PropertyGroups)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.StructOrders?.Overall ?? true)
             {
-                fg.AppendLine("StructOrders =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("StructOrders =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.StructOrders)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1147,15 +1093,15 @@ namespace Mutagen.Bethesda.Pex.Internals
             }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.Functions) ?? true))
             {
-                if (!lhs.Functions.SequenceEqualNullable(rhs.Functions)) return false;
+                if (!lhs.Functions.SequenceEqual(rhs.Functions, (l, r) => ((DebugFunctionCommon)((IDebugFunctionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.Functions)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.PropertyGroups) ?? true))
             {
-                if (!lhs.PropertyGroups.SequenceEqualNullable(rhs.PropertyGroups)) return false;
+                if (!lhs.PropertyGroups.SequenceEqual(rhs.PropertyGroups, (l, r) => ((DebugPropertyGroupCommon)((IDebugPropertyGroupGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.PropertyGroups)))) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.StructOrders) ?? true))
             {
-                if (!lhs.StructOrders.SequenceEqualNullable(rhs.StructOrders)) return false;
+                if (!lhs.StructOrders.SequenceEqual(rhs.StructOrders, (l, r) => ((DebugStructOrderCommon)((IDebugStructOrderGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)DebugInfo_FieldIndex.StructOrders)))) return false;
             }
             return true;
         }
@@ -1179,7 +1125,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugInfoSetterTranslationCommon
+    internal partial class DebugInfoSetterTranslationCommon
     {
         public static readonly DebugInfoSetterTranslationCommon Instance = new DebugInfoSetterTranslationCommon();
 
@@ -1329,7 +1275,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugInfo_Registration.Instance;
-        public static DebugInfo_Registration StaticRegistration => DebugInfo_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugInfo_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugInfoCommon.Instance;
         [DebuggerStepThrough]

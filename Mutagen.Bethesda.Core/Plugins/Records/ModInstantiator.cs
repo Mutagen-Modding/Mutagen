@@ -1,10 +1,7 @@
 // using Loqui;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Linq.Expressions;
 using DynamicData;
 using Loqui;
@@ -21,10 +18,16 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         static ModInstantiator()
         {
-            foreach (var modRegistration in LoquiRegistration.StaticRegister.Registrations
-                .WhereCastable<ILoquiRegistration, IModRegistration>())
+            foreach (var category in EnumExt<GameCategory>.Values)
             {
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}Mod_Registration, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                var modRegistration = obj as IModRegistration;
+                if (modRegistration == null) continue;
                 _dict[modRegistration.GameCategory] = ModInstantiatorReflection.GetOverlay<IModGetter>(modRegistration);
+
             }
         }
 

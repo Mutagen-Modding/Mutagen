@@ -5,32 +5,36 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +55,77 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IActorValueInformationGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IActorValueInformationGetter.Description => this.Description;
+        #endregion
+        #region Abbreviation
+        public String? Abbreviation { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IActorValueInformationGetter.Abbreviation => this.Abbreviation;
+        #endregion
+        #region DefaultValue
+        public Single? DefaultValue { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IActorValueInformationGetter.DefaultValue => this.DefaultValue;
+        #endregion
+        #region Flags
+        public ActorValueInformation.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ActorValueInformation.Flag? IActorValueInformationGetter.Flags => this.Flags;
+        #endregion
+        #region Type
+        public ActorValueInformation.Types? Type { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ActorValueInformation.Types? IActorValueInformationGetter.Type => this.Type;
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueInformationMixIn.ToString(
+            ActorValueInformationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +141,12 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Abbreviation = initialValue;
+                this.DefaultValue = initialValue;
+                this.Flags = initialValue;
+                this.Type = initialValue;
             }
 
             public Mask(
@@ -83,7 +155,13 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem Description,
+                TItem Abbreviation,
+                TItem DefaultValue,
+                TItem Flags,
+                TItem Type)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +170,12 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.Description = Description;
+                this.Abbreviation = Abbreviation;
+                this.DefaultValue = DefaultValue;
+                this.Flags = Flags;
+                this.Type = Type;
             }
 
             #pragma warning disable CS8618
@@ -100,6 +184,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem Description;
+            public TItem Abbreviation;
+            public TItem DefaultValue;
+            public TItem Flags;
+            public TItem Type;
             #endregion
 
             #region Equals
@@ -113,11 +206,23 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Abbreviation, rhs.Abbreviation)) return false;
+                if (!object.Equals(this.DefaultValue, rhs.DefaultValue)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Abbreviation);
+                hash.Add(this.DefaultValue);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +233,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Abbreviation)) return false;
+                if (!eval(this.DefaultValue)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
                 return true;
             }
             #endregion
@@ -136,6 +247,12 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Abbreviation)) return true;
+                if (eval(this.DefaultValue)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
                 return false;
             }
             #endregion
@@ -151,30 +268,55 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Abbreviation = eval(this.Abbreviation);
+                obj.DefaultValue = eval(this.DefaultValue);
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ActorValueInformation.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ActorValueInformation.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ActorValueInformation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ActorValueInformation.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Abbreviation ?? true)
+                    {
+                        sb.AppendItem(Abbreviation, "Abbreviation");
+                    }
+                    if (printMask?.DefaultValue ?? true)
+                    {
+                        sb.AppendItem(DefaultValue, "DefaultValue");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        sb.AppendItem(Type, "Type");
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +326,33 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? Description;
+            public Exception? Abbreviation;
+            public Exception? DefaultValue;
+            public Exception? Flags;
+            public Exception? Type;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
+                    case ActorValueInformation_FieldIndex.Name:
+                        return Name;
+                    case ActorValueInformation_FieldIndex.Description:
+                        return Description;
+                    case ActorValueInformation_FieldIndex.Abbreviation:
+                        return Abbreviation;
+                    case ActorValueInformation_FieldIndex.DefaultValue:
+                        return DefaultValue;
+                    case ActorValueInformation_FieldIndex.Flags:
+                        return Flags;
+                    case ActorValueInformation_FieldIndex.Type:
+                        return Type;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +363,24 @@ namespace Mutagen.Bethesda.Fallout4
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
+                    case ActorValueInformation_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Abbreviation:
+                        this.Abbreviation = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.DefaultValue:
+                        this.DefaultValue = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ActorValueInformation_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +392,24 @@ namespace Mutagen.Bethesda.Fallout4
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
+                    case ActorValueInformation_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Abbreviation:
+                        this.Abbreviation = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.DefaultValue:
+                        this.DefaultValue = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case ActorValueInformation_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +419,56 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Abbreviation != null) return true;
+                if (DefaultValue != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Abbreviation, "Abbreviation");
+                }
+                {
+                    sb.AppendItem(DefaultValue, "DefaultValue");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -263,6 +477,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Abbreviation = this.Abbreviation.Combine(rhs.Abbreviation);
+                ret.DefaultValue = this.DefaultValue.Combine(rhs.DefaultValue);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +504,41 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Description;
+            public bool Abbreviation;
+            public bool DefaultValue;
+            public bool Flags;
+            public bool Type;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Abbreviation = defaultOn;
+                this.DefaultValue = defaultOn;
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Abbreviation, null));
+                ret.Add((DefaultValue, null));
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -373,7 +619,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +629,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ActorValueInformation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValueInformation();
             ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +644,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActorValueInformation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +654,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -428,8 +674,21 @@ namespace Mutagen.Bethesda.Fallout4
         IActorValueInformationGetter,
         IDamageTypeTarget,
         IFallout4MajorRecordInternal,
-        ILoquiObjectSetter<IActorValueInformationInternal>
+        ILoquiObjectSetter<IActorValueInformationInternal>,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new TranslatedString? Description { get; set; }
+        new String? Abbreviation { get; set; }
+        new Single? DefaultValue { get; set; }
+        new ActorValueInformation.Flag? Flags { get; set; }
+        new ActorValueInformation.Types? Type { get; set; }
     }
 
     public partial interface IActorValueInformationInternal :
@@ -445,9 +704,24 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IDamageTypeTargetGetter,
         ILoquiObject<IActorValueInformationGetter>,
-        IMapsToGetter<IActorValueInformationGetter>
+        IMapsToGetter<IActorValueInformationGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        ITranslatedStringGetter? Description { get; }
+        String? Abbreviation { get; }
+        Single? DefaultValue { get; }
+        ActorValueInformation.Flag? Flags { get; }
+        ActorValueInformation.Types? Type { get; }
 
     }
 
@@ -472,26 +746,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IActorValueInformationGetter item,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).ToString(
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).ToString(
+            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -586,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IActorValueInformationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -601,10 +875,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ActorValueInformation_FieldIndex
+    internal enum ActorValueInformation_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -612,11 +886,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        Description = 7,
+        Abbreviation = 8,
+        DefaultValue = 9,
+        Flags = 10,
+        Type = 11,
     }
     #endregion
 
     #region Registration
-    public partial class ActorValueInformation_Registration : ILoquiRegistration
+    internal partial class ActorValueInformation_Registration : ILoquiRegistration
     {
         public static readonly ActorValueInformation_Registration Instance = new ActorValueInformation_Registration();
 
@@ -629,9 +909,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9a04bbd8-601a-4566-af72-e3645c9897b2";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(ActorValueInformation.Mask<>);
 
@@ -658,6 +938,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AVIF;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.AVIF);
+            var all = RecordCollection.Factory(
+                RecordTypes.AVIF,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.ANAM,
+                RecordTypes.NAM0,
+                RecordTypes.AVFL,
+                RecordTypes.NAM1);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ActorValueInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -691,7 +985,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ActorValueInformationSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ActorValueInformationSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ActorValueInformationSetterCommon Instance = new ActorValueInformationSetterCommon();
 
@@ -700,6 +994,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IActorValueInformationInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Description = default;
+            item.Abbreviation = default;
+            item.DefaultValue = default;
+            item.Flags = default;
+            item.Type = default;
             base.Clear(item);
         }
         
@@ -725,7 +1025,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IActorValueInformationInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IActorValueInformationInternal>(
                 record: item,
@@ -738,7 +1038,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ActorValueInformation)item,
@@ -749,7 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ActorValueInformation)item,
@@ -760,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActorValueInformationCommon : Fallout4MajorRecordCommon
+    internal partial class ActorValueInformationCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ActorValueInformationCommon Instance = new ActorValueInformationCommon();
 
@@ -784,58 +1084,91 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ActorValueInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Abbreviation = string.Equals(item.Abbreviation, rhs.Abbreviation);
+            ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IActorValueInformationGetter item,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActorValueInformation =>");
+                sb.AppendLine($"ActorValueInformation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActorValueInformation) =>");
+                sb.AppendLine($"{name} (ActorValueInformation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActorValueInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActorValueInformation.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if ((printMask?.Abbreviation ?? true)
+                && item.Abbreviation is {} AbbreviationItem)
+            {
+                sb.AppendItem(AbbreviationItem, "Abbreviation");
+            }
+            if ((printMask?.DefaultValue ?? true)
+                && item.DefaultValue is {} DefaultValueItem)
+            {
+                sb.AppendItem(DefaultValueItem, "DefaultValue");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.Type ?? true)
+                && item.Type is {} TypeItem)
+            {
+                sb.AppendItem(TypeItem, "Type");
+            }
         }
         
         public static ActorValueInformation_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -884,6 +1217,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            {
+                if (!string.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
+            {
+                if (!lhs.DefaultValue.EqualsWithin(rhs.DefaultValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
@@ -912,6 +1269,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(IActorValueInformationGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            if (item.Abbreviation is {} Abbreviationitem)
+            {
+                hash.Add(Abbreviationitem);
+            }
+            if (item.DefaultValue is {} DefaultValueitem)
+            {
+                hash.Add(DefaultValueitem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.Type is {} Typeitem)
+            {
+                hash.Add(Typeitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -935,9 +1316,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActorValueInformationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueInformationGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -982,7 +1363,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ActorValueInformationSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ActorValueInformationSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ActorValueInformationSetterTranslationCommon Instance = new ActorValueInformationSetterTranslationCommon();
 
@@ -1015,6 +1396,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            {
+                item.Abbreviation = rhs.Abbreviation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DefaultValue) ?? true))
+            {
+                item.DefaultValue = rhs.DefaultValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1137,7 +1542,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1155,18 +1560,60 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ActorValueInformationBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ActorValueInformationBinaryWriteTranslation Instance = new ActorValueInformationBinaryWriteTranslation();
+        public new static readonly ActorValueInformationBinaryWriteTranslation Instance = new ActorValueInformationBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            IActorValueInformationGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Abbreviation,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                binaryType: StringBinaryType.NullTerminate);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultValue,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
+            EnumBinaryTranslation<ActorValueInformation.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.AVFL));
+            EnumBinaryTranslation<ActorValueInformation.Types, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+        }
 
         public void Write(
             MutagenWriter writer,
             IActorValueInformationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1177,10 +1624,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1192,7 +1644,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActorValueInformationGetter)item,
@@ -1203,7 +1655,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IActorValueInformationGetter)item,
@@ -1214,7 +1666,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IActorValueInformationGetter)item,
@@ -1224,9 +1676,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ActorValueInformationBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ActorValueInformationBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
+        public new static readonly ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AVIF;
         public static void FillBinaryStructs(
@@ -1236,6 +1688,78 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IActorValueInformationInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ActorValueInformation_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ActorValueInformation_FieldIndex.Description;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Abbreviation = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ActorValueInformation_FieldIndex.DefaultValue;
+                }
+                case RecordTypeInts.AVFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<ActorValueInformation.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ActorValueInformation_FieldIndex.Flags;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<ActorValueInformation.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ActorValueInformation_FieldIndex.Type;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
         }
 
     }
@@ -1251,16 +1775,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ActorValueInformationBinaryOverlay :
+    internal partial class ActorValueInformationBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IActorValueInformationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ActorValueInformation_Registration StaticRegistration => ActorValueInformation_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ActorValueInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1268,13 +1792,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1284,6 +1808,38 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IActorValueInformation);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region Abbreviation
+        private int? _AbbreviationLocation;
+        public String? Abbreviation => _AbbreviationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region DefaultValue
+        private int? _DefaultValueLocation;
+        public Single? DefaultValue => _DefaultValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public ActorValueInformation.Flag? Flags => _FlagsLocation.HasValue ? (ActorValueInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ActorValueInformation.Flag?);
+        #endregion
+        #region Type
+        private int? _TypeLocation;
+        public ActorValueInformation.Types? Type => _TypeLocation.HasValue ? (ActorValueInformation.Types)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueInformation.Types?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1291,28 +1847,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected ActorValueInformationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ActorValueInformationBinaryOverlay ActorValueInformationFactory(
+        public static IActorValueInformationGetter ActorValueInformationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ActorValueInformationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1322,30 +1881,84 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ActorValueInformationBinaryOverlay ActorValueInformationFactory(
+        public static IActorValueInformationGetter ActorValueInformationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActorValueInformationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Description;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _AbbreviationLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _DefaultValueLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.DefaultValue;
+                }
+                case RecordTypeInts.AVFL:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Flags;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.Type;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueInformationMixIn.ToString(
+            ActorValueInformationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

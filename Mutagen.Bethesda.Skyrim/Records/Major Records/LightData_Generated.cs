@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -68,12 +70,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LightDataMixIn.ToString(
+            LightDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -222,50 +225,45 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LightData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LightData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LightData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LightData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LightData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LightData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.FovOffset ?? true)
                     {
-                        fg.AppendItem(FovOffset, "FovOffset");
+                        sb.AppendItem(FovOffset, "FovOffset");
                     }
                     if (printMask?.FadeOffset ?? true)
                     {
-                        fg.AppendItem(FadeOffset, "FadeOffset");
+                        sb.AppendItem(FadeOffset, "FadeOffset");
                     }
                     if (printMask?.EndDistanceCap ?? true)
                     {
-                        fg.AppendItem(EndDistanceCap, "EndDistanceCap");
+                        sb.AppendItem(EndDistanceCap, "EndDistanceCap");
                     }
                     if (printMask?.ShadowDepthBias ?? true)
                     {
-                        fg.AppendItem(ShadowDepthBias, "ShadowDepthBias");
+                        sb.AppendItem(ShadowDepthBias, "ShadowDepthBias");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -390,41 +388,44 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(FovOffset, "FovOffset");
-                fg.AppendItem(FadeOffset, "FadeOffset");
-                fg.AppendItem(EndDistanceCap, "EndDistanceCap");
-                fg.AppendItem(ShadowDepthBias, "ShadowDepthBias");
-                fg.AppendItem(Unknown, "Unknown");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(FovOffset, "FovOffset");
+                }
+                {
+                    sb.AppendItem(FadeOffset, "FadeOffset");
+                }
+                {
+                    sb.AppendItem(EndDistanceCap, "EndDistanceCap");
+                }
+                {
+                    sb.AppendItem(ShadowDepthBias, "ShadowDepthBias");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -515,7 +516,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LightData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static LightData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LightData();
             ((LightDataSetterCommon)((ILightDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LightData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -635,26 +635,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILightDataGetter item,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            return ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).ToString(
+            return ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).ToString(
+            ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILightData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LightDataSetterCommon)((ILightDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -775,10 +775,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum LightData_FieldIndex
+    internal enum LightData_FieldIndex
     {
         Versioning = 0,
         FovOffset = 1,
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class LightData_Registration : ILoquiRegistration
+    internal partial class LightData_Registration : ILoquiRegistration
     {
         public static readonly LightData_Registration Instance = new LightData_Registration();
 
@@ -832,6 +832,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XLIG;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XLIG);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LightDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -865,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LightDataSetterCommon
+    internal partial class LightDataSetterCommon
     {
         public static readonly LightDataSetterCommon Instance = new LightDataSetterCommon();
 
@@ -893,12 +899,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILightData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLIG),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -909,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LightDataCommon
+    internal partial class LightDataCommon
     {
         public static readonly LightDataCommon Instance = new LightDataCommon();
 
@@ -933,7 +939,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.FovOffset = item.FovOffset.EqualsWithin(rhs.FovOffset);
             ret.FadeOffset = item.FadeOffset.EqualsWithin(rhs.FadeOffset);
@@ -942,73 +947,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
-        public string ToString(
+        public string Print(
             ILightDataGetter item,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LightData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LightData =>");
+                sb.AppendLine($"LightData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LightData) =>");
+                sb.AppendLine($"{name} (LightData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILightDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LightData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.FovOffset ?? true)
             {
-                fg.AppendItem(item.FovOffset, "FovOffset");
+                sb.AppendItem(item.FovOffset, "FovOffset");
             }
             if (printMask?.FadeOffset ?? true)
             {
-                fg.AppendItem(item.FadeOffset, "FadeOffset");
+                sb.AppendItem(item.FadeOffset, "FadeOffset");
             }
             if (printMask?.EndDistanceCap ?? true)
             {
-                fg.AppendItem(item.EndDistanceCap, "EndDistanceCap");
+                sb.AppendItem(item.EndDistanceCap, "EndDistanceCap");
             }
             if (printMask?.ShadowDepthBias ?? true)
             {
-                fg.AppendItem(item.ShadowDepthBias, "ShadowDepthBias");
+                sb.AppendItem(item.ShadowDepthBias, "ShadowDepthBias");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1067,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILightDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILightDataGetter obj)
         {
             yield break;
         }
@@ -1075,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LightDataSetterTranslationCommon
+    internal partial class LightDataSetterTranslationCommon
     {
         public static readonly LightDataSetterTranslationCommon Instance = new LightDataSetterTranslationCommon();
 
@@ -1174,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightData_Registration.Instance;
-        public static LightData_Registration StaticRegistration => LightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LightDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1198,11 +1201,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LightDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
+        public static readonly LightDataBinaryWriteTranslation Instance = new LightDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILightDataGetter item,
@@ -1229,12 +1232,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILightDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLIG),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1246,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILightDataGetter)item,
@@ -1256,9 +1259,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LightDataBinaryCreateTranslation
+    internal partial class LightDataBinaryCreateTranslation
     {
-        public readonly static LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
+        public static readonly LightDataBinaryCreateTranslation Instance = new LightDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILightData item,
@@ -1287,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILightDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1300,16 +1303,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LightDataBinaryOverlay :
+    internal partial class LightDataBinaryOverlay :
         PluginBinaryOverlay,
         ILightDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LightData_Registration.Instance;
-        public static LightData_Registration StaticRegistration => LightData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LightData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LightDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1323,7 +1326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LightDataBinaryWriteTranslation.Instance;
@@ -1331,7 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LightDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1340,11 +1343,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public LightData.VersioningBreaks Versioning { get; private set; }
-        public Single FovOffset => _data.Slice(0x0, 0x4).Float();
-        public Single FadeOffset => _data.Slice(0x4, 0x4).Float();
-        public Single EndDistanceCap => _data.Slice(0x8, 0x4).Float();
-        public Single ShadowDepthBias => _data.Slice(0xC, 0x4).Float();
-        public Int32 Unknown => _data.Length <= 0x10 ? default : BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
+        public Single FovOffset => _structData.Slice(0x0, 0x4).Float();
+        public Single FadeOffset => _structData.Slice(0x4, 0x4).Float();
+        public Single EndDistanceCap => _structData.Slice(0x8, 0x4).Float();
+        public Single ShadowDepthBias => _structData.Slice(0xC, 0x4).Float();
+        public Int32 Unknown => _structData.Length <= 0x10 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1352,26 +1355,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LightDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LightDataBinaryOverlay LightDataFactory(
+        public static ILightDataGetter LightDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LightDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= LightData.VersioningBreaks.Break0;
             }
@@ -1382,25 +1390,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LightDataBinaryOverlay LightDataFactory(
+        public static ILightDataGetter LightDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LightDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LightDataMixIn.ToString(
+            LightDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

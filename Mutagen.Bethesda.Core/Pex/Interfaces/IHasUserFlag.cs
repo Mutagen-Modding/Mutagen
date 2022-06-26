@@ -1,51 +1,48 @@
 using Noggog;
-using System;
-using System.Collections.Generic;
 
-namespace Mutagen.Bethesda.Pex
+namespace Mutagen.Bethesda.Pex;
+
+public interface IHasUserFlags : IHasUserFlagsGetter
 {
-    public interface IHasUserFlags : IHasUserFlagsGetter
+    new uint RawUserFlags { get; set; }
+}
+
+public interface IHasUserFlagsGetter
+{
+    uint RawUserFlags { get; }
+}
+
+public static class IHasUserFlagExtensions
+{
+    public static IEnumerable<NullableUserFlag> GetActiveFlags(this IHasUserFlags hasFlags, IPexFileGetter pexFile)
     {
-        new uint RawUserFlags { get; set; }
+        var flags = (int)hasFlags.RawUserFlags;
+        int index = 1;
+        for (byte i = 0; i < 32; i++)
+        {
+            if (EnumExt.HasFlag(flags, index))
+            {
+                yield return new NullableUserFlag(pexFile.UserFlags[i], i);
+            }
+            index <<= 1;
+        }
     }
 
-    public interface IHasUserFlagsGetter
+    public static void SetFlag(this IHasUserFlags hasFlags, IPexFileGetter pexFile, UserFlag flag, bool on)
     {
-        uint RawUserFlags { get; }
+        if (pexFile.UserFlags[flag.Index] != flag.Name)
+        {
+            throw new ArgumentException("Tried to set a flag that was not registered in the reference pex file.");
+        }
+        hasFlags.RawUserFlags = EnumExt.SetFlag(hasFlags.RawUserFlags, flag.Index, on);
     }
 
-    public static class IHasUserFlagExtensions
+    public static bool HasFlag(this IHasUserFlags hasFlags, IPexFileGetter pexFile, UserFlag flag)
     {
-        public static IEnumerable<NullableUserFlag> GetActiveFlags(this IHasUserFlags hasFlags, IPexFileGetter pexFile)
+        if (pexFile.UserFlags[flag.Index] != flag.Name)
         {
-            var flags = (int)hasFlags.RawUserFlags;
-            int index = 1;
-            for (byte i = 0; i < 32; i++)
-            {
-                if (EnumExt.HasFlag(flags, index))
-                {
-                    yield return new NullableUserFlag(pexFile.UserFlags[i], i);
-                }
-                index <<= 1;
-            }
+            throw new ArgumentException("Tried to set a flag that was not registered in the reference pex file.");
         }
-
-        public static void SetFlag(this IHasUserFlags hasFlags, IPexFileGetter pexFile, UserFlag flag, bool on)
-        {
-            if (pexFile.UserFlags[flag.Index] != flag.Name)
-            {
-                throw new ArgumentException("Tried to set a flag that was not registered in the reference pex file.");
-            }
-            hasFlags.RawUserFlags = EnumExt.SetFlag(hasFlags.RawUserFlags, flag.Index, on);
-        }
-
-        public static bool HasFlag(this IHasUserFlags hasFlags, IPexFileGetter pexFile, UserFlag flag)
-        {
-            if (pexFile.UserFlags[flag.Index] != flag.Name)
-            {
-                throw new ArgumentException("Tried to set a flag that was not registered in the reference pex file.");
-            }
-            return EnumExt.HasFlag(hasFlags.RawUserFlags, flag.Index);
-        }
+        return EnumExt.HasFlag(hasFlags.RawUserFlags, flag.Index);
     }
 }

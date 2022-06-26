@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CameraPath" recordType="CPTH" objType="Record" baseClass="Fallout4MajorRecord" GUID="7e480dcf-619a-4555-bec0-65ff8c010caf" ID="543">
+    <Fields>
+      <RefList name="Conditions" refName="Condition" />
+      <List name="RelatedPaths" recordType="ANAM" nullable="False">
+        <FormLink refName="CameraPath" />
+      </List>
+      <Enum name="Zoom" enumName="CameraPath.Flags" byteLength="1" nullable="False" recordType="DATA" />
+      <List name="Shots">
+        <FormLink recordType="SNAM" refName="CameraShot" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

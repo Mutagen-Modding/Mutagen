@@ -1,39 +1,36 @@
-using System.Collections.Generic;
-using System.Linq;
 using Mutagen.Bethesda.Plugins.Order;
 
-namespace Mutagen.Bethesda.Plugins.Binary.Parameters
+namespace Mutagen.Bethesda.Plugins.Binary.Parameters;
+
+/// <summary>
+/// A class that instructs the export to make masters listings match a given load order.
+/// </summary>
+public class MastersListOrderingByLoadOrder : AMastersListOrderingOption
 {
+    private readonly List<ModKey> _modKeys;
+
+    public IReadOnlyList<ModKey> LoadOrder => _modKeys;
+
     /// <summary>
-    /// A class that instructs the export to make masters listings match a given load order.
+    /// Whether to throw an exception if an unknown mod during export that is not on the given load order
     /// </summary>
-    public class MastersListOrderingByLoadOrder : AMastersListOrderingOption
+    public bool Strict { get; set; }
+
+    public MastersListOrderingByLoadOrder(IEnumerable<ModKey> modKeys)
     {
-        private readonly List<ModKey> _modKeys;
+        _modKeys = modKeys.ToList();
+    }
 
-        public IReadOnlyList<ModKey> LoadOrder => _modKeys;
+    public MastersListOrderingByLoadOrder(ILoadOrderGetter lo)
+        : this(lo.ListedOrder)
+    {
+    }
 
-        /// <summary>
-        /// Whether to throw an exception if an unknown mod during export that is not on the given load order
-        /// </summary>
-        public bool Strict { get; set; }
-
-        public MastersListOrderingByLoadOrder(IEnumerable<ModKey> modKeys)
-        {
-            _modKeys = modKeys.ToList();
-        }
-
-        public MastersListOrderingByLoadOrder(ILoadOrderGetter lo)
-            : this(lo.ListedOrder)
-        {
-        }
-
-        public static MastersListOrderingByLoadOrder Factory(IEnumerable<ModKey> modKeys) => new MastersListOrderingByLoadOrder(modKeys);
+    public static MastersListOrderingByLoadOrder Factory(IEnumerable<ModKey> modKeys) => new MastersListOrderingByLoadOrder(modKeys);
             
-        public static MastersListOrderingByLoadOrder Factory<T>(LoadOrder<T> loadOrder)
-            where T : IModKeyed
-        {
-            return Factory(loadOrder.Select(listing => listing.Key));
-        }
+    public static MastersListOrderingByLoadOrder Factory<T>(LoadOrder<T> loadOrder)
+        where T : IModKeyed
+    {
+        return Factory(loadOrder.Select(listing => listing.Key));
     }
 }

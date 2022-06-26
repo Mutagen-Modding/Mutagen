@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,19 +17,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -67,12 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FindMatchingRefFromEventMixIn.ToString(
+            FindMatchingRefFromEventMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -185,34 +187,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(FindMatchingRefFromEvent.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(FindMatchingRefFromEvent.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FindMatchingRefFromEvent.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, FindMatchingRefFromEvent.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(FindMatchingRefFromEvent.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(FindMatchingRefFromEvent.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FromEvent ?? true)
                     {
-                        fg.AppendItem(FromEvent, "FromEvent");
+                        sb.AppendItem(FromEvent, "FromEvent");
                     }
                     if (printMask?.EventData ?? true)
                     {
-                        fg.AppendItem(EventData, "EventData");
+                        sb.AppendItem(EventData, "EventData");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -297,37 +294,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(FromEvent, "FromEvent");
-                fg.AppendItem(EventData, "EventData");
+                {
+                    sb.AppendItem(FromEvent, "FromEvent");
+                }
+                {
+                    sb.AppendItem(EventData, "EventData");
+                }
             }
             #endregion
 
@@ -408,7 +400,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -418,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static FindMatchingRefFromEvent CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new FindMatchingRefFromEvent();
             ((FindMatchingRefFromEventSetterCommon)((IFindMatchingRefFromEventGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -433,7 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out FindMatchingRefFromEvent item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -443,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -505,26 +497,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFindMatchingRefFromEventGetter item,
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
-            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).ToString(
+            return ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFindMatchingRefFromEventGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
-            ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).ToString(
+            ((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -630,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IFindMatchingRefFromEvent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((FindMatchingRefFromEventSetterCommon)((IFindMatchingRefFromEventGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -645,10 +637,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum FindMatchingRefFromEvent_FieldIndex
+    internal enum FindMatchingRefFromEvent_FieldIndex
     {
         FromEvent = 0,
         EventData = 1,
@@ -656,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class FindMatchingRefFromEvent_Registration : ILoquiRegistration
+    internal partial class FindMatchingRefFromEvent_Registration : ILoquiRegistration
     {
         public static readonly FindMatchingRefFromEvent_Registration Instance = new FindMatchingRefFromEvent_Registration();
 
@@ -697,17 +689,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.ALFE,
-                        RecordTypes.ALFD
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.ALFE,
+                RecordTypes.ALFD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FindMatchingRefFromEventBinaryWriteTranslation);
         #region Interface
@@ -742,7 +730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class FindMatchingRefFromEventSetterCommon
+    internal partial class FindMatchingRefFromEventSetterCommon
     {
         public static readonly FindMatchingRefFromEventSetterCommon Instance = new FindMatchingRefFromEventSetterCommon();
 
@@ -766,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IFindMatchingRefFromEvent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -779,7 +767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FindMatchingRefFromEventCommon
+    internal partial class FindMatchingRefFromEventCommon
     {
         public static readonly FindMatchingRefFromEventCommon Instance = new FindMatchingRefFromEventCommon();
 
@@ -803,64 +791,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefFromEvent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FromEvent = item.FromEvent == rhs.FromEvent;
             ret.EventData = MemorySliceExt.Equal(item.EventData, rhs.EventData);
         }
         
-        public string ToString(
+        public string Print(
             IFindMatchingRefFromEventGetter item,
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFindMatchingRefFromEventGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"FindMatchingRefFromEvent =>");
+                sb.AppendLine($"FindMatchingRefFromEvent =>");
             }
             else
             {
-                fg.AppendLine($"{name} (FindMatchingRefFromEvent) =>");
+                sb.AppendLine($"{name} (FindMatchingRefFromEvent) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFindMatchingRefFromEventGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             FindMatchingRefFromEvent.Mask<bool>? printMask = null)
         {
             if ((printMask?.FromEvent ?? true)
                 && item.FromEvent is {} FromEventItem)
             {
-                fg.AppendItem(FromEventItem, "FromEvent");
+                sb.AppendItem(FromEventItem, "FromEvent");
             }
             if ((printMask?.EventData ?? true)
                 && item.EventData is {} EventDataItem)
             {
-                fg.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
+                sb.AppendLine($"EventData => {SpanExt.ToHexString(EventDataItem)}");
             }
         }
         
@@ -905,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFindMatchingRefFromEventGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFindMatchingRefFromEventGetter obj)
         {
             yield break;
         }
@@ -913,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class FindMatchingRefFromEventSetterTranslationCommon
+    internal partial class FindMatchingRefFromEventSetterTranslationCommon
     {
         public static readonly FindMatchingRefFromEventSetterTranslationCommon Instance = new FindMatchingRefFromEventSetterTranslationCommon();
 
@@ -1002,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefFromEvent_Registration.Instance;
-        public static FindMatchingRefFromEvent_Registration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefFromEventCommon.Instance;
         [DebuggerStepThrough]
@@ -1026,16 +1011,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class FindMatchingRefFromEventBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static FindMatchingRefFromEventBinaryWriteTranslation Instance = new FindMatchingRefFromEventBinaryWriteTranslation();
+        public static readonly FindMatchingRefFromEventBinaryWriteTranslation Instance = new FindMatchingRefFromEventBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IFindMatchingRefFromEventGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1050,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IFindMatchingRefFromEventGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1061,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFindMatchingRefFromEventGetter)item,
@@ -1071,9 +1056,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class FindMatchingRefFromEventBinaryCreateTranslation
+    internal partial class FindMatchingRefFromEventBinaryCreateTranslation
     {
-        public readonly static FindMatchingRefFromEventBinaryCreateTranslation Instance = new FindMatchingRefFromEventBinaryCreateTranslation();
+        public static readonly FindMatchingRefFromEventBinaryCreateTranslation Instance = new FindMatchingRefFromEventBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IFindMatchingRefFromEvent item,
@@ -1088,21 +1073,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.ALFE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.FromEvent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FromEvent = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.EventData, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EventData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
@@ -1123,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IFindMatchingRefFromEventGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1136,16 +1121,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class FindMatchingRefFromEventBinaryOverlay :
+    internal partial class FindMatchingRefFromEventBinaryOverlay :
         PluginBinaryOverlay,
         IFindMatchingRefFromEventGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FindMatchingRefFromEvent_Registration.Instance;
-        public static FindMatchingRefFromEvent_Registration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FindMatchingRefFromEvent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => FindMatchingRefFromEventCommon.Instance;
         [DebuggerStepThrough]
@@ -1159,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => FindMatchingRefFromEventBinaryWriteTranslation.Instance;
@@ -1167,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((FindMatchingRefFromEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1177,11 +1162,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region FromEvent
         private int? _FromEventLocation;
-        public RecordType? FromEvent => _FromEventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FromEventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        public RecordType? FromEvent => _FromEventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FromEventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
         #endregion
         #region EventData
         private int? _EventDataLocation;
-        public ReadOnlyMemorySlice<Byte>? EventData => _EventDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _EventDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? EventData => _EventDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EventDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1190,42 +1175,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected FindMatchingRefFromEventBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static FindMatchingRefFromEventBinaryOverlay FindMatchingRefFromEventFactory(
+        public static IFindMatchingRefFromEventGetter FindMatchingRefFromEventFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new FindMatchingRefFromEventBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static FindMatchingRefFromEventBinaryOverlay FindMatchingRefFromEventFactory(
+        public static IFindMatchingRefFromEventGetter FindMatchingRefFromEventFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return FindMatchingRefFromEventFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1235,20 +1226,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.ALFE:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.FromEvent, translationParams)) return ParseResult.Stop;
                     _FromEventLocation = (stream.Position - offset);
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.EventData, translationParams)) return ParseResult.Stop;
                     _EventDataLocation = (stream.Position - offset);
                     return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
                 }
@@ -1258,12 +1249,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            FindMatchingRefFromEventMixIn.ToString(
+            FindMatchingRefFromEventMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

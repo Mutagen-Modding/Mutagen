@@ -1,255 +1,271 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Fields;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
+using Mutagen.Bethesda.Plugins.Meta;
+using Noggog.StructuredStrings;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation;
+
+public static class ObjectGenerationExt
 {
-    public static class ObjectGenerationExt
+    public static MutagenObjData GetObjectData(this ObjectGeneration objGen)
     {
-        public static MutagenObjData GetObjectData(this ObjectGeneration objGen)
-        {
-            return (MutagenObjData)objGen.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenObjData(objGen));
-        }
+        return (MutagenObjData)objGen.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenObjData(objGen));
+    }
 
-        public static RecordType GetRecordType(this ObjectGeneration objGen)
+    public static RecordType GetRecordType(this ObjectGeneration objGen)
+    {
+        if (!TryGetRecordType(objGen, out var data))
         {
-            if (!TryGetRecordType(objGen, out var data))
-            {
-                throw new ArgumentException($"Object {objGen.Name} did not have a record type.");
-            }
-            return data;
+            throw new ArgumentException($"Object {objGen.Name} did not have a record type.");
         }
+        return data;
+    }
 
-        public static bool TryGetRecordType(this ObjectGeneration objGen, out RecordType recType)
+    public static bool TryGetRecordType(this ObjectGeneration objGen, out RecordType recType)
+    {
+        var data = objGen.GetObjectData();
+        if (data.RecordType == null)
         {
-            var data = objGen.GetObjectData();
-            if (data.RecordType == null)
-            {
-                recType = default;
-                return false;
-            }
-            recType = data.RecordType.Value;
-            return true;
-        }
-
-        public static bool HasRecordType(this ObjectGeneration objGen)
-        {
-            return TryGetRecordType(objGen, out var recType);
-        }
-
-        public static async Task<IEnumerable<RecordType>> GetTriggeringRecordTypes(this ObjectGeneration objGen)
-        {
-            var data = await TryGetTriggeringRecordTypes(objGen);
-            if (data.Failed)
-            {
-                return EnumerableExt<RecordType>.Empty;
-            }
-            return data.Value;
-        }
-
-        public static bool TryGetMarkerType(this ObjectGeneration objGen, out RecordType recType)
-        {
-            var data = objGen.GetObjectData();
-            if (data.MarkerType == null)
-            {
-                recType = default;
-                return false;
-            }
-            recType = data.MarkerType.Value;
-            return true;
-        }
-
-        public static bool TryGetCustomRecordTypeTriggers(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)
-        {
-            var data = objGen.GetObjectData();
-            if (data.CustomRecordTypeTriggers == null
-                || data.CustomRecordTypeTriggers.Count == 0)
-            {
-                recTypes = default;
-                return false;
-            }
-            recTypes = data.CustomRecordTypeTriggers;
-            return true;
-        }
-
-        public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
-        {
-            await objGen.LoadingCompleteTask.Task;
-            var data = objGen.GetObjectData();
-            return TryGet<IEnumerable<RecordType>>.Create(
-                successful: data.TriggeringRecordTypes.Any(),
-                val: data.TriggeringRecordTypes);
-        }
-
-        public static async Task<bool> IsMajorRecord(this ObjectGeneration objGen)
-        {
-            if (objGen.GetObjectType() != ObjectType.Record) return false;
-            if (objGen.Name == "MajorRecord") return true;
-            await Task.WhenAll(objGen.BaseClassTrail().Select(bo => bo.LoadingCompleteTask.Task));
-            return objGen.BaseClassTrail().Any(bo => bo.Name == "MajorRecord");
-        }
-
-        public static async Task<bool> IsMajorRecord(this LoquiType loqui)
-        {
-            if (loqui.TargetObjectGeneration != null)
-            {
-                return await IsMajorRecord(loqui.TargetObjectGeneration);
-            }
-            else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
-            {
-                // ToDo  
-                // Quick hack.  Real solution should use reflection to investigate the interface  
-                return true;
-            }
+            recType = default;
             return false;
         }
+        recType = data.RecordType.Value;
+        return true;
+    }
 
-        public static bool IsTopLevelGroup(this ObjectGeneration objGen)
+    public static bool HasRecordType(this ObjectGeneration objGen)
+    {
+        return TryGetRecordType(objGen, out var recType);
+    }
+
+    public static string GetModName(this ObjectGeneration objGen, bool getter)
+    {
+        return objGen.GetObjectData().GameCategory.Value.ModInterface(getter: getter);
+    }
+
+    public static async Task<IEnumerable<RecordType>> GetTriggeringRecordTypes(this ObjectGeneration objGen)
+    {
+        var data = await TryGetTriggeringRecordTypes(objGen);
+        if (data.Failed)
         {
-            if (objGen.GetObjectType() != ObjectType.Group) return false;
-            if (objGen.Name == $"{objGen.ProtoGen.Protocol.Namespace}Group") return true;
+            return EnumerableExt<RecordType>.Empty;
+        }
+        return data.Value;
+    }
+
+    public static bool TryGetMarkerType(this ObjectGeneration objGen, out RecordType recType)
+    {
+        var data = objGen.GetObjectData();
+        if (data.MarkerType == null)
+        {
+            recType = default;
             return false;
         }
+        recType = data.MarkerType.Value;
+        return true;
+    }
 
-        public static ObjectType GetObjectType(this ObjectGeneration objGen)
+    public static bool TryGetCustomRecordTypeTriggers(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)
+    {
+        var data = objGen.GetObjectData();
+        if (data.CustomRecordTypeTriggers == null
+            || data.CustomRecordTypeTriggers.Count == 0)
         {
-            var objType = objGen.GetObjectData().ObjectType;
-            if (objType.HasValue) return objType.Value;
-            return ObjectType.Subrecord;
+            recTypes = default;
+            return false;
         }
+        recTypes = data.CustomRecordTypeTriggers;
+        return true;
+    }
 
-        public static bool IsListGroup(this ObjectGeneration obj)
+    public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
+    {
+        await objGen.LoadingCompleteTask.Task;
+        var data = objGen.GetObjectData();
+        return TryGet<IEnumerable<RecordType>>.Create(
+            successful: data.TriggeringRecordTypes.Any(),
+            val: data.TriggeringRecordTypes);
+    }
+
+    public static async Task<bool> IsMajorRecord(this ObjectGeneration objGen)
+    {
+        if (objGen.GetObjectType() != ObjectType.Record) return false;
+        if (objGen.Name == "MajorRecord") return true;
+        await Task.WhenAll(objGen.BaseClassTrail().Select(bo => bo.LoadingCompleteTask.Task));
+        return objGen.BaseClassTrail().Any(bo => bo.Name == "MajorRecord");
+    }
+
+    public static async Task<bool> IsMajorRecord(this LoquiType loqui)
+    {
+        if (loqui.TargetObjectGeneration != null)
         {
-            return obj.GetObjectType() == ObjectType.Group
-                && obj.Name != $"{obj.ProtoGen.Protocol.Namespace}Group";
+            return await IsMajorRecord(loqui.TargetObjectGeneration);
         }
-
-        public static string GetTriggeringSource(this ObjectGeneration objGen)
+        else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
         {
-            return objGen.GetObjectData().TriggeringSource;
+            // ToDo  
+            // Quick hack.  Real solution should use reflection to investigate the interface  
+            return true;
         }
+        return false;
+    }
 
-        public static async Task<bool> IsSingleTriggerSource(this ObjectGeneration objGen)
+    public static bool IsTopLevelGroup(this ObjectGeneration objGen)
+    {
+        if (objGen.GetObjectType() != ObjectType.Group) return false;
+        if (objGen.Name == $"{objGen.ProtoGen.Protocol.Namespace}Group") return true;
+        return false;
+    }
+
+    public static ObjectType GetObjectType(this ObjectGeneration objGen)
+    {
+        var objType = objGen.GetObjectData().ObjectType;
+        if (objType.HasValue) return objType.Value;
+        return ObjectType.Subrecord;
+    }
+
+    public static bool IsListGroup(this ObjectGeneration obj)
+    {
+        return obj.GetObjectType() == ObjectType.Group
+               && obj.Name != $"{obj.ProtoGen.Protocol.Namespace}Group";
+    }
+
+    public static string GetTriggeringSource(this ObjectGeneration objGen)
+    {
+        return objGen.GetObjectData().TriggeringSource;
+    }
+
+    public static async Task<bool> IsSingleTriggerSource(this ObjectGeneration objGen)
+    {
+        var enumer = await objGen.GetObjectData().GenerationTypes;
+        if (!enumer.SelectMany((e) => e.Key).Distinct().Any()) return false;
+        return !enumer.SelectMany((e) => e.Key).Distinct().CountGreaterThan(1);
+    }
+
+    public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
+    {
+        return $"RecordTypes.{recType.CheckedType}";
+    }
+
+    public static bool StructNullable(this ObjectGeneration objGen)
+    {
+        return objGen.IterateFields().Any((f) =>
         {
-            var enumer = await objGen.GetObjectData().GenerationTypes;
-            if (!enumer.SelectMany((e) => e.Key).Distinct().Any()) return false;
-            return !enumer.SelectMany((e) => e.Key).Distinct().CountGreaterThan(1);
+            if (!f.Nullable) return false;
+            var data = f.GetFieldData();
+            return !data.HasTrigger;
+        });
+    }
+
+    public static async Task<LoquiType> GetGroupLoquiType(this ObjectGeneration objGen)
+    {
+        await objGen.LoadingCompleteTask.Task;
+        if (objGen.GetObjectType() != ObjectType.Group)
+        {
+            throw new ArgumentException();
         }
-
-        public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
+        foreach (var field in objGen.IterateFields())
         {
-            return $"RecordTypes.{recType.CheckedType}";
-        }
-
-        public static bool StructNullable(this ObjectGeneration objGen)
-        {
-            return objGen.IterateFields().Any((f) =>
+            if (field is ContainerType cont)
             {
-                if (!f.Nullable) return false;
-                var data = f.GetFieldData();
-                return !data.HasTrigger;
-            });
-        }
-
-        public static async Task<LoquiType> GetGroupLoquiType(this ObjectGeneration objGen)
-        {
-            await objGen.LoadingCompleteTask.Task;
-            if (objGen.GetObjectType() != ObjectType.Group)
-            {
-                throw new ArgumentException();
+                return cont.SubTypeGeneration as LoquiType;
             }
-            foreach (var field in objGen.IterateFields())
+            else if (field is DictType dictType)
             {
-                if (field is ContainerType cont)
-                {
-                    return cont.SubTypeGeneration as LoquiType;
-                }
-                else if (field is DictType dictType)
-                {
-                    return dictType.ValueTypeGen as LoquiType;
-                }
+                return dictType.ValueTypeGen as LoquiType;
             }
+        }
+        throw new ArgumentException();
+    }
+
+    public static async Task<LoquiType> GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
+    {
+        await objGen.LoadingCompleteTask.Task;
+        if (objGen.GetObjectType() != ObjectType.Group)
+        {
             throw new ArgumentException();
         }
 
-        public static async Task<LoquiType> GetGroupLoquiTypeLowest(this ObjectGeneration objGen)
+        var loquiType = await GetGroupLoquiType(objGen);
+        while (loquiType.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
         {
-            await objGen.LoadingCompleteTask.Task;
-            if (objGen.GetObjectType() != ObjectType.Group)
+            loquiType = await GetGroupLoquiType(loquiType.TargetObjectGeneration);
+        }
+        return loquiType;
+    }
+
+    public static ObjectGeneration GetGroupTarget(this LoquiType loqui)
+    {
+        loqui.TryGetSpecificationAsObject("T", out var ret);
+        return ret;
+    }
+
+    public static bool IsTypelessStruct(this ObjectGeneration objGen)
+    {
+        return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();
+    }
+
+    public static bool IsVariableLengthStruct(this ObjectGeneration objGen)
+    {
+        var objData = objGen.GetObjectData();
+        return objGen.GetObjectType() == ObjectType.Subrecord
+               && objData.TriggeringSource == null
+               && objData.HasVersioning();
+    }
+
+    public static async Task<bool> GetNeedsMasters(this ObjectGeneration objGen)
+    {
+        if (objGen.GetObjectType() == ObjectType.Group) return true;
+        foreach (var field in objGen.IterateFields())
+        {
+            if (field is FormKeyType) return true;
+            if (field is FormIDType) return true;
+            if (field is ContainerType cont)
             {
-                throw new ArgumentException();
-            }
-
-            var loquiType = await GetGroupLoquiType(objGen);
-            while (loquiType.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
-            {
-                loquiType = await GetGroupLoquiType(loquiType.TargetObjectGeneration);
-            }
-            return loquiType;
-        }
-
-        public static ObjectGeneration GetGroupTarget(this LoquiType loqui)
-        {
-            loqui.TryGetSpecificationAsObject("T", out var ret);
-            return ret;
-        }
-
-        public static bool IsTypelessStruct(this ObjectGeneration objGen)
-        {
-            return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();
-        }
-
-        public static bool IsVariableLengthStruct(this ObjectGeneration objGen)
-        {
-            var objData = objGen.GetObjectData();
-            return objGen.GetObjectType() == ObjectType.Subrecord
-                && objData.TriggeringSource == null
-                && objData.HasVersioning();
-        }
-
-        public static async Task<bool> GetNeedsMasters(this ObjectGeneration objGen)
-        {
-            if (objGen.GetObjectType() == ObjectType.Group) return true;
-            foreach (var field in objGen.IterateFields())
-            {
-                if (field is FormKeyType) return true;
-                if (field is FormIDType) return true;
-                if (field is ContainerType cont)
+                if (cont.SubTypeGeneration is LoquiType loqui
+                    && (loqui.TargetObjectGeneration == null || await loqui.TargetObjectGeneration.GetNeedsMasters()))
                 {
-                    if (cont.SubTypeGeneration is LoquiType loqui
-                        && (loqui.TargetObjectGeneration == null || await loqui.TargetObjectGeneration.GetNeedsMasters()))
-                    {
-                        return true;
-                    }
-                }
-                if (field is DictType dict)
-                {
-                    if (dict.ValueTypeGen is LoquiType loqui
-                        && (loqui.TargetObjectGeneration == null || await loqui.TargetObjectGeneration.GetNeedsMasters()))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
-            foreach (var baseObj in objGen.BaseClassTrail())
+            if (field is DictType dict)
             {
-                if (await baseObj.GetNeedsMasters()) return true;
+                if (dict.ValueTypeGen is LoquiType loqui
+                    && (loqui.TargetObjectGeneration == null || await loqui.TargetObjectGeneration.GetNeedsMasters()))
+                {
+                    return true;
+                }
             }
-            return false;
         }
-
-        public static bool HasVersionedFields(this ObjectGeneration objGen)
+        foreach (var baseObj in objGen.BaseClassTrail())
         {
-            if (objGen.GetObjectType() != ObjectType.Record) return false;
-            return objGen.Fields.Any(f => f.GetFieldData().CustomVersion != null);
+            if (await baseObj.GetNeedsMasters()) return true;
+        }
+        return false;
+    }
+
+    public static bool HasVersionedFields(this ObjectGeneration objGen)
+    {
+        if (objGen.GetObjectType() != ObjectType.Record) return false;
+        return objGen.Fields.Any(f => f.GetFieldData().CustomVersion != null);
+    }
+
+    public static void AppendSwitchCases(this ObjectGeneration obj, StructuredStringBuilder sb)
+    {
+        sb.AppendLine($"case \"{obj.ObjectName}\":");
+        sb.AppendLine($"case \"{obj.Interface(getter: true)}\":");
+        sb.AppendLine($"case \"{obj.Interface(getter: false)}\":");
+        if (obj.HasInternalGetInterface)
+        {
+            sb.AppendLine($"case \"{obj.Interface(getter: true, internalInterface: true)}\":");
+        }
+        if (obj.HasInternalSetInterface)
+        {
+            sb.AppendLine($"case \"{obj.Interface(getter: false, internalInterface: true)}\":");
         }
     }
 }

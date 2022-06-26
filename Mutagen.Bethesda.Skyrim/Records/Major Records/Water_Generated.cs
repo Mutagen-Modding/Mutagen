@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
@@ -25,17 +27,16 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -156,14 +157,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISpellGetter> IWaterGetter.Spell => this.Spell;
         #endregion
         #region ImageSpace
-        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpace = new FormLinkNullable<IImageSpaceAdapterGetter>();
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace
+        private readonly IFormLinkNullable<IImageSpaceGetter> _ImageSpace = new FormLinkNullable<IImageSpaceGetter>();
+        public IFormLinkNullable<IImageSpaceGetter> ImageSpace
         {
             get => _ImageSpace;
             set => _ImageSpace.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IWaterGetter.ImageSpace => this.ImageSpace;
+        IFormLinkNullableGetter<IImageSpaceGetter> IWaterGetter.ImageSpace => this.ImageSpace;
         #endregion
         #region DamagePerSecond
         public UInt16? DamagePerSecond { get; set; }
@@ -401,12 +402,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterMixIn.ToString(
+            WaterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -1073,9 +1075,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.UnusedNoisemaps.Specific = l;
-                        foreach (var item in UnusedNoisemaps.Specific.WithIndex())
+                        foreach (var item in UnusedNoisemaps.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -1150,317 +1152,310 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Water.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Water.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Water.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Water.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if ((printMask?.UnusedNoisemaps?.Overall ?? true)
                         && UnusedNoisemaps is {} UnusedNoisemapsItem)
                     {
-                        fg.AppendLine("UnusedNoisemaps =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("UnusedNoisemaps =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(UnusedNoisemapsItem.Overall);
+                            sb.AppendItem(UnusedNoisemapsItem.Overall);
                             if (UnusedNoisemapsItem.Specific != null)
                             {
                                 foreach (var subItem in UnusedNoisemapsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.Opacity ?? true)
                     {
-                        fg.AppendItem(Opacity, "Opacity");
+                        sb.AppendItem(Opacity, "Opacity");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.MNAM ?? true)
                     {
-                        fg.AppendItem(MNAM, "MNAM");
+                        sb.AppendItem(MNAM, "MNAM");
                     }
                     if (printMask?.Material ?? true)
                     {
-                        fg.AppendItem(Material, "Material");
+                        sb.AppendItem(Material, "Material");
                     }
                     if (printMask?.OpenSound ?? true)
                     {
-                        fg.AppendItem(OpenSound, "OpenSound");
+                        sb.AppendItem(OpenSound, "OpenSound");
                     }
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.ImageSpace ?? true)
                     {
-                        fg.AppendItem(ImageSpace, "ImageSpace");
+                        sb.AppendItem(ImageSpace, "ImageSpace");
                     }
                     if (printMask?.DamagePerSecond ?? true)
                     {
-                        fg.AppendItem(DamagePerSecond, "DamagePerSecond");
+                        sb.AppendItem(DamagePerSecond, "DamagePerSecond");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.SpecularSunPower ?? true)
                     {
-                        fg.AppendItem(SpecularSunPower, "SpecularSunPower");
+                        sb.AppendItem(SpecularSunPower, "SpecularSunPower");
                     }
                     if (printMask?.WaterReflectivity ?? true)
                     {
-                        fg.AppendItem(WaterReflectivity, "WaterReflectivity");
+                        sb.AppendItem(WaterReflectivity, "WaterReflectivity");
                     }
                     if (printMask?.WaterFresnel ?? true)
                     {
-                        fg.AppendItem(WaterFresnel, "WaterFresnel");
+                        sb.AppendItem(WaterFresnel, "WaterFresnel");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                     if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
                     {
-                        fg.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                        sb.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
                     }
                     if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
                     {
-                        fg.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                        sb.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
                     }
                     if (printMask?.ShallowColor ?? true)
                     {
-                        fg.AppendItem(ShallowColor, "ShallowColor");
+                        sb.AppendItem(ShallowColor, "ShallowColor");
                     }
                     if (printMask?.DeepColor ?? true)
                     {
-                        fg.AppendItem(DeepColor, "DeepColor");
+                        sb.AppendItem(DeepColor, "DeepColor");
                     }
                     if (printMask?.ReflectionColor ?? true)
                     {
-                        fg.AppendItem(ReflectionColor, "ReflectionColor");
+                        sb.AppendItem(ReflectionColor, "ReflectionColor");
                     }
                     if (printMask?.Unknown3 ?? true)
                     {
-                        fg.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Unknown3, "Unknown3");
                     }
                     if (printMask?.DisplacementStartingSize ?? true)
                     {
-                        fg.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                        sb.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
                     }
                     if (printMask?.DisplacementFoce ?? true)
                     {
-                        fg.AppendItem(DisplacementFoce, "DisplacementFoce");
+                        sb.AppendItem(DisplacementFoce, "DisplacementFoce");
                     }
                     if (printMask?.DisplacementVelocity ?? true)
                     {
-                        fg.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                        sb.AppendItem(DisplacementVelocity, "DisplacementVelocity");
                     }
                     if (printMask?.DisplacementFalloff ?? true)
                     {
-                        fg.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                        sb.AppendItem(DisplacementFalloff, "DisplacementFalloff");
                     }
                     if (printMask?.DisplacementDampner ?? true)
                     {
-                        fg.AppendItem(DisplacementDampner, "DisplacementDampner");
+                        sb.AppendItem(DisplacementDampner, "DisplacementDampner");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
-                        fg.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(Unknown4, "Unknown4");
                     }
                     if (printMask?.NoiseFalloff ?? true)
                     {
-                        fg.AppendItem(NoiseFalloff, "NoiseFalloff");
+                        sb.AppendItem(NoiseFalloff, "NoiseFalloff");
                     }
                     if (printMask?.NoiseLayerOneWindDirection ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                        sb.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
                     }
                     if (printMask?.NoiseLayerTwoWindDirection ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                        sb.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
                     }
                     if (printMask?.NoiseLayerThreeWindDirection ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                        sb.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
                     }
                     if (printMask?.NoiseLayerOneWindSpeed ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                        sb.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
                     }
                     if (printMask?.NoiseLayerTwoWindSpeed ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                        sb.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
                     }
                     if (printMask?.NoiseLayerThreeWindSpeed ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                        sb.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
                     }
                     if (printMask?.Unknown5 ?? true)
                     {
-                        fg.AppendItem(Unknown5, "Unknown5");
+                        sb.AppendItem(Unknown5, "Unknown5");
                     }
                     if (printMask?.FogAboveWaterAmount ?? true)
                     {
-                        fg.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
+                        sb.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
                     }
                     if (printMask?.Unknown6 ?? true)
                     {
-                        fg.AppendItem(Unknown6, "Unknown6");
+                        sb.AppendItem(Unknown6, "Unknown6");
                     }
                     if (printMask?.FogUnderWaterAmount ?? true)
                     {
-                        fg.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
+                        sb.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
                     }
                     if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
                     {
-                        fg.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                        sb.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
                     }
                     if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
                     {
-                        fg.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                        sb.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
                     }
                     if (printMask?.WaterRefractionMagnitude ?? true)
                     {
-                        fg.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                        sb.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
                     }
                     if (printMask?.SpecularPower ?? true)
                     {
-                        fg.AppendItem(SpecularPower, "SpecularPower");
+                        sb.AppendItem(SpecularPower, "SpecularPower");
                     }
                     if (printMask?.Unknown7 ?? true)
                     {
-                        fg.AppendItem(Unknown7, "Unknown7");
+                        sb.AppendItem(Unknown7, "Unknown7");
                     }
                     if (printMask?.SpecularRadius ?? true)
                     {
-                        fg.AppendItem(SpecularRadius, "SpecularRadius");
+                        sb.AppendItem(SpecularRadius, "SpecularRadius");
                     }
                     if (printMask?.SpecularBrightness ?? true)
                     {
-                        fg.AppendItem(SpecularBrightness, "SpecularBrightness");
+                        sb.AppendItem(SpecularBrightness, "SpecularBrightness");
                     }
                     if (printMask?.NoiseLayerOneUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                        sb.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
                     }
                     if (printMask?.NoiseLayerTwoUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                        sb.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
                     }
                     if (printMask?.NoiseLayerThreeUvScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                        sb.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
                     }
                     if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                        sb.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
                     }
                     if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                        sb.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
                     }
                     if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                        sb.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
                     }
                     if (printMask?.WaterReflectionMagnitude ?? true)
                     {
-                        fg.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                        sb.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
                     }
                     if (printMask?.SpecularSunSparkleMagnitude ?? true)
                     {
-                        fg.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                        sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
                     }
                     if (printMask?.SpecularSunSpecularMagnitude ?? true)
                     {
-                        fg.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                        sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
                     }
                     if (printMask?.DepthReflections ?? true)
                     {
-                        fg.AppendItem(DepthReflections, "DepthReflections");
+                        sb.AppendItem(DepthReflections, "DepthReflections");
                     }
                     if (printMask?.DepthRefraction ?? true)
                     {
-                        fg.AppendItem(DepthRefraction, "DepthRefraction");
+                        sb.AppendItem(DepthRefraction, "DepthRefraction");
                     }
                     if (printMask?.DepthNormals ?? true)
                     {
-                        fg.AppendItem(DepthNormals, "DepthNormals");
+                        sb.AppendItem(DepthNormals, "DepthNormals");
                     }
                     if (printMask?.DepthSpecularLighting ?? true)
                     {
-                        fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
+                        sb.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
                     }
                     if (printMask?.SpecularSunSparklePower ?? true)
                     {
-                        fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                        sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
                     }
                     if (printMask?.NoiseFlowmapScale ?? true)
                     {
-                        fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
+                        sb.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
                     }
                     if (printMask?.GNAM ?? true)
                     {
-                        fg.AppendItem(GNAM, "GNAM");
+                        sb.AppendItem(GNAM, "GNAM");
                     }
                     if (printMask?.LinearVelocity ?? true)
                     {
-                        fg.AppendItem(LinearVelocity, "LinearVelocity");
+                        sb.AppendItem(LinearVelocity, "LinearVelocity");
                     }
                     if (printMask?.AngularVelocity ?? true)
                     {
-                        fg.AppendItem(AngularVelocity, "AngularVelocity");
+                        sb.AppendItem(AngularVelocity, "AngularVelocity");
                     }
                     if (printMask?.NoiseLayerOneTexture ?? true)
                     {
-                        fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
+                        sb.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
                     }
                     if (printMask?.NoiseLayerTwoTexture ?? true)
                     {
-                        fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
+                        sb.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
                     }
                     if (printMask?.NoiseLayerThreeTexture ?? true)
                     {
-                        fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                        sb.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
                     }
                     if (printMask?.FlowNormalsNoiseTexture ?? true)
                     {
-                        fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
+                        sb.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
-                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -2194,125 +2189,248 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 if (UnusedNoisemaps is {} UnusedNoisemapsItem)
                 {
-                    fg.AppendLine("UnusedNoisemaps =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("UnusedNoisemaps =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(UnusedNoisemapsItem.Overall);
+                        sb.AppendItem(UnusedNoisemapsItem.Overall);
                         if (UnusedNoisemapsItem.Specific != null)
                         {
                             foreach (var subItem in UnusedNoisemapsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(Opacity, "Opacity");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(MNAM, "MNAM");
-                fg.AppendItem(Material, "Material");
-                fg.AppendItem(OpenSound, "OpenSound");
-                fg.AppendItem(Spell, "Spell");
-                fg.AppendItem(ImageSpace, "ImageSpace");
-                fg.AppendItem(DamagePerSecond, "DamagePerSecond");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(SpecularSunPower, "SpecularSunPower");
-                fg.AppendItem(WaterReflectivity, "WaterReflectivity");
-                fg.AppendItem(WaterFresnel, "WaterFresnel");
-                fg.AppendItem(Unknown2, "Unknown2");
-                fg.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
-                fg.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
-                fg.AppendItem(ShallowColor, "ShallowColor");
-                fg.AppendItem(DeepColor, "DeepColor");
-                fg.AppendItem(ReflectionColor, "ReflectionColor");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
-                fg.AppendItem(DisplacementFoce, "DisplacementFoce");
-                fg.AppendItem(DisplacementVelocity, "DisplacementVelocity");
-                fg.AppendItem(DisplacementFalloff, "DisplacementFalloff");
-                fg.AppendItem(DisplacementDampner, "DisplacementDampner");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(NoiseFalloff, "NoiseFalloff");
-                fg.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
-                fg.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
-                fg.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
-                fg.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
-                fg.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
-                fg.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
-                fg.AppendItem(Unknown5, "Unknown5");
-                fg.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
-                fg.AppendItem(Unknown6, "Unknown6");
-                fg.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
-                fg.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
-                fg.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
-                fg.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
-                fg.AppendItem(SpecularPower, "SpecularPower");
-                fg.AppendItem(Unknown7, "Unknown7");
-                fg.AppendItem(SpecularRadius, "SpecularRadius");
-                fg.AppendItem(SpecularBrightness, "SpecularBrightness");
-                fg.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
-                fg.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
-                fg.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
-                fg.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
-                fg.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
-                fg.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
-                fg.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
-                fg.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
-                fg.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
-                fg.AppendItem(DepthReflections, "DepthReflections");
-                fg.AppendItem(DepthRefraction, "DepthRefraction");
-                fg.AppendItem(DepthNormals, "DepthNormals");
-                fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
-                fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
-                fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
-                fg.AppendItem(GNAM, "GNAM");
-                fg.AppendItem(LinearVelocity, "LinearVelocity");
-                fg.AppendItem(AngularVelocity, "AngularVelocity");
-                fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
-                fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
-                fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
-                fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
-                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                {
+                    sb.AppendItem(Opacity, "Opacity");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(MNAM, "MNAM");
+                }
+                {
+                    sb.AppendItem(Material, "Material");
+                }
+                {
+                    sb.AppendItem(OpenSound, "OpenSound");
+                }
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
+                {
+                    sb.AppendItem(ImageSpace, "ImageSpace");
+                }
+                {
+                    sb.AppendItem(DamagePerSecond, "DamagePerSecond");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(SpecularSunPower, "SpecularSunPower");
+                }
+                {
+                    sb.AppendItem(WaterReflectivity, "WaterReflectivity");
+                }
+                {
+                    sb.AppendItem(WaterFresnel, "WaterFresnel");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                }
+                {
+                    sb.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                }
+                {
+                    sb.AppendItem(ShallowColor, "ShallowColor");
+                }
+                {
+                    sb.AppendItem(DeepColor, "DeepColor");
+                }
+                {
+                    sb.AppendItem(ReflectionColor, "ReflectionColor");
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                }
+                {
+                    sb.AppendItem(DisplacementFoce, "DisplacementFoce");
+                }
+                {
+                    sb.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                }
+                {
+                    sb.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                }
+                {
+                    sb.AppendItem(DisplacementDampner, "DisplacementDampner");
+                }
+                {
+                    sb.AppendItem(Unknown4, "Unknown4");
+                }
+                {
+                    sb.AppendItem(NoiseFalloff, "NoiseFalloff");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                }
+                {
+                    sb.AppendItem(Unknown5, "Unknown5");
+                }
+                {
+                    sb.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
+                }
+                {
+                    sb.AppendItem(Unknown6, "Unknown6");
+                }
+                {
+                    sb.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
+                }
+                {
+                    sb.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                }
+                {
+                    sb.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                }
+                {
+                    sb.AppendItem(WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularPower, "SpecularPower");
+                }
+                {
+                    sb.AppendItem(Unknown7, "Unknown7");
+                }
+                {
+                    sb.AppendItem(SpecularRadius, "SpecularRadius");
+                }
+                {
+                    sb.AppendItem(SpecularBrightness, "SpecularBrightness");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                }
+                {
+                    sb.AppendItem(SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                }
+                {
+                    sb.AppendItem(DepthReflections, "DepthReflections");
+                }
+                {
+                    sb.AppendItem(DepthRefraction, "DepthRefraction");
+                }
+                {
+                    sb.AppendItem(DepthNormals, "DepthNormals");
+                }
+                {
+                    sb.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
+                }
+                {
+                    sb.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                }
+                {
+                    sb.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
+                }
+                {
+                    sb.AppendItem(GNAM, "GNAM");
+                }
+                {
+                    sb.AppendItem(LinearVelocity, "LinearVelocity");
+                }
+                {
+                    sb.AppendItem(AngularVelocity, "AngularVelocity");
+                }
+                {
+                    sb.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                }
+                {
+                    sb.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -2642,7 +2760,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WaterSetterCommon.Instance.RemapLinks(this, mapping);
         public Water(
             FormKey formKey,
@@ -2725,7 +2843,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2735,7 +2853,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Water CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Water();
             ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -2750,7 +2868,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Water item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -2760,7 +2878,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -2797,7 +2915,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IMaterialTypeGetter> Material { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
         new IFormLinkNullable<ISpellGetter> Spell { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; set; }
+        new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new UInt16? DamagePerSecond { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
         new Single SpecularSunPower { get; set; }
@@ -2892,7 +3010,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMaterialTypeGetter> Material { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
         IFormLinkNullableGetter<ISpellGetter> Spell { get; }
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace { get; }
+        IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         UInt16? DamagePerSecond { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
         Single SpecularSunPower { get; }
@@ -2976,26 +3094,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWaterGetter item,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
-            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWaterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
-            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -3090,7 +3208,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWaterInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -3105,10 +3223,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Water_FieldIndex
+    internal enum Water_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -3188,7 +3306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Water_Registration : ILoquiRegistration
+    internal partial class Water_Registration : ILoquiRegistration
     {
         public static readonly Water_Registration Instance = new Water_Registration();
 
@@ -3230,6 +3348,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WATR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.WATR);
+            var all = RecordCollection.Factory(
+                RecordTypes.WATR,
+                RecordTypes.FULL,
+                RecordTypes.NNAM,
+                RecordTypes.ANAM,
+                RecordTypes.FNAM,
+                RecordTypes.MNAM,
+                RecordTypes.TNAM,
+                RecordTypes.SNAM,
+                RecordTypes.XNAM,
+                RecordTypes.INAM,
+                RecordTypes.DATA,
+                RecordTypes.DNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM0,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3,
+                RecordTypes.NAM4,
+                RecordTypes.NAM5);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3263,7 +3407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WaterSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class WaterSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly WaterSetterCommon Instance = new WaterSetterCommon();
 
@@ -3369,7 +3513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWaterInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IWaterInternal>(
                 record: item,
@@ -3382,7 +3526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Water)item,
@@ -3393,7 +3537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Water)item,
@@ -3404,7 +3548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterCommon : SkyrimMajorRecordCommon
+    internal partial class WaterCommon : SkyrimMajorRecordCommon
     {
         public new static readonly WaterCommon Instance = new WaterCommon();
 
@@ -3428,7 +3572,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Water.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.UnusedNoisemaps = item.UnusedNoisemaps.CollectionEqualsHelper(
                 rhs.UnusedNoisemaps,
@@ -3503,350 +3646,344 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IWaterGetter item,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWaterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Water.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Water =>");
+                sb.AppendLine($"Water =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Water) =>");
+                sb.AppendLine($"{name} (Water) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWaterGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Water.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if (printMask?.UnusedNoisemaps?.Overall ?? true)
             {
-                fg.AppendLine("UnusedNoisemaps =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("UnusedNoisemaps =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.UnusedNoisemaps)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.Opacity ?? true)
             {
-                fg.AppendItem(item.Opacity, "Opacity");
+                sb.AppendItem(item.Opacity, "Opacity");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.MNAM ?? true)
                 && item.MNAM is {} MNAMItem)
             {
-                fg.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
+                sb.AppendLine($"MNAM => {SpanExt.ToHexString(MNAMItem)}");
             }
             if (printMask?.Material ?? true)
             {
-                fg.AppendItem(item.Material.FormKeyNullable, "Material");
+                sb.AppendItem(item.Material.FormKeyNullable, "Material");
             }
             if (printMask?.OpenSound ?? true)
             {
-                fg.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
+                sb.AppendItem(item.OpenSound.FormKeyNullable, "OpenSound");
             }
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
+                sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if (printMask?.ImageSpace ?? true)
             {
-                fg.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
+                sb.AppendItem(item.ImageSpace.FormKeyNullable, "ImageSpace");
             }
             if ((printMask?.DamagePerSecond ?? true)
                 && item.DamagePerSecond is {} DamagePerSecondItem)
             {
-                fg.AppendItem(DamagePerSecondItem, "DamagePerSecond");
+                sb.AppendItem(DamagePerSecondItem, "DamagePerSecond");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
             if (printMask?.SpecularSunPower ?? true)
             {
-                fg.AppendItem(item.SpecularSunPower, "SpecularSunPower");
+                sb.AppendItem(item.SpecularSunPower, "SpecularSunPower");
             }
             if (printMask?.WaterReflectivity ?? true)
             {
-                fg.AppendItem(item.WaterReflectivity, "WaterReflectivity");
+                sb.AppendItem(item.WaterReflectivity, "WaterReflectivity");
             }
             if (printMask?.WaterFresnel ?? true)
             {
-                fg.AppendItem(item.WaterFresnel, "WaterFresnel");
+                sb.AppendItem(item.WaterFresnel, "WaterFresnel");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
             if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
             {
-                fg.AppendItem(item.FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
+                sb.AppendItem(item.FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
             }
             if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
             {
-                fg.AppendItem(item.FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
+                sb.AppendItem(item.FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
             }
             if (printMask?.ShallowColor ?? true)
             {
-                fg.AppendItem(item.ShallowColor, "ShallowColor");
+                sb.AppendItem(item.ShallowColor, "ShallowColor");
             }
             if (printMask?.DeepColor ?? true)
             {
-                fg.AppendItem(item.DeepColor, "DeepColor");
+                sb.AppendItem(item.DeepColor, "DeepColor");
             }
             if (printMask?.ReflectionColor ?? true)
             {
-                fg.AppendItem(item.ReflectionColor, "ReflectionColor");
+                sb.AppendItem(item.ReflectionColor, "ReflectionColor");
             }
             if (printMask?.Unknown3 ?? true)
             {
-                fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
             if (printMask?.DisplacementStartingSize ?? true)
             {
-                fg.AppendItem(item.DisplacementStartingSize, "DisplacementStartingSize");
+                sb.AppendItem(item.DisplacementStartingSize, "DisplacementStartingSize");
             }
             if (printMask?.DisplacementFoce ?? true)
             {
-                fg.AppendItem(item.DisplacementFoce, "DisplacementFoce");
+                sb.AppendItem(item.DisplacementFoce, "DisplacementFoce");
             }
             if (printMask?.DisplacementVelocity ?? true)
             {
-                fg.AppendItem(item.DisplacementVelocity, "DisplacementVelocity");
+                sb.AppendItem(item.DisplacementVelocity, "DisplacementVelocity");
             }
             if (printMask?.DisplacementFalloff ?? true)
             {
-                fg.AppendItem(item.DisplacementFalloff, "DisplacementFalloff");
+                sb.AppendItem(item.DisplacementFalloff, "DisplacementFalloff");
             }
             if (printMask?.DisplacementDampner ?? true)
             {
-                fg.AppendItem(item.DisplacementDampner, "DisplacementDampner");
+                sb.AppendItem(item.DisplacementDampner, "DisplacementDampner");
             }
             if (printMask?.Unknown4 ?? true)
             {
-                fg.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.Unknown4, "Unknown4");
             }
             if (printMask?.NoiseFalloff ?? true)
             {
-                fg.AppendItem(item.NoiseFalloff, "NoiseFalloff");
+                sb.AppendItem(item.NoiseFalloff, "NoiseFalloff");
             }
             if (printMask?.NoiseLayerOneWindDirection ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
+                sb.AppendItem(item.NoiseLayerOneWindDirection, "NoiseLayerOneWindDirection");
             }
             if (printMask?.NoiseLayerTwoWindDirection ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
+                sb.AppendItem(item.NoiseLayerTwoWindDirection, "NoiseLayerTwoWindDirection");
             }
             if (printMask?.NoiseLayerThreeWindDirection ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
+                sb.AppendItem(item.NoiseLayerThreeWindDirection, "NoiseLayerThreeWindDirection");
             }
             if (printMask?.NoiseLayerOneWindSpeed ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
+                sb.AppendItem(item.NoiseLayerOneWindSpeed, "NoiseLayerOneWindSpeed");
             }
             if (printMask?.NoiseLayerTwoWindSpeed ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
+                sb.AppendItem(item.NoiseLayerTwoWindSpeed, "NoiseLayerTwoWindSpeed");
             }
             if (printMask?.NoiseLayerThreeWindSpeed ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
+                sb.AppendItem(item.NoiseLayerThreeWindSpeed, "NoiseLayerThreeWindSpeed");
             }
             if (printMask?.Unknown5 ?? true)
             {
-                fg.AppendLine($"Unknown5 => {SpanExt.ToHexString(item.Unknown5)}");
+                sb.AppendLine($"Unknown5 => {SpanExt.ToHexString(item.Unknown5)}");
             }
             if (printMask?.FogAboveWaterAmount ?? true)
             {
-                fg.AppendItem(item.FogAboveWaterAmount, "FogAboveWaterAmount");
+                sb.AppendItem(item.FogAboveWaterAmount, "FogAboveWaterAmount");
             }
             if (printMask?.Unknown6 ?? true)
             {
-                fg.AppendItem(item.Unknown6, "Unknown6");
+                sb.AppendItem(item.Unknown6, "Unknown6");
             }
             if (printMask?.FogUnderWaterAmount ?? true)
             {
-                fg.AppendItem(item.FogUnderWaterAmount, "FogUnderWaterAmount");
+                sb.AppendItem(item.FogUnderWaterAmount, "FogUnderWaterAmount");
             }
             if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
             {
-                fg.AppendItem(item.FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
+                sb.AppendItem(item.FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
             }
             if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
             {
-                fg.AppendItem(item.FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
+                sb.AppendItem(item.FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
             }
             if (printMask?.WaterRefractionMagnitude ?? true)
             {
-                fg.AppendItem(item.WaterRefractionMagnitude, "WaterRefractionMagnitude");
+                sb.AppendItem(item.WaterRefractionMagnitude, "WaterRefractionMagnitude");
             }
             if (printMask?.SpecularPower ?? true)
             {
-                fg.AppendItem(item.SpecularPower, "SpecularPower");
+                sb.AppendItem(item.SpecularPower, "SpecularPower");
             }
             if (printMask?.Unknown7 ?? true)
             {
-                fg.AppendItem(item.Unknown7, "Unknown7");
+                sb.AppendItem(item.Unknown7, "Unknown7");
             }
             if (printMask?.SpecularRadius ?? true)
             {
-                fg.AppendItem(item.SpecularRadius, "SpecularRadius");
+                sb.AppendItem(item.SpecularRadius, "SpecularRadius");
             }
             if (printMask?.SpecularBrightness ?? true)
             {
-                fg.AppendItem(item.SpecularBrightness, "SpecularBrightness");
+                sb.AppendItem(item.SpecularBrightness, "SpecularBrightness");
             }
             if (printMask?.NoiseLayerOneUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
+                sb.AppendItem(item.NoiseLayerOneUvScale, "NoiseLayerOneUvScale");
             }
             if (printMask?.NoiseLayerTwoUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
+                sb.AppendItem(item.NoiseLayerTwoUvScale, "NoiseLayerTwoUvScale");
             }
             if (printMask?.NoiseLayerThreeUvScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
+                sb.AppendItem(item.NoiseLayerThreeUvScale, "NoiseLayerThreeUvScale");
             }
             if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                sb.AppendItem(item.NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
             }
             if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                sb.AppendItem(item.NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
             }
             if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
             {
-                fg.AppendItem(item.NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                sb.AppendItem(item.NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
             }
             if (printMask?.WaterReflectionMagnitude ?? true)
             {
-                fg.AppendItem(item.WaterReflectionMagnitude, "WaterReflectionMagnitude");
+                sb.AppendItem(item.WaterReflectionMagnitude, "WaterReflectionMagnitude");
             }
             if (printMask?.SpecularSunSparkleMagnitude ?? true)
             {
-                fg.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
+                sb.AppendItem(item.SpecularSunSparkleMagnitude, "SpecularSunSparkleMagnitude");
             }
             if (printMask?.SpecularSunSpecularMagnitude ?? true)
             {
-                fg.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
+                sb.AppendItem(item.SpecularSunSpecularMagnitude, "SpecularSunSpecularMagnitude");
             }
             if (printMask?.DepthReflections ?? true)
             {
-                fg.AppendItem(item.DepthReflections, "DepthReflections");
+                sb.AppendItem(item.DepthReflections, "DepthReflections");
             }
             if (printMask?.DepthRefraction ?? true)
             {
-                fg.AppendItem(item.DepthRefraction, "DepthRefraction");
+                sb.AppendItem(item.DepthRefraction, "DepthRefraction");
             }
             if (printMask?.DepthNormals ?? true)
             {
-                fg.AppendItem(item.DepthNormals, "DepthNormals");
+                sb.AppendItem(item.DepthNormals, "DepthNormals");
             }
             if (printMask?.DepthSpecularLighting ?? true)
             {
-                fg.AppendItem(item.DepthSpecularLighting, "DepthSpecularLighting");
+                sb.AppendItem(item.DepthSpecularLighting, "DepthSpecularLighting");
             }
             if (printMask?.SpecularSunSparklePower ?? true)
             {
-                fg.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
+                sb.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
             }
             if (printMask?.NoiseFlowmapScale ?? true)
             {
-                fg.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
+                sb.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
             }
             if ((printMask?.GNAM ?? true)
                 && item.GNAM is {} GNAMItem)
             {
-                fg.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
             }
             if ((printMask?.LinearVelocity ?? true)
                 && item.LinearVelocity is {} LinearVelocityItem)
             {
-                fg.AppendItem(LinearVelocityItem, "LinearVelocity");
+                sb.AppendItem(LinearVelocityItem, "LinearVelocity");
             }
             if ((printMask?.AngularVelocity ?? true)
                 && item.AngularVelocity is {} AngularVelocityItem)
             {
-                fg.AppendItem(AngularVelocityItem, "AngularVelocity");
+                sb.AppendItem(AngularVelocityItem, "AngularVelocity");
             }
             if ((printMask?.NoiseLayerOneTexture ?? true)
                 && item.NoiseLayerOneTexture is {} NoiseLayerOneTextureItem)
             {
-                fg.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
+                sb.AppendItem(NoiseLayerOneTextureItem, "NoiseLayerOneTexture");
             }
             if ((printMask?.NoiseLayerTwoTexture ?? true)
                 && item.NoiseLayerTwoTexture is {} NoiseLayerTwoTextureItem)
             {
-                fg.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
+                sb.AppendItem(NoiseLayerTwoTextureItem, "NoiseLayerTwoTexture");
             }
             if ((printMask?.NoiseLayerThreeTexture ?? true)
                 && item.NoiseLayerThreeTexture is {} NoiseLayerThreeTextureItem)
             {
-                fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
+                sb.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
             }
             if ((printMask?.FlowNormalsNoiseTexture ?? true)
                 && item.FlowNormalsNoiseTexture is {} FlowNormalsNoiseTextureItem)
             {
-                fg.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
+                sb.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
-                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -4320,27 +4457,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWaterGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Material.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Material, out var MaterialInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Material);
+                yield return MaterialInfo;
             }
-            if (obj.OpenSound.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.OpenSound, out var OpenSoundInfo))
             {
-                yield return FormLinkInformation.Factory(obj.OpenSound);
+                yield return OpenSoundInfo;
             }
-            if (obj.Spell.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Spell, out var SpellInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Spell);
+                yield return SpellInfo;
             }
-            if (obj.ImageSpace.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.ImageSpace, out var ImageSpaceInfo))
             {
-                yield return FormLinkInformation.Factory(obj.ImageSpace);
+                yield return ImageSpaceInfo;
             }
             yield break;
         }
@@ -4383,7 +4520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WaterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class WaterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
@@ -4837,7 +4974,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
@@ -4855,13 +4992,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WaterBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
+        public new static readonly WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWaterGetter item,
@@ -4875,7 +5012,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IWaterGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -5110,7 +5247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWaterGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -5121,12 +5258,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -5138,7 +5278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5149,7 +5289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5160,7 +5300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IWaterGetter)item,
@@ -5170,9 +5310,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WaterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class WaterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
+        public new static readonly WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WATR;
         public static void FillBinaryStructs(
@@ -5191,7 +5331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -5382,7 +5522,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -5399,16 +5540,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WaterBinaryOverlay :
+    internal partial class WaterBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IWaterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
-        public new static Water_Registration StaticRegistration => Water_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Water_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
@@ -5416,14 +5557,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WaterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WaterCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -5435,7 +5576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -5445,318 +5586,318 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<String> UnusedNoisemaps { get; private set; } = ListExt.Empty<String>();
+        public IReadOnlyList<String> UnusedNoisemaps { get; private set; } = Array.Empty<String>();
         #region Opacity
         private int? _OpacityLocation;
-        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Water.Flag? Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag?);
+        public Water.Flag? Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Water.Flag?);
         #endregion
         #region MNAM
         private int? _MNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? MNAM => _MNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? MNAM => _MNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Material
         private int? _MaterialLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> Material => _MaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region OpenSound
         private int? _OpenSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpenSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region Spell
         private int? _SpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> Spell => _SpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
+        public IFormLinkNullableGetter<ISpellGetter> Spell => _SpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISpellGetter>.Null;
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _ImageSpaceLocation.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
         #endregion
         #region DamagePerSecond
         private int? _DamagePerSecondLocation;
-        public UInt16? DamagePerSecond => _DamagePerSecondLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DamagePerSecondLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        public UInt16? DamagePerSecond => _DamagePerSecondLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DamagePerSecondLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
-        private int? _DNAMLocation;
+        private RangeInt32? _DNAMLocation;
         public Water.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Unknown
-        private int _UnknownLocation => _DNAMLocation!.Value;
+        private int _UnknownLocation => _DNAMLocation!.Value.Min;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 16).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 16).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region SpecularSunPower
-        private int _SpecularSunPowerLocation => _DNAMLocation!.Value + 0x10;
+        private int _SpecularSunPowerLocation => _DNAMLocation!.Value.Min + 0x10;
         private bool _SpecularSunPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunPower => _SpecularSunPower_IsSet ? _data.Slice(_SpecularSunPowerLocation, 4).Float() : default;
+        public Single SpecularSunPower => _SpecularSunPower_IsSet ? _recordData.Slice(_SpecularSunPowerLocation, 4).Float() : default;
         #endregion
         #region WaterReflectivity
-        private int _WaterReflectivityLocation => _DNAMLocation!.Value + 0x14;
+        private int _WaterReflectivityLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _WaterReflectivity_IsSet => _DNAMLocation.HasValue;
-        public Single WaterReflectivity => _WaterReflectivity_IsSet ? _data.Slice(_WaterReflectivityLocation, 4).Float() : default;
+        public Single WaterReflectivity => _WaterReflectivity_IsSet ? _recordData.Slice(_WaterReflectivityLocation, 4).Float() : default;
         #endregion
         #region WaterFresnel
-        private int _WaterFresnelLocation => _DNAMLocation!.Value + 0x18;
+        private int _WaterFresnelLocation => _DNAMLocation!.Value.Min + 0x18;
         private bool _WaterFresnel_IsSet => _DNAMLocation.HasValue;
-        public Single WaterFresnel => _WaterFresnel_IsSet ? _data.Slice(_WaterFresnelLocation, 4).Float() : default;
+        public Single WaterFresnel => _WaterFresnel_IsSet ? _recordData.Slice(_WaterFresnelLocation, 4).Float() : default;
         #endregion
         #region Unknown2
-        private int _Unknown2Location => _DNAMLocation!.Value + 0x1C;
+        private int _Unknown2Location => _DNAMLocation!.Value.Min + 0x1C;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown2Location, 4)) : default;
+        public Int32 Unknown2 => _Unknown2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Unknown2Location, 4)) : default;
         #endregion
         #region FogAboveWaterDistanceNearPlane
-        private int _FogAboveWaterDistanceNearPlaneLocation => _DNAMLocation!.Value + 0x20;
+        private int _FogAboveWaterDistanceNearPlaneLocation => _DNAMLocation!.Value.Min + 0x20;
         private bool _FogAboveWaterDistanceNearPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogAboveWaterDistanceNearPlane => _FogAboveWaterDistanceNearPlane_IsSet ? _data.Slice(_FogAboveWaterDistanceNearPlaneLocation, 4).Float() : default;
+        public Single FogAboveWaterDistanceNearPlane => _FogAboveWaterDistanceNearPlane_IsSet ? _recordData.Slice(_FogAboveWaterDistanceNearPlaneLocation, 4).Float() : default;
         #endregion
         #region FogAboveWaterDistanceFarPlane
-        private int _FogAboveWaterDistanceFarPlaneLocation => _DNAMLocation!.Value + 0x24;
+        private int _FogAboveWaterDistanceFarPlaneLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _FogAboveWaterDistanceFarPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogAboveWaterDistanceFarPlane => _FogAboveWaterDistanceFarPlane_IsSet ? _data.Slice(_FogAboveWaterDistanceFarPlaneLocation, 4).Float() : default;
+        public Single FogAboveWaterDistanceFarPlane => _FogAboveWaterDistanceFarPlane_IsSet ? _recordData.Slice(_FogAboveWaterDistanceFarPlaneLocation, 4).Float() : default;
         #endregion
         #region ShallowColor
-        private int _ShallowColorLocation => _DNAMLocation!.Value + 0x28;
+        private int _ShallowColorLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _ShallowColor_IsSet => _DNAMLocation.HasValue;
-        public Color ShallowColor => _ShallowColor_IsSet ? _data.Slice(_ShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color ShallowColor => _ShallowColor_IsSet ? _recordData.Slice(_ShallowColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region DeepColor
-        private int _DeepColorLocation => _DNAMLocation!.Value + 0x2C;
+        private int _DeepColorLocation => _DNAMLocation!.Value.Min + 0x2C;
         private bool _DeepColor_IsSet => _DNAMLocation.HasValue;
-        public Color DeepColor => _DeepColor_IsSet ? _data.Slice(_DeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color DeepColor => _DeepColor_IsSet ? _recordData.Slice(_DeepColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region ReflectionColor
-        private int _ReflectionColorLocation => _DNAMLocation!.Value + 0x30;
+        private int _ReflectionColorLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _ReflectionColor_IsSet => _DNAMLocation.HasValue;
-        public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Slice(_ReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        public Color ReflectionColor => _ReflectionColor_IsSet ? _recordData.Slice(_ReflectionColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
         #endregion
         #region Unknown3
-        private int _Unknown3Location => _DNAMLocation!.Value + 0x34;
+        private int _Unknown3Location => _DNAMLocation!.Value.Min + 0x34;
         private bool _Unknown3_IsSet => _DNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _data.Span.Slice(_Unknown3Location, 20).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 20).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region DisplacementStartingSize
-        private int _DisplacementStartingSizeLocation => _DNAMLocation!.Value + 0x48;
+        private int _DisplacementStartingSizeLocation => _DNAMLocation!.Value.Min + 0x48;
         private bool _DisplacementStartingSize_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementStartingSize => _DisplacementStartingSize_IsSet ? _data.Slice(_DisplacementStartingSizeLocation, 4).Float() : default;
+        public Single DisplacementStartingSize => _DisplacementStartingSize_IsSet ? _recordData.Slice(_DisplacementStartingSizeLocation, 4).Float() : default;
         #endregion
         #region DisplacementFoce
-        private int _DisplacementFoceLocation => _DNAMLocation!.Value + 0x4C;
+        private int _DisplacementFoceLocation => _DNAMLocation!.Value.Min + 0x4C;
         private bool _DisplacementFoce_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementFoce => _DisplacementFoce_IsSet ? _data.Slice(_DisplacementFoceLocation, 4).Float() : default;
+        public Single DisplacementFoce => _DisplacementFoce_IsSet ? _recordData.Slice(_DisplacementFoceLocation, 4).Float() : default;
         #endregion
         #region DisplacementVelocity
-        private int _DisplacementVelocityLocation => _DNAMLocation!.Value + 0x50;
+        private int _DisplacementVelocityLocation => _DNAMLocation!.Value.Min + 0x50;
         private bool _DisplacementVelocity_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementVelocity => _DisplacementVelocity_IsSet ? _data.Slice(_DisplacementVelocityLocation, 4).Float() : default;
+        public Single DisplacementVelocity => _DisplacementVelocity_IsSet ? _recordData.Slice(_DisplacementVelocityLocation, 4).Float() : default;
         #endregion
         #region DisplacementFalloff
-        private int _DisplacementFalloffLocation => _DNAMLocation!.Value + 0x54;
+        private int _DisplacementFalloffLocation => _DNAMLocation!.Value.Min + 0x54;
         private bool _DisplacementFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementFalloff => _DisplacementFalloff_IsSet ? _data.Slice(_DisplacementFalloffLocation, 4).Float() : default;
+        public Single DisplacementFalloff => _DisplacementFalloff_IsSet ? _recordData.Slice(_DisplacementFalloffLocation, 4).Float() : default;
         #endregion
         #region DisplacementDampner
-        private int _DisplacementDampnerLocation => _DNAMLocation!.Value + 0x58;
+        private int _DisplacementDampnerLocation => _DNAMLocation!.Value.Min + 0x58;
         private bool _DisplacementDampner_IsSet => _DNAMLocation.HasValue;
-        public Single DisplacementDampner => _DisplacementDampner_IsSet ? _data.Slice(_DisplacementDampnerLocation, 4).Float() : default;
+        public Single DisplacementDampner => _DisplacementDampner_IsSet ? _recordData.Slice(_DisplacementDampnerLocation, 4).Float() : default;
         #endregion
         #region Unknown4
-        private int _Unknown4Location => _DNAMLocation!.Value + 0x5C;
+        private int _Unknown4Location => _DNAMLocation!.Value.Min + 0x5C;
         private bool _Unknown4_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown4 => _Unknown4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown4Location, 4)) : default;
+        public Int32 Unknown4 => _Unknown4_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Unknown4Location, 4)) : default;
         #endregion
         #region NoiseFalloff
-        private int _NoiseFalloffLocation => _DNAMLocation!.Value + 0x60;
+        private int _NoiseFalloffLocation => _DNAMLocation!.Value.Min + 0x60;
         private bool _NoiseFalloff_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseFalloff => _NoiseFalloff_IsSet ? _data.Slice(_NoiseFalloffLocation, 4).Float() : default;
+        public Single NoiseFalloff => _NoiseFalloff_IsSet ? _recordData.Slice(_NoiseFalloffLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneWindDirection
-        private int _NoiseLayerOneWindDirectionLocation => _DNAMLocation!.Value + 0x64;
+        private int _NoiseLayerOneWindDirectionLocation => _DNAMLocation!.Value.Min + 0x64;
         private bool _NoiseLayerOneWindDirection_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneWindDirection => _NoiseLayerOneWindDirection_IsSet ? _data.Slice(_NoiseLayerOneWindDirectionLocation, 4).Float() : default;
+        public Single NoiseLayerOneWindDirection => _NoiseLayerOneWindDirection_IsSet ? _recordData.Slice(_NoiseLayerOneWindDirectionLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoWindDirection
-        private int _NoiseLayerTwoWindDirectionLocation => _DNAMLocation!.Value + 0x68;
+        private int _NoiseLayerTwoWindDirectionLocation => _DNAMLocation!.Value.Min + 0x68;
         private bool _NoiseLayerTwoWindDirection_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoWindDirection => _NoiseLayerTwoWindDirection_IsSet ? _data.Slice(_NoiseLayerTwoWindDirectionLocation, 4).Float() : default;
+        public Single NoiseLayerTwoWindDirection => _NoiseLayerTwoWindDirection_IsSet ? _recordData.Slice(_NoiseLayerTwoWindDirectionLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeWindDirection
-        private int _NoiseLayerThreeWindDirectionLocation => _DNAMLocation!.Value + 0x6C;
+        private int _NoiseLayerThreeWindDirectionLocation => _DNAMLocation!.Value.Min + 0x6C;
         private bool _NoiseLayerThreeWindDirection_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeWindDirection => _NoiseLayerThreeWindDirection_IsSet ? _data.Slice(_NoiseLayerThreeWindDirectionLocation, 4).Float() : default;
+        public Single NoiseLayerThreeWindDirection => _NoiseLayerThreeWindDirection_IsSet ? _recordData.Slice(_NoiseLayerThreeWindDirectionLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneWindSpeed
-        private int _NoiseLayerOneWindSpeedLocation => _DNAMLocation!.Value + 0x70;
+        private int _NoiseLayerOneWindSpeedLocation => _DNAMLocation!.Value.Min + 0x70;
         private bool _NoiseLayerOneWindSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneWindSpeed => _NoiseLayerOneWindSpeed_IsSet ? _data.Slice(_NoiseLayerOneWindSpeedLocation, 4).Float() : default;
+        public Single NoiseLayerOneWindSpeed => _NoiseLayerOneWindSpeed_IsSet ? _recordData.Slice(_NoiseLayerOneWindSpeedLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoWindSpeed
-        private int _NoiseLayerTwoWindSpeedLocation => _DNAMLocation!.Value + 0x74;
+        private int _NoiseLayerTwoWindSpeedLocation => _DNAMLocation!.Value.Min + 0x74;
         private bool _NoiseLayerTwoWindSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoWindSpeed => _NoiseLayerTwoWindSpeed_IsSet ? _data.Slice(_NoiseLayerTwoWindSpeedLocation, 4).Float() : default;
+        public Single NoiseLayerTwoWindSpeed => _NoiseLayerTwoWindSpeed_IsSet ? _recordData.Slice(_NoiseLayerTwoWindSpeedLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeWindSpeed
-        private int _NoiseLayerThreeWindSpeedLocation => _DNAMLocation!.Value + 0x78;
+        private int _NoiseLayerThreeWindSpeedLocation => _DNAMLocation!.Value.Min + 0x78;
         private bool _NoiseLayerThreeWindSpeed_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeWindSpeed => _NoiseLayerThreeWindSpeed_IsSet ? _data.Slice(_NoiseLayerThreeWindSpeedLocation, 4).Float() : default;
+        public Single NoiseLayerThreeWindSpeed => _NoiseLayerThreeWindSpeed_IsSet ? _recordData.Slice(_NoiseLayerThreeWindSpeedLocation, 4).Float() : default;
         #endregion
         #region Unknown5
-        private int _Unknown5Location => _DNAMLocation!.Value + 0x7C;
+        private int _Unknown5Location => _DNAMLocation!.Value.Min + 0x7C;
         private bool _Unknown5_IsSet => _DNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown5 => _Unknown5_IsSet ? _data.Span.Slice(_Unknown5Location, 8).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        public ReadOnlyMemorySlice<Byte> Unknown5 => _Unknown5_IsSet ? _recordData.Span.Slice(_Unknown5Location, 8).ToArray() : default(ReadOnlyMemorySlice<byte>);
         #endregion
         #region FogAboveWaterAmount
-        private int _FogAboveWaterAmountLocation => _DNAMLocation!.Value + 0x84;
+        private int _FogAboveWaterAmountLocation => _DNAMLocation!.Value.Min + 0x84;
         private bool _FogAboveWaterAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogAboveWaterAmount => _FogAboveWaterAmount_IsSet ? _data.Slice(_FogAboveWaterAmountLocation, 4).Float() : default;
+        public Single FogAboveWaterAmount => _FogAboveWaterAmount_IsSet ? _recordData.Slice(_FogAboveWaterAmountLocation, 4).Float() : default;
         #endregion
         #region Unknown6
-        private int _Unknown6Location => _DNAMLocation!.Value + 0x88;
+        private int _Unknown6Location => _DNAMLocation!.Value.Min + 0x88;
         private bool _Unknown6_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown6 => _Unknown6_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown6Location, 4)) : default;
+        public Int32 Unknown6 => _Unknown6_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Unknown6Location, 4)) : default;
         #endregion
         #region FogUnderWaterAmount
-        private int _FogUnderWaterAmountLocation => _DNAMLocation!.Value + 0x8C;
+        private int _FogUnderWaterAmountLocation => _DNAMLocation!.Value.Min + 0x8C;
         private bool _FogUnderWaterAmount_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderWaterAmount => _FogUnderWaterAmount_IsSet ? _data.Slice(_FogUnderWaterAmountLocation, 4).Float() : default;
+        public Single FogUnderWaterAmount => _FogUnderWaterAmount_IsSet ? _recordData.Slice(_FogUnderWaterAmountLocation, 4).Float() : default;
         #endregion
         #region FogUnderWaterDistanceNearPlane
-        private int _FogUnderWaterDistanceNearPlaneLocation => _DNAMLocation!.Value + 0x90;
+        private int _FogUnderWaterDistanceNearPlaneLocation => _DNAMLocation!.Value.Min + 0x90;
         private bool _FogUnderWaterDistanceNearPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderWaterDistanceNearPlane => _FogUnderWaterDistanceNearPlane_IsSet ? _data.Slice(_FogUnderWaterDistanceNearPlaneLocation, 4).Float() : default;
+        public Single FogUnderWaterDistanceNearPlane => _FogUnderWaterDistanceNearPlane_IsSet ? _recordData.Slice(_FogUnderWaterDistanceNearPlaneLocation, 4).Float() : default;
         #endregion
         #region FogUnderWaterDistanceFarPlane
-        private int _FogUnderWaterDistanceFarPlaneLocation => _DNAMLocation!.Value + 0x94;
+        private int _FogUnderWaterDistanceFarPlaneLocation => _DNAMLocation!.Value.Min + 0x94;
         private bool _FogUnderWaterDistanceFarPlane_IsSet => _DNAMLocation.HasValue;
-        public Single FogUnderWaterDistanceFarPlane => _FogUnderWaterDistanceFarPlane_IsSet ? _data.Slice(_FogUnderWaterDistanceFarPlaneLocation, 4).Float() : default;
+        public Single FogUnderWaterDistanceFarPlane => _FogUnderWaterDistanceFarPlane_IsSet ? _recordData.Slice(_FogUnderWaterDistanceFarPlaneLocation, 4).Float() : default;
         #endregion
         #region WaterRefractionMagnitude
-        private int _WaterRefractionMagnitudeLocation => _DNAMLocation!.Value + 0x98;
+        private int _WaterRefractionMagnitudeLocation => _DNAMLocation!.Value.Min + 0x98;
         private bool _WaterRefractionMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single WaterRefractionMagnitude => _WaterRefractionMagnitude_IsSet ? _data.Slice(_WaterRefractionMagnitudeLocation, 4).Float() : default;
+        public Single WaterRefractionMagnitude => _WaterRefractionMagnitude_IsSet ? _recordData.Slice(_WaterRefractionMagnitudeLocation, 4).Float() : default;
         #endregion
         #region SpecularPower
-        private int _SpecularPowerLocation => _DNAMLocation!.Value + 0x9C;
+        private int _SpecularPowerLocation => _DNAMLocation!.Value.Min + 0x9C;
         private bool _SpecularPower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularPower => _SpecularPower_IsSet ? _data.Slice(_SpecularPowerLocation, 4).Float() : default;
+        public Single SpecularPower => _SpecularPower_IsSet ? _recordData.Slice(_SpecularPowerLocation, 4).Float() : default;
         #endregion
         #region Unknown7
-        private int _Unknown7Location => _DNAMLocation!.Value + 0xA0;
+        private int _Unknown7Location => _DNAMLocation!.Value.Min + 0xA0;
         private bool _Unknown7_IsSet => _DNAMLocation.HasValue;
-        public Int32 Unknown7 => _Unknown7_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_Unknown7Location, 4)) : default;
+        public Int32 Unknown7 => _Unknown7_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_Unknown7Location, 4)) : default;
         #endregion
         #region SpecularRadius
-        private int _SpecularRadiusLocation => _DNAMLocation!.Value + 0xA4;
+        private int _SpecularRadiusLocation => _DNAMLocation!.Value.Min + 0xA4;
         private bool _SpecularRadius_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularRadius => _SpecularRadius_IsSet ? _data.Slice(_SpecularRadiusLocation, 4).Float() : default;
+        public Single SpecularRadius => _SpecularRadius_IsSet ? _recordData.Slice(_SpecularRadiusLocation, 4).Float() : default;
         #endregion
         #region SpecularBrightness
-        private int _SpecularBrightnessLocation => _DNAMLocation!.Value + 0xA8;
+        private int _SpecularBrightnessLocation => _DNAMLocation!.Value.Min + 0xA8;
         private bool _SpecularBrightness_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularBrightness => _SpecularBrightness_IsSet ? _data.Slice(_SpecularBrightnessLocation, 4).Float() : default;
+        public Single SpecularBrightness => _SpecularBrightness_IsSet ? _recordData.Slice(_SpecularBrightnessLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneUvScale
-        private int _NoiseLayerOneUvScaleLocation => _DNAMLocation!.Value + 0xAC;
+        private int _NoiseLayerOneUvScaleLocation => _DNAMLocation!.Value.Min + 0xAC;
         private bool _NoiseLayerOneUvScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneUvScale => _NoiseLayerOneUvScale_IsSet ? _data.Slice(_NoiseLayerOneUvScaleLocation, 4).Float() : default;
+        public Single NoiseLayerOneUvScale => _NoiseLayerOneUvScale_IsSet ? _recordData.Slice(_NoiseLayerOneUvScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoUvScale
-        private int _NoiseLayerTwoUvScaleLocation => _DNAMLocation!.Value + 0xB0;
+        private int _NoiseLayerTwoUvScaleLocation => _DNAMLocation!.Value.Min + 0xB0;
         private bool _NoiseLayerTwoUvScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoUvScale => _NoiseLayerTwoUvScale_IsSet ? _data.Slice(_NoiseLayerTwoUvScaleLocation, 4).Float() : default;
+        public Single NoiseLayerTwoUvScale => _NoiseLayerTwoUvScale_IsSet ? _recordData.Slice(_NoiseLayerTwoUvScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeUvScale
-        private int _NoiseLayerThreeUvScaleLocation => _DNAMLocation!.Value + 0xB4;
+        private int _NoiseLayerThreeUvScaleLocation => _DNAMLocation!.Value.Min + 0xB4;
         private bool _NoiseLayerThreeUvScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeUvScale => _NoiseLayerThreeUvScale_IsSet ? _data.Slice(_NoiseLayerThreeUvScaleLocation, 4).Float() : default;
+        public Single NoiseLayerThreeUvScale => _NoiseLayerThreeUvScale_IsSet ? _recordData.Slice(_NoiseLayerThreeUvScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerOneAmplitudeScale
-        private int _NoiseLayerOneAmplitudeScaleLocation => _DNAMLocation!.Value + 0xB8;
+        private int _NoiseLayerOneAmplitudeScaleLocation => _DNAMLocation!.Value.Min + 0xB8;
         private bool _NoiseLayerOneAmplitudeScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerOneAmplitudeScale => _NoiseLayerOneAmplitudeScale_IsSet ? _data.Slice(_NoiseLayerOneAmplitudeScaleLocation, 4).Float() : default;
+        public Single NoiseLayerOneAmplitudeScale => _NoiseLayerOneAmplitudeScale_IsSet ? _recordData.Slice(_NoiseLayerOneAmplitudeScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerTwoAmplitudeScale
-        private int _NoiseLayerTwoAmplitudeScaleLocation => _DNAMLocation!.Value + 0xBC;
+        private int _NoiseLayerTwoAmplitudeScaleLocation => _DNAMLocation!.Value.Min + 0xBC;
         private bool _NoiseLayerTwoAmplitudeScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerTwoAmplitudeScale => _NoiseLayerTwoAmplitudeScale_IsSet ? _data.Slice(_NoiseLayerTwoAmplitudeScaleLocation, 4).Float() : default;
+        public Single NoiseLayerTwoAmplitudeScale => _NoiseLayerTwoAmplitudeScale_IsSet ? _recordData.Slice(_NoiseLayerTwoAmplitudeScaleLocation, 4).Float() : default;
         #endregion
         #region NoiseLayerThreeAmplitudeScale
-        private int _NoiseLayerThreeAmplitudeScaleLocation => _DNAMLocation!.Value + 0xC0;
+        private int _NoiseLayerThreeAmplitudeScaleLocation => _DNAMLocation!.Value.Min + 0xC0;
         private bool _NoiseLayerThreeAmplitudeScale_IsSet => _DNAMLocation.HasValue;
-        public Single NoiseLayerThreeAmplitudeScale => _NoiseLayerThreeAmplitudeScale_IsSet ? _data.Slice(_NoiseLayerThreeAmplitudeScaleLocation, 4).Float() : default;
+        public Single NoiseLayerThreeAmplitudeScale => _NoiseLayerThreeAmplitudeScale_IsSet ? _recordData.Slice(_NoiseLayerThreeAmplitudeScaleLocation, 4).Float() : default;
         #endregion
         #region WaterReflectionMagnitude
-        private int _WaterReflectionMagnitudeLocation => _DNAMLocation!.Value + 0xC4;
+        private int _WaterReflectionMagnitudeLocation => _DNAMLocation!.Value.Min + 0xC4;
         private bool _WaterReflectionMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single WaterReflectionMagnitude => _WaterReflectionMagnitude_IsSet ? _data.Slice(_WaterReflectionMagnitudeLocation, 4).Float() : default;
+        public Single WaterReflectionMagnitude => _WaterReflectionMagnitude_IsSet ? _recordData.Slice(_WaterReflectionMagnitudeLocation, 4).Float() : default;
         #endregion
         #region SpecularSunSparkleMagnitude
-        private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value + 0xC8;
+        private int _SpecularSunSparkleMagnitudeLocation => _DNAMLocation!.Value.Min + 0xC8;
         private bool _SpecularSunSparkleMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _data.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default;
+        public Single SpecularSunSparkleMagnitude => _SpecularSunSparkleMagnitude_IsSet ? _recordData.Slice(_SpecularSunSparkleMagnitudeLocation, 4).Float() : default;
         #endregion
         #region SpecularSunSpecularMagnitude
-        private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value + 0xCC;
+        private int _SpecularSunSpecularMagnitudeLocation => _DNAMLocation!.Value.Min + 0xCC;
         private bool _SpecularSunSpecularMagnitude_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _data.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default;
+        public Single SpecularSunSpecularMagnitude => _SpecularSunSpecularMagnitude_IsSet ? _recordData.Slice(_SpecularSunSpecularMagnitudeLocation, 4).Float() : default;
         #endregion
         #region DepthReflections
-        private int _DepthReflectionsLocation => _DNAMLocation!.Value + 0xD0;
+        private int _DepthReflectionsLocation => _DNAMLocation!.Value.Min + 0xD0;
         private bool _DepthReflections_IsSet => _DNAMLocation.HasValue;
-        public Single DepthReflections => _DepthReflections_IsSet ? _data.Slice(_DepthReflectionsLocation, 4).Float() : default;
+        public Single DepthReflections => _DepthReflections_IsSet ? _recordData.Slice(_DepthReflectionsLocation, 4).Float() : default;
         #endregion
         #region DepthRefraction
-        private int _DepthRefractionLocation => _DNAMLocation!.Value + 0xD4;
+        private int _DepthRefractionLocation => _DNAMLocation!.Value.Min + 0xD4;
         private bool _DepthRefraction_IsSet => _DNAMLocation.HasValue;
-        public Single DepthRefraction => _DepthRefraction_IsSet ? _data.Slice(_DepthRefractionLocation, 4).Float() : default;
+        public Single DepthRefraction => _DepthRefraction_IsSet ? _recordData.Slice(_DepthRefractionLocation, 4).Float() : default;
         #endregion
         #region DepthNormals
-        private int _DepthNormalsLocation => _DNAMLocation!.Value + 0xD8;
+        private int _DepthNormalsLocation => _DNAMLocation!.Value.Min + 0xD8;
         private bool _DepthNormals_IsSet => _DNAMLocation.HasValue;
-        public Single DepthNormals => _DepthNormals_IsSet ? _data.Slice(_DepthNormalsLocation, 4).Float() : default;
+        public Single DepthNormals => _DepthNormals_IsSet ? _recordData.Slice(_DepthNormalsLocation, 4).Float() : default;
         #endregion
         #region DepthSpecularLighting
-        private int _DepthSpecularLightingLocation => _DNAMLocation!.Value + 0xDC;
+        private int _DepthSpecularLightingLocation => _DNAMLocation!.Value.Min + 0xDC;
         private bool _DepthSpecularLighting_IsSet => _DNAMLocation.HasValue;
-        public Single DepthSpecularLighting => _DepthSpecularLighting_IsSet ? _data.Slice(_DepthSpecularLightingLocation, 4).Float() : default;
+        public Single DepthSpecularLighting => _DepthSpecularLighting_IsSet ? _recordData.Slice(_DepthSpecularLightingLocation, 4).Float() : default;
         #endregion
         #region SpecularSunSparklePower
-        private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value + 0xE0;
+        private int _SpecularSunSparklePowerLocation => _DNAMLocation!.Value.Min + 0xE0;
         private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
-        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _data.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default;
+        public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? _recordData.Slice(_SpecularSunSparklePowerLocation, 4).Float() : default;
         #endregion
         #region NoiseFlowmapScale
-        private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value + 0xE4;
+        private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value.Min + 0xE4;
         private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Water.DNAMDataType.Break0);
-        public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? _data.Slice(_NoiseFlowmapScaleLocation, 4).Float() : default;
+        public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? _recordData.Slice(_NoiseFlowmapScaleLocation, 4).Float() : default;
         #endregion
         #region GNAM
         private int? _GNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region LinearVelocity
         private int? _LinearVelocityLocation;
-        public P3Float? LinearVelocity => _LinearVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _LinearVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        public P3Float? LinearVelocity => _LinearVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LinearVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         #region AngularVelocity
         private int? _AngularVelocityLocation;
-        public P3Float? AngularVelocity => _AngularVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _AngularVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        public P3Float? AngularVelocity => _AngularVelocityLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AngularVelocityLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         #region NoiseLayerOneTexture
         private int? _NoiseLayerOneTextureLocation;
-        public String? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? NoiseLayerOneTexture => _NoiseLayerOneTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerOneTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region NoiseLayerTwoTexture
         private int? _NoiseLayerTwoTextureLocation;
-        public String? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? NoiseLayerTwoTexture => _NoiseLayerTwoTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerTwoTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region NoiseLayerThreeTexture
         private int? _NoiseLayerThreeTextureLocation;
-        public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region FlowNormalsNoiseTexture
         private int? _FlowNormalsNoiseTextureLocation;
-        public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5765,28 +5906,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WaterBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WaterBinaryOverlay WaterFactory(
+        public static IWaterGetter WaterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WaterBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -5796,20 +5940,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static WaterBinaryOverlay WaterFactory(
+        public static IWaterGetter WaterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WaterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -5819,9 +5963,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -5834,13 +5978,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.UnusedNoisemaps = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordFrame(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
-                            parseParams: parseParams));
+                            translationParams: translationParams));
                     return (int)Water_FieldIndex.UnusedNoisemaps;
                 }
                 case RecordTypeInts.ANAM:
@@ -5885,8 +6029,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0xE4)
                     {
                         this.DNAMDataTypeState |= Water.DNAMDataType.Break0;
@@ -5935,17 +6079,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WaterMixIn.ToString(
+            WaterMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

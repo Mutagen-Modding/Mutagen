@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -50,17 +51,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMesh
-        private readonly IFormLink<IANavigationMeshGetter> _NavMesh = new FormLink<IANavigationMeshGetter>();
-        public IFormLink<IANavigationMeshGetter> NavMesh
+        private readonly IFormLink<INavigationMeshGetter> _NavMesh = new FormLink<INavigationMeshGetter>();
+        public IFormLink<INavigationMeshGetter> NavMesh
         {
             get => _NavMesh;
             set => _NavMesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IANavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
+        IFormLinkGetter<INavigationMeshGetter> INavigationDoorLinkGetter.NavMesh => this.NavMesh;
         #endregion
-        #region NavMeshTriangleIndex
-        public Int16 NavMeshTriangleIndex { get; set; } = default;
+        #region TeleportMarkerTriangle
+        public Int16 TeleportMarkerTriangle { get; set; } = default;
         #endregion
         #region Unused
         public Int16 Unused { get; set; } = default;
@@ -68,12 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavigationDoorLinkMixIn.ToString(
+            NavigationDoorLinkMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -104,17 +106,17 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.NavMesh = initialValue;
-                this.NavMeshTriangleIndex = initialValue;
+                this.TeleportMarkerTriangle = initialValue;
                 this.Unused = initialValue;
             }
 
             public Mask(
                 TItem NavMesh,
-                TItem NavMeshTriangleIndex,
+                TItem TeleportMarkerTriangle,
                 TItem Unused)
             {
                 this.NavMesh = NavMesh;
-                this.NavMeshTriangleIndex = NavMeshTriangleIndex;
+                this.TeleportMarkerTriangle = TeleportMarkerTriangle;
                 this.Unused = Unused;
             }
 
@@ -128,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem NavMesh;
-            public TItem NavMeshTriangleIndex;
+            public TItem TeleportMarkerTriangle;
             public TItem Unused;
             #endregion
 
@@ -143,7 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.NavMesh, rhs.NavMesh)) return false;
-                if (!object.Equals(this.NavMeshTriangleIndex, rhs.NavMeshTriangleIndex)) return false;
+                if (!object.Equals(this.TeleportMarkerTriangle, rhs.TeleportMarkerTriangle)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
@@ -151,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.NavMesh);
-                hash.Add(this.NavMeshTriangleIndex);
+                hash.Add(this.TeleportMarkerTriangle);
                 hash.Add(this.Unused);
                 return hash.ToHashCode();
             }
@@ -162,7 +164,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.NavMesh)) return false;
-                if (!eval(this.NavMeshTriangleIndex)) return false;
+                if (!eval(this.TeleportMarkerTriangle)) return false;
                 if (!eval(this.Unused)) return false;
                 return true;
             }
@@ -172,7 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.NavMesh)) return true;
-                if (eval(this.NavMeshTriangleIndex)) return true;
+                if (eval(this.TeleportMarkerTriangle)) return true;
                 if (eval(this.Unused)) return true;
                 return false;
             }
@@ -189,44 +191,39 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.NavMesh = eval(this.NavMesh);
-                obj.NavMeshTriangleIndex = eval(this.NavMeshTriangleIndex);
+                obj.TeleportMarkerTriangle = eval(this.TeleportMarkerTriangle);
                 obj.Unused = eval(this.Unused);
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NavigationDoorLink.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NavigationDoorLink.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavigationDoorLink.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NavigationDoorLink.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NavigationDoorLink.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NavigationDoorLink.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.NavMesh ?? true)
                     {
-                        fg.AppendItem(NavMesh, "NavMesh");
+                        sb.AppendItem(NavMesh, "NavMesh");
                     }
-                    if (printMask?.NavMeshTriangleIndex ?? true)
+                    if (printMask?.TeleportMarkerTriangle ?? true)
                     {
-                        fg.AppendItem(NavMeshTriangleIndex, "NavMeshTriangleIndex");
+                        sb.AppendItem(TeleportMarkerTriangle, "TeleportMarkerTriangle");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -251,7 +248,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? NavMesh;
-            public Exception? NavMeshTriangleIndex;
+            public Exception? TeleportMarkerTriangle;
             public Exception? Unused;
             #endregion
 
@@ -263,8 +260,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case NavigationDoorLink_FieldIndex.NavMesh:
                         return NavMesh;
-                    case NavigationDoorLink_FieldIndex.NavMeshTriangleIndex:
-                        return NavMeshTriangleIndex;
+                    case NavigationDoorLink_FieldIndex.TeleportMarkerTriangle:
+                        return TeleportMarkerTriangle;
                     case NavigationDoorLink_FieldIndex.Unused:
                         return Unused;
                     default:
@@ -280,8 +277,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationDoorLink_FieldIndex.NavMesh:
                         this.NavMesh = ex;
                         break;
-                    case NavigationDoorLink_FieldIndex.NavMeshTriangleIndex:
-                        this.NavMeshTriangleIndex = ex;
+                    case NavigationDoorLink_FieldIndex.TeleportMarkerTriangle:
+                        this.TeleportMarkerTriangle = ex;
                         break;
                     case NavigationDoorLink_FieldIndex.Unused:
                         this.Unused = ex;
@@ -299,8 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case NavigationDoorLink_FieldIndex.NavMesh:
                         this.NavMesh = (Exception?)obj;
                         break;
-                    case NavigationDoorLink_FieldIndex.NavMeshTriangleIndex:
-                        this.NavMeshTriangleIndex = (Exception?)obj;
+                    case NavigationDoorLink_FieldIndex.TeleportMarkerTriangle:
+                        this.TeleportMarkerTriangle = (Exception?)obj;
                         break;
                     case NavigationDoorLink_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
@@ -314,45 +311,42 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (NavMesh != null) return true;
-                if (NavMeshTriangleIndex != null) return true;
+                if (TeleportMarkerTriangle != null) return true;
                 if (Unused != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(NavMesh, "NavMesh");
-                fg.AppendItem(NavMeshTriangleIndex, "NavMeshTriangleIndex");
-                fg.AppendItem(Unused, "Unused");
+                {
+                    sb.AppendItem(NavMesh, "NavMesh");
+                }
+                {
+                    sb.AppendItem(TeleportMarkerTriangle, "TeleportMarkerTriangle");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
             }
             #endregion
 
@@ -362,7 +356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NavMesh = this.NavMesh.Combine(rhs.NavMesh);
-                ret.NavMeshTriangleIndex = this.NavMeshTriangleIndex.Combine(rhs.NavMeshTriangleIndex);
+                ret.TeleportMarkerTriangle = this.TeleportMarkerTriangle.Combine(rhs.TeleportMarkerTriangle);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
@@ -388,7 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool NavMesh;
-            public bool NavMeshTriangleIndex;
+            public bool TeleportMarkerTriangle;
             public bool Unused;
             #endregion
 
@@ -400,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.NavMesh = defaultOn;
-                this.NavMeshTriangleIndex = defaultOn;
+                this.TeleportMarkerTriangle = defaultOn;
                 this.Unused = defaultOn;
             }
 
@@ -418,7 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((NavMesh, null));
-                ret.Add((NavMeshTriangleIndex, null));
+                ret.Add((TeleportMarkerTriangle, null));
                 ret.Add((Unused, null));
             }
 
@@ -431,8 +425,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = NavigationDoorLink_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationDoorLinkCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationDoorLinkCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationDoorLinkSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -443,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationDoorLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static NavigationDoorLink CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NavigationDoorLink();
             ((NavigationDoorLinkSetterCommon)((INavigationDoorLinkGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NavigationDoorLink item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -478,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -499,8 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationDoorLink>,
         INavigationDoorLinkGetter
     {
-        new IFormLink<IANavigationMeshGetter> NavMesh { get; set; }
-        new Int16 NavMeshTriangleIndex { get; set; }
+        new IFormLink<INavigationMeshGetter> NavMesh { get; set; }
+        new Int16 TeleportMarkerTriangle { get; set; }
         new Int16 Unused { get; set; }
     }
 
@@ -517,8 +510,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavigationDoorLink_Registration.Instance;
-        IFormLinkGetter<IANavigationMeshGetter> NavMesh { get; }
-        Int16 NavMeshTriangleIndex { get; }
+        IFormLinkGetter<INavigationMeshGetter> NavMesh { get; }
+        Int16 TeleportMarkerTriangle { get; }
         Int16 Unused { get; }
 
     }
@@ -544,26 +537,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INavigationDoorLinkGetter item,
             string? name = null,
             NavigationDoorLink.Mask<bool>? printMask = null)
         {
-            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)item).CommonInstance()!).ToString(
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INavigationDoorLinkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationDoorLink.Mask<bool>? printMask = null)
         {
-            ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)item).CommonInstance()!).ToString(
+            ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -669,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INavigationDoorLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NavigationDoorLinkSetterCommon)((INavigationDoorLinkGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -684,19 +677,19 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NavigationDoorLink_FieldIndex
+    internal enum NavigationDoorLink_FieldIndex
     {
         NavMesh = 0,
-        NavMeshTriangleIndex = 1,
+        TeleportMarkerTriangle = 1,
         Unused = 2,
     }
     #endregion
 
     #region Registration
-    public partial class NavigationDoorLink_Registration : ILoquiRegistration
+    internal partial class NavigationDoorLink_Registration : ILoquiRegistration
     {
         public static readonly NavigationDoorLink_Registration Instance = new NavigationDoorLink_Registration();
 
@@ -738,6 +731,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XNDP;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XNDP);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NavigationDoorLinkBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -771,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NavigationDoorLinkSetterCommon
+    internal partial class NavigationDoorLinkSetterCommon
     {
         public static readonly NavigationDoorLinkSetterCommon Instance = new NavigationDoorLinkSetterCommon();
 
@@ -781,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.NavMesh.Clear();
-            item.NavMeshTriangleIndex = default;
+            item.TeleportMarkerTriangle = default;
             item.Unused = default;
         }
         
@@ -797,12 +796,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INavigationDoorLink item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XNDP),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -813,7 +812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationDoorLinkCommon
+    internal partial class NavigationDoorLinkCommon
     {
         public static readonly NavigationDoorLinkCommon Instance = new NavigationDoorLinkCommon();
 
@@ -837,67 +836,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NavigationDoorLink.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.NavMesh = item.NavMesh.Equals(rhs.NavMesh);
-            ret.NavMeshTriangleIndex = item.NavMeshTriangleIndex == rhs.NavMeshTriangleIndex;
+            ret.TeleportMarkerTriangle = item.TeleportMarkerTriangle == rhs.TeleportMarkerTriangle;
             ret.Unused = item.Unused == rhs.Unused;
         }
         
-        public string ToString(
+        public string Print(
             INavigationDoorLinkGetter item,
             string? name = null,
             NavigationDoorLink.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INavigationDoorLinkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NavigationDoorLink.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NavigationDoorLink =>");
+                sb.AppendLine($"NavigationDoorLink =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NavigationDoorLink) =>");
+                sb.AppendLine($"{name} (NavigationDoorLink) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INavigationDoorLinkGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NavigationDoorLink.Mask<bool>? printMask = null)
         {
             if (printMask?.NavMesh ?? true)
             {
-                fg.AppendItem(item.NavMesh.FormKey, "NavMesh");
+                sb.AppendItem(item.NavMesh.FormKey, "NavMesh");
             }
-            if (printMask?.NavMeshTriangleIndex ?? true)
+            if (printMask?.TeleportMarkerTriangle ?? true)
             {
-                fg.AppendItem(item.NavMeshTriangleIndex, "NavMeshTriangleIndex");
+                sb.AppendItem(item.TeleportMarkerTriangle, "TeleportMarkerTriangle");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Unused, "Unused");
             }
         }
         
@@ -912,9 +908,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
+            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.TeleportMarkerTriangle) ?? true))
             {
-                if (lhs.NavMeshTriangleIndex != rhs.NavMeshTriangleIndex) return false;
+                if (lhs.TeleportMarkerTriangle != rhs.TeleportMarkerTriangle) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
             {
@@ -927,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.NavMesh);
-            hash.Add(item.NavMeshTriangleIndex);
+            hash.Add(item.TeleportMarkerTriangle);
             hash.Add(item.Unused);
             return hash.ToHashCode();
         }
@@ -941,7 +937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationDoorLinkGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationDoorLinkGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.NavMesh);
             yield break;
@@ -950,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NavigationDoorLinkSetterTranslationCommon
+    internal partial class NavigationDoorLinkSetterTranslationCommon
     {
         public static readonly NavigationDoorLinkSetterTranslationCommon Instance = new NavigationDoorLinkSetterTranslationCommon();
 
@@ -966,9 +962,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.NavMesh.SetTo(rhs.NavMesh.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.TeleportMarkerTriangle) ?? true))
             {
-                item.NavMeshTriangleIndex = rhs.NavMeshTriangleIndex;
+                item.TeleportMarkerTriangle = rhs.TeleportMarkerTriangle;
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
             {
@@ -1036,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationDoorLink_Registration.Instance;
-        public static NavigationDoorLink_Registration StaticRegistration => NavigationDoorLink_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavigationDoorLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationDoorLinkCommon.Instance;
         [DebuggerStepThrough]
@@ -1060,11 +1056,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NavigationDoorLinkBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static NavigationDoorLinkBinaryWriteTranslation Instance = new NavigationDoorLinkBinaryWriteTranslation();
+        public static readonly NavigationDoorLinkBinaryWriteTranslation Instance = new NavigationDoorLinkBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             INavigationDoorLinkGetter item,
@@ -1073,19 +1069,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NavMesh);
-            writer.Write(item.NavMeshTriangleIndex);
+            writer.Write(item.TeleportMarkerTriangle);
             writer.Write(item.Unused);
         }
 
         public void Write(
             MutagenWriter writer,
             INavigationDoorLinkGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XNDP),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1097,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INavigationDoorLinkGetter)item,
@@ -1107,16 +1103,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NavigationDoorLinkBinaryCreateTranslation
+    internal partial class NavigationDoorLinkBinaryCreateTranslation
     {
-        public readonly static NavigationDoorLinkBinaryCreateTranslation Instance = new NavigationDoorLinkBinaryCreateTranslation();
+        public static readonly NavigationDoorLinkBinaryCreateTranslation Instance = new NavigationDoorLinkBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INavigationDoorLink item,
             MutagenFrame frame)
         {
             item.NavMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.NavMeshTriangleIndex = frame.ReadInt16();
+            item.TeleportMarkerTriangle = frame.ReadInt16();
             item.Unused = frame.ReadInt16();
         }
 
@@ -1131,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this INavigationDoorLinkGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationDoorLinkBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1144,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NavigationDoorLinkBinaryOverlay :
+    internal partial class NavigationDoorLinkBinaryOverlay :
         PluginBinaryOverlay,
         INavigationDoorLinkGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NavigationDoorLink_Registration.Instance;
-        public static NavigationDoorLink_Registration StaticRegistration => NavigationDoorLink_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavigationDoorLink_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => NavigationDoorLinkCommon.Instance;
         [DebuggerStepThrough]
@@ -1167,16 +1163,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationDoorLinkCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationDoorLinkCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationDoorLinkBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NavigationDoorLinkBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1184,9 +1180,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int16 NavMeshTriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public IFormLinkGetter<INavigationMeshGetter> NavMesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int16 TeleportMarkerTriangle => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x4, 0x2));
+        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1194,25 +1190,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NavigationDoorLinkBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NavigationDoorLinkBinaryOverlay NavigationDoorLinkFactory(
+        public static INavigationDoorLinkGetter NavigationDoorLinkFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x8,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new NavigationDoorLinkBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1221,25 +1222,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static NavigationDoorLinkBinaryOverlay NavigationDoorLinkFactory(
+        public static INavigationDoorLinkGetter NavigationDoorLinkFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NavigationDoorLinkFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NavigationDoorLinkMixIn.ToString(
+            NavigationDoorLinkMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

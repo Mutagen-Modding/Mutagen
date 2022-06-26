@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -92,12 +93,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherVolumetricLightingMixIn.ToString(
+            WeatherVolumetricLightingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -228,42 +230,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeatherVolumetricLighting.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeatherVolumetricLighting.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeatherVolumetricLighting.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeatherVolumetricLighting.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeatherVolumetricLighting.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherVolumetricLighting.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Sunrise ?? true)
                     {
-                        fg.AppendItem(Sunrise, "Sunrise");
+                        sb.AppendItem(Sunrise, "Sunrise");
                     }
                     if (printMask?.Day ?? true)
                     {
-                        fg.AppendItem(Day, "Day");
+                        sb.AppendItem(Day, "Day");
                     }
                     if (printMask?.Sunset ?? true)
                     {
-                        fg.AppendItem(Sunset, "Sunset");
+                        sb.AppendItem(Sunset, "Sunset");
                     }
                     if (printMask?.Night ?? true)
                     {
-                        fg.AppendItem(Night, "Night");
+                        sb.AppendItem(Night, "Night");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -368,39 +365,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Sunrise, "Sunrise");
-                fg.AppendItem(Day, "Day");
-                fg.AppendItem(Sunset, "Sunset");
-                fg.AppendItem(Night, "Night");
+                {
+                    sb.AppendItem(Sunrise, "Sunrise");
+                }
+                {
+                    sb.AppendItem(Day, "Day");
+                }
+                {
+                    sb.AppendItem(Sunset, "Sunset");
+                }
+                {
+                    sb.AppendItem(Night, "Night");
+                }
             }
             #endregion
 
@@ -483,8 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WeatherVolumetricLighting_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherVolumetricLightingCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -495,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -505,7 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WeatherVolumetricLighting CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherVolumetricLighting();
             ((WeatherVolumetricLightingSetterCommon)((IWeatherVolumetricLightingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -520,7 +515,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherVolumetricLighting item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -530,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -598,26 +593,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherVolumetricLightingGetter item,
             string? name = null,
             WeatherVolumetricLighting.Mask<bool>? printMask = null)
         {
-            return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)item).CommonInstance()!).ToString(
+            return ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherVolumetricLighting.Mask<bool>? printMask = null)
         {
-            ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)item).CommonInstance()!).ToString(
+            ((WeatherVolumetricLightingCommon)((IWeatherVolumetricLightingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -723,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWeatherVolumetricLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherVolumetricLightingSetterCommon)((IWeatherVolumetricLightingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -738,10 +733,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WeatherVolumetricLighting_FieldIndex
+    internal enum WeatherVolumetricLighting_FieldIndex
     {
         Sunrise = 0,
         Day = 1,
@@ -751,7 +746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherVolumetricLighting_Registration : ILoquiRegistration
+    internal partial class WeatherVolumetricLighting_Registration : ILoquiRegistration
     {
         public static readonly WeatherVolumetricLighting_Registration Instance = new WeatherVolumetricLighting_Registration();
 
@@ -793,6 +788,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.HNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.HNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherVolumetricLightingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -826,7 +827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherVolumetricLightingSetterCommon
+    internal partial class WeatherVolumetricLightingSetterCommon
     {
         public static readonly WeatherVolumetricLightingSetterCommon Instance = new WeatherVolumetricLightingSetterCommon();
 
@@ -856,12 +857,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWeatherVolumetricLighting item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.HNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -872,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherVolumetricLightingCommon
+    internal partial class WeatherVolumetricLightingCommon
     {
         public static readonly WeatherVolumetricLightingCommon Instance = new WeatherVolumetricLightingCommon();
 
@@ -896,72 +897,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeatherVolumetricLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Sunrise = item.Sunrise.Equals(rhs.Sunrise);
             ret.Day = item.Day.Equals(rhs.Day);
             ret.Sunset = item.Sunset.Equals(rhs.Sunset);
             ret.Night = item.Night.Equals(rhs.Night);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherVolumetricLightingGetter item,
             string? name = null,
             WeatherVolumetricLighting.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherVolumetricLighting.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherVolumetricLighting =>");
+                sb.AppendLine($"WeatherVolumetricLighting =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherVolumetricLighting) =>");
+                sb.AppendLine($"{name} (WeatherVolumetricLighting) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherVolumetricLightingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherVolumetricLighting.Mask<bool>? printMask = null)
         {
             if (printMask?.Sunrise ?? true)
             {
-                fg.AppendItem(item.Sunrise.FormKey, "Sunrise");
+                sb.AppendItem(item.Sunrise.FormKey, "Sunrise");
             }
             if (printMask?.Day ?? true)
             {
-                fg.AppendItem(item.Day.FormKey, "Day");
+                sb.AppendItem(item.Day.FormKey, "Day");
             }
             if (printMask?.Sunset ?? true)
             {
-                fg.AppendItem(item.Sunset.FormKey, "Sunset");
+                sb.AppendItem(item.Sunset.FormKey, "Sunset");
             }
             if (printMask?.Night ?? true)
             {
-                fg.AppendItem(item.Night.FormKey, "Night");
+                sb.AppendItem(item.Night.FormKey, "Night");
             }
         }
         
@@ -1010,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherVolumetricLightingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherVolumetricLightingGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sunrise);
             yield return FormLinkInformation.Factory(obj.Day);
@@ -1022,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WeatherVolumetricLightingSetterTranslationCommon
+    internal partial class WeatherVolumetricLightingSetterTranslationCommon
     {
         public static readonly WeatherVolumetricLightingSetterTranslationCommon Instance = new WeatherVolumetricLightingSetterTranslationCommon();
 
@@ -1112,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherVolumetricLighting_Registration.Instance;
-        public static WeatherVolumetricLighting_Registration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherVolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1136,11 +1134,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WeatherVolumetricLightingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherVolumetricLightingBinaryWriteTranslation Instance = new WeatherVolumetricLightingBinaryWriteTranslation();
+        public static readonly WeatherVolumetricLightingBinaryWriteTranslation Instance = new WeatherVolumetricLightingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherVolumetricLightingGetter item,
@@ -1163,12 +1161,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherVolumetricLightingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.HNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1180,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherVolumetricLightingGetter)item,
@@ -1190,9 +1188,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherVolumetricLightingBinaryCreateTranslation
+    internal partial class WeatherVolumetricLightingBinaryCreateTranslation
     {
-        public readonly static WeatherVolumetricLightingBinaryCreateTranslation Instance = new WeatherVolumetricLightingBinaryCreateTranslation();
+        public static readonly WeatherVolumetricLightingBinaryCreateTranslation Instance = new WeatherVolumetricLightingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherVolumetricLighting item,
@@ -1215,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWeatherVolumetricLightingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1228,16 +1226,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherVolumetricLightingBinaryOverlay :
+    internal partial class WeatherVolumetricLightingBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherVolumetricLightingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherVolumetricLighting_Registration.Instance;
-        public static WeatherVolumetricLighting_Registration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherVolumetricLighting_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherVolumetricLightingCommon.Instance;
         [DebuggerStepThrough]
@@ -1251,16 +1249,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeatherVolumetricLightingCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherVolumetricLightingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherVolumetricLightingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1268,10 +1266,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IVolumetricLightingGetter> Sunrise => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IVolumetricLightingGetter> Day => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IVolumetricLightingGetter> Sunset => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IVolumetricLightingGetter> Night => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IVolumetricLightingGetter> Sunrise => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IVolumetricLightingGetter> Day => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IVolumetricLightingGetter> Sunset => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IVolumetricLightingGetter> Night => new FormLink<IVolumetricLightingGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1279,25 +1277,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WeatherVolumetricLightingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeatherVolumetricLightingBinaryOverlay WeatherVolumetricLightingFactory(
+        public static IWeatherVolumetricLightingGetter WeatherVolumetricLightingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherVolumetricLightingBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1306,25 +1309,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeatherVolumetricLightingBinaryOverlay WeatherVolumetricLightingFactory(
+        public static IWeatherVolumetricLightingGetter WeatherVolumetricLightingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherVolumetricLightingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherVolumetricLightingMixIn.ToString(
+            WeatherVolumetricLightingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

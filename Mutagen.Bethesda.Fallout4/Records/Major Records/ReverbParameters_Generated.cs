@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -80,18 +81,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte ReverbDelayMS { get; set; } = default;
         #endregion
         #region DiffusionPercent
-        public Byte DiffusionPercent { get; set; } = default;
+        public Percent DiffusionPercent { get; set; } = default;
         #endregion
         #region DensityPercent
-        public Byte DensityPercent { get; set; } = default;
+        public Percent DensityPercent { get; set; } = default;
         #endregion
         #region Unknown
         public Byte Unknown { get; set; } = default;
         #endregion
         #region ReverbClass
-        public UInt32? ReverbClass { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IReverbParametersGetter.ReverbClass => this.ReverbClass;
+        public ReverbClass ReverbClass { get; set; } = default;
         #endregion
         #region DATADataTypeState
         public ReverbParameters.DATADataType DATADataTypeState { get; set; } = default;
@@ -99,12 +98,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ReverbParametersMixIn.ToString(
+            ReverbParametersMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -329,82 +329,77 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ReverbParameters.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ReverbParameters.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ReverbParameters.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ReverbParameters.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ReverbParameters.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ReverbParameters.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.DecayMilliseconds ?? true)
                     {
-                        fg.AppendItem(DecayMilliseconds, "DecayMilliseconds");
+                        sb.AppendItem(DecayMilliseconds, "DecayMilliseconds");
                     }
                     if (printMask?.HfReferenceHertz ?? true)
                     {
-                        fg.AppendItem(HfReferenceHertz, "HfReferenceHertz");
+                        sb.AppendItem(HfReferenceHertz, "HfReferenceHertz");
                     }
                     if (printMask?.RoomFilter ?? true)
                     {
-                        fg.AppendItem(RoomFilter, "RoomFilter");
+                        sb.AppendItem(RoomFilter, "RoomFilter");
                     }
                     if (printMask?.RoomHfFilter ?? true)
                     {
-                        fg.AppendItem(RoomHfFilter, "RoomHfFilter");
+                        sb.AppendItem(RoomHfFilter, "RoomHfFilter");
                     }
                     if (printMask?.Reflections ?? true)
                     {
-                        fg.AppendItem(Reflections, "Reflections");
+                        sb.AppendItem(Reflections, "Reflections");
                     }
                     if (printMask?.ReverbAmp ?? true)
                     {
-                        fg.AppendItem(ReverbAmp, "ReverbAmp");
+                        sb.AppendItem(ReverbAmp, "ReverbAmp");
                     }
                     if (printMask?.DecayHfRatio ?? true)
                     {
-                        fg.AppendItem(DecayHfRatio, "DecayHfRatio");
+                        sb.AppendItem(DecayHfRatio, "DecayHfRatio");
                     }
                     if (printMask?.ReflectDelayMS ?? true)
                     {
-                        fg.AppendItem(ReflectDelayMS, "ReflectDelayMS");
+                        sb.AppendItem(ReflectDelayMS, "ReflectDelayMS");
                     }
                     if (printMask?.ReverbDelayMS ?? true)
                     {
-                        fg.AppendItem(ReverbDelayMS, "ReverbDelayMS");
+                        sb.AppendItem(ReverbDelayMS, "ReverbDelayMS");
                     }
                     if (printMask?.DiffusionPercent ?? true)
                     {
-                        fg.AppendItem(DiffusionPercent, "DiffusionPercent");
+                        sb.AppendItem(DiffusionPercent, "DiffusionPercent");
                     }
                     if (printMask?.DensityPercent ?? true)
                     {
-                        fg.AppendItem(DensityPercent, "DensityPercent");
+                        sb.AppendItem(DensityPercent, "DensityPercent");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.ReverbClass ?? true)
                     {
-                        fg.AppendItem(ReverbClass, "ReverbClass");
+                        sb.AppendItem(ReverbClass, "ReverbClass");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -598,50 +593,69 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(DecayMilliseconds, "DecayMilliseconds");
-                fg.AppendItem(HfReferenceHertz, "HfReferenceHertz");
-                fg.AppendItem(RoomFilter, "RoomFilter");
-                fg.AppendItem(RoomHfFilter, "RoomHfFilter");
-                fg.AppendItem(Reflections, "Reflections");
-                fg.AppendItem(ReverbAmp, "ReverbAmp");
-                fg.AppendItem(DecayHfRatio, "DecayHfRatio");
-                fg.AppendItem(ReflectDelayMS, "ReflectDelayMS");
-                fg.AppendItem(ReverbDelayMS, "ReverbDelayMS");
-                fg.AppendItem(DiffusionPercent, "DiffusionPercent");
-                fg.AppendItem(DensityPercent, "DensityPercent");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(ReverbClass, "ReverbClass");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(DecayMilliseconds, "DecayMilliseconds");
+                }
+                {
+                    sb.AppendItem(HfReferenceHertz, "HfReferenceHertz");
+                }
+                {
+                    sb.AppendItem(RoomFilter, "RoomFilter");
+                }
+                {
+                    sb.AppendItem(RoomHfFilter, "RoomHfFilter");
+                }
+                {
+                    sb.AppendItem(Reflections, "Reflections");
+                }
+                {
+                    sb.AppendItem(ReverbAmp, "ReverbAmp");
+                }
+                {
+                    sb.AppendItem(DecayHfRatio, "DecayHfRatio");
+                }
+                {
+                    sb.AppendItem(ReflectDelayMS, "ReflectDelayMS");
+                }
+                {
+                    sb.AppendItem(ReverbDelayMS, "ReverbDelayMS");
+                }
+                {
+                    sb.AppendItem(DiffusionPercent, "DiffusionPercent");
+                }
+                {
+                    sb.AppendItem(DensityPercent, "DensityPercent");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(ReverbClass, "ReverbClass");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -828,7 +842,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ReverbParametersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -838,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ReverbParameters CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ReverbParameters();
             ((ReverbParametersSetterCommon)((IReverbParametersGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -853,7 +867,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ReverbParameters item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -863,7 +877,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -893,10 +907,10 @@ namespace Mutagen.Bethesda.Fallout4
         new Single DecayHfRatio { get; set; }
         new Byte ReflectDelayMS { get; set; }
         new Byte ReverbDelayMS { get; set; }
-        new Byte DiffusionPercent { get; set; }
-        new Byte DensityPercent { get; set; }
+        new Percent DiffusionPercent { get; set; }
+        new Percent DensityPercent { get; set; }
         new Byte Unknown { get; set; }
-        new UInt32? ReverbClass { get; set; }
+        new ReverbClass ReverbClass { get; set; }
         new ReverbParameters.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -924,10 +938,10 @@ namespace Mutagen.Bethesda.Fallout4
         Single DecayHfRatio { get; }
         Byte ReflectDelayMS { get; }
         Byte ReverbDelayMS { get; }
-        Byte DiffusionPercent { get; }
-        Byte DensityPercent { get; }
+        Percent DiffusionPercent { get; }
+        Percent DensityPercent { get; }
         Byte Unknown { get; }
-        UInt32? ReverbClass { get; }
+        ReverbClass ReverbClass { get; }
         ReverbParameters.DATADataType DATADataTypeState { get; }
 
     }
@@ -953,26 +967,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IReverbParametersGetter item,
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
-            return ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).ToString(
+            return ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IReverbParametersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
-            ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).ToString(
+            ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1067,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IReverbParametersInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ReverbParametersSetterCommon)((IReverbParametersGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1082,10 +1096,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ReverbParameters_FieldIndex
+    internal enum ReverbParameters_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1111,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ReverbParameters_Registration : ILoquiRegistration
+    internal partial class ReverbParameters_Registration : ILoquiRegistration
     {
         public static readonly ReverbParameters_Registration Instance = new ReverbParameters_Registration();
 
@@ -1153,6 +1167,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.REVB;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.REVB);
+            var all = RecordCollection.Factory(
+                RecordTypes.REVB,
+                RecordTypes.DATA,
+                RecordTypes.ANAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ReverbParametersBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1186,7 +1210,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ReverbParametersSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class ReverbParametersSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly ReverbParametersSetterCommon Instance = new ReverbParametersSetterCommon();
 
@@ -1234,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IReverbParametersInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IReverbParametersInternal>(
                 record: item,
@@ -1247,7 +1271,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ReverbParameters)item,
@@ -1258,7 +1282,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ReverbParameters)item,
@@ -1269,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ReverbParametersCommon : Fallout4MajorRecordCommon
+    internal partial class ReverbParametersCommon : Fallout4MajorRecordCommon
     {
         public new static readonly ReverbParametersCommon Instance = new ReverbParametersCommon();
 
@@ -1293,7 +1317,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ReverbParameters.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.DecayMilliseconds = item.DecayMilliseconds == rhs.DecayMilliseconds;
             ret.HfReferenceHertz = item.HfReferenceHertz == rhs.HfReferenceHertz;
             ret.RoomFilter = item.RoomFilter == rhs.RoomFilter;
@@ -1303,118 +1326,115 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.DecayHfRatio = item.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio);
             ret.ReflectDelayMS = item.ReflectDelayMS == rhs.ReflectDelayMS;
             ret.ReverbDelayMS = item.ReverbDelayMS == rhs.ReverbDelayMS;
-            ret.DiffusionPercent = item.DiffusionPercent == rhs.DiffusionPercent;
-            ret.DensityPercent = item.DensityPercent == rhs.DensityPercent;
+            ret.DiffusionPercent = item.DiffusionPercent.Equals(rhs.DiffusionPercent);
+            ret.DensityPercent = item.DensityPercent.Equals(rhs.DensityPercent);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.ReverbClass = item.ReverbClass == rhs.ReverbClass;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IReverbParametersGetter item,
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IReverbParametersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ReverbParameters.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ReverbParameters =>");
+                sb.AppendLine($"ReverbParameters =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ReverbParameters) =>");
+                sb.AppendLine($"{name} (ReverbParameters) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IReverbParametersGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ReverbParameters.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.DecayMilliseconds ?? true)
             {
-                fg.AppendItem(item.DecayMilliseconds, "DecayMilliseconds");
+                sb.AppendItem(item.DecayMilliseconds, "DecayMilliseconds");
             }
             if (printMask?.HfReferenceHertz ?? true)
             {
-                fg.AppendItem(item.HfReferenceHertz, "HfReferenceHertz");
+                sb.AppendItem(item.HfReferenceHertz, "HfReferenceHertz");
             }
             if (printMask?.RoomFilter ?? true)
             {
-                fg.AppendItem(item.RoomFilter, "RoomFilter");
+                sb.AppendItem(item.RoomFilter, "RoomFilter");
             }
             if (printMask?.RoomHfFilter ?? true)
             {
-                fg.AppendItem(item.RoomHfFilter, "RoomHfFilter");
+                sb.AppendItem(item.RoomHfFilter, "RoomHfFilter");
             }
             if (printMask?.Reflections ?? true)
             {
-                fg.AppendItem(item.Reflections, "Reflections");
+                sb.AppendItem(item.Reflections, "Reflections");
             }
             if (printMask?.ReverbAmp ?? true)
             {
-                fg.AppendItem(item.ReverbAmp, "ReverbAmp");
+                sb.AppendItem(item.ReverbAmp, "ReverbAmp");
             }
             if (printMask?.DecayHfRatio ?? true)
             {
-                fg.AppendItem(item.DecayHfRatio, "DecayHfRatio");
+                sb.AppendItem(item.DecayHfRatio, "DecayHfRatio");
             }
             if (printMask?.ReflectDelayMS ?? true)
             {
-                fg.AppendItem(item.ReflectDelayMS, "ReflectDelayMS");
+                sb.AppendItem(item.ReflectDelayMS, "ReflectDelayMS");
             }
             if (printMask?.ReverbDelayMS ?? true)
             {
-                fg.AppendItem(item.ReverbDelayMS, "ReverbDelayMS");
+                sb.AppendItem(item.ReverbDelayMS, "ReverbDelayMS");
             }
             if (printMask?.DiffusionPercent ?? true)
             {
-                fg.AppendItem(item.DiffusionPercent, "DiffusionPercent");
+                sb.AppendItem(item.DiffusionPercent, "DiffusionPercent");
             }
             if (printMask?.DensityPercent ?? true)
             {
-                fg.AppendItem(item.DensityPercent, "DensityPercent");
+                sb.AppendItem(item.DensityPercent, "DensityPercent");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
-            if ((printMask?.ReverbClass ?? true)
-                && item.ReverbClass is {} ReverbClassItem)
+            if (printMask?.ReverbClass ?? true)
             {
-                fg.AppendItem(ReverbClassItem, "ReverbClass");
+                sb.AppendItem(item.ReverbClass, "ReverbClass");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1502,11 +1522,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
             {
-                if (lhs.DiffusionPercent != rhs.DiffusionPercent) return false;
+                if (!lhs.DiffusionPercent.Equals(rhs.DiffusionPercent)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
             {
-                if (lhs.DensityPercent != rhs.DensityPercent) return false;
+                if (!lhs.DensityPercent.Equals(rhs.DensityPercent)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
             {
@@ -1560,10 +1580,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.DiffusionPercent);
             hash.Add(item.DensityPercent);
             hash.Add(item.Unknown);
-            if (item.ReverbClass is {} ReverbClassitem)
-            {
-                hash.Add(ReverbClassitem);
-            }
+            hash.Add(item.ReverbClass);
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1588,9 +1605,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IReverbParametersGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IReverbParametersGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1635,7 +1652,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ReverbParametersSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class ReverbParametersSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly ReverbParametersSetterTranslationCommon Instance = new ReverbParametersSetterTranslationCommon();
 
@@ -1846,7 +1863,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -1864,13 +1881,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ReverbParametersBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ReverbParametersBinaryWriteTranslation Instance = new ReverbParametersBinaryWriteTranslation();
+        public new static readonly ReverbParametersBinaryWriteTranslation Instance = new ReverbParametersBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IReverbParametersGetter item,
@@ -1884,7 +1901,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             IReverbParametersGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1905,20 +1922,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     multiplier: 0.01);
                 writer.Write(item.ReflectDelayMS);
                 writer.Write(item.ReverbDelayMS);
-                writer.Write(item.DiffusionPercent);
-                writer.Write(item.DensityPercent);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DiffusionPercent,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DensityPercent,
+                    integerType: FloatIntegerType.Byte);
                 writer.Write(item.Unknown);
             }
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ReverbClass,
+            EnumBinaryTranslation<ReverbClass, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.ReverbClass,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
         }
 
         public void Write(
             MutagenWriter writer,
             IReverbParametersGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1929,12 +1953,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1946,7 +1973,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IReverbParametersGetter)item,
@@ -1957,7 +1984,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IReverbParametersGetter)item,
@@ -1968,7 +1995,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IReverbParametersGetter)item,
@@ -1978,9 +2005,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ReverbParametersBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class ReverbParametersBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
+        public new static readonly ReverbParametersBinaryCreateTranslation Instance = new ReverbParametersBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.REVB;
         public static void FillBinaryStructs(
@@ -1999,7 +2026,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2020,15 +2047,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         multiplier: 0.01);
                     item.ReflectDelayMS = dataFrame.ReadUInt8();
                     item.ReverbDelayMS = dataFrame.ReadUInt8();
-                    item.DiffusionPercent = dataFrame.ReadUInt8();
-                    item.DensityPercent = dataFrame.ReadUInt8();
+                    item.DiffusionPercent = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.DensityPercent = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)ReverbParameters_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReverbClass = frame.ReadUInt32();
+                    item.ReverbClass = EnumBinaryTranslation<ReverbClass, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)ReverbParameters_FieldIndex.ReverbClass;
                 }
                 default:
@@ -2038,7 +2071,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2055,16 +2089,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ReverbParametersBinaryOverlay :
+    internal partial class ReverbParametersBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         IReverbParametersGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ReverbParameters_Registration.Instance;
-        public new static ReverbParameters_Registration StaticRegistration => ReverbParameters_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ReverbParameters_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ReverbParametersCommon.Instance;
         [DebuggerStepThrough]
@@ -2072,13 +2106,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ReverbParametersBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ReverbParametersBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2088,71 +2122,71 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(IReverbParameters);
 
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public ReverbParameters.DATADataType DATADataTypeState { get; private set; }
         #region DecayMilliseconds
-        private int _DecayMillisecondsLocation => _DATALocation!.Value;
+        private int _DecayMillisecondsLocation => _DATALocation!.Value.Min;
         private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;
-        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DecayMillisecondsLocation, 2)) : default;
+        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DecayMillisecondsLocation, 2)) : default;
         #endregion
         #region HfReferenceHertz
-        private int _HfReferenceHertzLocation => _DATALocation!.Value + 0x2;
+        private int _HfReferenceHertzLocation => _DATALocation!.Value.Min + 0x2;
         private bool _HfReferenceHertz_IsSet => _DATALocation.HasValue;
-        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_HfReferenceHertzLocation, 2)) : default;
+        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_HfReferenceHertzLocation, 2)) : default;
         #endregion
         #region RoomFilter
-        private int _RoomFilterLocation => _DATALocation!.Value + 0x4;
+        private int _RoomFilterLocation => _DATALocation!.Value.Min + 0x4;
         private bool _RoomFilter_IsSet => _DATALocation.HasValue;
-        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_data.Slice(_RoomFilterLocation, 1)[0] : default;
+        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_recordData.Slice(_RoomFilterLocation, 1)[0] : default;
         #endregion
         #region RoomHfFilter
-        private int _RoomHfFilterLocation => _DATALocation!.Value + 0x5;
+        private int _RoomHfFilterLocation => _DATALocation!.Value.Min + 0x5;
         private bool _RoomHfFilter_IsSet => _DATALocation.HasValue;
-        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_data.Slice(_RoomHfFilterLocation, 1)[0] : default;
+        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_recordData.Slice(_RoomHfFilterLocation, 1)[0] : default;
         #endregion
         #region Reflections
-        private int _ReflectionsLocation => _DATALocation!.Value + 0x6;
+        private int _ReflectionsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Reflections_IsSet => _DATALocation.HasValue;
-        public SByte Reflections => _Reflections_IsSet ? (sbyte)_data.Slice(_ReflectionsLocation, 1)[0] : default;
+        public SByte Reflections => _Reflections_IsSet ? (sbyte)_recordData.Slice(_ReflectionsLocation, 1)[0] : default;
         #endregion
         #region ReverbAmp
-        private int _ReverbAmpLocation => _DATALocation!.Value + 0x7;
+        private int _ReverbAmpLocation => _DATALocation!.Value.Min + 0x7;
         private bool _ReverbAmp_IsSet => _DATALocation.HasValue;
-        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_data.Slice(_ReverbAmpLocation, 1)[0] : default;
+        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_recordData.Slice(_ReverbAmpLocation, 1)[0] : default;
         #endregion
         #region DecayHfRatio
-        private int _DecayHfRatioLocation => _DATALocation!.Value + 0x8;
+        private int _DecayHfRatioLocation => _DATALocation!.Value.Min + 0x8;
         private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
-        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
         #endregion
         #region ReflectDelayMS
-        private int _ReflectDelayMSLocation => _DATALocation!.Value + 0x9;
+        private int _ReflectDelayMSLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ReflectDelayMS_IsSet => _DATALocation.HasValue;
-        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _data.Span[_ReflectDelayMSLocation] : default;
+        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _recordData.Span[_ReflectDelayMSLocation] : default;
         #endregion
         #region ReverbDelayMS
-        private int _ReverbDelayMSLocation => _DATALocation!.Value + 0xA;
+        private int _ReverbDelayMSLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ReverbDelayMS_IsSet => _DATALocation.HasValue;
-        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _data.Span[_ReverbDelayMSLocation] : default;
+        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _recordData.Span[_ReverbDelayMSLocation] : default;
         #endregion
         #region DiffusionPercent
-        private int _DiffusionPercentLocation => _DATALocation!.Value + 0xB;
+        private int _DiffusionPercentLocation => _DATALocation!.Value.Min + 0xB;
         private bool _DiffusionPercent_IsSet => _DATALocation.HasValue;
-        public Byte DiffusionPercent => _DiffusionPercent_IsSet ? _data.Span[_DiffusionPercentLocation] : default;
+        public Percent DiffusionPercent => _DiffusionPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DiffusionPercentLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region DensityPercent
-        private int _DensityPercentLocation => _DATALocation!.Value + 0xC;
+        private int _DensityPercentLocation => _DATALocation!.Value.Min + 0xC;
         private bool _DensityPercent_IsSet => _DATALocation.HasValue;
-        public Byte DensityPercent => _DensityPercent_IsSet ? _data.Span[_DensityPercentLocation] : default;
+        public Percent DensityPercent => _DensityPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DensityPercentLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0xD;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0xD;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
         #endregion
         #region ReverbClass
         private int? _ReverbClassLocation;
-        public UInt32? ReverbClass => _ReverbClassLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ReverbClassLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public ReverbClass ReverbClass => _ReverbClassLocation.HasValue ? (ReverbClass)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReverbClassLocation!.Value, _package.MetaData.Constants)) : default(ReverbClass);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2161,28 +2195,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected ReverbParametersBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ReverbParametersBinaryOverlay ReverbParametersFactory(
+        public static IReverbParametersGetter ReverbParametersFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ReverbParametersBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2192,20 +2229,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ReverbParametersBinaryOverlay ReverbParametersFactory(
+        public static IReverbParametersGetter ReverbParametersFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ReverbParametersFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2215,14 +2252,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)ReverbParameters_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.ANAM:
@@ -2237,17 +2274,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ReverbParametersMixIn.ToString(
+            ReverbParametersMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

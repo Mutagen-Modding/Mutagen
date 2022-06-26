@@ -5,13 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -20,20 +21,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -241,12 +242,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellMixIn.ToString(
+            CellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -628,9 +630,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Regions.Specific = l;
-                        foreach (var item in Regions.Specific.WithIndex())
+                        foreach (var item in Regions.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -653,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Persistent.Specific = l;
-                        foreach (var item in Persistent.Specific.WithIndex())
+                        foreach (var item in Persistent.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -670,7 +672,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.Temporary.Specific = l;
-                        foreach (var item in Temporary.Specific.WithIndex())
+                        foreach (var item in Temporary.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -687,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<MaskItemIndexed<R, IMask<R>?>>();
                         obj.VisibleWhenDistant.Specific = l;
-                        foreach (var item in VisibleWhenDistant.Specific.WithIndex())
+                        foreach (var item in VisibleWhenDistant.Specific)
                         {
                             MaskItemIndexed<R, IMask<R>?>? mask;
                             throw new NotImplementedException();
@@ -700,186 +702,167 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Cell.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Cell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Cell.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Cell.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Grid ?? true)
                     {
-                        fg.AppendItem(Grid, "Grid");
+                        sb.AppendItem(Grid, "Grid");
                     }
                     if (printMask?.Lighting?.Overall ?? true)
                     {
-                        Lighting?.ToString(fg);
+                        Lighting?.Print(sb);
                     }
                     if ((printMask?.Regions?.Overall ?? true)
                         && Regions is {} RegionsItem)
                     {
-                        fg.AppendLine("Regions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Regions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(RegionsItem.Overall);
+                            sb.AppendItem(RegionsItem.Overall);
                             if (RegionsItem.Specific != null)
                             {
                                 foreach (var subItem in RegionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.MusicType ?? true)
                     {
-                        fg.AppendItem(MusicType, "MusicType");
+                        sb.AppendItem(MusicType, "MusicType");
                     }
                     if (printMask?.WaterHeight ?? true)
                     {
-                        fg.AppendItem(WaterHeight, "WaterHeight");
+                        sb.AppendItem(WaterHeight, "WaterHeight");
                     }
                     if (printMask?.Climate ?? true)
                     {
-                        fg.AppendItem(Climate, "Climate");
+                        sb.AppendItem(Climate, "Climate");
                     }
                     if (printMask?.Water ?? true)
                     {
-                        fg.AppendItem(Water, "Water");
+                        sb.AppendItem(Water, "Water");
                     }
                     if (printMask?.Owner ?? true)
                     {
-                        fg.AppendItem(Owner, "Owner");
+                        sb.AppendItem(Owner, "Owner");
                     }
                     if (printMask?.FactionRank ?? true)
                     {
-                        fg.AppendItem(FactionRank, "FactionRank");
+                        sb.AppendItem(FactionRank, "FactionRank");
                     }
                     if (printMask?.GlobalVariable ?? true)
                     {
-                        fg.AppendItem(GlobalVariable, "GlobalVariable");
+                        sb.AppendItem(GlobalVariable, "GlobalVariable");
                     }
                     if (printMask?.PathGrid?.Overall ?? true)
                     {
-                        PathGrid?.ToString(fg);
+                        PathGrid?.Print(sb);
                     }
                     if (printMask?.Landscape?.Overall ?? true)
                     {
-                        Landscape?.ToString(fg);
+                        Landscape?.Print(sb);
                     }
                     if (printMask?.Timestamp ?? true)
                     {
-                        fg.AppendItem(Timestamp, "Timestamp");
+                        sb.AppendItem(Timestamp, "Timestamp");
                     }
                     if (printMask?.PersistentTimestamp ?? true)
                     {
-                        fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                        sb.AppendItem(PersistentTimestamp, "PersistentTimestamp");
                     }
                     if ((printMask?.Persistent?.Overall ?? true)
                         && Persistent is {} PersistentItem)
                     {
-                        fg.AppendLine("Persistent =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Persistent =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(PersistentItem.Overall);
+                            sb.AppendItem(PersistentItem.Overall);
                             if (PersistentItem.Specific != null)
                             {
                                 foreach (var subItem in PersistentItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.TemporaryTimestamp ?? true)
                     {
-                        fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                        sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
                     }
                     if ((printMask?.Temporary?.Overall ?? true)
                         && Temporary is {} TemporaryItem)
                     {
-                        fg.AppendLine("Temporary =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Temporary =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(TemporaryItem.Overall);
+                            sb.AppendItem(TemporaryItem.Overall);
                             if (TemporaryItem.Specific != null)
                             {
                                 foreach (var subItem in TemporaryItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                     if (printMask?.VisibleWhenDistantTimestamp ?? true)
                     {
-                        fg.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                        sb.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
                     }
                     if ((printMask?.VisibleWhenDistant?.Overall ?? true)
                         && VisibleWhenDistant is {} VisibleWhenDistantItem)
                     {
-                        fg.AppendLine("VisibleWhenDistant =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("VisibleWhenDistant =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(VisibleWhenDistantItem.Overall);
+                            sb.AppendItem(VisibleWhenDistantItem.Overall);
                             if (VisibleWhenDistantItem.Specific != null)
                             {
                                 foreach (var subItem in VisibleWhenDistantItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        subItem?.ToString(fg);
+                                        subItem?.Print(sb);
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1143,140 +1126,145 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Grid, "Grid");
-                Lighting?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Grid, "Grid");
+                }
+                Lighting?.Print(sb);
                 if (Regions is {} RegionsItem)
                 {
-                    fg.AppendLine("Regions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Regions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(RegionsItem.Overall);
+                        sb.AppendItem(RegionsItem.Overall);
                         if (RegionsItem.Specific != null)
                         {
                             foreach (var subItem in RegionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(MusicType, "MusicType");
-                fg.AppendItem(WaterHeight, "WaterHeight");
-                fg.AppendItem(Climate, "Climate");
-                fg.AppendItem(Water, "Water");
-                fg.AppendItem(Owner, "Owner");
-                fg.AppendItem(FactionRank, "FactionRank");
-                fg.AppendItem(GlobalVariable, "GlobalVariable");
-                PathGrid?.ToString(fg);
-                Landscape?.ToString(fg);
-                fg.AppendItem(Timestamp, "Timestamp");
-                fg.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                {
+                    sb.AppendItem(MusicType, "MusicType");
+                }
+                {
+                    sb.AppendItem(WaterHeight, "WaterHeight");
+                }
+                {
+                    sb.AppendItem(Climate, "Climate");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(Owner, "Owner");
+                }
+                {
+                    sb.AppendItem(FactionRank, "FactionRank");
+                }
+                {
+                    sb.AppendItem(GlobalVariable, "GlobalVariable");
+                }
+                PathGrid?.Print(sb);
+                Landscape?.Print(sb);
+                {
+                    sb.AppendItem(Timestamp, "Timestamp");
+                }
+                {
+                    sb.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                }
                 if (Persistent is {} PersistentItem)
                 {
-                    fg.AppendLine("Persistent =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Persistent =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(PersistentItem.Overall);
+                        sb.AppendItem(PersistentItem.Overall);
                         if (PersistentItem.Specific != null)
                         {
                             foreach (var subItem in PersistentItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                {
+                    sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                }
                 if (Temporary is {} TemporaryItem)
                 {
-                    fg.AppendLine("Temporary =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Temporary =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(TemporaryItem.Overall);
+                        sb.AppendItem(TemporaryItem.Overall);
                         if (TemporaryItem.Specific != null)
                         {
                             foreach (var subItem in TemporaryItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
-                fg.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                {
+                    sb.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                }
                 if (VisibleWhenDistant is {} VisibleWhenDistantItem)
                 {
-                    fg.AppendLine("VisibleWhenDistant =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("VisibleWhenDistant =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(VisibleWhenDistantItem.Overall);
+                        sb.AppendItem(VisibleWhenDistantItem.Overall);
                         if (VisibleWhenDistantItem.Specific != null)
                         {
                             foreach (var subItem in VisibleWhenDistantItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    subItem?.ToString(fg);
+                                    subItem?.Print(sb);
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -1416,7 +1404,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
         public Cell(FormKey formKey)
         {
@@ -1511,7 +1499,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1521,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public new static Cell CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Cell();
             ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1536,7 +1524,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Cell item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1546,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1666,26 +1654,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICellGetter item,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            return ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            ((CellCommon)((ICellGetter)item).CommonInstance()!).ToString(
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1773,7 +1761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
             this ICellGetter obj,
             bool throwIfUnknown = true)
-            where TMajor : class, IMajorRecordGetter
+            where TMajor : class, IMajorRecordQueryableGetter
         {
             return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1803,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
-            where TMajor : class, IMajorRecord
+            where TMajor : class, IMajorRecordQueryable
         {
             return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
@@ -1992,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ICellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2007,10 +1995,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Cell_FieldIndex
+    internal enum Cell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -2042,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Cell_Registration : ILoquiRegistration
+    internal partial class Cell_Registration : ILoquiRegistration
     {
         public static readonly Cell_Registration Instance = new Cell_Registration();
 
@@ -2084,6 +2072,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CELL);
+            var all = RecordCollection.Factory(
+                RecordTypes.CELL,
+                RecordTypes.FULL,
+                RecordTypes.DATA,
+                RecordTypes.XCLC,
+                RecordTypes.XCLL,
+                RecordTypes.XCLR,
+                RecordTypes.XCMT,
+                RecordTypes.XCLW,
+                RecordTypes.XCCM,
+                RecordTypes.XCWT,
+                RecordTypes.XOWN,
+                RecordTypes.XRNK,
+                RecordTypes.XGLB,
+                RecordTypes.PGRD,
+                RecordTypes.LAND,
+                RecordTypes.ACRE,
+                RecordTypes.ACHR,
+                RecordTypes.REFR);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2117,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CellSetterCommon : PlaceSetterCommon
+    internal partial class CellSetterCommon : PlaceSetterCommon
     {
         public new static readonly CellSetterCommon Instance = new CellSetterCommon();
 
@@ -2316,7 +2329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ICellInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICellInternal>(
                 record: item,
@@ -2332,7 +2345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IPlaceInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Cell)item,
@@ -2343,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IOblivionMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Cell)item,
@@ -2354,7 +2367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Cell)item,
@@ -2365,7 +2378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellCommon : PlaceCommon
+    internal partial class CellCommon : PlaceCommon
     {
         public new static readonly CellCommon Instance = new CellCommon();
 
@@ -2389,7 +2402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Cell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Grid = item.Grid.Equals(rhs.Grid);
@@ -2438,203 +2450,185 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ICellGetter item,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Cell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Cell =>");
+                sb.AppendLine($"Cell =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Cell) =>");
+                sb.AppendLine($"{name} (Cell) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICellGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Cell.Mask<bool>? printMask = null)
         {
             PlaceCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.Grid ?? true)
                 && item.Grid is {} GridItem)
             {
-                fg.AppendItem(GridItem, "Grid");
+                sb.AppendItem(GridItem, "Grid");
             }
             if ((printMask?.Lighting?.Overall ?? true)
                 && item.Lighting is {} LightingItem)
             {
-                LightingItem?.ToString(fg, "Lighting");
+                LightingItem?.Print(sb, "Lighting");
             }
             if ((printMask?.Regions?.Overall ?? true)
                 && item.Regions is {} RegionsItem)
             {
-                fg.AppendLine("Regions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Regions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in RegionsItem)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem.FormKey);
+                            sb.AppendItem(subItem.FormKey);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if ((printMask?.MusicType ?? true)
                 && item.MusicType is {} MusicTypeItem)
             {
-                fg.AppendItem(MusicTypeItem, "MusicType");
+                sb.AppendItem(MusicTypeItem, "MusicType");
             }
             if ((printMask?.WaterHeight ?? true)
                 && item.WaterHeight is {} WaterHeightItem)
             {
-                fg.AppendItem(WaterHeightItem, "WaterHeight");
+                sb.AppendItem(WaterHeightItem, "WaterHeight");
             }
             if (printMask?.Climate ?? true)
             {
-                fg.AppendItem(item.Climate.FormKeyNullable, "Climate");
+                sb.AppendItem(item.Climate.FormKeyNullable, "Climate");
             }
             if (printMask?.Water ?? true)
             {
-                fg.AppendItem(item.Water.FormKeyNullable, "Water");
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
             }
             if (printMask?.Owner ?? true)
             {
-                fg.AppendItem(item.Owner.FormKeyNullable, "Owner");
+                sb.AppendItem(item.Owner.FormKeyNullable, "Owner");
             }
             if ((printMask?.FactionRank ?? true)
                 && item.FactionRank is {} FactionRankItem)
             {
-                fg.AppendItem(FactionRankItem, "FactionRank");
+                sb.AppendItem(FactionRankItem, "FactionRank");
             }
             if (printMask?.GlobalVariable ?? true)
             {
-                fg.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
+                sb.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
             }
             if ((printMask?.PathGrid?.Overall ?? true)
                 && item.PathGrid is {} PathGridItem)
             {
-                PathGridItem?.ToString(fg, "PathGrid");
+                PathGridItem?.Print(sb, "PathGrid");
             }
             if ((printMask?.Landscape?.Overall ?? true)
                 && item.Landscape is {} LandscapeItem)
             {
-                LandscapeItem?.ToString(fg, "Landscape");
+                LandscapeItem?.Print(sb, "Landscape");
             }
             if (printMask?.Timestamp ?? true)
             {
-                fg.AppendItem(item.Timestamp, "Timestamp");
+                sb.AppendItem(item.Timestamp, "Timestamp");
             }
             if (printMask?.PersistentTimestamp ?? true)
             {
-                fg.AppendItem(item.PersistentTimestamp, "PersistentTimestamp");
+                sb.AppendItem(item.PersistentTimestamp, "PersistentTimestamp");
             }
             if (printMask?.Persistent?.Overall ?? true)
             {
-                fg.AppendLine("Persistent =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Persistent =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Persistent)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.TemporaryTimestamp ?? true)
             {
-                fg.AppendItem(item.TemporaryTimestamp, "TemporaryTimestamp");
+                sb.AppendItem(item.TemporaryTimestamp, "TemporaryTimestamp");
             }
             if (printMask?.Temporary?.Overall ?? true)
             {
-                fg.AppendLine("Temporary =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Temporary =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Temporary)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             if (printMask?.VisibleWhenDistantTimestamp ?? true)
             {
-                fg.AppendItem(item.VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                sb.AppendItem(item.VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
             }
             if (printMask?.VisibleWhenDistant?.Overall ?? true)
             {
-                fg.AppendLine("VisibleWhenDistant =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("VisibleWhenDistant =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.VisibleWhenDistant)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            subItem?.ToString(fg, "Item");
+                            subItem?.Print(sb, "Item");
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -2912,9 +2906,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -2925,48 +2919,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Climate.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Climate, out var ClimateInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Climate);
+                yield return ClimateInfo;
             }
-            if (obj.Water.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Water);
+                yield return WaterInfo;
             }
-            if (obj.Owner.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Owner, out var OwnerInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Owner);
+                yield return OwnerInfo;
             }
-            if (obj.GlobalVariable.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.GlobalVariable, out var GlobalVariableInfo))
             {
-                yield return FormLinkInformation.Factory(obj.GlobalVariable);
+                yield return GlobalVariableInfo;
             }
             if (obj.PathGrid is {} PathGridItems)
             {
-                foreach (var item in PathGridItems.ContainedFormLinks)
+                foreach (var item in PathGridItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Landscape is {} LandscapeItems)
             {
-                foreach (var item in LandscapeItems.ContainedFormLinks)
+                foreach (var item in LandscapeItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.ContainedFormLinks))
+                .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -3198,6 +3192,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Oblivion, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -3838,6 +3840,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<ICellGetter, IOblivionMod, IOblivionModGetter>(
+                        GameCategory.Oblivion,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -3898,7 +3914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CellSetterTranslationCommon : PlaceSetterTranslationCommon
+    internal partial class CellSetterTranslationCommon : PlaceSetterTranslationCommon
     {
         public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
@@ -4310,7 +4326,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration StaticRegistration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
@@ -4328,13 +4344,13 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class CellBinaryWriteTranslation :
         PlaceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
+        public new static readonly CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICellGetter item,
@@ -4348,7 +4364,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void WriteRecordTypes(
             ICellGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -4379,7 +4395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.Regions,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XCLR),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, TypedWriteParams? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4430,7 +4446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ICellGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -4441,12 +4457,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -4461,7 +4480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICellGetter)item,
@@ -4472,7 +4491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IPlaceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICellGetter)item,
@@ -4483,7 +4502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IOblivionMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICellGetter)item,
@@ -4494,7 +4513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICellGetter)item,
@@ -4504,9 +4523,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CellBinaryCreateTranslation : PlaceBinaryCreateTranslation
+    internal partial class CellBinaryCreateTranslation : PlaceBinaryCreateTranslation
     {
-        public new readonly static CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
+        public new static readonly CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CELL;
         public static void FillBinaryStructs(
@@ -4525,7 +4544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -4618,7 +4637,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -4646,16 +4666,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class CellBinaryOverlay :
+    internal partial class CellBinaryOverlay :
         PlaceBinaryOverlay,
         ICellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
-        public new static Cell_Registration StaticRegistration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
@@ -4663,9 +4683,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => CellCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -4676,7 +4696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -4688,7 +4708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -4696,44 +4716,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Cell.Flag?);
+        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Cell.Flag?);
         #endregion
         #region Grid
         private int? _GridLocation;
-        public P2Int? Grid => _GridLocation.HasValue ? P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _GridLocation.Value, _package.MetaData.Constants)) : default(P2Int?);
+        public P2Int? Grid => _GridLocation.HasValue ? P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GridLocation.Value, _package.MetaData.Constants)) : default(P2Int?);
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;
-        public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(new OverlayStream(_data.Slice(_LightingLocation!.Value.Min), _package), _package) : default;
+        public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(_recordData.Slice(_LightingLocation!.Value.Min), _package) : default;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region MusicType
         private int? _MusicTypeLocation;
-        public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)HeaderTranslation.ExtractSubrecordMemory(_data, _MusicTypeLocation!.Value, _package.MetaData.Constants)[0] : default(MusicType?);
+        public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MusicTypeLocation!.Value, _package.MetaData.Constants)[0] : default(MusicType?);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
-        public Single? WaterHeight => _WaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? WaterHeight => _WaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Climate
         private int? _ClimateLocation;
-        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
+        public IFormLinkNullableGetter<IClimateGetter> Climate => _ClimateLocation.HasValue ? new FormLinkNullable<IClimateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ClimateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IClimateGetter>.Null;
         #endregion
         #region Water
         private int? _WaterLocation;
-        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
+        public IFormLinkNullableGetter<IWaterGetter> Water => _WaterLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWaterGetter>.Null;
         #endregion
         #region Owner
         private int? _OwnerLocation;
-        public IFormLinkNullableGetter<IFactionGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OwnerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;
-        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? FactionRank => _FactionRankLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionRankLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4746,29 +4766,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected CellBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CellBinaryOverlay CellFactory(
+        public static ICellGetter CellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             var origStream = stream;
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CellBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -4778,7 +4801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             ret.CustomEnd(
                 stream: origStream,
@@ -4787,15 +4810,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static CellBinaryOverlay CellFactory(
+        public static ICellGetter CellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -4805,9 +4828,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FULL:
@@ -4832,8 +4855,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.XCLR:
                 {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
                     this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IRegionGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
@@ -4884,17 +4907,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CellMixIn.ToString(
+            CellMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

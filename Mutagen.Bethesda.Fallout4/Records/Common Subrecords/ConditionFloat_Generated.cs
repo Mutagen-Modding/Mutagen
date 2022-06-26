@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -57,12 +58,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionFloatMixIn.ToString(
+            ConditionFloatMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -197,34 +199,29 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ConditionFloat.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ConditionFloat.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ConditionFloat.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ConditionFloat.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ConditionFloat.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ConditionFloat.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ComparisonValue ?? true)
                     {
-                        fg.AppendItem(ComparisonValue, "ComparisonValue");
+                        sb.AppendItem(ComparisonValue, "ComparisonValue");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -298,38 +295,31 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(ComparisonValue, "ComparisonValue");
-                Data?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(ComparisonValue, "ComparisonValue");
+                }
+                Data?.Print(sb);
             }
             #endregion
 
@@ -393,8 +383,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ConditionFloat_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionFloatCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionFloatCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionFloatSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -403,7 +392,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => ConditionFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -413,7 +402,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static ConditionFloat CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ConditionFloat();
             ((ConditionFloatSetterCommon)((IConditionFloatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -428,7 +417,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ConditionFloat item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -438,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -497,26 +486,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IConditionFloatGetter item,
             string? name = null,
             ConditionFloat.Mask<bool>? printMask = null)
         {
-            return ((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).ToString(
+            return ((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IConditionFloatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ConditionFloat.Mask<bool>? printMask = null)
         {
-            ((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).ToString(
+            ((ConditionFloatCommon)((IConditionFloatGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -597,7 +586,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IConditionFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ConditionFloatSetterCommon)((IConditionFloatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -612,10 +601,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum ConditionFloat_FieldIndex
+    internal enum ConditionFloat_FieldIndex
     {
         CompareOperator = 0,
         Flags = 1,
@@ -626,7 +615,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class ConditionFloat_Registration : ILoquiRegistration
+    internal partial class ConditionFloat_Registration : ILoquiRegistration
     {
         public static readonly ConditionFloat_Registration Instance = new ConditionFloat_Registration();
 
@@ -634,10 +623,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 56,
+            msgID: 290,
             version: 0);
 
-        public const string GUID = "c5e87d5b-ed3a-4949-948d-5b697649eec8";
+        public const string GUID = "cf1fcd5b-c409-46de-9632-e01722c0779b";
 
         public const ushort AdditionalFieldCount = 2;
 
@@ -668,6 +657,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CTDA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CTDA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ConditionFloatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -701,7 +696,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class ConditionFloatSetterCommon : ConditionSetterCommon
+    internal partial class ConditionFloatSetterCommon : ConditionSetterCommon
     {
         public new static readonly ConditionFloatSetterCommon Instance = new ConditionFloatSetterCommon();
 
@@ -733,12 +728,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             IConditionFloat item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CTDA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -752,7 +747,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             ICondition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (ConditionFloat)item,
@@ -763,7 +758,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ConditionFloatCommon : ConditionCommon
+    internal partial class ConditionFloatCommon : ConditionCommon
     {
         public new static readonly ConditionFloatCommon Instance = new ConditionFloatCommon();
 
@@ -787,67 +782,64 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionFloat.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ComparisonValue = item.ComparisonValue.EqualsWithin(rhs.ComparisonValue);
             ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IConditionFloatGetter item,
             string? name = null,
             ConditionFloat.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IConditionFloatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ConditionFloat.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ConditionFloat =>");
+                sb.AppendLine($"ConditionFloat =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ConditionFloat) =>");
+                sb.AppendLine($"{name} (ConditionFloat) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IConditionFloatGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ConditionFloat.Mask<bool>? printMask = null)
         {
             ConditionCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.ComparisonValue ?? true)
             {
-                fg.AppendItem(item.ComparisonValue, "ComparisonValue");
+                sb.AppendItem(item.ComparisonValue, "ComparisonValue");
             }
             if (printMask?.Data?.Overall ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                item.Data?.Print(sb, "Data");
             }
         }
         
@@ -923,13 +915,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionFloatGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionFloatGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Data.ContainedFormLinks)
+            foreach (var item in obj.Data.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -939,7 +931,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class ConditionFloatSetterTranslationCommon : ConditionSetterTranslationCommon
+    internal partial class ConditionFloatSetterTranslationCommon : ConditionSetterTranslationCommon
     {
         public new static readonly ConditionFloatSetterTranslationCommon Instance = new ConditionFloatSetterTranslationCommon();
 
@@ -1061,7 +1053,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionFloat_Registration.Instance;
-        public new static ConditionFloat_Registration StaticRegistration => ConditionFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1079,13 +1071,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class ConditionFloatBinaryWriteTranslation :
         ConditionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
+        public new static readonly ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IConditionFloatGetter item,
@@ -1097,10 +1089,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
-            var DataItem = item.Data;
-            ((ConditionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer);
+            ConditionFloatBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IConditionFloatGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IConditionFloatGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
         }
 
         public static partial void CustomBinaryEndExport(
@@ -1117,12 +1121,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             IConditionFloatGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CTDA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1137,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IConditionFloatGetter)item,
@@ -1148,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IConditionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IConditionFloatGetter)item,
@@ -1158,9 +1162,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class ConditionFloatBinaryCreateTranslation : ConditionBinaryCreateTranslation
+    internal partial class ConditionFloatBinaryCreateTranslation : ConditionBinaryCreateTranslation
     {
-        public new readonly static ConditionFloatBinaryCreateTranslation Instance = new ConditionFloatBinaryCreateTranslation();
+        public new static readonly ConditionFloatBinaryCreateTranslation Instance = new ConditionFloatBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IConditionFloat item,
@@ -1170,8 +1174,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 frame: frame);
             item.ComparisonValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
+            ConditionFloatBinaryCreateTranslation.FillBinaryDataCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            IConditionFloat item);
 
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
@@ -1197,16 +1207,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class ConditionFloatBinaryOverlay :
+    internal partial class ConditionFloatBinaryOverlay :
         ConditionBinaryOverlay,
         IConditionFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ConditionFloat_Registration.Instance;
-        public new static ConditionFloat_Registration StaticRegistration => ConditionFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionFloat_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ConditionFloatCommon.Instance;
         [DebuggerStepThrough]
@@ -1214,14 +1224,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionFloatCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConditionFloatCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConditionFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ConditionFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1229,10 +1239,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public Single ComparisonValue => _data.Slice(0x4, 0x4).Float();
+        public Single ComparisonValue => _structData.Slice(0x4, 0x4).Float();
         #region Data
-        public IConditionDataGetter Data => ConditionDataBinaryOverlay.ConditionDataFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(TypedParseParams));
+        public partial IConditionDataGetter GetDataCustom(int location);
+        public override IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
+        partial void CustomDataEndPos();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1245,25 +1257,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected ConditionFloatBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ConditionFloatBinaryOverlay ConditionFloatFactory(
+        public static IConditionFloatGetter ConditionFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ConditionFloatBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            ret.CustomDataEndPos();
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1275,25 +1293,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static ConditionFloatBinaryOverlay ConditionFloatFactory(
+        public static IConditionFloatGetter ConditionFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ConditionFloatFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionFloatMixIn.ToString(
+            ConditionFloatMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

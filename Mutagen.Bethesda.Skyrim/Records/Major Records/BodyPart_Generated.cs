@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -227,12 +228,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyPartMixIn.ToString(
+            BodyPartMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -624,158 +626,153 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(BodyPart.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(BodyPart.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BodyPart.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, BodyPart.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(BodyPart.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BodyPart.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.PoseMatching ?? true)
                     {
-                        fg.AppendItem(PoseMatching, "PoseMatching");
+                        sb.AppendItem(PoseMatching, "PoseMatching");
                     }
                     if (printMask?.PartNode ?? true)
                     {
-                        fg.AppendItem(PartNode, "PartNode");
+                        sb.AppendItem(PartNode, "PartNode");
                     }
                     if (printMask?.VatsTarget ?? true)
                     {
-                        fg.AppendItem(VatsTarget, "VatsTarget");
+                        sb.AppendItem(VatsTarget, "VatsTarget");
                     }
                     if (printMask?.IkStartNode ?? true)
                     {
-                        fg.AppendItem(IkStartNode, "IkStartNode");
+                        sb.AppendItem(IkStartNode, "IkStartNode");
                     }
                     if (printMask?.DamageMult ?? true)
                     {
-                        fg.AppendItem(DamageMult, "DamageMult");
+                        sb.AppendItem(DamageMult, "DamageMult");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.HealthPercent ?? true)
                     {
-                        fg.AppendItem(HealthPercent, "HealthPercent");
+                        sb.AppendItem(HealthPercent, "HealthPercent");
                     }
                     if (printMask?.ActorValue ?? true)
                     {
-                        fg.AppendItem(ActorValue, "ActorValue");
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
                     if (printMask?.ToHitChance ?? true)
                     {
-                        fg.AppendItem(ToHitChance, "ToHitChance");
+                        sb.AppendItem(ToHitChance, "ToHitChance");
                     }
                     if (printMask?.ExplodableExplosionChance ?? true)
                     {
-                        fg.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
+                        sb.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
                     }
                     if (printMask?.ExplodableDebrisCount ?? true)
                     {
-                        fg.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
+                        sb.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
                     }
                     if (printMask?.ExplodableDebris ?? true)
                     {
-                        fg.AppendItem(ExplodableDebris, "ExplodableDebris");
+                        sb.AppendItem(ExplodableDebris, "ExplodableDebris");
                     }
                     if (printMask?.ExplodableExplosion ?? true)
                     {
-                        fg.AppendItem(ExplodableExplosion, "ExplodableExplosion");
+                        sb.AppendItem(ExplodableExplosion, "ExplodableExplosion");
                     }
                     if (printMask?.TrackingMaxAngle ?? true)
                     {
-                        fg.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
+                        sb.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
                     }
                     if (printMask?.ExplodableDebrisScale ?? true)
                     {
-                        fg.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
+                        sb.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
                     }
                     if (printMask?.SeverableDebrisCount ?? true)
                     {
-                        fg.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
+                        sb.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
                     }
                     if (printMask?.SeverableDebris ?? true)
                     {
-                        fg.AppendItem(SeverableDebris, "SeverableDebris");
+                        sb.AppendItem(SeverableDebris, "SeverableDebris");
                     }
                     if (printMask?.SeverableExplosion ?? true)
                     {
-                        fg.AppendItem(SeverableExplosion, "SeverableExplosion");
+                        sb.AppendItem(SeverableExplosion, "SeverableExplosion");
                     }
                     if (printMask?.SeverableDebrisScale ?? true)
                     {
-                        fg.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
+                        sb.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
                     }
                     if (printMask?.GorePositioning ?? true)
                     {
-                        fg.AppendItem(GorePositioning, "GorePositioning");
+                        sb.AppendItem(GorePositioning, "GorePositioning");
                     }
                     if (printMask?.GoreRotation ?? true)
                     {
-                        fg.AppendItem(GoreRotation, "GoreRotation");
+                        sb.AppendItem(GoreRotation, "GoreRotation");
                     }
                     if (printMask?.SeverableImpactData ?? true)
                     {
-                        fg.AppendItem(SeverableImpactData, "SeverableImpactData");
+                        sb.AppendItem(SeverableImpactData, "SeverableImpactData");
                     }
                     if (printMask?.ExplodableImpactData ?? true)
                     {
-                        fg.AppendItem(ExplodableImpactData, "ExplodableImpactData");
+                        sb.AppendItem(ExplodableImpactData, "ExplodableImpactData");
                     }
                     if (printMask?.SeverableDecalCount ?? true)
                     {
-                        fg.AppendItem(SeverableDecalCount, "SeverableDecalCount");
+                        sb.AppendItem(SeverableDecalCount, "SeverableDecalCount");
                     }
                     if (printMask?.ExplodableDecalCount ?? true)
                     {
-                        fg.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
+                        sb.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.LimbReplacementScale ?? true)
                     {
-                        fg.AppendItem(LimbReplacementScale, "LimbReplacementScale");
+                        sb.AppendItem(LimbReplacementScale, "LimbReplacementScale");
                     }
                     if (printMask?.LimbReplacementModel ?? true)
                     {
-                        fg.AppendItem(LimbReplacementModel, "LimbReplacementModel");
+                        sb.AppendItem(LimbReplacementModel, "LimbReplacementModel");
                     }
                     if (printMask?.GoreTargetBone ?? true)
                     {
-                        fg.AppendItem(GoreTargetBone, "GoreTargetBone");
+                        sb.AppendItem(GoreTargetBone, "GoreTargetBone");
                     }
                     if (printMask?.TextureFilesHashes ?? true)
                     {
-                        fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                        sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
                     }
                     if (printMask?.BPNDDataTypeState ?? true)
                     {
-                        fg.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
+                        sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1170,68 +1167,125 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(PoseMatching, "PoseMatching");
-                fg.AppendItem(PartNode, "PartNode");
-                fg.AppendItem(VatsTarget, "VatsTarget");
-                fg.AppendItem(IkStartNode, "IkStartNode");
-                fg.AppendItem(DamageMult, "DamageMult");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(HealthPercent, "HealthPercent");
-                fg.AppendItem(ActorValue, "ActorValue");
-                fg.AppendItem(ToHitChance, "ToHitChance");
-                fg.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
-                fg.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
-                fg.AppendItem(ExplodableDebris, "ExplodableDebris");
-                fg.AppendItem(ExplodableExplosion, "ExplodableExplosion");
-                fg.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
-                fg.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
-                fg.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
-                fg.AppendItem(SeverableDebris, "SeverableDebris");
-                fg.AppendItem(SeverableExplosion, "SeverableExplosion");
-                fg.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
-                fg.AppendItem(GorePositioning, "GorePositioning");
-                fg.AppendItem(GoreRotation, "GoreRotation");
-                fg.AppendItem(SeverableImpactData, "SeverableImpactData");
-                fg.AppendItem(ExplodableImpactData, "ExplodableImpactData");
-                fg.AppendItem(SeverableDecalCount, "SeverableDecalCount");
-                fg.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(LimbReplacementScale, "LimbReplacementScale");
-                fg.AppendItem(LimbReplacementModel, "LimbReplacementModel");
-                fg.AppendItem(GoreTargetBone, "GoreTargetBone");
-                fg.AppendItem(TextureFilesHashes, "TextureFilesHashes");
-                fg.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(PoseMatching, "PoseMatching");
+                }
+                {
+                    sb.AppendItem(PartNode, "PartNode");
+                }
+                {
+                    sb.AppendItem(VatsTarget, "VatsTarget");
+                }
+                {
+                    sb.AppendItem(IkStartNode, "IkStartNode");
+                }
+                {
+                    sb.AppendItem(DamageMult, "DamageMult");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(HealthPercent, "HealthPercent");
+                }
+                {
+                    sb.AppendItem(ActorValue, "ActorValue");
+                }
+                {
+                    sb.AppendItem(ToHitChance, "ToHitChance");
+                }
+                {
+                    sb.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
+                }
+                {
+                    sb.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
+                }
+                {
+                    sb.AppendItem(ExplodableDebris, "ExplodableDebris");
+                }
+                {
+                    sb.AppendItem(ExplodableExplosion, "ExplodableExplosion");
+                }
+                {
+                    sb.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
+                }
+                {
+                    sb.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
+                }
+                {
+                    sb.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
+                }
+                {
+                    sb.AppendItem(SeverableDebris, "SeverableDebris");
+                }
+                {
+                    sb.AppendItem(SeverableExplosion, "SeverableExplosion");
+                }
+                {
+                    sb.AppendItem(SeverableDebrisScale, "SeverableDebrisScale");
+                }
+                {
+                    sb.AppendItem(GorePositioning, "GorePositioning");
+                }
+                {
+                    sb.AppendItem(GoreRotation, "GoreRotation");
+                }
+                {
+                    sb.AppendItem(SeverableImpactData, "SeverableImpactData");
+                }
+                {
+                    sb.AppendItem(ExplodableImpactData, "ExplodableImpactData");
+                }
+                {
+                    sb.AppendItem(SeverableDecalCount, "SeverableDecalCount");
+                }
+                {
+                    sb.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(LimbReplacementScale, "LimbReplacementScale");
+                }
+                {
+                    sb.AppendItem(LimbReplacementModel, "LimbReplacementModel");
+                }
+                {
+                    sb.AppendItem(GoreTargetBone, "GoreTargetBone");
+                }
+                {
+                    sb.AppendItem(TextureFilesHashes, "TextureFilesHashes");
+                }
+                {
+                    sb.AppendItem(BPNDDataTypeState, "BPNDDataTypeState");
+                }
             }
             #endregion
 
@@ -1430,8 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = BodyPart_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum BPNDDataType
@@ -1446,7 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1456,7 +1509,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static BodyPart CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BodyPart();
             ((BodyPartSetterCommon)((IBodyPartGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1471,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BodyPart item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1481,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1619,26 +1672,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBodyPartGetter item,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
+            return ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).ToString(
+            ((BodyPartCommon)((IBodyPartGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1744,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBodyPart item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BodyPartSetterCommon)((IBodyPartGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1759,10 +1812,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BodyPart_FieldIndex
+    internal enum BodyPart_FieldIndex
     {
         Name = 0,
         PoseMatching = 1,
@@ -1801,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class BodyPart_Registration : ILoquiRegistration
+    internal partial class BodyPart_Registration : ILoquiRegistration
     {
         public static readonly BodyPart_Registration Instance = new BodyPart_Registration();
 
@@ -1843,6 +1896,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.BPTN;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.BPTN);
+            var all = RecordCollection.Factory(
+                RecordTypes.BPTN,
+                RecordTypes.PNAM,
+                RecordTypes.BPNN,
+                RecordTypes.BPNT,
+                RecordTypes.BPNI,
+                RecordTypes.BPND,
+                RecordTypes.NAM1,
+                RecordTypes.NAM4,
+                RecordTypes.NAM5);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(BodyPartBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1876,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BodyPartSetterCommon
+    internal partial class BodyPartSetterCommon
     {
         public static readonly BodyPartSetterCommon Instance = new BodyPartSetterCommon();
 
@@ -1937,7 +2006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IBodyPart item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -1950,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BodyPartCommon
+    internal partial class BodyPartCommon
     {
         public static readonly BodyPartCommon Instance = new BodyPartCommon();
 
@@ -1974,7 +2043,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyPart.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.PoseMatching = string.Equals(item.PoseMatching, rhs.PoseMatching);
             ret.PartNode = string.Equals(item.PartNode, rhs.PartNode);
@@ -2010,183 +2078,181 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.BPNDDataTypeState = item.BPNDDataTypeState == rhs.BPNDDataTypeState;
         }
         
-        public string ToString(
+        public string Print(
             IBodyPartGetter item,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyPart.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BodyPart =>");
+                sb.AppendLine($"BodyPart =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BodyPart) =>");
+                sb.AppendLine($"{name} (BodyPart) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBodyPartGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BodyPart.Mask<bool>? printMask = null)
         {
             if (printMask?.Name ?? true)
             {
-                fg.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
             if ((printMask?.PoseMatching ?? true)
                 && item.PoseMatching is {} PoseMatchingItem)
             {
-                fg.AppendItem(PoseMatchingItem, "PoseMatching");
+                sb.AppendItem(PoseMatchingItem, "PoseMatching");
             }
             if (printMask?.PartNode ?? true)
             {
-                fg.AppendItem(item.PartNode, "PartNode");
+                sb.AppendItem(item.PartNode, "PartNode");
             }
             if (printMask?.VatsTarget ?? true)
             {
-                fg.AppendItem(item.VatsTarget, "VatsTarget");
+                sb.AppendItem(item.VatsTarget, "VatsTarget");
             }
             if (printMask?.IkStartNode ?? true)
             {
-                fg.AppendItem(item.IkStartNode, "IkStartNode");
+                sb.AppendItem(item.IkStartNode, "IkStartNode");
             }
             if (printMask?.DamageMult ?? true)
             {
-                fg.AppendItem(item.DamageMult, "DamageMult");
+                sb.AppendItem(item.DamageMult, "DamageMult");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.HealthPercent ?? true)
             {
-                fg.AppendItem(item.HealthPercent, "HealthPercent");
+                sb.AppendItem(item.HealthPercent, "HealthPercent");
             }
             if (printMask?.ActorValue ?? true)
             {
-                fg.AppendItem(item.ActorValue, "ActorValue");
+                sb.AppendItem(item.ActorValue, "ActorValue");
             }
             if (printMask?.ToHitChance ?? true)
             {
-                fg.AppendItem(item.ToHitChance, "ToHitChance");
+                sb.AppendItem(item.ToHitChance, "ToHitChance");
             }
             if (printMask?.ExplodableExplosionChance ?? true)
             {
-                fg.AppendItem(item.ExplodableExplosionChance, "ExplodableExplosionChance");
+                sb.AppendItem(item.ExplodableExplosionChance, "ExplodableExplosionChance");
             }
             if (printMask?.ExplodableDebrisCount ?? true)
             {
-                fg.AppendItem(item.ExplodableDebrisCount, "ExplodableDebrisCount");
+                sb.AppendItem(item.ExplodableDebrisCount, "ExplodableDebrisCount");
             }
             if (printMask?.ExplodableDebris ?? true)
             {
-                fg.AppendItem(item.ExplodableDebris.FormKey, "ExplodableDebris");
+                sb.AppendItem(item.ExplodableDebris.FormKey, "ExplodableDebris");
             }
             if (printMask?.ExplodableExplosion ?? true)
             {
-                fg.AppendItem(item.ExplodableExplosion.FormKey, "ExplodableExplosion");
+                sb.AppendItem(item.ExplodableExplosion.FormKey, "ExplodableExplosion");
             }
             if (printMask?.TrackingMaxAngle ?? true)
             {
-                fg.AppendItem(item.TrackingMaxAngle, "TrackingMaxAngle");
+                sb.AppendItem(item.TrackingMaxAngle, "TrackingMaxAngle");
             }
             if (printMask?.ExplodableDebrisScale ?? true)
             {
-                fg.AppendItem(item.ExplodableDebrisScale, "ExplodableDebrisScale");
+                sb.AppendItem(item.ExplodableDebrisScale, "ExplodableDebrisScale");
             }
             if (printMask?.SeverableDebrisCount ?? true)
             {
-                fg.AppendItem(item.SeverableDebrisCount, "SeverableDebrisCount");
+                sb.AppendItem(item.SeverableDebrisCount, "SeverableDebrisCount");
             }
             if (printMask?.SeverableDebris ?? true)
             {
-                fg.AppendItem(item.SeverableDebris.FormKey, "SeverableDebris");
+                sb.AppendItem(item.SeverableDebris.FormKey, "SeverableDebris");
             }
             if (printMask?.SeverableExplosion ?? true)
             {
-                fg.AppendItem(item.SeverableExplosion.FormKey, "SeverableExplosion");
+                sb.AppendItem(item.SeverableExplosion.FormKey, "SeverableExplosion");
             }
             if (printMask?.SeverableDebrisScale ?? true)
             {
-                fg.AppendItem(item.SeverableDebrisScale, "SeverableDebrisScale");
+                sb.AppendItem(item.SeverableDebrisScale, "SeverableDebrisScale");
             }
             if (printMask?.GorePositioning ?? true)
             {
-                fg.AppendItem(item.GorePositioning, "GorePositioning");
+                sb.AppendItem(item.GorePositioning, "GorePositioning");
             }
             if (printMask?.GoreRotation ?? true)
             {
-                fg.AppendItem(item.GoreRotation, "GoreRotation");
+                sb.AppendItem(item.GoreRotation, "GoreRotation");
             }
             if (printMask?.SeverableImpactData ?? true)
             {
-                fg.AppendItem(item.SeverableImpactData.FormKey, "SeverableImpactData");
+                sb.AppendItem(item.SeverableImpactData.FormKey, "SeverableImpactData");
             }
             if (printMask?.ExplodableImpactData ?? true)
             {
-                fg.AppendItem(item.ExplodableImpactData.FormKey, "ExplodableImpactData");
+                sb.AppendItem(item.ExplodableImpactData.FormKey, "ExplodableImpactData");
             }
             if (printMask?.SeverableDecalCount ?? true)
             {
-                fg.AppendItem(item.SeverableDecalCount, "SeverableDecalCount");
+                sb.AppendItem(item.SeverableDecalCount, "SeverableDecalCount");
             }
             if (printMask?.ExplodableDecalCount ?? true)
             {
-                fg.AppendItem(item.ExplodableDecalCount, "ExplodableDecalCount");
+                sb.AppendItem(item.ExplodableDecalCount, "ExplodableDecalCount");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.LimbReplacementScale ?? true)
             {
-                fg.AppendItem(item.LimbReplacementScale, "LimbReplacementScale");
+                sb.AppendItem(item.LimbReplacementScale, "LimbReplacementScale");
             }
             if (printMask?.LimbReplacementModel ?? true)
             {
-                fg.AppendItem(item.LimbReplacementModel, "LimbReplacementModel");
+                sb.AppendItem(item.LimbReplacementModel, "LimbReplacementModel");
             }
             if (printMask?.GoreTargetBone ?? true)
             {
-                fg.AppendItem(item.GoreTargetBone, "GoreTargetBone");
+                sb.AppendItem(item.GoreTargetBone, "GoreTargetBone");
             }
             if ((printMask?.TextureFilesHashes ?? true)
                 && item.TextureFilesHashes is {} TextureFilesHashesItem)
             {
-                fg.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
+                sb.AppendLine($"TextureFilesHashes => {SpanExt.ToHexString(TextureFilesHashesItem)}");
             }
             if (printMask?.BPNDDataTypeState ?? true)
             {
-                fg.AppendItem(item.BPNDDataTypeState, "BPNDDataTypeState");
+                sb.AppendItem(item.BPNDDataTypeState, "BPNDDataTypeState");
             }
         }
         
@@ -2386,7 +2452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyPartGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyPartGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.ExplodableDebris);
             yield return FormLinkInformation.Factory(obj.ExplodableExplosion);
@@ -2400,7 +2466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BodyPartSetterTranslationCommon
+    internal partial class BodyPartSetterTranslationCommon
     {
         public static readonly BodyPartSetterTranslationCommon Instance = new BodyPartSetterTranslationCommon();
 
@@ -2613,7 +2679,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
-        public static BodyPart_Registration StaticRegistration => BodyPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
         [DebuggerStepThrough]
@@ -2637,11 +2703,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BodyPartBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyPartBinaryWriteTranslation Instance = new BodyPartBinaryWriteTranslation();
+        public static readonly BodyPartBinaryWriteTranslation Instance = new BodyPartBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBodyPartGetter item,
@@ -2652,7 +2718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IBodyPartGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -2761,7 +2827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IBodyPartGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -2775,7 +2841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBodyPartGetter)item,
@@ -2785,9 +2851,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BodyPartBinaryCreateTranslation
+    internal partial class BodyPartBinaryCreateTranslation
     {
-        public readonly static BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
+        public static readonly BodyPartBinaryCreateTranslation Instance = new BodyPartBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBodyPart item,
@@ -2802,14 +2868,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BPTN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -2923,7 +2989,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBodyPartGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -2936,16 +3002,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BodyPartBinaryOverlay :
+    internal partial class BodyPartBinaryOverlay :
         PluginBinaryOverlay,
         IBodyPartGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
-        public static BodyPart_Registration StaticRegistration => BodyPart_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyPart_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyPartCommon.Instance;
         [DebuggerStepThrough]
@@ -2959,16 +3025,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => BodyPartCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyPartCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyPartBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2978,7 +3044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -2986,153 +3052,153 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PoseMatching
         private int? _PoseMatchingLocation;
-        public String? PoseMatching => _PoseMatchingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _PoseMatchingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? PoseMatching => _PoseMatchingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PoseMatchingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region PartNode
         private int? _PartNodeLocation;
-        public String PartNode => _PartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _PartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String PartNode => _PartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region VatsTarget
         private int? _VatsTargetLocation;
-        public String VatsTarget => _VatsTargetLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _VatsTargetLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String VatsTarget => _VatsTargetLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VatsTargetLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region IkStartNode
         private int? _IkStartNodeLocation;
-        public String IkStartNode => _IkStartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IkStartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String IkStartNode => _IkStartNodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IkStartNodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        private int? _BPNDLocation;
+        private RangeInt32? _BPNDLocation;
         public BodyPart.BPNDDataType BPNDDataTypeState { get; private set; }
         #region DamageMult
-        private int _DamageMultLocation => _BPNDLocation!.Value;
+        private int _DamageMultLocation => _BPNDLocation!.Value.Min;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;
-        public Single DamageMult => _DamageMult_IsSet ? _data.Slice(_DamageMultLocation, 4).Float() : default;
+        public Single DamageMult => _DamageMult_IsSet ? _recordData.Slice(_DamageMultLocation, 4).Float() : default;
         #endregion
         #region Flags
-        private int _FlagsLocation => _BPNDLocation!.Value + 0x4;
+        private int _FlagsLocation => _BPNDLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region Type
-        private int _TypeLocation => _BPNDLocation!.Value + 0x5;
+        private int _TypeLocation => _BPNDLocation!.Value.Min + 0x5;
         private bool _Type_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region HealthPercent
-        private int _HealthPercentLocation => _BPNDLocation!.Value + 0x6;
+        private int _HealthPercentLocation => _BPNDLocation!.Value.Min + 0x6;
         private bool _HealthPercent_IsSet => _BPNDLocation.HasValue;
-        public Byte HealthPercent => _HealthPercent_IsSet ? _data.Span[_HealthPercentLocation] : default;
+        public Byte HealthPercent => _HealthPercent_IsSet ? _recordData.Span[_HealthPercentLocation] : default;
         #endregion
         #region ActorValue
-        private int _ActorValueLocation => _BPNDLocation!.Value + 0x7;
+        private int _ActorValueLocation => _BPNDLocation!.Value.Min + 0x7;
         private bool _ActorValue_IsSet => _BPNDLocation.HasValue;
-        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_data.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
+        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_recordData.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
         #endregion
         #region ToHitChance
-        private int _ToHitChanceLocation => _BPNDLocation!.Value + 0x8;
+        private int _ToHitChanceLocation => _BPNDLocation!.Value.Min + 0x8;
         private bool _ToHitChance_IsSet => _BPNDLocation.HasValue;
-        public Byte ToHitChance => _ToHitChance_IsSet ? _data.Span[_ToHitChanceLocation] : default;
+        public Byte ToHitChance => _ToHitChance_IsSet ? _recordData.Span[_ToHitChanceLocation] : default;
         #endregion
         #region ExplodableExplosionChance
-        private int _ExplodableExplosionChanceLocation => _BPNDLocation!.Value + 0x9;
+        private int _ExplodableExplosionChanceLocation => _BPNDLocation!.Value.Min + 0x9;
         private bool _ExplodableExplosionChance_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableExplosionChance => _ExplodableExplosionChance_IsSet ? _data.Span[_ExplodableExplosionChanceLocation] : default;
+        public Byte ExplodableExplosionChance => _ExplodableExplosionChance_IsSet ? _recordData.Span[_ExplodableExplosionChanceLocation] : default;
         #endregion
         #region ExplodableDebrisCount
-        private int _ExplodableDebrisCountLocation => _BPNDLocation!.Value + 0xA;
+        private int _ExplodableDebrisCountLocation => _BPNDLocation!.Value.Min + 0xA;
         private bool _ExplodableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_ExplodableDebrisCountLocation, 2)) : default;
+        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ExplodableDebrisCountLocation, 2)) : default;
         #endregion
         #region ExplodableDebris
-        private int _ExplodableDebrisLocation => _BPNDLocation!.Value + 0xC;
+        private int _ExplodableDebrisLocation => _BPNDLocation!.Value.Min + 0xC;
         private bool _ExplodableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableExplosion
-        private int _ExplodableExplosionLocation => _BPNDLocation!.Value + 0x10;
+        private int _ExplodableExplosionLocation => _BPNDLocation!.Value.Min + 0x10;
         private bool _ExplodableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region TrackingMaxAngle
-        private int _TrackingMaxAngleLocation => _BPNDLocation!.Value + 0x14;
+        private int _TrackingMaxAngleLocation => _BPNDLocation!.Value.Min + 0x14;
         private bool _TrackingMaxAngle_IsSet => _BPNDLocation.HasValue;
-        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _data.Slice(_TrackingMaxAngleLocation, 4).Float() : default;
+        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _recordData.Slice(_TrackingMaxAngleLocation, 4).Float() : default;
         #endregion
         #region ExplodableDebrisScale
-        private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value + 0x18;
+        private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x18;
         private bool _ExplodableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _data.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region SeverableDebrisCount
-        private int _SeverableDebrisCountLocation => _BPNDLocation!.Value + 0x1C;
+        private int _SeverableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x1C;
         private bool _SeverableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public Int32 SeverableDebrisCount => _SeverableDebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_SeverableDebrisCountLocation, 4)) : default;
+        public Int32 SeverableDebrisCount => _SeverableDebrisCount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_SeverableDebrisCountLocation, 4)) : default;
         #endregion
         #region SeverableDebris
-        private int _SeverableDebrisLocation => _BPNDLocation!.Value + 0x20;
+        private int _SeverableDebrisLocation => _BPNDLocation!.Value.Min + 0x20;
         private bool _SeverableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableExplosion
-        private int _SeverableExplosionLocation => _BPNDLocation!.Value + 0x24;
+        private int _SeverableExplosionLocation => _BPNDLocation!.Value.Min + 0x24;
         private bool _SeverableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebrisScale
-        private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value + 0x28;
+        private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x28;
         private bool _SeverableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _data.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _recordData.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region GorePositioning
-        private int _GorePositioningLocation => _BPNDLocation!.Value + 0x2C;
+        private int _GorePositioningLocation => _BPNDLocation!.Value.Min + 0x2C;
         private bool _GorePositioning_IsSet => _BPNDLocation.HasValue;
-        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_GorePositioningLocation, 12)) : default;
+        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GorePositioningLocation, 12)) : default;
         #endregion
         #region GoreRotation
-        private int _GoreRotationLocation => _BPNDLocation!.Value + 0x38;
+        private int _GoreRotationLocation => _BPNDLocation!.Value.Min + 0x38;
         private bool _GoreRotation_IsSet => _BPNDLocation.HasValue;
-        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_GoreRotationLocation, 12)) : default;
+        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_GoreRotationLocation, 12)) : default;
         #endregion
         #region SeverableImpactData
-        private int _SeverableImpactDataLocation => _BPNDLocation!.Value + 0x44;
+        private int _SeverableImpactDataLocation => _BPNDLocation!.Value.Min + 0x44;
         private bool _SeverableImpactData_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactData => _SeverableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactData => _SeverableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SeverableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableImpactData
-        private int _ExplodableImpactDataLocation => _BPNDLocation!.Value + 0x48;
+        private int _ExplodableImpactDataLocation => _BPNDLocation!.Value.Min + 0x48;
         private bool _ExplodableImpactData_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData => _ExplodableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData => _ExplodableImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplodableImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SeverableDecalCount
-        private int _SeverableDecalCountLocation => _BPNDLocation!.Value + 0x4C;
+        private int _SeverableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4C;
         private bool _SeverableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _data.Span[_SeverableDecalCountLocation] : default;
+        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default;
         #endregion
         #region ExplodableDecalCount
-        private int _ExplodableDecalCountLocation => _BPNDLocation!.Value + 0x4D;
+        private int _ExplodableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4D;
         private bool _ExplodableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _data.Span[_ExplodableDecalCountLocation] : default;
+        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _BPNDLocation!.Value + 0x4E;
+        private int _UnknownLocation => _BPNDLocation!.Value.Min + 0x4E;
         private bool _Unknown_IsSet => _BPNDLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region LimbReplacementScale
-        private int _LimbReplacementScaleLocation => _BPNDLocation!.Value + 0x50;
+        private int _LimbReplacementScaleLocation => _BPNDLocation!.Value.Min + 0x50;
         private bool _LimbReplacementScale_IsSet => _BPNDLocation.HasValue;
-        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _data.Slice(_LimbReplacementScaleLocation, 4).Float() : default;
+        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _recordData.Slice(_LimbReplacementScaleLocation, 4).Float() : default;
         #endregion
         #region LimbReplacementModel
         private int? _LimbReplacementModelLocation;
-        public String LimbReplacementModel => _LimbReplacementModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LimbReplacementModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String LimbReplacementModel => _LimbReplacementModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LimbReplacementModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region GoreTargetBone
         private int? _GoreTargetBoneLocation;
-        public String GoreTargetBone => _GoreTargetBoneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _GoreTargetBoneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public String GoreTargetBone => _GoreTargetBoneLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoreTargetBoneLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;
-        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? TextureFilesHashes => _TextureFilesHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFilesHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3141,42 +3207,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected BodyPartBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BodyPartBinaryOverlay BodyPartFactory(
+        public static IBodyPartGetter BodyPartFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new BodyPartBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static BodyPartBinaryOverlay BodyPartFactory(
+        public static IBodyPartGetter BodyPartFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BodyPartFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -3186,14 +3258,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BPTN:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BodyPart_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
                     return (int)BodyPart_FieldIndex.Name;
                 }
@@ -3219,7 +3291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.BPND:
                 {
-                    _BPNDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _BPNDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)BodyPart_FieldIndex.LimbReplacementScale;
                 }
                 case RecordTypeInts.NAM1:
@@ -3243,12 +3315,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyPartMixIn.ToString(
+            BodyPartMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

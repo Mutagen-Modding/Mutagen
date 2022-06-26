@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+		<TargetFramework>net6.0</TargetFramework>
         <PackageId>Mutagen.Bethesda.Testing</PackageId>
         <Authors>Noggog</Authors>
         <Company>Mutagen</Company>
@@ -21,7 +20,7 @@
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-        <PackageReference Include="Noggog.Testing" Version="2.39.0" />
+        <PackageReference Include="Noggog.Testing" Version="2.48" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,12 +32,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj" />
+        <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+        <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
         <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="AutoData\ModListingBuilder.cs">
+        <CodeLanguage>cs</CodeLanguage>
+        <DefaultPackFolder>content</DefaultPackFolder>
+        <BuildAction>Compile</BuildAction>
+      </Compile>
     </ItemGroup>
 
 </Project>

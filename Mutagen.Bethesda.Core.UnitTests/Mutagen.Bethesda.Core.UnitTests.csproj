@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
         <WarningsAsErrors>nullable</WarningsAsErrors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>Mutagen.Bethesda.UnitTests</RootNamespace>
@@ -11,11 +10,11 @@
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-        <PackageReference Include="FluentAssertions" Version="6.3.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-        <PackageReference Include="Noggog.CSharpExt" Version="2.39.0" />
-        <PackageReference Include="Noggog.Testing" Version="2.39.0" />
+        <PackageReference Include="Noggog.CSharpExt" Version="2.48" />
+        <PackageReference Include="Noggog.Testing" Version="2.48" />
         <PackageReference Include="GitInfo" Version="2.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,20 +23,19 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="16.0.8" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.console" Version="2.4.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" Version="1.1.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.SourceGenerators.Testing" Version="1.1.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -48,7 +46,6 @@
       <ProjectReference Include="..\Mutagen.Bethesda.SourceGenerators\Mutagen.Bethesda.SourceGenerators.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Sqlite\Mutagen.Bethesda.Sqlite.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
-      <ProjectReference Include="..\Mutagen.Bethesda.WPF\Mutagen.Bethesda.WPF.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -61,6 +58,93 @@
         <Content Include="Plugins\Records\Files\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Plugins\Binary\Headers\MajorBytes">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\EnumerateSubrecordsDirect">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\EnumerateSubrecordsDirectWithOverflow">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Headers\ModHeaderOverflow">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\SomeSubrecords">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\DuplicateSubrecord">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\RepeatingSubrecords">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\FnamStart">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\Overflow">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\OffsetSubrecords">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Analysis\SkyrimTypical.esp">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\Actor.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\ActorBase-F04.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\Outfit.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\SoulGem.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\FormType.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\Art.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\nwsFollowerMCMScript.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\ObjectReference.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\Game.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\nwsFollowerMCMExScript.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Pex\SmoothCamMCM.pex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Plugins\Analysis\OrphanedDeepGroups.esp">
+          <DefaultPackFolder>none</DefaultPackFolder>
+          <BuildAction>None</BuildAction>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Plugins\Order\ListsModsMixInTests.cs">
+        <CodeLanguage>cs</CodeLanguage>
+        <DefaultPackFolder>content</DefaultPackFolder>
+        <BuildAction>Compile</BuildAction>
+      </Compile>
+      <Compile Update="Plugins\Binary\Translations\RecordSpanExtensionsTests\FindAllOfSubrecordTests.cs">
+        <CodeLanguage>cs</CodeLanguage>
+        <DefaultPackFolder>content</DefaultPackFolder>
+        <BuildAction>Compile</BuildAction>
+      </Compile>
     </ItemGroup>
 
 </Project>

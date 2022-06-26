@@ -1,25 +1,23 @@
-﻿using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Testing;
-using Mutagen.Bethesda.Core.UnitTests;
+﻿using Microsoft.CodeAnalysis.Testing;
 using Mutagen.Bethesda.SourceGenerators.CustomAspectInterface;
 using Xunit;
 using VerifyCS = Mutagen.Bethesda.UnitTests.SourceGenerators.CSharpSourceGeneratorVerifier<Mutagen.Bethesda.SourceGenerators.CustomAspectInterface.CustomAspectInterfaceGenerator>;
 
-namespace Mutagen.Bethesda.UnitTests.SourceGenerators
-{
-    public class CustomAspectGeneratorTests: IClassFixture<LoadMetadataReferenceFixture>
-    {
-        private readonly LoadMetadataReferenceFixture metadata;
+namespace Mutagen.Bethesda.UnitTests.SourceGenerators;
 
-        public CustomAspectGeneratorTests(LoadMetadataReferenceFixture metadata)
-        {
-            this.metadata = metadata;
-        }
+public class CustomAspectGeneratorTests: IClassFixture<LoadMetadataReferenceFixture>
+{
+    private readonly LoadMetadataReferenceFixture metadata;
+
+    public CustomAspectGeneratorTests(LoadMetadataReferenceFixture metadata)
+    {
+        this.metadata = metadata;
+    }
         
-        [Fact]
-        public async Task TestSourceGeneratorWithEnvironmentVariables()
-        {
-            const string source = @"
+    [Fact]
+    public async Task TestSourceGeneratorWithEnvironmentVariables()
+    {
+        const string source = @"
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
@@ -49,7 +47,7 @@ namespace SomeNamespace
 }
 ";
             
-            const string generated = @"using Mutagen.Bethesda.Skyrim;
+        const string generated = @"using Mutagen.Bethesda.Skyrim;
 
 namespace SomeNamespace
 {
@@ -84,26 +82,25 @@ namespace SomeNamespace
 
 }
 ";
-            var testState = new VerifyCS.Test
+        var testState = new VerifyCS.Test
+        {
+            TestState =
             {
-                TestState =
+                Sources =
                 {
-                    Sources =
-                    {
-                        ("SomeFile.cs", source)
-                    },
-                    GeneratedSources =
-                    {
-                        (typeof(CustomAspectInterfaceGenerator), "CustomAspectInterfaces.g.cs", generated)
-                    },
+                    ("SomeFile.cs", source)
                 },
-                CompilerDiagnostics = CompilerDiagnostics.None,
-            };
-            foreach (var meta in metadata.MetadataReferences)
-            {
-                testState.TestState.AdditionalReferences.Add(meta);
-            }
-            await testState.RunAsync();
+                GeneratedSources =
+                {
+                    (typeof(CustomAspectInterfaceGenerator), "CustomAspectInterfaces.g.cs", generated)
+                },
+            },
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+        foreach (var meta in metadata.MetadataReferences)
+        {
+            testState.TestState.AdditionalReferences.Add(meta);
         }
+        await testState.RunAsync();
     }
 }

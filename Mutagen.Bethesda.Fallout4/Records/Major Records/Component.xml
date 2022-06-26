@@ -4,11 +4,13 @@
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <FormLink name="CraftingSound" refName="SoundDescriptor" recordType="CUSD" />
-      <Int32 name="AutoCalcValue" recordType="DATA" />
+      <UInt32 name="AutoCalcValue" recordType="DATA" />
       <FormLink name="ScrapItem" refName="MiscItem" recordType="MNAM" />
       <FormLink name="ModScrapScalar" refName="Global" recordType="GNAM" />
     </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

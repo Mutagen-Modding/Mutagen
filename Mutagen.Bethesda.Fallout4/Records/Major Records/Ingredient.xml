@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingredient" recordType="INGR" baseClass="Fallout4MajorRecord" objType="Record" GUID="ff149c28-1233-4a7a-97cf-c9d2e7a1b490" ID="192">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="EquipType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Data recordType="ENIT">
+        <Fields>
+          <Int32 name="IngredientValue" />
+          <Enum name="Flags" enumName="Ingredient.Flag" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" nullable="False" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

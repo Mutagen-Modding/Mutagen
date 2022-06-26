@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="5068f739-6d69-4494-af56-ca46c299b41b" ID="544">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" />
+      <RefDirect name="Flags" refName="DialogResponseFlags" />
+      <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
+      <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />
+      <FormLink name="SharedDialog" recordType="DNAM" refName="DialogResponses" />
+      <FormLink name="DialogGroup" recordType="GNAM" refName="DialogResponses" />
+      <String name="OverrideFileName" recordType="IOVR" />
+      <RefList name="Responses" refName="DialogResponse" />
+      <RefList name="Conditions" refName="Condition" />
+      <String name="Prompt" recordType="RNAM" translated="Normal" />
+      <FormLink name="Speaker" recordType="ANAM" refName="Npc" />
+      <FormLink name="StartScene" recordType="TSCE" refName="Scene" />
+      <ByteArray name="INTV" recordType="INTV" />
+      <Int32 name="ForcedAlias" recordType="ALFA" />
+      <FormLink name="AudioOutputOverride" recordType="ONAM" refName="SoundOutputModel" />
+      <UInt32 name="GreetDistance" recordType="GREE" />
+      <RefDirect name="SetParentQuestStage" refName="DialogSetParentQuestStage" />
+      <String name="StartScenePhase" recordType="NAM0" />
+      <Enum name="Challenge" recordType="INCC" enumName="DialogResponses.ChallengeType" byteLength="4" />
+      <FormLink name="ResetGlobal" refName="Global" recordType="MODQ" />
+      <Enum name="SubtitlePriority" enumName="DialogResponses.SubtitlePriorityLevel" recordType="INAM" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" GUID="0f9fb747-a165-4bc2-aef2-6aa7bda50b4e" ID="545">
+    <Fields>
+      <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
+      <Float name="ResetHours" integerType="UShort" divisor="2730" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="ddc80272-af67-4695-9028-265471621db9" ID="546">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="DialogResponse" objType="Subrecord" GUID="2af08585-7d3a-49dd-98d2-500486f6c2e7" ID="547">
+    <Fields>
+      <Data recordType="TRDA">
+        <Fields>
+          <FormLink name="Emotion" refName="Keyword" />
+          <UInt8 name="ResponseNumber" />
+          <FormLink name="Sound" refName="SoundDescriptor" />
+          <UInt8 name="Unknown" />
+          <UInt16 name="InterruptPercentage" binaryOverlay="Custom" />
+          <Int32 name="CameraTargetAlias" />
+          <Int32 name="CameraLocationAlias" />
+        </Fields>
+      </Data>
+      <String name="Text" recordType="NAM1" translated="IL" nullable="False" />
+      <String name="ScriptNotes" recordType="NAM2" nullable="False" />
+      <String name="Edits" recordType="NAM3" nullable="False" />
+      <String name="AlternateLipText" recordType="NAM4" nullable="False" />
+      <FormLink name="SpeakerIdleAnimation" refName="IdleAnimation" recordType="SNAM" />
+      <FormLink name="ListenerIdleAnimation" refName="IdleAnimation" recordType="LNAM" />
+      <CustomLogic name="InterruptPercentageTNAM" recordType="TNAM" />
+      <ByteArray name="TextHash" recordType="NAM9" />
+      <FormLink name="CameraPath" recordType="SRAF" refName="CameraPath" />
+      <Bool name="StopOnSceneEnd" boolAsMarker="WZMD" />
+    </Fields>
+  </Object>
+  <Object name="DialogSetParentQuestStage" objType="Subrecord" recordType="TIQS" GUID="2f8c7304-6fe8-416e-955e-b1da73dee687" ID="548">
+    <Fields>
+      <Int16 name="OnBegin" />
+      <Int16 name="OnEnd" />
+    </Fields>
+  </Object>
+</Loqui>

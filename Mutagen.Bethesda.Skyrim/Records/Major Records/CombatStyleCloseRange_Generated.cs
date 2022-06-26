@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +67,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CombatStyleCloseRangeMixIn.ToString(
+            CombatStyleCloseRangeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -210,46 +213,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CombatStyleCloseRange.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CombatStyleCloseRange.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CombatStyleCloseRange.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CombatStyleCloseRange.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CombatStyleCloseRange.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyleCloseRange.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.CircleMult ?? true)
                     {
-                        fg.AppendItem(CircleMult, "CircleMult");
+                        sb.AppendItem(CircleMult, "CircleMult");
                     }
                     if (printMask?.FallbackMult ?? true)
                     {
-                        fg.AppendItem(FallbackMult, "FallbackMult");
+                        sb.AppendItem(FallbackMult, "FallbackMult");
                     }
                     if (printMask?.FlankDistance ?? true)
                     {
-                        fg.AppendItem(FlankDistance, "FlankDistance");
+                        sb.AppendItem(FlankDistance, "FlankDistance");
                     }
                     if (printMask?.StalkTime ?? true)
                     {
-                        fg.AppendItem(StalkTime, "StalkTime");
+                        sb.AppendItem(StalkTime, "StalkTime");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -364,40 +362,41 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(CircleMult, "CircleMult");
-                fg.AppendItem(FallbackMult, "FallbackMult");
-                fg.AppendItem(FlankDistance, "FlankDistance");
-                fg.AppendItem(StalkTime, "StalkTime");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(CircleMult, "CircleMult");
+                }
+                {
+                    sb.AppendItem(FallbackMult, "FallbackMult");
+                }
+                {
+                    sb.AppendItem(FlankDistance, "FlankDistance");
+                }
+                {
+                    sb.AppendItem(StalkTime, "StalkTime");
+                }
             }
             #endregion
 
@@ -484,7 +483,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = CombatStyleCloseRange_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -499,7 +497,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleCloseRangeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -509,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static CombatStyleCloseRange CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyleCloseRange();
             ((CombatStyleCloseRangeSetterCommon)((ICombatStyleCloseRangeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -524,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyleCloseRange item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -534,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -602,26 +600,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICombatStyleCloseRangeGetter item,
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
-            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)item).CommonInstance()!).ToString(
+            return ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICombatStyleCloseRangeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
-            ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)item).CommonInstance()!).ToString(
+            ((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICombatStyleCloseRange item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleCloseRangeSetterCommon)((ICombatStyleCloseRangeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -742,10 +740,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CombatStyleCloseRange_FieldIndex
+    internal enum CombatStyleCloseRange_FieldIndex
     {
         Versioning = 0,
         CircleMult = 1,
@@ -756,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyleCloseRange_Registration : ILoquiRegistration
+    internal partial class CombatStyleCloseRange_Registration : ILoquiRegistration
     {
         public static readonly CombatStyleCloseRange_Registration Instance = new CombatStyleCloseRange_Registration();
 
@@ -798,6 +796,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CSCR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleCloseRangeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -831,7 +835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleCloseRangeSetterCommon
+    internal partial class CombatStyleCloseRangeSetterCommon
     {
         public static readonly CombatStyleCloseRangeSetterCommon Instance = new CombatStyleCloseRangeSetterCommon();
 
@@ -858,12 +862,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ICombatStyleCloseRange item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CSCR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -874,7 +878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleCloseRangeCommon
+    internal partial class CombatStyleCloseRangeCommon
     {
         public static readonly CombatStyleCloseRangeCommon Instance = new CombatStyleCloseRangeCommon();
 
@@ -898,7 +902,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CombatStyleCloseRange.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.CircleMult = item.CircleMult.EqualsWithin(rhs.CircleMult);
             ret.FallbackMult = item.FallbackMult.EqualsWithin(rhs.FallbackMult);
@@ -906,69 +909,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.StalkTime = item.StalkTime.EqualsWithin(rhs.StalkTime);
         }
         
-        public string ToString(
+        public string Print(
             ICombatStyleCloseRangeGetter item,
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICombatStyleCloseRangeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyleCloseRange =>");
+                sb.AppendLine($"CombatStyleCloseRange =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyleCloseRange) =>");
+                sb.AppendLine($"{name} (CombatStyleCloseRange) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleCloseRangeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyleCloseRange.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.CircleMult ?? true)
             {
-                fg.AppendItem(item.CircleMult, "CircleMult");
+                sb.AppendItem(item.CircleMult, "CircleMult");
             }
             if (printMask?.FallbackMult ?? true)
             {
-                fg.AppendItem(item.FallbackMult, "FallbackMult");
+                sb.AppendItem(item.FallbackMult, "FallbackMult");
             }
             if (printMask?.FlankDistance ?? true)
             {
-                fg.AppendItem(item.FlankDistance, "FlankDistance");
+                sb.AppendItem(item.FlankDistance, "FlankDistance");
             }
             if (printMask?.StalkTime ?? true)
             {
-                fg.AppendItem(item.StalkTime, "StalkTime");
+                sb.AppendItem(item.StalkTime, "StalkTime");
             }
         }
         
@@ -1022,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleCloseRangeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleCloseRangeGetter obj)
         {
             yield break;
         }
@@ -1030,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleCloseRangeSetterTranslationCommon
+    internal partial class CombatStyleCloseRangeSetterTranslationCommon
     {
         public static readonly CombatStyleCloseRangeSetterTranslationCommon Instance = new CombatStyleCloseRangeSetterTranslationCommon();
 
@@ -1125,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleCloseRange_Registration.Instance;
-        public static CombatStyleCloseRange_Registration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleCloseRangeCommon.Instance;
         [DebuggerStepThrough]
@@ -1149,11 +1150,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleCloseRangeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static CombatStyleCloseRangeBinaryWriteTranslation Instance = new CombatStyleCloseRangeBinaryWriteTranslation();
+        public static readonly CombatStyleCloseRangeBinaryWriteTranslation Instance = new CombatStyleCloseRangeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleCloseRangeGetter item,
@@ -1179,12 +1180,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ICombatStyleCloseRangeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CSCR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1196,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleCloseRangeGetter)item,
@@ -1206,9 +1207,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CombatStyleCloseRangeBinaryCreateTranslation
+    internal partial class CombatStyleCloseRangeBinaryCreateTranslation
     {
-        public readonly static CombatStyleCloseRangeBinaryCreateTranslation Instance = new CombatStyleCloseRangeBinaryCreateTranslation();
+        public static readonly CombatStyleCloseRangeBinaryCreateTranslation Instance = new CombatStyleCloseRangeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ICombatStyleCloseRange item,
@@ -1236,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ICombatStyleCloseRangeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleCloseRangeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1249,16 +1250,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CombatStyleCloseRangeBinaryOverlay :
+    internal partial class CombatStyleCloseRangeBinaryOverlay :
         PluginBinaryOverlay,
         ICombatStyleCloseRangeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyleCloseRange_Registration.Instance;
-        public static CombatStyleCloseRange_Registration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CombatStyleCloseRange_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => CombatStyleCloseRangeCommon.Instance;
         [DebuggerStepThrough]
@@ -1272,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CombatStyleCloseRangeBinaryWriteTranslation.Instance;
@@ -1280,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleCloseRangeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1289,10 +1290,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public CombatStyleCloseRange.VersioningBreaks Versioning { get; private set; }
-        public Single CircleMult => _data.Slice(0x0, 0x4).Float();
-        public Single FallbackMult => _data.Slice(0x4, 0x4).Float();
-        public Single FlankDistance => _data.Length <= 0x8 ? default : _data.Slice(0x8, 0x4).Float();
-        public Single StalkTime => _data.Length <= 0xC ? default : _data.Slice(0xC, 0x4).Float();
+        public Single CircleMult => _structData.Slice(0x0, 0x4).Float();
+        public Single FallbackMult => _structData.Slice(0x4, 0x4).Float();
+        public Single FlankDistance => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x4).Float();
+        public Single StalkTime => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1300,26 +1301,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected CombatStyleCloseRangeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CombatStyleCloseRangeBinaryOverlay CombatStyleCloseRangeFactory(
+        public static ICombatStyleCloseRangeGetter CombatStyleCloseRangeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new CombatStyleCloseRangeBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x8)
+            if (ret._structData.Length <= 0x8)
             {
                 ret.Versioning |= CombatStyleCloseRange.VersioningBreaks.Break0;
             }
@@ -1330,25 +1336,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static CombatStyleCloseRangeBinaryOverlay CombatStyleCloseRangeFactory(
+        public static ICombatStyleCloseRangeGetter CombatStyleCloseRangeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleCloseRangeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CombatStyleCloseRangeMixIn.ToString(
+            CombatStyleCloseRangeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

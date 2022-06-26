@@ -5,12 +5,14 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +20,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -93,12 +95,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TransformMixIn.ToString(
+            TransformMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -251,50 +254,45 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Transform.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Transform.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Transform.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Transform.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Transform.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Transform.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
+                        sb.AppendItem(Position, "Position");
                     }
                     if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendItem(Rotation, "Rotation");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                     if (printMask?.Scale ?? true)
                     {
-                        fg.AppendItem(Scale, "Scale");
+                        sb.AppendItem(Scale, "Scale");
                     }
                     if (printMask?.ZoomMin ?? true)
                     {
-                        fg.AppendItem(ZoomMin, "ZoomMin");
+                        sb.AppendItem(ZoomMin, "ZoomMin");
                     }
                     if (printMask?.ZoomMax ?? true)
                     {
-                        fg.AppendItem(ZoomMax, "ZoomMax");
+                        sb.AppendItem(ZoomMax, "ZoomMax");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -408,42 +406,45 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
-                fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(ZoomMin, "ZoomMin");
-                fg.AppendItem(ZoomMax, "ZoomMax");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(Rotation, "Rotation");
+                }
+                {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
+                    sb.AppendItem(ZoomMin, "ZoomMin");
+                }
+                {
+                    sb.AppendItem(ZoomMax, "ZoomMax");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -567,6 +568,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ITransform);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         [Flags]
         public enum DATADataType
         {
@@ -599,7 +605,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => TransformBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransformBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -609,7 +615,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static Transform CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Transform();
             ((TransformSetterCommon)((ITransformGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -624,7 +630,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Transform item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -634,7 +640,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -653,6 +659,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ITransform :
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<ITransformInternal>,
+        IPositionRotation,
         ITransformGetter
     {
         new P3Float Position { get; set; }
@@ -661,6 +668,10 @@ namespace Mutagen.Bethesda.Fallout4
         new Single ZoomMin { get; set; }
         new Single ZoomMax { get; set; }
         new Transform.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new Transform.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ITransformInternal :
@@ -675,7 +686,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ITransformGetter>,
-        IMapsToGetter<ITransformGetter>
+        IMapsToGetter<ITransformGetter>,
+        IPositionRotationGetter
     {
         static new ILoquiRegistration StaticRegistration => Transform_Registration.Instance;
         P3Float Position { get; }
@@ -684,6 +696,10 @@ namespace Mutagen.Bethesda.Fallout4
         Single ZoomMin { get; }
         Single ZoomMax { get; }
         Transform.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        Transform.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -708,26 +724,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITransformGetter item,
             string? name = null,
             Transform.Mask<bool>? printMask = null)
         {
-            return ((TransformCommon)((ITransformGetter)item).CommonInstance()!).ToString(
+            return ((TransformCommon)((ITransformGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITransformGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Transform.Mask<bool>? printMask = null)
         {
-            ((TransformCommon)((ITransformGetter)item).CommonInstance()!).ToString(
+            ((TransformCommon)((ITransformGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -822,7 +838,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ITransformInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TransformSetterCommon)((ITransformGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -837,10 +853,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Transform_FieldIndex
+    internal enum Transform_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -858,7 +874,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Transform_Registration : ILoquiRegistration
+    internal partial class Transform_Registration : ILoquiRegistration
     {
         public static readonly Transform_Registration Instance = new Transform_Registration();
 
@@ -900,6 +916,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TRNS;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.TRNS);
+            var all = RecordCollection.Factory(
+                RecordTypes.TRNS,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TransformBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -933,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class TransformSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class TransformSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly TransformSetterCommon Instance = new TransformSetterCommon();
 
@@ -973,7 +998,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ITransformInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ITransformInternal>(
                 record: item,
@@ -986,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Transform)item,
@@ -997,7 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Transform)item,
@@ -1008,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TransformCommon : Fallout4MajorRecordCommon
+    internal partial class TransformCommon : Fallout4MajorRecordCommon
     {
         public new static readonly TransformCommon Instance = new TransformCommon();
 
@@ -1032,7 +1057,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Transform.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
@@ -1042,77 +1066,75 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ITransformGetter item,
             string? name = null,
             Transform.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITransformGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Transform.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Transform =>");
+                sb.AppendLine($"Transform =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Transform) =>");
+                sb.AppendLine($"{name} (Transform) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITransformGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Transform.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Position ?? true)
             {
-                fg.AppendItem(item.Position, "Position");
+                sb.AppendItem(item.Position, "Position");
             }
             if (printMask?.Rotation ?? true)
             {
-                fg.AppendItem(item.Rotation, "Rotation");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
             if (printMask?.Scale ?? true)
             {
-                fg.AppendItem(item.Scale, "Scale");
+                sb.AppendItem(item.Scale, "Scale");
             }
             if (printMask?.ZoomMin ?? true)
             {
-                fg.AppendItem(item.ZoomMin, "ZoomMin");
+                sb.AppendItem(item.ZoomMin, "ZoomMin");
             }
             if (printMask?.ZoomMax ?? true)
             {
-                fg.AppendItem(item.ZoomMax, "ZoomMax");
+                sb.AppendItem(item.ZoomMax, "ZoomMax");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1243,9 +1265,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITransformGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITransformGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1290,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class TransformSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class TransformSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly TransformSetterTranslationCommon Instance = new TransformSetterTranslationCommon();
 
@@ -1469,7 +1491,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Transform_Registration.Instance;
-        public new static Transform_Registration StaticRegistration => Transform_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Transform_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TransformCommon.Instance;
         [DebuggerStepThrough]
@@ -1487,13 +1509,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class TransformBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TransformBinaryWriteTranslation Instance = new TransformBinaryWriteTranslation();
+        public new static readonly TransformBinaryWriteTranslation Instance = new TransformBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITransformGetter item,
@@ -1507,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static void WriteRecordTypes(
             ITransformGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1539,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             ITransformGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1550,12 +1572,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1567,7 +1592,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITransformGetter)item,
@@ -1578,7 +1603,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITransformGetter)item,
@@ -1589,7 +1614,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ITransformGetter)item,
@@ -1599,9 +1624,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class TransformBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class TransformBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static TransformBinaryCreateTranslation Instance = new TransformBinaryCreateTranslation();
+        public new static readonly TransformBinaryCreateTranslation Instance = new TransformBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TRNS;
         public static void FillBinaryStructs(
@@ -1620,7 +1645,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1648,7 +1673,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1665,16 +1691,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class TransformBinaryOverlay :
+    internal partial class TransformBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ITransformGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Transform_Registration.Instance;
-        public new static Transform_Registration StaticRegistration => Transform_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Transform_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => TransformCommon.Instance;
         [DebuggerStepThrough]
@@ -1682,13 +1708,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TransformBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TransformBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1697,33 +1723,34 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         protected override Type LinkType => typeof(ITransform);
 
+        public Transform.MajorFlag MajorFlags => (Transform.MajorFlag)this.MajorRecordFlagsRaw;
 
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Transform.DATADataType DATADataTypeState { get; private set; }
         #region Position
-        private int _PositionLocation => _DATALocation!.Value;
+        private int _PositionLocation => _DATALocation!.Value.Min;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_PositionLocation, 12)) : default;
         #endregion
         #region Rotation
-        private int _RotationLocation => _DATALocation!.Value + 0xC;
+        private int _RotationLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RotationLocation, 12)) : default;
         #endregion
         #region Scale
-        private int _ScaleLocation => _DATALocation!.Value + 0x18;
+        private int _ScaleLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Scale_IsSet => _DATALocation.HasValue;
-        public Single Scale => _Scale_IsSet ? _data.Slice(_ScaleLocation, 4).Float() : default;
+        public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default;
         #endregion
         #region ZoomMin
-        private int _ZoomMinLocation => _DATALocation!.Value + 0x1C;
+        private int _ZoomMinLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _ZoomMin_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
-        public Single ZoomMin => _ZoomMin_IsSet ? _data.Slice(_ZoomMinLocation, 4).Float() : default;
+        public Single ZoomMin => _ZoomMin_IsSet ? _recordData.Slice(_ZoomMinLocation, 4).Float() : default;
         #endregion
         #region ZoomMax
-        private int _ZoomMaxLocation => _DATALocation!.Value + 0x20;
+        private int _ZoomMaxLocation => _DATALocation!.Value.Min + 0x20;
         private bool _ZoomMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Transform.DATADataType.Break0);
-        public Single ZoomMax => _ZoomMax_IsSet ? _data.Slice(_ZoomMaxLocation, 4).Float() : default;
+        public Single ZoomMax => _ZoomMax_IsSet ? _recordData.Slice(_ZoomMaxLocation, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1732,28 +1759,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected TransformBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TransformBinaryOverlay TransformFactory(
+        public static ITransformGetter TransformFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new TransformBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1763,20 +1793,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static TransformBinaryOverlay TransformFactory(
+        public static ITransformGetter TransformFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TransformFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1786,15 +1816,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x1C)
                     {
                         this.DATADataTypeState |= Transform.DATADataType.Break0;
@@ -1808,17 +1838,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TransformMixIn.ToString(
+            TransformMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

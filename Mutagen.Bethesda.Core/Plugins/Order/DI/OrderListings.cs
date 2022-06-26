@@ -1,77 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Noggog;
+﻿using Noggog;
 
-namespace Mutagen.Bethesda.Plugins.Order.DI
+namespace Mutagen.Bethesda.Plugins.Order.DI;
+
+/// <summary>
+/// Orders objects by their associated ModKeys
+/// </summary>
+public interface IOrderListings
 {
     /// <summary>
-    /// Orders objects by their associated ModKeys
+    /// Orders a given set of objects
     /// </summary>
-    public interface IOrderListings
-    {
-        /// <summary>
-        /// Orders a given set of objects
-        /// </summary>
-        /// <param name="e">Objects to order</param>
-        /// <param name="selector">How to retrieve a ModKey from them</param>
-        /// <returns>Ordered objects</returns>
-        IEnumerable<T> Order<T>(IEnumerable<T> e, Func<T, ModKey> selector);
+    /// <param name="e">Objects to order</param>
+    /// <param name="selector">How to retrieve a ModKey from them</param>
+    /// <returns>Ordered objects</returns>
+    IEnumerable<T> Order<T>(IEnumerable<T> e, Func<T, ModKey> selector);
 
-        /// <summary>
-        /// Orders given sets of objects associated with different sources
-        /// </summary>
-        /// <param name="implicitListings">Objects associated with implicit listings</param>
-        /// <param name="pluginsListings">Objects associated with plugin listings</param>
-        /// <param name="creationClubListings">Objects associated with creation club listings</param>
-        /// <param name="selector">How to retrieve a ModKey from them</param>
-        /// <returns>Ordered objects</returns>
-        IEnumerable<T> Order<T>(
-            IEnumerable<T> implicitListings,
-            IEnumerable<T> pluginsListings,
-            IEnumerable<T> creationClubListings,
-            Func<T, ModKey> selector);
+    /// <summary>
+    /// Orders given sets of objects associated with different sources
+    /// </summary>
+    /// <param name="implicitListings">Objects associated with implicit listings</param>
+    /// <param name="pluginsListings">Objects associated with plugin listings</param>
+    /// <param name="creationClubListings">Objects associated with creation club listings</param>
+    /// <param name="selector">How to retrieve a ModKey from them</param>
+    /// <returns>Ordered objects</returns>
+    IEnumerable<T> Order<T>(
+        IEnumerable<T> implicitListings,
+        IEnumerable<T> pluginsListings,
+        IEnumerable<T> creationClubListings,
+        Func<T, ModKey> selector);
+}
+
+public class OrderListings : IOrderListings
+{
+    /// <inheritdoc />
+    public IEnumerable<T> Order<T>(IEnumerable<T> e, Func<T, ModKey> selector)
+    {
+        return e.OrderBy(e => selector(e).Type);
     }
 
-    public class OrderListings : IOrderListings
+    /// <inheritdoc />
+    public IEnumerable<T> Order<T>(
+        IEnumerable<T> implicitListings,
+        IEnumerable<T> pluginsListings,
+        IEnumerable<T> creationClubListings,
+        Func<T, ModKey> selector)
     {
-        /// <inheritdoc />
-        public IEnumerable<T> Order<T>(IEnumerable<T> e, Func<T, ModKey> selector)
-        {
-            return e.OrderBy(e => selector(e).Type);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<T> Order<T>(
-            IEnumerable<T> implicitListings,
-            IEnumerable<T> pluginsListings,
-            IEnumerable<T> creationClubListings,
-            Func<T, ModKey> selector)
-        {
-            var plugins = pluginsListings
-                .Select(selector)
-                .ToList();
-            return implicitListings
-                .Concat(
-                    Order(creationClubListings
-                        .Select(x =>
+        var plugins = pluginsListings
+            .Select(selector)
+            .ToList();
+        return implicitListings
+            .Concat(
+                Order(creationClubListings
+                    .Select(x =>
+                    {
+                        if (selector(x).Type == ModType.Plugin)
                         {
-                            if (selector(x).Type == ModType.Plugin)
-                            {
-                                throw new NotImplementedException("Creation Club does not support esp plugins.");
-                            }
-                            return x;
-                        })
-                        // If CC mod is on plugins list, refer to its ordering
-                        .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
-                        {
-                            var xIndex = plugins.IndexOf(x);
-                            var yIndex = plugins.IndexOf(y);
-                            if (xIndex == yIndex) return 0;
-                            return xIndex - yIndex;
-                        })), selector))
-                .Concat(pluginsListings)
-                .Distinct(selector);
-        }
+                            throw new NotImplementedException("Creation Club does not support esp plugins.");
+                        }
+                        return x;
+                    })
+                    // If CC mod is on plugins list, refer to its ordering
+                    .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
+                    {
+                        var xIndex = plugins.IndexOf(x);
+                        var yIndex = plugins.IndexOf(y);
+                        if (xIndex == yIndex) return 0;
+                        return xIndex - yIndex;
+                    })), selector))
+            .Concat(pluginsListings)
+            .Distinct(selector);
     }
 }

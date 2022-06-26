@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueSkillMixIn.ToString(
+            ActorValueSkillMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ActorValueSkill.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ActorValueSkill.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ActorValueSkill.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ActorValueSkill.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ActorValueSkill.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ActorValueSkill.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.UseMult ?? true)
                     {
-                        fg.AppendItem(UseMult, "UseMult");
+                        sb.AppendItem(UseMult, "UseMult");
                     }
                     if (printMask?.OffsetMult ?? true)
                     {
-                        fg.AppendItem(OffsetMult, "OffsetMult");
+                        sb.AppendItem(OffsetMult, "OffsetMult");
                     }
                     if (printMask?.ImproveMult ?? true)
                     {
-                        fg.AppendItem(ImproveMult, "ImproveMult");
+                        sb.AppendItem(ImproveMult, "ImproveMult");
                     }
                     if (printMask?.ImproveOffset ?? true)
                     {
-                        fg.AppendItem(ImproveOffset, "ImproveOffset");
+                        sb.AppendItem(ImproveOffset, "ImproveOffset");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(UseMult, "UseMult");
-                fg.AppendItem(OffsetMult, "OffsetMult");
-                fg.AppendItem(ImproveMult, "ImproveMult");
-                fg.AppendItem(ImproveOffset, "ImproveOffset");
+                {
+                    sb.AppendItem(UseMult, "UseMult");
+                }
+                {
+                    sb.AppendItem(OffsetMult, "OffsetMult");
+                }
+                {
+                    sb.AppendItem(ImproveMult, "ImproveMult");
+                }
+                {
+                    sb.AppendItem(ImproveOffset, "ImproveOffset");
+                }
             }
             #endregion
 
@@ -452,10 +449,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = ActorValueSkill_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActorValueSkillBinaryWriteTranslation.Instance;
@@ -463,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueSkillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -473,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ActorValueSkill CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ActorValueSkill();
             ((ActorValueSkillSetterCommon)((IActorValueSkillGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -488,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ActorValueSkill item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -498,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -564,26 +557,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IActorValueSkillGetter item,
             string? name = null,
             ActorValueSkill.Mask<bool>? printMask = null)
         {
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)item).CommonInstance()!).ToString(
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IActorValueSkillGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueSkill.Mask<bool>? printMask = null)
         {
-            ((ActorValueSkillCommon)((IActorValueSkillGetter)item).CommonInstance()!).ToString(
+            ((ActorValueSkillCommon)((IActorValueSkillGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -689,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IActorValueSkill item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ActorValueSkillSetterCommon)((IActorValueSkillGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -704,10 +697,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ActorValueSkill_FieldIndex
+    internal enum ActorValueSkill_FieldIndex
     {
         UseMult = 0,
         OffsetMult = 1,
@@ -717,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ActorValueSkill_Registration : ILoquiRegistration
+    internal partial class ActorValueSkill_Registration : ILoquiRegistration
     {
         public static readonly ActorValueSkill_Registration Instance = new ActorValueSkill_Registration();
 
@@ -759,6 +752,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.AVSK;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.AVSK);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ActorValueSkillBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -792,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ActorValueSkillSetterCommon
+    internal partial class ActorValueSkillSetterCommon
     {
         public static readonly ActorValueSkillSetterCommon Instance = new ActorValueSkillSetterCommon();
 
@@ -818,12 +817,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IActorValueSkill item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.AVSK),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -834,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValueSkillCommon
+    internal partial class ActorValueSkillCommon
     {
         public static readonly ActorValueSkillCommon Instance = new ActorValueSkillCommon();
 
@@ -858,72 +857,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ActorValueSkill.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.UseMult = item.UseMult.EqualsWithin(rhs.UseMult);
             ret.OffsetMult = item.OffsetMult.EqualsWithin(rhs.OffsetMult);
             ret.ImproveMult = item.ImproveMult.EqualsWithin(rhs.ImproveMult);
             ret.ImproveOffset = item.ImproveOffset.EqualsWithin(rhs.ImproveOffset);
         }
         
-        public string ToString(
+        public string Print(
             IActorValueSkillGetter item,
             string? name = null,
             ActorValueSkill.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IActorValueSkillGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ActorValueSkill.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ActorValueSkill =>");
+                sb.AppendLine($"ActorValueSkill =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ActorValueSkill) =>");
+                sb.AppendLine($"{name} (ActorValueSkill) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IActorValueSkillGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ActorValueSkill.Mask<bool>? printMask = null)
         {
             if (printMask?.UseMult ?? true)
             {
-                fg.AppendItem(item.UseMult, "UseMult");
+                sb.AppendItem(item.UseMult, "UseMult");
             }
             if (printMask?.OffsetMult ?? true)
             {
-                fg.AppendItem(item.OffsetMult, "OffsetMult");
+                sb.AppendItem(item.OffsetMult, "OffsetMult");
             }
             if (printMask?.ImproveMult ?? true)
             {
-                fg.AppendItem(item.ImproveMult, "ImproveMult");
+                sb.AppendItem(item.ImproveMult, "ImproveMult");
             }
             if (printMask?.ImproveOffset ?? true)
             {
-                fg.AppendItem(item.ImproveOffset, "ImproveOffset");
+                sb.AppendItem(item.ImproveOffset, "ImproveOffset");
             }
         }
         
@@ -972,7 +968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IActorValueSkillGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueSkillGetter obj)
         {
             yield break;
         }
@@ -980,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ActorValueSkillSetterTranslationCommon
+    internal partial class ActorValueSkillSetterTranslationCommon
     {
         public static readonly ActorValueSkillSetterTranslationCommon Instance = new ActorValueSkillSetterTranslationCommon();
 
@@ -1070,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueSkill_Registration.Instance;
-        public static ActorValueSkill_Registration StaticRegistration => ActorValueSkill_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValueSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValueSkillCommon.Instance;
         [DebuggerStepThrough]
@@ -1094,11 +1090,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ActorValueSkillBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ActorValueSkillBinaryWriteTranslation Instance = new ActorValueSkillBinaryWriteTranslation();
+        public static readonly ActorValueSkillBinaryWriteTranslation Instance = new ActorValueSkillBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IActorValueSkillGetter item,
@@ -1121,12 +1117,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IActorValueSkillGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.AVSK),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1138,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IActorValueSkillGetter)item,
@@ -1148,9 +1144,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ActorValueSkillBinaryCreateTranslation
+    internal partial class ActorValueSkillBinaryCreateTranslation
     {
-        public readonly static ActorValueSkillBinaryCreateTranslation Instance = new ActorValueSkillBinaryCreateTranslation();
+        public static readonly ActorValueSkillBinaryCreateTranslation Instance = new ActorValueSkillBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IActorValueSkill item,
@@ -1173,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IActorValueSkillGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueSkillBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1186,16 +1182,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ActorValueSkillBinaryOverlay :
+    internal partial class ActorValueSkillBinaryOverlay :
         PluginBinaryOverlay,
         IActorValueSkillGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ActorValueSkill_Registration.Instance;
-        public static ActorValueSkill_Registration StaticRegistration => ActorValueSkill_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValueSkill_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ActorValueSkillCommon.Instance;
         [DebuggerStepThrough]
@@ -1209,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ActorValueSkillBinaryWriteTranslation.Instance;
@@ -1217,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ActorValueSkillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1225,10 +1221,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single UseMult => _data.Slice(0x0, 0x4).Float();
-        public Single OffsetMult => _data.Slice(0x4, 0x4).Float();
-        public Single ImproveMult => _data.Slice(0x8, 0x4).Float();
-        public Single ImproveOffset => _data.Slice(0xC, 0x4).Float();
+        public Single UseMult => _structData.Slice(0x0, 0x4).Float();
+        public Single OffsetMult => _structData.Slice(0x4, 0x4).Float();
+        public Single ImproveMult => _structData.Slice(0x8, 0x4).Float();
+        public Single ImproveOffset => _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1236,25 +1232,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ActorValueSkillBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ActorValueSkillBinaryOverlay ActorValueSkillFactory(
+        public static IActorValueSkillGetter ActorValueSkillFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ActorValueSkillBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1263,25 +1264,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ActorValueSkillBinaryOverlay ActorValueSkillFactory(
+        public static IActorValueSkillGetter ActorValueSkillFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ActorValueSkillFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueSkillMixIn.ToString(
+            ActorValueSkillMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

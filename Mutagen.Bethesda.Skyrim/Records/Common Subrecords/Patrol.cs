@@ -3,69 +3,64 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
-using System.Collections.Generic;
+using Mutagen.Bethesda.Skyrim.Internals;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class PatrolBinaryCreateTranslation
 {
-    namespace Internals
+    public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item, PreviousParse lastParsed)
     {
-        public partial class PatrolBinaryCreateTranslation
+        if (frame.ReadSubrecord().Content.Length != 0)
         {
-            public static partial ParseResult FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item, PreviousParse lastParsed)
-            {
-                if (frame.ReadSubrecordFrame().Content.Length != 0)
-                {
-                    throw new ArgumentException($"Marker had unexpected length.");
-                }
-
-                return lastParsed;
-            }
-
-            public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item)
-            {
-                item.Topics.SetTo(ATopicReferenceBinaryCreateTranslation.Factory(frame));
-            }
+            throw new ArgumentException($"Marker had unexpected length.");
         }
 
-        public partial class PatrolBinaryWriteTranslation
-        {
-            public static partial void WriteBinaryPatrolScriptMarkerCustom(MutagenWriter writer, IPatrolGetter item)
-            {
-                using (HeaderExport.Subrecord(writer, RecordTypes.XPPA)) { }
-            }
+        return lastParsed;
+    }
 
-            public static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPatrolGetter item)
-            {
-                ATopicReferenceBinaryWriteTranslation.Write(writer, item.Topics);
-            }
+    public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item)
+    {
+        item.Topics.SetTo(ATopicReferenceBinaryCreateTranslation.Factory(frame));
+    }
+}
+
+partial class PatrolBinaryWriteTranslation
+{
+    public static partial void WriteBinaryPatrolScriptMarkerCustom(MutagenWriter writer, IPatrolGetter item)
+    {
+        using (HeaderExport.Subrecord(writer, RecordTypes.XPPA)) { }
+    }
+
+    public static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPatrolGetter item)
+    {
+        ATopicReferenceBinaryWriteTranslation.Write(writer, item.Topics);
+    }
+}
+
+partial class PatrolBinaryOverlay
+{
+    public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = Array.Empty<IATopicReferenceGetter>();
+
+    public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+    {
+        if (stream.ReadSubrecord().Content.Length != 0)
+        {
+            throw new ArgumentException($"Marker had unexpected length.");
         }
 
-        public partial class PatrolBinaryOverlay
-        {
-            public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
+        return lastParsed;
+    }
 
-            public partial ParseResult PatrolScriptMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-            {
-                if (stream.ReadSubrecordFrame().Content.Length != 0)
-                {
-                    throw new ArgumentException($"Marker had unexpected length.");
-                }
-
-                return lastParsed;
-            }
-
-            partial void TopicsCustomParse(
-                OverlayStream stream,
-                long finalPos,
-                int offset,
-                RecordType type,
-                PreviousParse lastParsed)
-            {
-                Topics = new List<IATopicReferenceGetter>(
-                    ATopicReferenceBinaryCreateTranslation.Factory(
-                        new MutagenFrame(stream)));
-            }
-        }
+    partial void TopicsCustomParse(
+        OverlayStream stream,
+        long finalPos,
+        int offset,
+        RecordType type,
+        PreviousParse lastParsed)
+    {
+        Topics = new List<IATopicReferenceGetter>(
+            ATopicReferenceBinaryCreateTranslation.Factory(
+                new MutagenFrame(stream)));
     }
 }

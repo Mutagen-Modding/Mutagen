@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +67,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptMetaSummaryMixIn.ToString(
+            ScriptMetaSummaryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -210,46 +213,41 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ScriptMetaSummary.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ScriptMetaSummary.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ScriptMetaSummary.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ScriptMetaSummary.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ScriptMetaSummary.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ScriptMetaSummary.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.RefCount ?? true)
                     {
-                        fg.AppendItem(RefCount, "RefCount");
+                        sb.AppendItem(RefCount, "RefCount");
                     }
                     if (printMask?.CompiledSize ?? true)
                     {
-                        fg.AppendItem(CompiledSize, "CompiledSize");
+                        sb.AppendItem(CompiledSize, "CompiledSize");
                     }
                     if (printMask?.VariableCount ?? true)
                     {
-                        fg.AppendItem(VariableCount, "VariableCount");
+                        sb.AppendItem(VariableCount, "VariableCount");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -364,40 +362,41 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(RefCount, "RefCount");
-                fg.AppendItem(CompiledSize, "CompiledSize");
-                fg.AppendItem(VariableCount, "VariableCount");
-                fg.AppendItem(Type, "Type");
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(RefCount, "RefCount");
+                }
+                {
+                    sb.AppendItem(CompiledSize, "CompiledSize");
+                }
+                {
+                    sb.AppendItem(VariableCount, "VariableCount");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -483,10 +482,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = ScriptMetaSummary_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;
@@ -494,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -504,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static ScriptMetaSummary CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ScriptMetaSummary();
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -519,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ScriptMetaSummary item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -529,7 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -596,26 +591,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IScriptMetaSummaryGetter item,
             string? name = null,
             ScriptMetaSummary.Mask<bool>? printMask = null)
         {
-            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).ToString(
+            return ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IScriptMetaSummaryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptMetaSummary.Mask<bool>? printMask = null)
         {
-            ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).ToString(
+            ((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -721,7 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IScriptMetaSummary item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ScriptMetaSummarySetterCommon)((IScriptMetaSummaryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -736,10 +731,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum ScriptMetaSummary_FieldIndex
+    internal enum ScriptMetaSummary_FieldIndex
     {
         Unknown = 0,
         RefCount = 1,
@@ -750,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class ScriptMetaSummary_Registration : ILoquiRegistration
+    internal partial class ScriptMetaSummary_Registration : ILoquiRegistration
     {
         public static readonly ScriptMetaSummary_Registration Instance = new ScriptMetaSummary_Registration();
 
@@ -792,6 +787,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SCHR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.SCHR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ScriptMetaSummaryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -825,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptMetaSummarySetterCommon
+    internal partial class ScriptMetaSummarySetterCommon
     {
         public static readonly ScriptMetaSummarySetterCommon Instance = new ScriptMetaSummarySetterCommon();
 
@@ -851,12 +852,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IScriptMetaSummary item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.SCHR),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -867,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptMetaSummaryCommon
+    internal partial class ScriptMetaSummaryCommon
     {
         public static readonly ScriptMetaSummaryCommon Instance = new ScriptMetaSummaryCommon();
 
@@ -891,7 +892,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
@@ -899,69 +899,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Type = item.Type == rhs.Type;
         }
         
-        public string ToString(
+        public string Print(
             IScriptMetaSummaryGetter item,
             string? name = null,
             ScriptMetaSummary.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IScriptMetaSummaryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptMetaSummary =>");
+                sb.AppendLine($"ScriptMetaSummary =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptMetaSummary) =>");
+                sb.AppendLine($"{name} (ScriptMetaSummary) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IScriptMetaSummaryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ScriptMetaSummary.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.RefCount ?? true)
             {
-                fg.AppendItem(item.RefCount, "RefCount");
+                sb.AppendItem(item.RefCount, "RefCount");
             }
             if (printMask?.CompiledSize ?? true)
             {
-                fg.AppendItem(item.CompiledSize, "CompiledSize");
+                sb.AppendItem(item.CompiledSize, "CompiledSize");
             }
             if (printMask?.VariableCount ?? true)
             {
-                fg.AppendItem(item.VariableCount, "VariableCount");
+                sb.AppendItem(item.VariableCount, "VariableCount");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -1015,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptMetaSummaryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IScriptMetaSummaryGetter obj)
         {
             yield break;
         }
@@ -1023,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptMetaSummarySetterTranslationCommon
+    internal partial class ScriptMetaSummarySetterTranslationCommon
     {
         public static readonly ScriptMetaSummarySetterTranslationCommon Instance = new ScriptMetaSummarySetterTranslationCommon();
 
@@ -1113,7 +1111,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
-        public static ScriptMetaSummary_Registration StaticRegistration => ScriptMetaSummary_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptMetaSummary_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         [DebuggerStepThrough]
@@ -1137,11 +1135,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class ScriptMetaSummaryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
+        public static readonly ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IScriptMetaSummaryGetter item,
@@ -1175,12 +1173,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.SCHR),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1192,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IScriptMetaSummaryGetter)item,
@@ -1202,9 +1200,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptMetaSummaryBinaryCreateTranslation
+    internal partial class ScriptMetaSummaryBinaryCreateTranslation
     {
-        public readonly static ScriptMetaSummaryBinaryCreateTranslation Instance = new ScriptMetaSummaryBinaryCreateTranslation();
+        public static readonly ScriptMetaSummaryBinaryCreateTranslation Instance = new ScriptMetaSummaryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IScriptMetaSummary item,
@@ -1236,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IScriptMetaSummaryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1249,16 +1247,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ScriptMetaSummaryBinaryOverlay :
+    internal partial class ScriptMetaSummaryBinaryOverlay :
         PluginBinaryOverlay,
         IScriptMetaSummaryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptMetaSummary_Registration.Instance;
-        public static ScriptMetaSummary_Registration StaticRegistration => ScriptMetaSummary_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ScriptMetaSummary_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ScriptMetaSummaryCommon.Instance;
         [DebuggerStepThrough]
@@ -1272,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptMetaSummaryBinaryWriteTranslation.Instance;
@@ -1280,7 +1278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ScriptMetaSummaryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1288,11 +1286,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        #region CompiledSize
+        public partial Int32 GetCompiledSizeCustom(int location);
         public Int32 CompiledSize => GetCompiledSizeCustom(location: 0x8);
-        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));
-        public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
+        #endregion
+        public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public ScriptFields.ScriptType Type => (ScriptFields.ScriptType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1300,25 +1301,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected ScriptMetaSummaryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ScriptMetaSummaryBinaryOverlay ScriptMetaSummaryFactory(
+        public static IScriptMetaSummaryGetter ScriptMetaSummaryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x14,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new ScriptMetaSummaryBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x14 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1327,25 +1333,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static ScriptMetaSummaryBinaryOverlay ScriptMetaSummaryFactory(
+        public static IScriptMetaSummaryGetter ScriptMetaSummaryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ScriptMetaSummaryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ScriptMetaSummaryMixIn.ToString(
+            ScriptMetaSummaryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

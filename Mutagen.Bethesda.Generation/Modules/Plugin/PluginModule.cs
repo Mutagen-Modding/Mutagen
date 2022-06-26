@@ -1,14 +1,11 @@
 using Loqui.Generation;
-using System;
-using System.Threading.Tasks;
-using Loqui;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using DictType = Mutagen.Bethesda.Generation.Fields.DictType;
 
 namespace Mutagen.Bethesda.Generation.Modules;
@@ -33,7 +30,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new MajorRecordFlagModule());
         SubModules.Add(new DataTypeModule());
         SubModules.Add(new LinkInterfaceModule());
-        SubModules.Add(new WarmupModule());
+        SubModules.Add(new AbstractInterfaceModule());
         SubModules.Add(new MajorRecordRemovalModule());
         SubModules.Add(new MajorRecordContextEnumerationModule());
         SubModules.Add(new AspectInterfaceModule());
@@ -42,11 +39,15 @@ public class PluginModule : GenerationModule
         SubModules.Add(new DuplicateModule());
         SubModules.Add(new GameCategoryExtensionsModule());
         SubModules.Add(new InterfaceDocumentationModule());
+        SubModules.Add(new RecordTypeOrderExporterModule());
+        SubModules.Add(new LastRequiredFieldModule());
         SubModules.Add(new MapsToGetterModule());
         SubModules.Add(new GameEnvironmentStateModule());
         SubModules.Add(new MajorRecordLinkEqualityModule());
         SubModules.Add(new ImplicitsModule());
         SubModules.Add(new BreakMarkingModule());
+        SubModules.Add(new SubgroupsModule());
+        SubModules.Add(new PartialFormModule());
     }
 
     public bool FieldFilter(TypeGeneration field)
@@ -91,7 +92,6 @@ public class PluginModule : GenerationModule
         if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) return;
         loqui.Singleton = true;
         loqui.NullableProperty.OnNext((false, true));
-        loqui.NotifyingProperty.OnNext((NotifyingType.None, true));
     }
 
     public override async Task PostLoad(ObjectGeneration obj)

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Holotape" recordType="NOTE" objType="Record" baseClass="Fallout4MajorRecord" GUID="2bbbff8d-bde9-4838-8c78-87cbd8407d32" ID="235">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <CustomLogic name="TypeParse" recordType="DNAM" />
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <CustomLogic name="DataParse">
+        <RecordType>SNAM</RecordType>
+        <RecordType>PNAM</RecordType>
+      </CustomLogic>
+      <RefDirect name="Data" refName="AHolotapeData" binary="NoGeneration" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+  <Object name="AHolotapeData" objType="Subrecord" abstract="true" GUID="5a1db957-f49f-4455-a3db-fad5ccf4a929" ID="352" />
+  <Object name="HolotapeSound" objType="Subrecord" baseClass="AHolotapeData" GUID="e667cb0b-dcdc-40b9-9b73-b740758f9e50" ID="353">
+    <Fields>
+      <FormLink name="Sound" refName="SoundDescriptor" />
+    </Fields>
+  </Object>
+  <Object name="HolotapeVoice" objType="Subrecord" baseClass="AHolotapeData" GUID="7f88c9dc-771e-4bbe-b1ee-e0a8ee6dccc0" ID="354">
+    <Fields>
+      <FormLink name="Scene" refName="Scene" />
+    </Fields>
+  </Object>
+  <Object name="HolotapeProgram" objType="Subrecord" baseClass="AHolotapeData" GUID="600c5389-62be-4b50-bc98-093fa0e20fb6" ID="355">
+    <Fields>
+      <String name="File" />
+    </Fields>
+  </Object>
+  <Object name="HolotapeTerminal" objType="Subrecord" baseClass="AHolotapeData" GUID="73e04a7b-352a-4708-b896-f6971b2523d6" ID="356">
+    <Fields>
+      <FormLink name="Terminal" refName="Terminal" />
+    </Fields>
+  </Object>
+</Loqui>

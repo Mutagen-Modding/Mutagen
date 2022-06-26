@@ -5,12 +5,13 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -19,18 +20,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationKeywordMixIn.ToString(
+            LocationKeywordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,30 +176,25 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LocationKeyword.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LocationKeyword.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationKeyword.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LocationKeyword.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LocationKeyword.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LocationKeyword.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Link ?? true)
                     {
-                        fg.AppendItem(Link, "Link");
+                        sb.AppendItem(Link, "Link");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -261,37 +258,30 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Link, "Link");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Link, "Link");
+                }
             }
             #endregion
 
@@ -352,7 +342,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationKeywordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationKeywordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationKeywordSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -361,7 +351,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => LocationKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationKeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -371,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static LocationKeyword CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LocationKeyword();
             ((LocationKeywordSetterCommon)((ILocationKeywordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -386,7 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LocationKeyword item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -396,7 +386,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -453,26 +443,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILocationKeywordGetter item,
             string? name = null,
             LocationKeyword.Mask<bool>? printMask = null)
         {
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).ToString(
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILocationKeywordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationKeyword.Mask<bool>? printMask = null)
         {
-            ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).ToString(
+            ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -553,7 +543,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ILocationKeyword item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LocationKeywordSetterCommon)((ILocationKeywordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -568,17 +558,17 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum LocationKeyword_FieldIndex
+    internal enum LocationKeyword_FieldIndex
     {
         Link = 0,
     }
     #endregion
 
     #region Registration
-    public partial class LocationKeyword_Registration : ILoquiRegistration
+    internal partial class LocationKeyword_Registration : ILoquiRegistration
     {
         public static readonly LocationKeyword_Registration Instance = new LocationKeyword_Registration();
 
@@ -652,7 +642,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class LocationKeywordSetterCommon : ALocationTargetSetterCommon
+    internal partial class LocationKeywordSetterCommon : ALocationTargetSetterCommon
     {
         public new static readonly LocationKeywordSetterCommon Instance = new LocationKeywordSetterCommon();
 
@@ -683,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ILocationKeyword item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -695,7 +685,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IALocationTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (LocationKeyword)item,
@@ -706,7 +696,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationKeywordCommon : ALocationTargetCommon
+    internal partial class LocationKeywordCommon : ALocationTargetCommon
     {
         public new static readonly LocationKeywordCommon Instance = new LocationKeywordCommon();
 
@@ -730,62 +720,59 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             LocationKeyword.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Link = item.Link.Equals(rhs.Link);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ILocationKeywordGetter item,
             string? name = null,
             LocationKeyword.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILocationKeywordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LocationKeyword.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocationKeyword =>");
+                sb.AppendLine($"LocationKeyword =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocationKeyword) =>");
+                sb.AppendLine($"{name} (LocationKeyword) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILocationKeywordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LocationKeyword.Mask<bool>? printMask = null)
         {
             ALocationTargetCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Link ?? true)
             {
-                fg.AppendItem(item.Link.FormKey, "Link");
+                sb.AppendItem(item.Link.FormKey, "Link");
             }
         }
         
@@ -846,9 +833,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationKeywordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationKeywordGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -859,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class LocationKeywordSetterTranslationCommon : ALocationTargetSetterTranslationCommon
+    internal partial class LocationKeywordSetterTranslationCommon : ALocationTargetSetterTranslationCommon
     {
         public new static readonly LocationKeywordSetterTranslationCommon Instance = new LocationKeywordSetterTranslationCommon();
 
@@ -959,7 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationKeyword_Registration.Instance;
-        public new static LocationKeyword_Registration StaticRegistration => LocationKeyword_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationKeyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationKeywordCommon.Instance;
         [DebuggerStepThrough]
@@ -977,13 +964,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class LocationKeywordBinaryWriteTranslation :
         ALocationTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LocationKeywordBinaryWriteTranslation Instance = new LocationKeywordBinaryWriteTranslation();
+        public new static readonly LocationKeywordBinaryWriteTranslation Instance = new LocationKeywordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILocationKeywordGetter item,
@@ -997,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Write(
             MutagenWriter writer,
             ILocationKeywordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1007,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILocationKeywordGetter)item,
@@ -1018,7 +1005,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IALocationTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ILocationKeywordGetter)item,
@@ -1028,9 +1015,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class LocationKeywordBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
+    internal partial class LocationKeywordBinaryCreateTranslation : ALocationTargetBinaryCreateTranslation
     {
-        public new readonly static LocationKeywordBinaryCreateTranslation Instance = new LocationKeywordBinaryCreateTranslation();
+        public new static readonly LocationKeywordBinaryCreateTranslation Instance = new LocationKeywordBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILocationKeyword item,
@@ -1052,16 +1039,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class LocationKeywordBinaryOverlay :
+    internal partial class LocationKeywordBinaryOverlay :
         ALocationTargetBinaryOverlay,
         ILocationKeywordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocationKeyword_Registration.Instance;
-        public new static LocationKeyword_Registration StaticRegistration => LocationKeyword_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationKeyword_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => LocationKeywordCommon.Instance;
         [DebuggerStepThrough]
@@ -1069,14 +1056,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationKeywordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationKeywordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationKeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LocationKeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1084,7 +1071,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IKeywordGetter> Link => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IKeywordGetter> Link => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1092,24 +1079,30 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected LocationKeywordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LocationKeywordBinaryOverlay LocationKeywordFactory(
+        public static ILocationKeywordGetter LocationKeywordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x4,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LocationKeywordBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1118,25 +1111,26 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             return ret;
         }
 
-        public static LocationKeywordBinaryOverlay LocationKeywordFactory(
+        public static ILocationKeywordGetter LocationKeywordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LocationKeywordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationKeywordMixIn.ToString(
+            LocationKeywordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

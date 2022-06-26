@@ -7,14 +7,10 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -61,12 +57,13 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PexObjectVariableMixIn.ToString(
+            PexObjectVariableMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -205,42 +202,37 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PexObjectVariable.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PexObjectVariable.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PexObjectVariable.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PexObjectVariable.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PexObjectVariable.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PexObjectVariable.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.TypeName ?? true)
                     {
-                        fg.AppendItem(TypeName, "TypeName");
+                        sb.AppendItem(TypeName, "TypeName");
                     }
                     if (printMask?.RawUserFlags ?? true)
                     {
-                        fg.AppendItem(RawUserFlags, "RawUserFlags");
+                        sb.AppendItem(RawUserFlags, "RawUserFlags");
                     }
                     if (printMask?.VariableData?.Overall ?? true)
                     {
-                        VariableData?.ToString(fg);
+                        VariableData?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -345,39 +337,36 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(TypeName, "TypeName");
-                fg.AppendItem(RawUserFlags, "RawUserFlags");
-                VariableData?.ToString(fg);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(TypeName, "TypeName");
+                }
+                {
+                    sb.AppendItem(RawUserFlags, "RawUserFlags");
+                }
+                VariableData?.Print(sb);
             }
             #endregion
 
@@ -458,7 +447,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -525,26 +514,26 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPexObjectVariableGetter item,
             string? name = null,
             PexObjectVariable.Mask<bool>? printMask = null)
         {
-            return ((PexObjectVariableCommon)((IPexObjectVariableGetter)item).CommonInstance()!).ToString(
+            return ((PexObjectVariableCommon)((IPexObjectVariableGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPexObjectVariableGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObjectVariable.Mask<bool>? printMask = null)
         {
-            ((PexObjectVariableCommon)((IPexObjectVariableGetter)item).CommonInstance()!).ToString(
+            ((PexObjectVariableCommon)((IPexObjectVariableGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -651,10 +640,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum PexObjectVariable_FieldIndex
+    internal enum PexObjectVariable_FieldIndex
     {
         Name = 0,
         TypeName = 1,
@@ -664,7 +653,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class PexObjectVariable_Registration : ILoquiRegistration
+    internal partial class PexObjectVariable_Registration : ILoquiRegistration
     {
         public static readonly PexObjectVariable_Registration Instance = new PexObjectVariable_Registration();
 
@@ -737,7 +726,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class PexObjectVariableSetterCommon
+    internal partial class PexObjectVariableSetterCommon
     {
         public static readonly PexObjectVariableSetterCommon Instance = new PexObjectVariableSetterCommon();
 
@@ -753,7 +742,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectVariableCommon
+    internal partial class PexObjectVariableCommon
     {
         public static readonly PexObjectVariableCommon Instance = new PexObjectVariableCommon();
 
@@ -777,7 +766,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             PexObjectVariable.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.TypeName = string.Equals(item.TypeName, rhs.TypeName);
             ret.RawUserFlags = item.RawUserFlags == rhs.RawUserFlags;
@@ -788,68 +776,66 @@ namespace Mutagen.Bethesda.Pex.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IPexObjectVariableGetter item,
             string? name = null,
             PexObjectVariable.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPexObjectVariableGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PexObjectVariable.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PexObjectVariable =>");
+                sb.AppendLine($"PexObjectVariable =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PexObjectVariable) =>");
+                sb.AppendLine($"{name} (PexObjectVariable) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPexObjectVariableGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PexObjectVariable.Mask<bool>? printMask = null)
         {
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
-                fg.AppendItem(NameItem, "Name");
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.TypeName ?? true)
                 && item.TypeName is {} TypeNameItem)
             {
-                fg.AppendItem(TypeNameItem, "TypeName");
+                sb.AppendItem(TypeNameItem, "TypeName");
             }
             if (printMask?.RawUserFlags ?? true)
             {
-                fg.AppendItem(item.RawUserFlags, "RawUserFlags");
+                sb.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
             if ((printMask?.VariableData?.Overall ?? true)
                 && item.VariableData is {} VariableDataItem)
             {
-                VariableDataItem?.ToString(fg, "VariableData");
+                VariableDataItem?.Print(sb, "VariableData");
             }
         }
         
@@ -911,7 +897,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class PexObjectVariableSetterTranslationCommon
+    internal partial class PexObjectVariableSetterTranslationCommon
     {
         public static readonly PexObjectVariableSetterTranslationCommon Instance = new PexObjectVariableSetterTranslationCommon();
 
@@ -1023,7 +1009,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PexObjectVariable_Registration.Instance;
-        public static PexObjectVariable_Registration StaticRegistration => PexObjectVariable_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PexObjectVariable_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PexObjectVariableCommon.Instance;
         [DebuggerStepThrough]

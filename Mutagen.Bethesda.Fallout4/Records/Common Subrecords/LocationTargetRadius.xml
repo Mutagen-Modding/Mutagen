@@ -4,6 +4,7 @@
     <Fields>
       <RefDirect name="Target" refName="ALocationTarget" byteLength="8" generateClassMembers="false" binary="Custom" />
       <UInt32 name="Radius" />
+      <Break />
       <UInt32 name="CollectionIndex" />
     </Fields>
   </Object>

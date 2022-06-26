@@ -6,14 +6,10 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda.Pex.Internals;
 using Noggog;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +58,13 @@ namespace Mutagen.Bethesda.Pex
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DebugFunctionMixIn.ToString(
+            DebugFunctionMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -229,9 +226,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Instructions.Specific = l;
-                        foreach (var item in Instructions.Specific.WithIndex())
+                        foreach (var item in Instructions.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -240,65 +237,58 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DebugFunction.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DebugFunction.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DebugFunction.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DebugFunction.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DebugFunction.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DebugFunction.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.ObjectName ?? true)
                     {
-                        fg.AppendItem(ObjectName, "ObjectName");
+                        sb.AppendItem(ObjectName, "ObjectName");
                     }
                     if (printMask?.StateName ?? true)
                     {
-                        fg.AppendItem(StateName, "StateName");
+                        sb.AppendItem(StateName, "StateName");
                     }
                     if (printMask?.FunctionName ?? true)
                     {
-                        fg.AppendItem(FunctionName, "FunctionName");
+                        sb.AppendItem(FunctionName, "FunctionName");
                     }
                     if (printMask?.FunctionType ?? true)
                     {
-                        fg.AppendItem(FunctionType, "FunctionType");
+                        sb.AppendItem(FunctionType, "FunctionType");
                     }
                     if ((printMask?.Instructions?.Overall ?? true)
                         && Instructions is {} InstructionsItem)
                     {
-                        fg.AppendLine("Instructions =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Instructions =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(InstructionsItem.Overall);
+                            sb.AppendItem(InstructionsItem.Overall);
                             if (InstructionsItem.Specific != null)
                             {
                                 foreach (var subItem in InstructionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -413,60 +403,57 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(ObjectName, "ObjectName");
-                fg.AppendItem(StateName, "StateName");
-                fg.AppendItem(FunctionName, "FunctionName");
-                fg.AppendItem(FunctionType, "FunctionType");
+                {
+                    sb.AppendItem(ObjectName, "ObjectName");
+                }
+                {
+                    sb.AppendItem(StateName, "StateName");
+                }
+                {
+                    sb.AppendItem(FunctionName, "FunctionName");
+                }
+                {
+                    sb.AppendItem(FunctionType, "FunctionType");
+                }
                 if (Instructions is {} InstructionsItem)
                 {
-                    fg.AppendLine("Instructions =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Instructions =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(InstructionsItem.Overall);
+                        sb.AppendItem(InstructionsItem.Overall);
                         if (InstructionsItem.Specific != null)
                         {
                             foreach (var subItem in InstructionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -553,7 +540,7 @@ namespace Mutagen.Bethesda.Pex
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -620,26 +607,26 @@ namespace Mutagen.Bethesda.Pex
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDebugFunctionGetter item,
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
-            return ((DebugFunctionCommon)((IDebugFunctionGetter)item).CommonInstance()!).ToString(
+            return ((DebugFunctionCommon)((IDebugFunctionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDebugFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
-            ((DebugFunctionCommon)((IDebugFunctionGetter)item).CommonInstance()!).ToString(
+            ((DebugFunctionCommon)((IDebugFunctionGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -746,10 +733,10 @@ namespace Mutagen.Bethesda.Pex
 
 }
 
-namespace Mutagen.Bethesda.Pex.Internals
+namespace Mutagen.Bethesda.Pex
 {
     #region Field Index
-    public enum DebugFunction_FieldIndex
+    internal enum DebugFunction_FieldIndex
     {
         ObjectName = 0,
         StateName = 1,
@@ -760,7 +747,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Registration
-    public partial class DebugFunction_Registration : ILoquiRegistration
+    internal partial class DebugFunction_Registration : ILoquiRegistration
     {
         public static readonly DebugFunction_Registration Instance = new DebugFunction_Registration();
 
@@ -833,7 +820,7 @@ namespace Mutagen.Bethesda.Pex.Internals
     #endregion
 
     #region Common
-    public partial class DebugFunctionSetterCommon
+    internal partial class DebugFunctionSetterCommon
     {
         public static readonly DebugFunctionSetterCommon Instance = new DebugFunctionSetterCommon();
 
@@ -850,7 +837,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugFunctionCommon
+    internal partial class DebugFunctionCommon
     {
         public static readonly DebugFunctionCommon Instance = new DebugFunctionCommon();
 
@@ -874,7 +861,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             DebugFunction.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.ObjectName = string.Equals(item.ObjectName, rhs.ObjectName);
             ret.StateName = string.Equals(item.StateName, rhs.StateName);
             ret.FunctionName = string.Equals(item.FunctionName, rhs.FunctionName);
@@ -885,83 +871,77 @@ namespace Mutagen.Bethesda.Pex.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDebugFunctionGetter item,
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDebugFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DebugFunction.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DebugFunction =>");
+                sb.AppendLine($"DebugFunction =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DebugFunction) =>");
+                sb.AppendLine($"{name} (DebugFunction) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDebugFunctionGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DebugFunction.Mask<bool>? printMask = null)
         {
             if (printMask?.ObjectName ?? true)
             {
-                fg.AppendItem(item.ObjectName, "ObjectName");
+                sb.AppendItem(item.ObjectName, "ObjectName");
             }
             if (printMask?.StateName ?? true)
             {
-                fg.AppendItem(item.StateName, "StateName");
+                sb.AppendItem(item.StateName, "StateName");
             }
             if (printMask?.FunctionName ?? true)
             {
-                fg.AppendItem(item.FunctionName, "FunctionName");
+                sb.AppendItem(item.FunctionName, "FunctionName");
             }
             if (printMask?.FunctionType ?? true)
             {
-                fg.AppendItem(item.FunctionType, "FunctionType");
+                sb.AppendItem(item.FunctionType, "FunctionType");
             }
             if (printMask?.Instructions?.Overall ?? true)
             {
-                fg.AppendLine("Instructions =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Instructions =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Instructions)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1015,7 +995,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         }
         
     }
-    public partial class DebugFunctionSetterTranslationCommon
+    internal partial class DebugFunctionSetterTranslationCommon
     {
         public static readonly DebugFunctionSetterTranslationCommon Instance = new DebugFunctionSetterTranslationCommon();
 
@@ -1122,7 +1102,7 @@ namespace Mutagen.Bethesda.Pex
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DebugFunction_Registration.Instance;
-        public static DebugFunction_Registration StaticRegistration => DebugFunction_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DebugFunction_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DebugFunctionCommon.Instance;
         [DebuggerStepThrough]

@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -83,12 +84,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DestructionStageMixIn.ToString(
+            DestructionStageMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -217,34 +219,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DestructionStage.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DestructionStage.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DestructionStage.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DestructionStage.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DestructionStage.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DestructionStage.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -329,37 +326,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Data?.ToString(fg);
-                Model?.ToString(fg);
+                Data?.Print(sb);
+                Model?.Print(sb);
             }
             #endregion
 
@@ -432,7 +420,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DestructionStageCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructionStageCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -443,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructionStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +441,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static DestructionStage CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DestructionStage();
             ((DestructionStageSetterCommon)((IDestructionStageGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DestructionStage item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -478,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -552,26 +540,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDestructionStageGetter item,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
-            return ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).ToString(
+            return ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDestructionStageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
-            ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).ToString(
+            ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -677,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IDestructionStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DestructionStageSetterCommon)((IDestructionStageGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -692,10 +680,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum DestructionStage_FieldIndex
+    internal enum DestructionStage_FieldIndex
     {
         Data = 0,
         Model = 1,
@@ -703,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DestructionStage_Registration : ILoquiRegistration
+    internal partial class DestructionStage_Registration : ILoquiRegistration
     {
         public static readonly DestructionStage_Registration Instance = new DestructionStage_Registration();
 
@@ -744,28 +732,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.DSTD,
-                        RecordTypes.DMDL
-                    })
-            );
+            var triggers = RecordCollection.Factory(
+                RecordTypes.DSTD,
+                RecordTypes.DMDL);
+            var all = RecordCollection.Factory(
+                RecordTypes.DSTD,
+                RecordTypes.DMDL,
+                RecordTypes.DSTF,
+                RecordTypes.DMDT,
+                RecordTypes.DMDS);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODL"),
-                new RecordType("DMDL")),
+                RecordTypes.MODL,
+                RecordTypes.DMDL),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODT"),
-                new RecordType("DMDT")),
+                RecordTypes.MODT,
+                RecordTypes.DMDT),
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("MODS"),
-                new RecordType("DMDS")));
+                RecordTypes.MODS,
+                RecordTypes.DMDS));
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -799,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DestructionStageSetterCommon
+    internal partial class DestructionStageSetterCommon
     {
         public static readonly DestructionStageSetterCommon Instance = new DestructionStageSetterCommon();
 
@@ -825,7 +815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IDestructionStage item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -838,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DestructionStageCommon
+    internal partial class DestructionStageCommon
     {
         public static readonly DestructionStageCommon Instance = new DestructionStageCommon();
 
@@ -862,7 +852,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DestructionStage.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -875,59 +864,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IDestructionStageGetter item,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDestructionStageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DestructionStage.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DestructionStage =>");
+                sb.AppendLine($"DestructionStage =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DestructionStage) =>");
+                sb.AppendLine($"{name} (DestructionStage) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDestructionStageGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DestructionStage.Mask<bool>? printMask = null)
         {
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.Print(sb, "Data");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
         }
         
@@ -980,18 +967,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDestructionStageGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDestructionStageGetter obj)
         {
             if (obj.Data is {} DataItems)
             {
-                foreach (var item in DataItems.ContainedFormLinks)
+                foreach (var item in DataItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1002,7 +989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DestructionStageSetterTranslationCommon
+    internal partial class DestructionStageSetterTranslationCommon
     {
         public static readonly DestructionStageSetterTranslationCommon Instance = new DestructionStageSetterTranslationCommon();
 
@@ -1128,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStage_Registration.Instance;
-        public static DestructionStage_Registration StaticRegistration => DestructionStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructionStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1152,16 +1139,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class DestructionStageBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DestructionStageBinaryWriteTranslation Instance = new DestructionStageBinaryWriteTranslation();
+        public static readonly DestructionStageBinaryWriteTranslation Instance = new DestructionStageBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IDestructionStageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             if (item.Data is {} DataItem)
             {
@@ -1183,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IDestructionStageGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1194,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDestructionStageGetter)item,
@@ -1204,9 +1191,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DestructionStageBinaryCreateTranslation
+    internal partial class DestructionStageBinaryCreateTranslation
     {
-        public readonly static DestructionStageBinaryCreateTranslation Instance = new DestructionStageBinaryCreateTranslation();
+        public static readonly DestructionStageBinaryCreateTranslation Instance = new DestructionStageBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDestructionStage item,
@@ -1221,28 +1208,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Skyrim.DestructionStageData.CreateFromBinary(frame: frame);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
+                        translationParams: translationParams.With(DestructionStage_Registration.ModelConverter).DoNotShortCircuit());
                     return (int)DestructionStage_FieldIndex.Model;
                 }
                 case RecordTypeInts.DSTF: // End Marker
                 {
-                    frame.ReadSubrecordFrame();
+                    frame.ReadSubrecord();
                     return ParseResult.Stop;
                 }
                 default:
@@ -1261,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IDestructionStageGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructionStageBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1274,16 +1261,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DestructionStageBinaryOverlay :
+    internal partial class DestructionStageBinaryOverlay :
         PluginBinaryOverlay,
         IDestructionStageGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DestructionStage_Registration.Instance;
-        public static DestructionStage_Registration StaticRegistration => DestructionStage_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DestructionStage_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DestructionStageCommon.Instance;
         [DebuggerStepThrough]
@@ -1297,16 +1284,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => DestructionStageCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DestructionStageCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DestructionStageBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DestructionStageBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1316,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDestructionStageDataGetter? Data => _DataLocation.HasValue ? DestructionStageDataBinaryOverlay.DestructionStageDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IDestructionStageDataGetter? Data => _DataLocation.HasValue ? DestructionStageDataBinaryOverlay.DestructionStageDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
@@ -1326,42 +1313,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected DestructionStageBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DestructionStageBinaryOverlay DestructionStageFactory(
+        public static IDestructionStageGetter DestructionStageFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new DestructionStageBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static DestructionStageBinaryOverlay DestructionStageFactory(
+        public static IDestructionStageGetter DestructionStageFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DestructionStageFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1371,29 +1364,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.DSTD:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Data) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Data, translationParams)) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)DestructionStage_FieldIndex.Data;
                 }
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)DestructionStage_FieldIndex.Model) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DestructionStage_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: DestructionStage_Registration.ModelConverter);
+                        translationParams: translationParams.With(DestructionStage_Registration.ModelConverter).DoNotShortCircuit());
                     return (int)DestructionStage_FieldIndex.Model;
                 }
                 case RecordTypeInts.DSTF: // End Marker
                 {
-                    stream.ReadSubrecordFrame();
+                    stream.ReadSubrecord();
                     return ParseResult.Stop;
                 }
                 default:
@@ -1402,12 +1395,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DestructionStageMixIn.ToString(
+            DestructionStageMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

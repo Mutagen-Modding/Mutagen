@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -90,12 +92,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherDataMixIn.ToString(
+            WeatherDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -307,78 +310,73 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WeatherData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WeatherData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeatherData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WeatherData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WeatherData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WeatherData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.WindSpeed ?? true)
                     {
-                        fg.AppendItem(WindSpeed, "WindSpeed");
+                        sb.AppendItem(WindSpeed, "WindSpeed");
                     }
                     if (printMask?.CloudSpeedLower ?? true)
                     {
-                        fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
+                        sb.AppendItem(CloudSpeedLower, "CloudSpeedLower");
                     }
                     if (printMask?.CloudSpeedUpper ?? true)
                     {
-                        fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
+                        sb.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
                     }
                     if (printMask?.TransDelta ?? true)
                     {
-                        fg.AppendItem(TransDelta, "TransDelta");
+                        sb.AppendItem(TransDelta, "TransDelta");
                     }
                     if (printMask?.SunGlare ?? true)
                     {
-                        fg.AppendItem(SunGlare, "SunGlare");
+                        sb.AppendItem(SunGlare, "SunGlare");
                     }
                     if (printMask?.SunDamage ?? true)
                     {
-                        fg.AppendItem(SunDamage, "SunDamage");
+                        sb.AppendItem(SunDamage, "SunDamage");
                     }
                     if (printMask?.PrecipitationBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                        sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
                     }
                     if (printMask?.PrecipitationEndFadeOut ?? true)
                     {
-                        fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                        sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
                     }
                     if (printMask?.ThunderLightningBeginFadeIn ?? true)
                     {
-                        fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                        sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
                     }
                     if (printMask?.ThunderLightningEndFadeOut ?? true)
                     {
-                        fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                        sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
                     }
                     if (printMask?.ThunderLightningFrequency ?? true)
                     {
-                        fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                        sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
                     }
                     if (printMask?.Classification ?? true)
                     {
-                        fg.AppendItem(Classification, "Classification");
+                        sb.AppendItem(Classification, "Classification");
                     }
                     if (printMask?.LightningColor ?? true)
                     {
-                        fg.AppendItem(LightningColor, "LightningColor");
+                        sb.AppendItem(LightningColor, "LightningColor");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -573,48 +571,65 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(WindSpeed, "WindSpeed");
-                fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
-                fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
-                fg.AppendItem(TransDelta, "TransDelta");
-                fg.AppendItem(SunGlare, "SunGlare");
-                fg.AppendItem(SunDamage, "SunDamage");
-                fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-                fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-                fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-                fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-                fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
-                fg.AppendItem(Classification, "Classification");
-                fg.AppendItem(LightningColor, "LightningColor");
+                {
+                    sb.AppendItem(WindSpeed, "WindSpeed");
+                }
+                {
+                    sb.AppendItem(CloudSpeedLower, "CloudSpeedLower");
+                }
+                {
+                    sb.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
+                }
+                {
+                    sb.AppendItem(TransDelta, "TransDelta");
+                }
+                {
+                    sb.AppendItem(SunGlare, "SunGlare");
+                }
+                {
+                    sb.AppendItem(SunDamage, "SunDamage");
+                }
+                {
+                    sb.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                }
+                {
+                    sb.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                }
+                {
+                    sb.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
+                }
+                {
+                    sb.AppendItem(Classification, "Classification");
+                }
+                {
+                    sb.AppendItem(LightningColor, "LightningColor");
+                }
             }
             #endregion
 
@@ -732,10 +747,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = WeatherData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherDataBinaryWriteTranslation.Instance;
@@ -743,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -753,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static WeatherData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WeatherData();
             ((WeatherDataSetterCommon)((IWeatherDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -768,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WeatherData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -778,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -862,26 +873,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWeatherDataGetter item,
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
-            return ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).ToString(
+            return ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWeatherDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
-            ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).ToString(
+            ((WeatherDataCommon)((IWeatherDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -987,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IWeatherData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WeatherDataSetterCommon)((IWeatherDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1002,10 +1013,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum WeatherData_FieldIndex
+    internal enum WeatherData_FieldIndex
     {
         WindSpeed = 0,
         CloudSpeedLower = 1,
@@ -1024,7 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherData_Registration : ILoquiRegistration
+    internal partial class WeatherData_Registration : ILoquiRegistration
     {
         public static readonly WeatherData_Registration Instance = new WeatherData_Registration();
 
@@ -1066,6 +1077,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WeatherDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1099,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class WeatherDataSetterCommon
+    internal partial class WeatherDataSetterCommon
     {
         public static readonly WeatherDataSetterCommon Instance = new WeatherDataSetterCommon();
 
@@ -1134,12 +1151,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IWeatherData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1150,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherDataCommon
+    internal partial class WeatherDataCommon
     {
         public static readonly WeatherDataCommon Instance = new WeatherDataCommon();
 
@@ -1174,7 +1191,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WeatherData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
             ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
             ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
@@ -1190,101 +1206,99 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LightningColor = item.LightningColor.ColorOnlyEquals(rhs.LightningColor);
         }
         
-        public string ToString(
+        public string Print(
             IWeatherDataGetter item,
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWeatherDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WeatherData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherData =>");
+                sb.AppendLine($"WeatherData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherData) =>");
+                sb.AppendLine($"{name} (WeatherData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWeatherDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WeatherData.Mask<bool>? printMask = null)
         {
             if (printMask?.WindSpeed ?? true)
             {
-                fg.AppendItem(item.WindSpeed, "WindSpeed");
+                sb.AppendItem(item.WindSpeed, "WindSpeed");
             }
             if (printMask?.CloudSpeedLower ?? true)
             {
-                fg.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
+                sb.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
             }
             if (printMask?.CloudSpeedUpper ?? true)
             {
-                fg.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
+                sb.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
             }
             if (printMask?.TransDelta ?? true)
             {
-                fg.AppendItem(item.TransDelta, "TransDelta");
+                sb.AppendItem(item.TransDelta, "TransDelta");
             }
             if (printMask?.SunGlare ?? true)
             {
-                fg.AppendItem(item.SunGlare, "SunGlare");
+                sb.AppendItem(item.SunGlare, "SunGlare");
             }
             if (printMask?.SunDamage ?? true)
             {
-                fg.AppendItem(item.SunDamage, "SunDamage");
+                sb.AppendItem(item.SunDamage, "SunDamage");
             }
             if (printMask?.PrecipitationBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
+                sb.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
             }
             if (printMask?.PrecipitationEndFadeOut ?? true)
             {
-                fg.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
+                sb.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
             }
             if (printMask?.ThunderLightningBeginFadeIn ?? true)
             {
-                fg.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
+                sb.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
             }
             if (printMask?.ThunderLightningEndFadeOut ?? true)
             {
-                fg.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
+                sb.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
             }
             if (printMask?.ThunderLightningFrequency ?? true)
             {
-                fg.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
+                sb.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
             }
             if (printMask?.Classification ?? true)
             {
-                fg.AppendItem(item.Classification, "Classification");
+                sb.AppendItem(item.Classification, "Classification");
             }
             if (printMask?.LightningColor ?? true)
             {
-                fg.AppendItem(item.LightningColor, "LightningColor");
+                sb.AppendItem(item.LightningColor, "LightningColor");
             }
         }
         
@@ -1378,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeatherDataGetter obj)
         {
             yield break;
         }
@@ -1386,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class WeatherDataSetterTranslationCommon
+    internal partial class WeatherDataSetterTranslationCommon
     {
         public static readonly WeatherDataSetterTranslationCommon Instance = new WeatherDataSetterTranslationCommon();
 
@@ -1512,7 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1536,11 +1550,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class WeatherDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherDataBinaryWriteTranslation Instance = new WeatherDataBinaryWriteTranslation();
+        public static readonly WeatherDataBinaryWriteTranslation Instance = new WeatherDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWeatherDataGetter item,
@@ -1570,12 +1584,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IWeatherDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1587,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWeatherDataGetter)item,
@@ -1597,9 +1611,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class WeatherDataBinaryCreateTranslation
+    internal partial class WeatherDataBinaryCreateTranslation
     {
-        public readonly static WeatherDataBinaryCreateTranslation Instance = new WeatherDataBinaryCreateTranslation();
+        public static readonly WeatherDataBinaryCreateTranslation Instance = new WeatherDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWeatherData item,
@@ -1633,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IWeatherDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1646,16 +1660,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class WeatherDataBinaryOverlay :
+    internal partial class WeatherDataBinaryOverlay :
         PluginBinaryOverlay,
         IWeatherDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WeatherData_Registration.Instance;
-        public static WeatherData_Registration StaticRegistration => WeatherData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeatherData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WeatherDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1669,7 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherDataBinaryWriteTranslation.Instance;
@@ -1677,7 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WeatherDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1685,19 +1699,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Byte WindSpeed => _data.Span[0x0];
-        public Byte CloudSpeedLower => _data.Span[0x1];
-        public Byte CloudSpeedUpper => _data.Span[0x2];
-        public Byte TransDelta => _data.Span[0x3];
-        public Byte SunGlare => _data.Span[0x4];
-        public Byte SunDamage => _data.Span[0x5];
-        public Byte PrecipitationBeginFadeIn => _data.Span[0x6];
-        public Byte PrecipitationEndFadeOut => _data.Span[0x7];
-        public Byte ThunderLightningBeginFadeIn => _data.Span[0x8];
-        public Byte ThunderLightningEndFadeOut => _data.Span[0x9];
-        public Byte ThunderLightningFrequency => _data.Span[0xA];
-        public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_data.Span.Slice(0xB, 0x1)[0];
-        public Color LightningColor => _data.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
+        public Byte WindSpeed => _structData.Span[0x0];
+        public Byte CloudSpeedLower => _structData.Span[0x1];
+        public Byte CloudSpeedUpper => _structData.Span[0x2];
+        public Byte TransDelta => _structData.Span[0x3];
+        public Byte SunGlare => _structData.Span[0x4];
+        public Byte SunDamage => _structData.Span[0x5];
+        public Byte PrecipitationBeginFadeIn => _structData.Span[0x6];
+        public Byte PrecipitationEndFadeOut => _structData.Span[0x7];
+        public Byte ThunderLightningBeginFadeIn => _structData.Span[0x8];
+        public Byte ThunderLightningEndFadeOut => _structData.Span[0x9];
+        public Byte ThunderLightningFrequency => _structData.Span[0xA];
+        public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_structData.Span.Slice(0xB, 0x1)[0];
+        public Color LightningColor => _structData.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1705,25 +1719,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected WeatherDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WeatherDataBinaryOverlay WeatherDataFactory(
+        public static IWeatherDataGetter WeatherDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xF,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WeatherDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xF + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1732,25 +1751,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static WeatherDataBinaryOverlay WeatherDataFactory(
+        public static IWeatherDataGetter WeatherDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WeatherDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WeatherDataMixIn.ToString(
+            WeatherDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

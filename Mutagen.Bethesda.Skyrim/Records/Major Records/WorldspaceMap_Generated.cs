@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceMapMixIn.ToString(
+            WorldspaceMapMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -234,54 +237,49 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WorldspaceMap.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WorldspaceMap.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceMap.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WorldspaceMap.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WorldspaceMap.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WorldspaceMap.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.UsableDimensions ?? true)
                     {
-                        fg.AppendItem(UsableDimensions, "UsableDimensions");
+                        sb.AppendItem(UsableDimensions, "UsableDimensions");
                     }
                     if (printMask?.NorthwestCellCoords ?? true)
                     {
-                        fg.AppendItem(NorthwestCellCoords, "NorthwestCellCoords");
+                        sb.AppendItem(NorthwestCellCoords, "NorthwestCellCoords");
                     }
                     if (printMask?.SoutheastCellCoords ?? true)
                     {
-                        fg.AppendItem(SoutheastCellCoords, "SoutheastCellCoords");
+                        sb.AppendItem(SoutheastCellCoords, "SoutheastCellCoords");
                     }
                     if (printMask?.CameraMinHeight ?? true)
                     {
-                        fg.AppendItem(CameraMinHeight, "CameraMinHeight");
+                        sb.AppendItem(CameraMinHeight, "CameraMinHeight");
                     }
                     if (printMask?.CameraMaxHeight ?? true)
                     {
-                        fg.AppendItem(CameraMaxHeight, "CameraMaxHeight");
+                        sb.AppendItem(CameraMaxHeight, "CameraMaxHeight");
                     }
                     if (printMask?.CameraInitialPitch ?? true)
                     {
-                        fg.AppendItem(CameraInitialPitch, "CameraInitialPitch");
+                        sb.AppendItem(CameraInitialPitch, "CameraInitialPitch");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -416,42 +414,47 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(UsableDimensions, "UsableDimensions");
-                fg.AppendItem(NorthwestCellCoords, "NorthwestCellCoords");
-                fg.AppendItem(SoutheastCellCoords, "SoutheastCellCoords");
-                fg.AppendItem(CameraMinHeight, "CameraMinHeight");
-                fg.AppendItem(CameraMaxHeight, "CameraMaxHeight");
-                fg.AppendItem(CameraInitialPitch, "CameraInitialPitch");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(UsableDimensions, "UsableDimensions");
+                }
+                {
+                    sb.AppendItem(NorthwestCellCoords, "NorthwestCellCoords");
+                }
+                {
+                    sb.AppendItem(SoutheastCellCoords, "SoutheastCellCoords");
+                }
+                {
+                    sb.AppendItem(CameraMinHeight, "CameraMinHeight");
+                }
+                {
+                    sb.AppendItem(CameraMaxHeight, "CameraMaxHeight");
+                }
+                {
+                    sb.AppendItem(CameraInitialPitch, "CameraInitialPitch");
+                }
             }
             #endregion
 
@@ -546,7 +549,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WorldspaceMap_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -561,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -571,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceMap CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceMap();
             ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -586,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceMap item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -596,7 +598,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -668,26 +670,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWorldspaceMapGetter item,
             string? name = null,
             WorldspaceMap.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWorldspaceMapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceMap.Mask<bool>? printMask = null)
         {
-            ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -793,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceMap item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceMapSetterCommon)((IWorldspaceMapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -808,10 +810,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceMap_FieldIndex
+    internal enum WorldspaceMap_FieldIndex
     {
         Versioning = 0,
         UsableDimensions = 1,
@@ -824,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceMap_Registration : ILoquiRegistration
+    internal partial class WorldspaceMap_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceMap_Registration Instance = new WorldspaceMap_Registration();
 
@@ -866,6 +868,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceMapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -899,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceMapSetterCommon
+    internal partial class WorldspaceMapSetterCommon
     {
         public static readonly WorldspaceMapSetterCommon Instance = new WorldspaceMapSetterCommon();
 
@@ -928,12 +936,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWorldspaceMap item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -944,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMapCommon
+    internal partial class WorldspaceMapCommon
     {
         public static readonly WorldspaceMapCommon Instance = new WorldspaceMapCommon();
 
@@ -968,7 +976,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.UsableDimensions = item.UsableDimensions.Equals(rhs.UsableDimensions);
             ret.NorthwestCellCoords = item.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords);
@@ -978,77 +985,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.CameraInitialPitch = item.CameraInitialPitch.EqualsWithin(rhs.CameraInitialPitch);
         }
         
-        public string ToString(
+        public string Print(
             IWorldspaceMapGetter item,
             string? name = null,
             WorldspaceMap.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWorldspaceMapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceMap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceMap =>");
+                sb.AppendLine($"WorldspaceMap =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceMap) =>");
+                sb.AppendLine($"{name} (WorldspaceMap) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceMapGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WorldspaceMap.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.UsableDimensions ?? true)
             {
-                fg.AppendItem(item.UsableDimensions, "UsableDimensions");
+                sb.AppendItem(item.UsableDimensions, "UsableDimensions");
             }
             if (printMask?.NorthwestCellCoords ?? true)
             {
-                fg.AppendItem(item.NorthwestCellCoords, "NorthwestCellCoords");
+                sb.AppendItem(item.NorthwestCellCoords, "NorthwestCellCoords");
             }
             if (printMask?.SoutheastCellCoords ?? true)
             {
-                fg.AppendItem(item.SoutheastCellCoords, "SoutheastCellCoords");
+                sb.AppendItem(item.SoutheastCellCoords, "SoutheastCellCoords");
             }
             if (printMask?.CameraMinHeight ?? true)
             {
-                fg.AppendItem(item.CameraMinHeight, "CameraMinHeight");
+                sb.AppendItem(item.CameraMinHeight, "CameraMinHeight");
             }
             if (printMask?.CameraMaxHeight ?? true)
             {
-                fg.AppendItem(item.CameraMaxHeight, "CameraMaxHeight");
+                sb.AppendItem(item.CameraMaxHeight, "CameraMaxHeight");
             }
             if (printMask?.CameraInitialPitch ?? true)
             {
-                fg.AppendItem(item.CameraInitialPitch, "CameraInitialPitch");
+                sb.AppendItem(item.CameraInitialPitch, "CameraInitialPitch");
             }
         }
         
@@ -1112,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceMapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceMapGetter obj)
         {
             yield break;
         }
@@ -1120,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceMapSetterTranslationCommon
+    internal partial class WorldspaceMapSetterTranslationCommon
     {
         public static readonly WorldspaceMapSetterTranslationCommon Instance = new WorldspaceMapSetterTranslationCommon();
 
@@ -1223,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
-        public static WorldspaceMap_Registration StaticRegistration => WorldspaceMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1247,11 +1252,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceMapBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceMapBinaryWriteTranslation Instance = new WorldspaceMapBinaryWriteTranslation();
+        public static readonly WorldspaceMapBinaryWriteTranslation Instance = new WorldspaceMapBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IWorldspaceMapGetter item,
@@ -1283,12 +1288,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceMapGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1300,7 +1305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceMapGetter)item,
@@ -1310,9 +1315,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceMapBinaryCreateTranslation
+    internal partial class WorldspaceMapBinaryCreateTranslation
     {
-        public readonly static WorldspaceMapBinaryCreateTranslation Instance = new WorldspaceMapBinaryCreateTranslation();
+        public static readonly WorldspaceMapBinaryCreateTranslation Instance = new WorldspaceMapBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceMap item,
@@ -1342,7 +1347,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceMapGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMapBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1355,16 +1360,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceMapBinaryOverlay :
+    internal partial class WorldspaceMapBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceMapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceMap_Registration.Instance;
-        public static WorldspaceMap_Registration StaticRegistration => WorldspaceMap_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceMap_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceMapCommon.Instance;
         [DebuggerStepThrough]
@@ -1378,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceMapBinaryWriteTranslation.Instance;
@@ -1386,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceMapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1395,12 +1400,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WorldspaceMap.VersioningBreaks Versioning { get; private set; }
-        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
-        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4));
-        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0x4));
-        public Single CameraMinHeight => _data.Length <= 0x10 ? default : _data.Slice(0x10, 0x4).Float();
-        public Single CameraMaxHeight => _data.Length <= 0x14 ? default : _data.Slice(0x14, 0x4).Float();
-        public Single CameraInitialPitch => _data.Length <= 0x18 ? default : _data.Slice(0x18, 0x4).Float();
+        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x8));
+        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4));
+        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4));
+        public Single CameraMinHeight => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).Float();
+        public Single CameraMaxHeight => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).Float();
+        public Single CameraInitialPitch => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1408,26 +1413,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WorldspaceMapBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WorldspaceMapBinaryOverlay WorldspaceMapFactory(
+        public static IWorldspaceMapGetter WorldspaceMapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new WorldspaceMapBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x10)
+            if (ret._structData.Length <= 0x10)
             {
                 ret.Versioning |= WorldspaceMap.VersioningBreaks.Break0;
             }
@@ -1438,25 +1448,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WorldspaceMapBinaryOverlay WorldspaceMapFactory(
+        public static IWorldspaceMapGetter WorldspaceMapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceMapFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceMapMixIn.ToString(
+            WorldspaceMapMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

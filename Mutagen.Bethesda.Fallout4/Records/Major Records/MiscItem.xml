@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MiscItem" recordType="MISC" objType="Record" baseClass="Fallout4MajorRecord" GUID="efafd8d1-53ff-4afa-9052-eef059fdd5fe" ID="39">
+  <Object name="MiscItem" recordType="MISC" baseClass="Fallout4MajorRecord" objType="Record" majorFlag="true" GUID="f2257a52-1a56-4afd-8c11-7e84a50f21d8" ID="169">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="FeaturedItemMessage" refName="Message" recordType="FIMD" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <RefList name="Components" refName="MiscItemComponent" recordType="CVPA" />
+      <List name="ComponentDisplayIndices" recordType="CDIX" >
+        <UInt8 />
+      </List>
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+  <Object name="MiscItemComponent" objType="Subrecord" GUID="2b777f92-de56-4260-a32d-5c28592a7fe8" ID="170">
+    <Fields>
+      <FormLink name="Component" refName="Component" />
+      <UInt32 name="Count" />
+    </Fields>
   </Object>
 </Loqui>

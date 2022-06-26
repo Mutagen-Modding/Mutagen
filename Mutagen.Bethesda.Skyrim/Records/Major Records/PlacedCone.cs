@@ -1,12 +1,8 @@
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+partial class PlacedConeBinaryOverlay
 {
-    namespace Internals
-    {
-        public partial class PlacedConeBinaryOverlay
-        {
-            public IFormLinkGetter<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
-        }
-    }
+    public IFormLinkGetter<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
 }

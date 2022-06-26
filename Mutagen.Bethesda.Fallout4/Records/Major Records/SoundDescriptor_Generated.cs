@@ -5,32 +5,35 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -51,15 +54,129 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Notes
+        public String? Notes { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISoundDescriptorGetter.Notes => this.Notes;
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ASoundDescriptor? _Data;
+        public ASoundDescriptor? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IASoundDescriptorGetter? ISoundDescriptorGetter.Data => this.Data;
+        #endregion
+        #region Category
+        private readonly IFormLinkNullable<ISoundCategoryGetter> _Category = new FormLinkNullable<ISoundCategoryGetter>();
+        public IFormLinkNullable<ISoundCategoryGetter> Category
+        {
+            get => _Category;
+            set => _Category.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundCategoryGetter> ISoundDescriptorGetter.Category => this.Category;
+        #endregion
+        #region AlternateSoundFor
+        private readonly IFormLinkNullable<ISoundDescriptorGetter> _AlternateSoundFor = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor
+        {
+            get => _AlternateSoundFor;
+            set => _AlternateSoundFor.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundDescriptorGetter.AlternateSoundFor => this.AlternateSoundFor;
+        #endregion
+        #region SoundFiles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<String> _SoundFiles = new ExtendedList<String>();
+        public ExtendedList<String> SoundFiles
+        {
+            get => this._SoundFiles;
+            init => this._SoundFiles = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<String> ISoundDescriptorGetter.SoundFiles => _SoundFiles;
+        #endregion
+
+        #endregion
+        #region OutputModel
+        private readonly IFormLinkNullable<ISoundOutputModelGetter> _OutputModel = new FormLinkNullable<ISoundOutputModelGetter>();
+        public IFormLinkNullable<ISoundOutputModelGetter> OutputModel
+        {
+            get => _OutputModel;
+            set => _OutputModel.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> ISoundDescriptorGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region LoopAndRumble
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundLoopAndRumble? _LoopAndRumble;
+        public SoundLoopAndRumble? LoopAndRumble
+        {
+            get => _LoopAndRumble;
+            set => _LoopAndRumble = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundLoopAndRumbleGetter? ISoundDescriptorGetter.LoopAndRumble => this.LoopAndRumble;
+        #endregion
+        #region Descriptors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ISoundDescriptorGetter>> _Descriptors = new ExtendedList<IFormLinkGetter<ISoundDescriptorGetter>>();
+        public ExtendedList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors
+        {
+            get => this._Descriptors;
+            init => this._Descriptors = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ISoundDescriptorGetter>> ISoundDescriptorGetter.Descriptors => _Descriptors;
+        #endregion
+
+        #endregion
+        #region RatesOfFire
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<SoundRateOfFire>? _RatesOfFire;
+        public ExtendedList<SoundRateOfFire>? RatesOfFire
+        {
+            get => this._RatesOfFire;
+            set => this._RatesOfFire = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ISoundRateOfFireGetter>? ISoundDescriptorGetter.RatesOfFire => _RatesOfFire;
+        #endregion
+
+        #endregion
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundDescriptorMixIn.ToString(
+            SoundDescriptorMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -75,6 +192,16 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Notes = initialValue;
+                this.Data = new MaskItem<TItem, ASoundDescriptor.Mask<TItem>?>(initialValue, new ASoundDescriptor.Mask<TItem>(initialValue));
+                this.Category = initialValue;
+                this.AlternateSoundFor = initialValue;
+                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.OutputModel = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.LoopAndRumble = new MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>(initialValue, new SoundLoopAndRumble.Mask<TItem>(initialValue));
+                this.Descriptors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RatesOfFire = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -83,7 +210,17 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Notes,
+                TItem Data,
+                TItem Category,
+                TItem AlternateSoundFor,
+                TItem SoundFiles,
+                TItem OutputModel,
+                TItem Conditions,
+                TItem LoopAndRumble,
+                TItem Descriptors,
+                TItem RatesOfFire)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -92,6 +229,16 @@ namespace Mutagen.Bethesda.Fallout4
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Notes = Notes;
+                this.Data = new MaskItem<TItem, ASoundDescriptor.Mask<TItem>?>(Data, new ASoundDescriptor.Mask<TItem>(Data));
+                this.Category = Category;
+                this.AlternateSoundFor = AlternateSoundFor;
+                this.SoundFiles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SoundFiles, Enumerable.Empty<(int Index, TItem Value)>());
+                this.OutputModel = OutputModel;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.LoopAndRumble = new MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>(LoopAndRumble, new SoundLoopAndRumble.Mask<TItem>(LoopAndRumble));
+                this.Descriptors = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Descriptors, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RatesOfFire = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>(RatesOfFire, Enumerable.Empty<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -100,6 +247,19 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Notes;
+            public MaskItem<TItem, ASoundDescriptor.Mask<TItem>?>? Data { get; set; }
+            public TItem Category;
+            public TItem AlternateSoundFor;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SoundFiles;
+            public TItem OutputModel;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, SoundLoopAndRumble.Mask<TItem>?>? LoopAndRumble { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Descriptors;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SoundRateOfFire.Mask<TItem>?>>?>? RatesOfFire;
             #endregion
 
             #region Equals
@@ -113,11 +273,31 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Notes, rhs.Notes)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Category, rhs.Category)) return false;
+                if (!object.Equals(this.AlternateSoundFor, rhs.AlternateSoundFor)) return false;
+                if (!object.Equals(this.SoundFiles, rhs.SoundFiles)) return false;
+                if (!object.Equals(this.OutputModel, rhs.OutputModel)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.LoopAndRumble, rhs.LoopAndRumble)) return false;
+                if (!object.Equals(this.Descriptors, rhs.Descriptors)) return false;
+                if (!object.Equals(this.RatesOfFire, rhs.RatesOfFire)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Notes);
+                hash.Add(this.Data);
+                hash.Add(this.Category);
+                hash.Add(this.AlternateSoundFor);
+                hash.Add(this.SoundFiles);
+                hash.Add(this.OutputModel);
+                hash.Add(this.Conditions);
+                hash.Add(this.LoopAndRumble);
+                hash.Add(this.Descriptors);
+                hash.Add(this.RatesOfFire);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -128,6 +308,66 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Notes)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Category)) return false;
+                if (!eval(this.AlternateSoundFor)) return false;
+                if (this.SoundFiles != null)
+                {
+                    if (!eval(this.SoundFiles.Overall)) return false;
+                    if (this.SoundFiles.Specific != null)
+                    {
+                        foreach (var item in this.SoundFiles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.OutputModel)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (LoopAndRumble != null)
+                {
+                    if (!eval(this.LoopAndRumble.Overall)) return false;
+                    if (this.LoopAndRumble.Specific != null && !this.LoopAndRumble.Specific.All(eval)) return false;
+                }
+                if (this.Descriptors != null)
+                {
+                    if (!eval(this.Descriptors.Overall)) return false;
+                    if (this.Descriptors.Specific != null)
+                    {
+                        foreach (var item in this.Descriptors.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RatesOfFire != null)
+                {
+                    if (!eval(this.RatesOfFire.Overall)) return false;
+                    if (this.RatesOfFire.Specific != null)
+                    {
+                        foreach (var item in this.RatesOfFire.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -136,6 +376,66 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Notes)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Category)) return true;
+                if (eval(this.AlternateSoundFor)) return true;
+                if (this.SoundFiles != null)
+                {
+                    if (eval(this.SoundFiles.Overall)) return true;
+                    if (this.SoundFiles.Specific != null)
+                    {
+                        foreach (var item in this.SoundFiles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.OutputModel)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (LoopAndRumble != null)
+                {
+                    if (eval(this.LoopAndRumble.Overall)) return true;
+                    if (this.LoopAndRumble.Specific != null && this.LoopAndRumble.Specific.Any(eval)) return true;
+                }
+                if (this.Descriptors != null)
+                {
+                    if (eval(this.Descriptors.Overall)) return true;
+                    if (this.Descriptors.Specific != null)
+                    {
+                        foreach (var item in this.Descriptors.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RatesOfFire != null)
+                {
+                    if (eval(this.RatesOfFire.Overall)) return true;
+                    if (this.RatesOfFire.Specific != null)
+                    {
+                        foreach (var item in this.RatesOfFire.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -151,30 +451,193 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Notes = eval(this.Notes);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ASoundDescriptor.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Category = eval(this.Category);
+                obj.AlternateSoundFor = eval(this.AlternateSoundFor);
+                if (SoundFiles != null)
+                {
+                    obj.SoundFiles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SoundFiles.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (SoundFiles.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.SoundFiles.Specific = l;
+                        foreach (var item in SoundFiles.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.OutputModel = eval(this.OutputModel);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.LoopAndRumble = this.LoopAndRumble == null ? null : new MaskItem<R, SoundLoopAndRumble.Mask<R>?>(eval(this.LoopAndRumble.Overall), this.LoopAndRumble.Specific?.Translate(eval));
+                if (Descriptors != null)
+                {
+                    obj.Descriptors = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Descriptors.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Descriptors.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Descriptors.Specific = l;
+                        foreach (var item in Descriptors.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (RatesOfFire != null)
+                {
+                    obj.RatesOfFire = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>?>(eval(this.RatesOfFire.Overall), Enumerable.Empty<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>());
+                    if (RatesOfFire.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>>();
+                        obj.RatesOfFire.Specific = l;
+                        foreach (var item in RatesOfFire.Specific)
+                        {
+                            MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SoundRateOfFire.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(SoundDescriptor.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(SoundDescriptor.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SoundDescriptor.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, SoundDescriptor.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(SoundDescriptor.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(SoundDescriptor.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
+                    if (printMask?.Notes ?? true)
+                    {
+                        sb.AppendItem(Notes, "Notes");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
+                    if (printMask?.Category ?? true)
+                    {
+                        sb.AppendItem(Category, "Category");
+                    }
+                    if (printMask?.AlternateSoundFor ?? true)
+                    {
+                        sb.AppendItem(AlternateSoundFor, "AlternateSoundFor");
+                    }
+                    if ((printMask?.SoundFiles?.Overall ?? true)
+                        && SoundFiles is {} SoundFilesItem)
+                    {
+                        sb.AppendLine("SoundFiles =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(SoundFilesItem.Overall);
+                            if (SoundFilesItem.Specific != null)
+                            {
+                                foreach (var subItem in SoundFilesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.OutputModel ?? true)
+                    {
+                        sb.AppendItem(OutputModel, "OutputModel");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.LoopAndRumble?.Overall ?? true)
+                    {
+                        LoopAndRumble?.Print(sb);
+                    }
+                    if ((printMask?.Descriptors?.Overall ?? true)
+                        && Descriptors is {} DescriptorsItem)
+                    {
+                        sb.AppendLine("Descriptors =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DescriptorsItem.Overall);
+                            if (DescriptorsItem.Specific != null)
+                            {
+                                foreach (var subItem in DescriptorsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.RatesOfFire?.Overall ?? true)
+                        && RatesOfFire is {} RatesOfFireItem)
+                    {
+                        sb.AppendLine("RatesOfFire =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RatesOfFireItem.Overall);
+                            if (RatesOfFireItem.Specific != null)
+                            {
+                                foreach (var subItem in RatesOfFireItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -184,12 +647,45 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Notes;
+            public MaskItem<Exception?, ASoundDescriptor.ErrorMask?>? Data;
+            public Exception? Category;
+            public Exception? AlternateSoundFor;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SoundFiles;
+            public Exception? OutputModel;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, SoundLoopAndRumble.ErrorMask?>? LoopAndRumble;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Descriptors;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundRateOfFire.ErrorMask?>>?>? RatesOfFire;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundDescriptor_FieldIndex.Notes:
+                        return Notes;
+                    case SoundDescriptor_FieldIndex.Data:
+                        return Data;
+                    case SoundDescriptor_FieldIndex.Category:
+                        return Category;
+                    case SoundDescriptor_FieldIndex.AlternateSoundFor:
+                        return AlternateSoundFor;
+                    case SoundDescriptor_FieldIndex.SoundFiles:
+                        return SoundFiles;
+                    case SoundDescriptor_FieldIndex.OutputModel:
+                        return OutputModel;
+                    case SoundDescriptor_FieldIndex.Conditions:
+                        return Conditions;
+                    case SoundDescriptor_FieldIndex.LoopAndRumble:
+                        return LoopAndRumble;
+                    case SoundDescriptor_FieldIndex.Descriptors:
+                        return Descriptors;
+                    case SoundDescriptor_FieldIndex.RatesOfFire:
+                        return RatesOfFire;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +696,36 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundDescriptor_FieldIndex.Notes:
+                        this.Notes = ex;
+                        break;
+                    case SoundDescriptor_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ASoundDescriptor.ErrorMask?>(ex, null);
+                        break;
+                    case SoundDescriptor_FieldIndex.Category:
+                        this.Category = ex;
+                        break;
+                    case SoundDescriptor_FieldIndex.AlternateSoundFor:
+                        this.AlternateSoundFor = ex;
+                        break;
+                    case SoundDescriptor_FieldIndex.SoundFiles:
+                        this.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SoundDescriptor_FieldIndex.OutputModel:
+                        this.OutputModel = ex;
+                        break;
+                    case SoundDescriptor_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SoundDescriptor_FieldIndex.LoopAndRumble:
+                        this.LoopAndRumble = new MaskItem<Exception?, SoundLoopAndRumble.ErrorMask?>(ex, null);
+                        break;
+                    case SoundDescriptor_FieldIndex.Descriptors:
+                        this.Descriptors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SoundDescriptor_FieldIndex.RatesOfFire:
+                        this.RatesOfFire = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundRateOfFire.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +737,36 @@ namespace Mutagen.Bethesda.Fallout4
                 SoundDescriptor_FieldIndex enu = (SoundDescriptor_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundDescriptor_FieldIndex.Notes:
+                        this.Notes = (Exception?)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ASoundDescriptor.ErrorMask?>?)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.Category:
+                        this.Category = (Exception?)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.AlternateSoundFor:
+                        this.AlternateSoundFor = (Exception?)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.SoundFiles:
+                        this.SoundFiles = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.OutputModel:
+                        this.OutputModel = (Exception?)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.LoopAndRumble:
+                        this.LoopAndRumble = (MaskItem<Exception?, SoundLoopAndRumble.ErrorMask?>?)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.Descriptors:
+                        this.Descriptors = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SoundDescriptor_FieldIndex.RatesOfFire:
+                        this.RatesOfFire = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundRateOfFire.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,41 +776,132 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Notes != null) return true;
+                if (Data != null) return true;
+                if (Category != null) return true;
+                if (AlternateSoundFor != null) return true;
+                if (SoundFiles != null) return true;
+                if (OutputModel != null) return true;
+                if (Conditions != null) return true;
+                if (LoopAndRumble != null) return true;
+                if (Descriptors != null) return true;
+                if (RatesOfFire != null) return true;
                 return false;
             }
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Notes, "Notes");
+                }
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(Category, "Category");
+                }
+                {
+                    sb.AppendItem(AlternateSoundFor, "AlternateSoundFor");
+                }
+                if (SoundFiles is {} SoundFilesItem)
+                {
+                    sb.AppendLine("SoundFiles =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(SoundFilesItem.Overall);
+                        if (SoundFilesItem.Specific != null)
+                        {
+                            foreach (var subItem in SoundFilesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(OutputModel, "OutputModel");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                LoopAndRumble?.Print(sb);
+                if (Descriptors is {} DescriptorsItem)
+                {
+                    sb.AppendLine("Descriptors =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DescriptorsItem.Overall);
+                        if (DescriptorsItem.Specific != null)
+                        {
+                            foreach (var subItem in DescriptorsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (RatesOfFire is {} RatesOfFireItem)
+                {
+                    sb.AppendLine("RatesOfFire =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RatesOfFireItem.Overall);
+                        if (RatesOfFireItem.Specific != null)
+                        {
+                            foreach (var subItem in RatesOfFireItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -263,6 +910,16 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Notes = this.Notes.Combine(rhs.Notes);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Category = this.Category.Combine(rhs.Category);
+                ret.AlternateSoundFor = this.AlternateSoundFor.Combine(rhs.AlternateSoundFor);
+                ret.SoundFiles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SoundFiles?.Overall, rhs.SoundFiles?.Overall), ExceptionExt.Combine(this.SoundFiles?.Specific, rhs.SoundFiles?.Specific));
+                ret.OutputModel = this.OutputModel.Combine(rhs.OutputModel);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.LoopAndRumble = this.LoopAndRumble.Combine(rhs.LoopAndRumble, (l, r) => l.Combine(r));
+                ret.Descriptors = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Descriptors?.Overall, rhs.Descriptors?.Overall), ExceptionExt.Combine(this.Descriptors?.Specific, rhs.Descriptors?.Specific));
+                ret.RatesOfFire = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SoundRateOfFire.ErrorMask?>>?>(ExceptionExt.Combine(this.RatesOfFire?.Overall, rhs.RatesOfFire?.Overall), ExceptionExt.Combine(this.RatesOfFire?.Specific, rhs.RatesOfFire?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -284,15 +941,49 @@ namespace Mutagen.Bethesda.Fallout4
             Fallout4MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Notes;
+            public ASoundDescriptor.TranslationMask? Data;
+            public bool Category;
+            public bool AlternateSoundFor;
+            public bool SoundFiles;
+            public bool OutputModel;
+            public Condition.TranslationMask? Conditions;
+            public SoundLoopAndRumble.TranslationMask? LoopAndRumble;
+            public bool Descriptors;
+            public SoundRateOfFire.TranslationMask? RatesOfFire;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Notes = defaultOn;
+                this.Category = defaultOn;
+                this.AlternateSoundFor = defaultOn;
+                this.SoundFiles = defaultOn;
+                this.OutputModel = defaultOn;
+                this.Descriptors = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Notes, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Category, null));
+                ret.Add((AlternateSoundFor, null));
+                ret.Add((SoundFiles, null));
+                ret.Add((OutputModel, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((LoopAndRumble != null ? LoopAndRumble.OnOverall : DefaultOn, LoopAndRumble?.GetCrystal()));
+                ret.Add((Descriptors, null));
+                ret.Add((RatesOfFire == null ? DefaultOn : !RatesOfFire.GetCrystal().CopyNothing, RatesOfFire?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -304,6 +995,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundDescriptorCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundDescriptorSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundDescriptor(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -373,7 +1066,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -383,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Create
         public new static SoundDescriptor CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new SoundDescriptor();
             ((SoundDescriptorSetterCommon)((ISoundDescriptorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -398,7 +1091,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out SoundDescriptor item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -408,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -426,9 +1119,21 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface ISoundDescriptor :
         IFallout4MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoundDescriptorInternal>,
+        ISound,
         ISoundDescriptorGetter
     {
+        new String? Notes { get; set; }
+        new ASoundDescriptor? Data { get; set; }
+        new IFormLinkNullable<ISoundCategoryGetter> Category { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
+        new ExtendedList<String> SoundFiles { get; }
+        new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new SoundLoopAndRumble? LoopAndRumble { get; set; }
+        new ExtendedList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors { get; }
+        new ExtendedList<SoundRateOfFire>? RatesOfFire { get; set; }
     }
 
     public partial interface ISoundDescriptorInternal :
@@ -442,10 +1147,22 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface ISoundDescriptorGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISoundDescriptorGetter>,
-        IMapsToGetter<ISoundDescriptorGetter>
+        IMapsToGetter<ISoundDescriptorGetter>,
+        ISoundGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
+        String? Notes { get; }
+        IASoundDescriptorGetter? Data { get; }
+        IFormLinkNullableGetter<ISoundCategoryGetter> Category { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }
+        IReadOnlyList<String> SoundFiles { get; }
+        IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        ISoundLoopAndRumbleGetter? LoopAndRumble { get; }
+        IReadOnlyList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors { get; }
+        IReadOnlyList<ISoundRateOfFireGetter>? RatesOfFire { get; }
 
     }
 
@@ -470,26 +1187,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ISoundDescriptorGetter item,
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).ToString(
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ISoundDescriptorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
-            ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).ToString(
+            ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -584,7 +1301,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this ISoundDescriptorInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((SoundDescriptorSetterCommon)((ISoundDescriptorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -599,10 +1316,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum SoundDescriptor_FieldIndex
+    internal enum SoundDescriptor_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -610,11 +1327,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Notes = 6,
+        Data = 7,
+        Category = 8,
+        AlternateSoundFor = 9,
+        SoundFiles = 10,
+        OutputModel = 11,
+        Conditions = 12,
+        LoopAndRumble = 13,
+        Descriptors = 14,
+        RatesOfFire = 15,
     }
     #endregion
 
     #region Registration
-    public partial class SoundDescriptor_Registration : ILoquiRegistration
+    internal partial class SoundDescriptor_Registration : ILoquiRegistration
     {
         public static readonly SoundDescriptor_Registration Instance = new SoundDescriptor_Registration();
 
@@ -627,9 +1354,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "bf0b717d-4b81-4da3-88bf-7c8e8fe162c8";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(SoundDescriptor.Mask<>);
 
@@ -656,6 +1383,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.SNDR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.SNDR);
+            var all = RecordCollection.Factory(
+                RecordTypes.SNDR,
+                RecordTypes.NNAM,
+                RecordTypes.CNAM,
+                RecordTypes.GNAM,
+                RecordTypes.SNAM,
+                RecordTypes.ANAM,
+                RecordTypes.ONAM,
+                RecordTypes.CTDA,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.LNAM,
+                RecordTypes.BNAM,
+                RecordTypes.DNAM,
+                RecordTypes.ITMS,
+                RecordTypes.INTV,
+                RecordTypes.FNAM,
+                RecordTypes.ITMC,
+                RecordTypes.ITME);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(SoundDescriptorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -689,7 +1441,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class SoundDescriptorSetterCommon : Fallout4MajorRecordSetterCommon
+    internal partial class SoundDescriptorSetterCommon : Fallout4MajorRecordSetterCommon
     {
         public new static readonly SoundDescriptorSetterCommon Instance = new SoundDescriptorSetterCommon();
 
@@ -698,6 +1450,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(ISoundDescriptorInternal item)
         {
             ClearPartial();
+            item.Notes = default;
+            item.Data = null;
+            item.Category.Clear();
+            item.AlternateSoundFor.Clear();
+            item.SoundFiles.Clear();
+            item.OutputModel.Clear();
+            item.Conditions.Clear();
+            item.LoopAndRumble = null;
+            item.Descriptors.Clear();
+            item.RatesOfFire = null;
             base.Clear(item);
         }
         
@@ -715,6 +1477,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(ISoundDescriptor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Data?.RemapLinks(mapping);
+            obj.Category.Relink(mapping);
+            obj.AlternateSoundFor.Relink(mapping);
+            obj.OutputModel.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.Descriptors.RemapLinks(mapping);
         }
         
         #endregion
@@ -723,7 +1491,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void CopyInFromBinary(
             ISoundDescriptorInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ISoundDescriptorInternal>(
                 record: item,
@@ -736,7 +1504,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundDescriptor)item,
@@ -747,7 +1515,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (SoundDescriptor)item,
@@ -758,7 +1526,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundDescriptorCommon : Fallout4MajorRecordCommon
+    internal partial class SoundDescriptorCommon : Fallout4MajorRecordCommon
     {
         public new static readonly SoundDescriptorCommon Instance = new SoundDescriptorCommon();
 
@@ -782,58 +1550,169 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             SoundDescriptor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
+            ret.Notes = string.Equals(item.Notes, rhs.Notes);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Category = item.Category.Equals(rhs.Category);
+            ret.AlternateSoundFor = item.AlternateSoundFor.Equals(rhs.AlternateSoundFor);
+            ret.SoundFiles = item.SoundFiles.CollectionEqualsHelper(
+                rhs.SoundFiles,
+                (l, r) => string.Equals(l, r),
+                include);
+            ret.OutputModel = item.OutputModel.Equals(rhs.OutputModel);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LoopAndRumble = EqualsMaskHelper.EqualsHelper(
+                item.LoopAndRumble,
+                rhs.LoopAndRumble,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Descriptors = item.Descriptors.CollectionEqualsHelper(
+                rhs.Descriptors,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.RatesOfFire = item.RatesOfFire.CollectionEqualsHelper(
+                rhs.RatesOfFire,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ISoundDescriptorGetter item,
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ISoundDescriptorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SoundDescriptor =>");
+                sb.AppendLine($"SoundDescriptor =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SoundDescriptor) =>");
+                sb.AppendLine($"{name} (SoundDescriptor) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ISoundDescriptorGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             SoundDescriptor.Mask<bool>? printMask = null)
         {
             Fallout4MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
+            if ((printMask?.Notes ?? true)
+                && item.Notes is {} NotesItem)
+            {
+                sb.AppendItem(NotesItem, "Notes");
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
+            {
+                DataItem?.Print(sb, "Data");
+            }
+            if (printMask?.Category ?? true)
+            {
+                sb.AppendItem(item.Category.FormKeyNullable, "Category");
+            }
+            if (printMask?.AlternateSoundFor ?? true)
+            {
+                sb.AppendItem(item.AlternateSoundFor.FormKeyNullable, "AlternateSoundFor");
+            }
+            if (printMask?.SoundFiles?.Overall ?? true)
+            {
+                sb.AppendLine("SoundFiles =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.SoundFiles)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if (printMask?.OutputModel ?? true)
+            {
+                sb.AppendItem(item.OutputModel.FormKeyNullable, "OutputModel");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.LoopAndRumble?.Overall ?? true)
+                && item.LoopAndRumble is {} LoopAndRumbleItem)
+            {
+                LoopAndRumbleItem?.Print(sb, "LoopAndRumble");
+            }
+            if (printMask?.Descriptors?.Overall ?? true)
+            {
+                sb.AppendLine("Descriptors =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Descriptors)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.RatesOfFire?.Overall ?? true)
+                && item.RatesOfFire is {} RatesOfFireItem)
+            {
+                sb.AppendLine("RatesOfFire =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RatesOfFireItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static SoundDescriptor_FieldIndex ConvertFieldIndex(Fallout4MajorRecord_FieldIndex index)
@@ -882,6 +1761,54 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Notes) ?? true))
+            {
+                if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((ASoundDescriptorCommon)((IASoundDescriptorGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
+            {
+                if (!lhs.Category.Equals(rhs.Category)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
+            {
+                if (!lhs.AlternateSoundFor.Equals(rhs.AlternateSoundFor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
+            {
+                if (!lhs.SoundFiles.SequenceEqualNullable(rhs.SoundFiles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
+            {
+                if (!lhs.OutputModel.Equals(rhs.OutputModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.Conditions)))) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.LoopAndRumble) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LoopAndRumble, rhs.LoopAndRumble, out var lhsLoopAndRumble, out var rhsLoopAndRumble, out var isLoopAndRumbleEqual))
+                {
+                    if (!((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)lhsLoopAndRumble).CommonInstance()!).Equals(lhsLoopAndRumble, rhsLoopAndRumble, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.LoopAndRumble))) return false;
+                }
+                else if (!isLoopAndRumbleEqual) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Descriptors) ?? true))
+            {
+                if (!lhs.Descriptors.SequenceEqualNullable(rhs.Descriptors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.RatesOfFire) ?? true))
+            {
+                if (!lhs.RatesOfFire.SequenceEqualNullable(rhs.RatesOfFire, (l, r) => ((SoundRateOfFireCommon)((ISoundRateOfFireGetter)l).CommonInstance()!).Equals(l, r, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.RatesOfFire)))) return false;
+            }
             return true;
         }
         
@@ -910,6 +1837,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual int GetHashCode(ISoundDescriptorGetter item)
         {
             var hash = new HashCode();
+            if (item.Notes is {} Notesitem)
+            {
+                hash.Add(Notesitem);
+            }
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
+            hash.Add(item.Category);
+            hash.Add(item.AlternateSoundFor);
+            hash.Add(item.SoundFiles);
+            hash.Add(item.OutputModel);
+            hash.Add(item.Conditions);
+            if (item.LoopAndRumble is {} LoopAndRumbleitem)
+            {
+                hash.Add(LoopAndRumbleitem);
+            }
+            hash.Add(item.Descriptors);
+            hash.Add(item.RatesOfFire);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -933,11 +1879,39 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundDescriptorGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISoundDescriptorGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Data is IFormLinkContainerGetter DatalinkCont)
+            {
+                foreach (var item in DatalinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Category, out var CategoryInfo))
+            {
+                yield return CategoryInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AlternateSoundFor, out var AlternateSoundForInfo))
+            {
+                yield return AlternateSoundForInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.OutputModel, out var OutputModelInfo))
+            {
+                yield return OutputModelInfo;
+            }
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Descriptors)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -980,7 +1954,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class SoundDescriptorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
+    internal partial class SoundDescriptorSetterTranslationCommon : Fallout4MajorRecordSetterTranslationCommon
     {
         public new static readonly SoundDescriptorSetterTranslationCommon Instance = new SoundDescriptorSetterTranslationCommon();
 
@@ -1013,6 +1987,166 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Notes) ?? true))
+            {
+                item.Notes = rhs.Notes;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundDescriptor_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
+            {
+                item.Category.SetTo(rhs.Category.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
+            {
+                item.AlternateSoundFor.SetTo(rhs.AlternateSoundFor.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.SoundFiles);
+                try
+                {
+                    item.SoundFiles.SetTo(rhs.SoundFiles);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
+            {
+                item.OutputModel.SetTo(rhs.OutputModel.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.LoopAndRumble) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.LoopAndRumble);
+                try
+                {
+                    if(rhs.LoopAndRumble is {} rhsLoopAndRumble)
+                    {
+                        item.LoopAndRumble = rhsLoopAndRumble.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundDescriptor_FieldIndex.LoopAndRumble));
+                    }
+                    else
+                    {
+                        item.LoopAndRumble = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Descriptors) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.Descriptors);
+                try
+                {
+                    item.Descriptors.SetTo(
+                        rhs.Descriptors
+                        .Select(r => (IFormLinkGetter<ISoundDescriptorGetter>)new FormLink<ISoundDescriptorGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.RatesOfFire) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundDescriptor_FieldIndex.RatesOfFire);
+                try
+                {
+                    if ((rhs.RatesOfFire != null))
+                    {
+                        item.RatesOfFire = 
+                            rhs.RatesOfFire
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<SoundRateOfFire>();
+                    }
+                    else
+                    {
+                        item.RatesOfFire = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1135,7 +2269,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]
@@ -1153,18 +2287,124 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class SoundDescriptorBinaryWriteTranslation :
         Fallout4MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SoundDescriptorBinaryWriteTranslation Instance = new SoundDescriptorBinaryWriteTranslation();
+        public new static readonly SoundDescriptorBinaryWriteTranslation Instance = new SoundDescriptorBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            ISoundDescriptorGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Notes,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            SoundDescriptorBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Category,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AlternateSoundFor,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
+                writer: writer,
+                items: item.SoundFiles,
+                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                transl: StringBinaryTranslation.Instance.Write);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OutputModel,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.LoopAndRumble is {} LoopAndRumbleItem)
+            {
+                ((SoundLoopAndRumbleBinaryWriteTranslation)((IBinaryItem)LoopAndRumbleItem).BinaryWriteTranslator).Write(
+                    item: LoopAndRumbleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            SoundDescriptorBinaryWriteTranslation.WriteBinaryDataParse(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISoundDescriptorGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Descriptors,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISoundDescriptorGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISoundRateOfFireGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.RatesOfFire,
+                counterType: RecordTypes.ITMC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, ISoundRateOfFireGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SoundRateOfFireBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            ISoundDescriptorGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            ISoundDescriptorGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataParseCustom(
+            MutagenWriter writer,
+            ISoundDescriptorGetter item);
+
+        public static void WriteBinaryDataParse(
+            MutagenWriter writer,
+            ISoundDescriptorGetter item)
+        {
+            WriteBinaryDataParseCustom(
+                writer: writer,
+                item: item);
+        }
 
         public void Write(
             MutagenWriter writer,
             ISoundDescriptorGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -1175,10 +2415,15 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1190,7 +2435,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ISoundDescriptorGetter)item,
@@ -1201,7 +2446,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundDescriptorGetter)item,
@@ -1212,7 +2457,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ISoundDescriptorGetter)item,
@@ -1222,9 +2467,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class SoundDescriptorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
+    internal partial class SoundDescriptorBinaryCreateTranslation : Fallout4MajorRecordBinaryCreateTranslation
     {
-        public new readonly static SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
+        public new static readonly SoundDescriptorBinaryCreateTranslation Instance = new SoundDescriptorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SNDR;
         public static void FillBinaryStructs(
@@ -1235,6 +2480,126 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 frame: frame);
         }
+
+        public static ParseResult FillBinaryRecordTypes(
+            ISoundDescriptorInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Notes = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)SoundDescriptor_FieldIndex.Notes;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    SoundDescriptorBinaryCreateTranslation.FillBinaryDataCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return (int)SoundDescriptor_FieldIndex.Data;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Category.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SoundDescriptor_FieldIndex.Category;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlternateSoundFor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    item.SoundFiles.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ANAM),
+                            transl: StringBinaryTranslation.Instance.Parse));
+                    return (int)SoundDescriptor_FieldIndex.SoundFiles;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OutputModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)SoundDescriptor_FieldIndex.OutputModel;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)SoundDescriptor_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    item.LoopAndRumble = Mutagen.Bethesda.Fallout4.SoundLoopAndRumble.CreateFromBinary(frame: frame);
+                    return (int)SoundDescriptor_FieldIndex.LoopAndRumble;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    return SoundDescriptorBinaryCreateTranslation.FillBinaryDataParseCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    item.Descriptors.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISoundDescriptorGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)SoundDescriptor_FieldIndex.Descriptors;
+                }
+                case RecordTypeInts.ITMS:
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.ITMC:
+                {
+                    item.RatesOfFire = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SoundRateOfFire>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.ITMC,
+                            triggeringRecord: SoundRateOfFire_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SoundRateOfFire.TryCreateFromBinary)
+                        .CastExtendedList<SoundRateOfFire>();
+                    return (int)SoundDescriptor_FieldIndex.RatesOfFire;
+                }
+                default:
+                    return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinaryDataCustom(
+            MutagenFrame frame,
+            ISoundDescriptorInternal item);
+
+        public static partial ParseResult FillBinaryDataParseCustom(
+            MutagenFrame frame,
+            ISoundDescriptorInternal item);
 
     }
 
@@ -1249,16 +2614,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class SoundDescriptorBinaryOverlay :
+    internal partial class SoundDescriptorBinaryOverlay :
         Fallout4MajorRecordBinaryOverlay,
         ISoundDescriptorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundDescriptor_Registration.Instance;
-        public new static SoundDescriptor_Registration StaticRegistration => SoundDescriptor_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => SoundDescriptor_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => SoundDescriptorCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,13 +2631,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundDescriptorCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundDescriptorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((SoundDescriptorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1282,6 +2648,43 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         protected override Type LinkType => typeof(ISoundDescriptor);
 
 
+        #region Notes
+        private int? _NotesLocation;
+        public String? Notes => _NotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Data
+        partial void DataCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public partial IASoundDescriptorGetter? GetDataCustom();
+        public IASoundDescriptorGetter? Data => GetDataCustom();
+        #endregion
+        #region Category
+        private int? _CategoryLocation;
+        public IFormLinkNullableGetter<ISoundCategoryGetter> Category => _CategoryLocation.HasValue ? new FormLinkNullable<ISoundCategoryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CategoryLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundCategoryGetter>.Null;
+        #endregion
+        #region AlternateSoundFor
+        private int? _AlternateSoundForLocation;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor => _AlternateSoundForLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateSoundForLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        public IReadOnlyList<String> SoundFiles { get; private set; } = Array.Empty<String>();
+        #region OutputModel
+        private int? _OutputModelLocation;
+        public IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel => _OutputModelLocation.HasValue ? new FormLinkNullable<ISoundOutputModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OutputModelLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundOutputModelGetter>.Null;
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        #region LoopAndRumble
+        private RangeInt32? _LoopAndRumbleLocation;
+        public ISoundLoopAndRumbleGetter? LoopAndRumble => _LoopAndRumbleLocation.HasValue ? SoundLoopAndRumbleBinaryOverlay.SoundLoopAndRumbleFactory(_recordData.Slice(_LoopAndRumbleLocation!.Value.Min), _package) : default;
+        #endregion
+        #region DataParse
+        public partial ParseResult DataParseCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors { get; private set; } = Array.Empty<IFormLinkGetter<ISoundDescriptorGetter>>();
+        public IReadOnlyList<ISoundRateOfFireGetter>? RatesOfFire { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1289,28 +2692,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected SoundDescriptorBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static SoundDescriptorBinaryOverlay SoundDescriptorFactory(
+        public static ISoundDescriptorGetter SoundDescriptorFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new SoundDescriptorBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -1320,30 +2726,152 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static SoundDescriptorBinaryOverlay SoundDescriptorFactory(
+        public static ISoundDescriptorGetter SoundDescriptorFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return SoundDescriptorFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.NNAM:
+                {
+                    _NotesLocation = (stream.Position - offset);
+                    return (int)SoundDescriptor_FieldIndex.Notes;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    DataCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)SoundDescriptor_FieldIndex.Data;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _CategoryLocation = (stream.Position - offset);
+                    return (int)SoundDescriptor_FieldIndex.Category;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _AlternateSoundForLocation = (stream.Position - offset);
+                    return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    this.SoundFiles = BinaryOverlayList.FactoryByArray<String>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: false,
+                            translationParams: translationParams));
+                    return (int)SoundDescriptor_FieldIndex.SoundFiles;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _OutputModelLocation = (stream.Position - offset);
+                    return (int)SoundDescriptor_FieldIndex.OutputModel;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)SoundDescriptor_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LoopAndRumbleLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SoundDescriptor_FieldIndex.LoopAndRumble;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    return DataParseCustomParse(
+                        stream,
+                        offset);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    this.Descriptors = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISoundDescriptorGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)SoundDescriptor_FieldIndex.Descriptors;
+                }
+                case RecordTypeInts.ITMS:
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.ITMC:
+                {
+                    this.RatesOfFire = BinaryOverlayList.FactoryByCountPerItem<ISoundRateOfFireGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: SoundRateOfFire_Registration.TriggerSpecs,
+                        countType: RecordTypes.ITMC,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => SoundRateOfFireBinaryOverlay.SoundRateOfFireFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)SoundDescriptor_FieldIndex.RatesOfFire;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            SoundDescriptorMixIn.ToString(
+            SoundDescriptorMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -74,12 +76,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TreeDataMixIn.ToString(
+            TreeDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -246,58 +249,53 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(TreeData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(TreeData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TreeData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, TreeData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(TreeData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(TreeData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.LeafCurvature ?? true)
                     {
-                        fg.AppendItem(LeafCurvature, "LeafCurvature");
+                        sb.AppendItem(LeafCurvature, "LeafCurvature");
                     }
                     if (printMask?.MinimumLeafAngle ?? true)
                     {
-                        fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
+                        sb.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
                     }
                     if (printMask?.MaximumLeafAngle ?? true)
                     {
-                        fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
+                        sb.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
                     }
                     if (printMask?.BranchDimmingValue ?? true)
                     {
-                        fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
+                        sb.AppendItem(BranchDimmingValue, "BranchDimmingValue");
                     }
                     if (printMask?.LeafDimmingValue ?? true)
                     {
-                        fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
+                        sb.AppendItem(LeafDimmingValue, "LeafDimmingValue");
                     }
                     if (printMask?.ShadowRadius ?? true)
                     {
-                        fg.AppendItem(ShadowRadius, "ShadowRadius");
+                        sb.AppendItem(ShadowRadius, "ShadowRadius");
                     }
                     if (printMask?.RockingSpeed ?? true)
                     {
-                        fg.AppendItem(RockingSpeed, "RockingSpeed");
+                        sb.AppendItem(RockingSpeed, "RockingSpeed");
                     }
                     if (printMask?.RustleSpeed ?? true)
                     {
-                        fg.AppendItem(RustleSpeed, "RustleSpeed");
+                        sb.AppendItem(RustleSpeed, "RustleSpeed");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -442,43 +440,50 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LeafCurvature, "LeafCurvature");
-                fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
-                fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
-                fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
-                fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
-                fg.AppendItem(ShadowRadius, "ShadowRadius");
-                fg.AppendItem(RockingSpeed, "RockingSpeed");
-                fg.AppendItem(RustleSpeed, "RustleSpeed");
+                {
+                    sb.AppendItem(LeafCurvature, "LeafCurvature");
+                }
+                {
+                    sb.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
+                }
+                {
+                    sb.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
+                }
+                {
+                    sb.AppendItem(BranchDimmingValue, "BranchDimmingValue");
+                }
+                {
+                    sb.AppendItem(LeafDimmingValue, "LeafDimmingValue");
+                }
+                {
+                    sb.AppendItem(ShadowRadius, "ShadowRadius");
+                }
+                {
+                    sb.AppendItem(RockingSpeed, "RockingSpeed");
+                }
+                {
+                    sb.AppendItem(RustleSpeed, "RustleSpeed");
+                }
             }
             #endregion
 
@@ -576,10 +581,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = TreeData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TreeDataBinaryWriteTranslation.Instance;
@@ -587,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -597,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static TreeData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new TreeData();
             ((TreeDataSetterCommon)((ITreeDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -612,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out TreeData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -622,7 +623,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -696,26 +697,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ITreeDataGetter item,
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
-            return ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).ToString(
+            return ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ITreeDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
-            ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).ToString(
+            ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -821,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ITreeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((TreeDataSetterCommon)((ITreeDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -836,10 +837,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum TreeData_FieldIndex
+    internal enum TreeData_FieldIndex
     {
         LeafCurvature = 0,
         MinimumLeafAngle = 1,
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class TreeData_Registration : ILoquiRegistration
+    internal partial class TreeData_Registration : ILoquiRegistration
     {
         public static readonly TreeData_Registration Instance = new TreeData_Registration();
 
@@ -895,6 +896,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(TreeDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -928,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class TreeDataSetterCommon
+    internal partial class TreeDataSetterCommon
     {
         public static readonly TreeDataSetterCommon Instance = new TreeDataSetterCommon();
 
@@ -958,12 +965,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ITreeData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.CNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -974,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TreeDataCommon
+    internal partial class TreeDataCommon
     {
         public static readonly TreeDataCommon Instance = new TreeDataCommon();
 
@@ -998,7 +1005,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TreeData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LeafCurvature = item.LeafCurvature.EqualsWithin(rhs.LeafCurvature);
             ret.MinimumLeafAngle = item.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle);
             ret.MaximumLeafAngle = item.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle);
@@ -1009,81 +1015,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.RustleSpeed = item.RustleSpeed.EqualsWithin(rhs.RustleSpeed);
         }
         
-        public string ToString(
+        public string Print(
             ITreeDataGetter item,
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ITreeDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             TreeData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TreeData =>");
+                sb.AppendLine($"TreeData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TreeData) =>");
+                sb.AppendLine($"{name} (TreeData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ITreeDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             TreeData.Mask<bool>? printMask = null)
         {
             if (printMask?.LeafCurvature ?? true)
             {
-                fg.AppendItem(item.LeafCurvature, "LeafCurvature");
+                sb.AppendItem(item.LeafCurvature, "LeafCurvature");
             }
             if (printMask?.MinimumLeafAngle ?? true)
             {
-                fg.AppendItem(item.MinimumLeafAngle, "MinimumLeafAngle");
+                sb.AppendItem(item.MinimumLeafAngle, "MinimumLeafAngle");
             }
             if (printMask?.MaximumLeafAngle ?? true)
             {
-                fg.AppendItem(item.MaximumLeafAngle, "MaximumLeafAngle");
+                sb.AppendItem(item.MaximumLeafAngle, "MaximumLeafAngle");
             }
             if (printMask?.BranchDimmingValue ?? true)
             {
-                fg.AppendItem(item.BranchDimmingValue, "BranchDimmingValue");
+                sb.AppendItem(item.BranchDimmingValue, "BranchDimmingValue");
             }
             if (printMask?.LeafDimmingValue ?? true)
             {
-                fg.AppendItem(item.LeafDimmingValue, "LeafDimmingValue");
+                sb.AppendItem(item.LeafDimmingValue, "LeafDimmingValue");
             }
             if (printMask?.ShadowRadius ?? true)
             {
-                fg.AppendItem(item.ShadowRadius, "ShadowRadius");
+                sb.AppendItem(item.ShadowRadius, "ShadowRadius");
             }
             if (printMask?.RockingSpeed ?? true)
             {
-                fg.AppendItem(item.RockingSpeed, "RockingSpeed");
+                sb.AppendItem(item.RockingSpeed, "RockingSpeed");
             }
             if (printMask?.RustleSpeed ?? true)
             {
-                fg.AppendItem(item.RustleSpeed, "RustleSpeed");
+                sb.AppendItem(item.RustleSpeed, "RustleSpeed");
             }
         }
         
@@ -1152,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITreeDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITreeDataGetter obj)
         {
             yield break;
         }
@@ -1160,7 +1164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class TreeDataSetterTranslationCommon
+    internal partial class TreeDataSetterTranslationCommon
     {
         public static readonly TreeDataSetterTranslationCommon Instance = new TreeDataSetterTranslationCommon();
 
@@ -1266,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TreeData_Registration.Instance;
-        public static TreeData_Registration StaticRegistration => TreeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TreeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TreeDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1290,11 +1294,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class TreeDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static TreeDataBinaryWriteTranslation Instance = new TreeDataBinaryWriteTranslation();
+        public static readonly TreeDataBinaryWriteTranslation Instance = new TreeDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ITreeDataGetter item,
@@ -1327,12 +1331,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ITreeDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.CNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1344,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ITreeDataGetter)item,
@@ -1354,9 +1358,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class TreeDataBinaryCreateTranslation
+    internal partial class TreeDataBinaryCreateTranslation
     {
-        public readonly static TreeDataBinaryCreateTranslation Instance = new TreeDataBinaryCreateTranslation();
+        public static readonly TreeDataBinaryCreateTranslation Instance = new TreeDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ITreeData item,
@@ -1383,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ITreeDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1396,16 +1400,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class TreeDataBinaryOverlay :
+    internal partial class TreeDataBinaryOverlay :
         PluginBinaryOverlay,
         ITreeDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TreeData_Registration.Instance;
-        public static TreeData_Registration StaticRegistration => TreeData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TreeData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => TreeDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1419,7 +1423,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TreeDataBinaryWriteTranslation.Instance;
@@ -1427,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((TreeDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1435,14 +1439,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Single LeafCurvature => _data.Slice(0x0, 0x4).Float();
-        public Single MinimumLeafAngle => _data.Slice(0x4, 0x4).Float();
-        public Single MaximumLeafAngle => _data.Slice(0x8, 0x4).Float();
-        public Single BranchDimmingValue => _data.Slice(0xC, 0x4).Float();
-        public Single LeafDimmingValue => _data.Slice(0x10, 0x4).Float();
-        public Int32 ShadowRadius => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Single RockingSpeed => _data.Slice(0x18, 0x4).Float();
-        public Single RustleSpeed => _data.Slice(0x1C, 0x4).Float();
+        public Single LeafCurvature => _structData.Slice(0x0, 0x4).Float();
+        public Single MinimumLeafAngle => _structData.Slice(0x4, 0x4).Float();
+        public Single MaximumLeafAngle => _structData.Slice(0x8, 0x4).Float();
+        public Single BranchDimmingValue => _structData.Slice(0xC, 0x4).Float();
+        public Single LeafDimmingValue => _structData.Slice(0x10, 0x4).Float();
+        public Int32 ShadowRadius => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public Single RockingSpeed => _structData.Slice(0x18, 0x4).Float();
+        public Single RustleSpeed => _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1450,25 +1454,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected TreeDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static TreeDataBinaryOverlay TreeDataFactory(
+        public static ITreeDataGetter TreeDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new TreeDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1477,25 +1486,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static TreeDataBinaryOverlay TreeDataFactory(
+        public static ITreeDataGetter TreeDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return TreeDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            TreeDataMixIn.ToString(
+            TreeDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

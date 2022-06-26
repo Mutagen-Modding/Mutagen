@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public enum Emotion
 {
-    public enum Emotion
-    {
-        Neutral,
-        Anger,
-        Disgust,
-        Fear,
-        Sad,
-        Happy,
-        Surprise,
-        Puzzled,
-    }
+    Neutral,
+    Anger,
+    Disgust,
+    Fear,
+    Sad,
+    Happy,
+    Surprise,
+    Puzzled,
 }

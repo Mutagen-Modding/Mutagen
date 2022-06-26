@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Noggog;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 
@@ -64,16 +63,16 @@ public class StringType : Loqui.Generation.StringType
         await base.Load(node, requireName);
     }
 
-    public override void GenerateClear(FileGeneration fg, Accessor identifier)
+    public override void GenerateClear(StructuredStringBuilder sb, Accessor identifier)
     {
         if (this.Translated.HasValue
             && !this.Nullable)
         {
-            fg.AppendLine($"{identifier}.Clear();");
+            sb.AppendLine($"{identifier}.Clear();");
         }
         else
         {
-            base.GenerateClear(fg, identifier);
+            base.GenerateClear(sb, identifier);
         }
     }
 
@@ -89,19 +88,19 @@ public class StringType : Loqui.Generation.StringType
         }
     }
 
-    public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
+    public override void GenerateForCopy(StructuredStringBuilder sb, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
     {
         if (this.Translated.HasValue)
         {
-            fg.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
-            using (new BraceWrapper(fg))
+            sb.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
+            using (sb.CurlyBrace())
             {
-                fg.AppendLine($"{accessor.Access} = {rhs}{this.NullChar}.DeepCopy();");
+                sb.AppendLine($"{accessor.Access} = {rhs}{this.NullChar}.DeepCopy();");
             }
         }
         else
         {
-            base.GenerateForCopy(fg, accessor, rhs, copyMaskAccessor, protectedMembers, deepCopy);
+            base.GenerateForCopy(sb, accessor, rhs, copyMaskAccessor, protectedMembers, deepCopy);
         }
     }
 

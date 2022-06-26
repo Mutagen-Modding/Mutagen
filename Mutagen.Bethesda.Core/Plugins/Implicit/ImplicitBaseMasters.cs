@@ -1,13 +1,10 @@
-using System;
+namespace Mutagen.Bethesda.Plugins.Implicit;
 
-namespace Mutagen.Bethesda.Plugins.Implicit
+public class ImplicitBaseMasters
 {
-    public class ImplicitBaseMasters
-    {
-        public static readonly ImplicitBaseMasters Instance = new ImplicitBaseMasters();
+    public static readonly ImplicitBaseMasters Instance = new ImplicitBaseMasters();
 
-        private ImplicitBaseMasters()
-        {
-        }
+    private ImplicitBaseMasters()
+    {
     }
 }

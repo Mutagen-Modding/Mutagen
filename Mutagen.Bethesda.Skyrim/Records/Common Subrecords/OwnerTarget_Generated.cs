@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -55,12 +56,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            OwnerTargetMixIn.ToString(
+            OwnerTargetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -149,26 +151,21 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(OwnerTarget.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(OwnerTarget.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OwnerTarget.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, OwnerTarget.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(OwnerTarget.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(OwnerTarget.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -233,34 +230,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public virtual void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
             }
             #endregion
@@ -328,7 +316,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => OwnerTargetCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OwnerTargetCommon.Instance.EnumerateFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OwnerTargetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -339,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OwnerTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -348,7 +336,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -414,26 +402,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IOwnerTargetGetter item,
             string? name = null,
             OwnerTarget.Mask<bool>? printMask = null)
         {
-            return ((OwnerTargetCommon)((IOwnerTargetGetter)item).CommonInstance()!).ToString(
+            return ((OwnerTargetCommon)((IOwnerTargetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IOwnerTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OwnerTarget.Mask<bool>? printMask = null)
         {
-            ((OwnerTargetCommon)((IOwnerTargetGetter)item).CommonInstance()!).ToString(
+            ((OwnerTargetCommon)((IOwnerTargetGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -539,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((OwnerTargetSetterCommon)((IOwnerTargetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -554,16 +542,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum OwnerTarget_FieldIndex
+    internal enum OwnerTarget_FieldIndex
     {
     }
     #endregion
 
     #region Registration
-    public partial class OwnerTarget_Registration : ILoquiRegistration
+    internal partial class OwnerTarget_Registration : ILoquiRegistration
     {
         public static readonly OwnerTarget_Registration Instance = new OwnerTarget_Registration();
 
@@ -637,7 +625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class OwnerTargetSetterCommon
+    internal partial class OwnerTargetSetterCommon
     {
         public static readonly OwnerTargetSetterCommon Instance = new OwnerTargetSetterCommon();
 
@@ -659,14 +647,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IOwnerTarget item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         #endregion
         
     }
-    public partial class OwnerTargetCommon
+    internal partial class OwnerTargetCommon
     {
         public static readonly OwnerTargetCommon Instance = new OwnerTargetCommon();
 
@@ -690,51 +678,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             OwnerTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
         }
         
-        public string ToString(
+        public string Print(
             IOwnerTargetGetter item,
             string? name = null,
             OwnerTarget.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IOwnerTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             OwnerTarget.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"OwnerTarget =>");
+                sb.AppendLine($"OwnerTarget =>");
             }
             else
             {
-                fg.AppendLine($"{name} (OwnerTarget) =>");
+                sb.AppendLine($"{name} (OwnerTarget) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IOwnerTargetGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             OwnerTarget.Mask<bool>? printMask = null)
         {
         }
@@ -764,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOwnerTargetGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOwnerTargetGetter obj)
         {
             yield break;
         }
@@ -772,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class OwnerTargetSetterTranslationCommon
+    internal partial class OwnerTargetSetterTranslationCommon
     {
         public static readonly OwnerTargetSetterTranslationCommon Instance = new OwnerTargetSetterTranslationCommon();
 
@@ -846,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OwnerTarget_Registration.Instance;
-        public static OwnerTarget_Registration StaticRegistration => OwnerTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OwnerTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => OwnerTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -870,23 +855,23 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class OwnerTargetBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static OwnerTargetBinaryWriteTranslation Instance = new OwnerTargetBinaryWriteTranslation();
+        public static readonly OwnerTargetBinaryWriteTranslation Instance = new OwnerTargetBinaryWriteTranslation();
 
         public virtual void Write(
             MutagenWriter writer,
             IOwnerTargetGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
         }
 
         public virtual void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IOwnerTargetGetter)item,
@@ -896,9 +881,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class OwnerTargetBinaryCreateTranslation
+    internal partial class OwnerTargetBinaryCreateTranslation
     {
-        public readonly static OwnerTargetBinaryCreateTranslation Instance = new OwnerTargetBinaryCreateTranslation();
+        public static readonly OwnerTargetBinaryCreateTranslation Instance = new OwnerTargetBinaryCreateTranslation();
 
     }
 
@@ -911,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IOwnerTargetGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OwnerTargetBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -924,16 +909,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public abstract partial class OwnerTargetBinaryOverlay :
+    internal abstract partial class OwnerTargetBinaryOverlay :
         PluginBinaryOverlay,
         IOwnerTargetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OwnerTarget_Registration.Instance;
-        public static OwnerTarget_Registration StaticRegistration => OwnerTarget_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OwnerTarget_Registration.Instance;
         [DebuggerStepThrough]
         protected virtual object CommonInstance() => OwnerTargetCommon.Instance;
         [DebuggerStepThrough]
@@ -947,16 +932,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => OwnerTargetCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OwnerTargetCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => OwnerTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((OwnerTargetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -971,10 +956,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected OwnerTargetBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -983,12 +968,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region To String
 
-        public virtual void ToString(
-            FileGeneration fg,
+        public virtual void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            OwnerTargetMixIn.ToString(
+            OwnerTargetMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

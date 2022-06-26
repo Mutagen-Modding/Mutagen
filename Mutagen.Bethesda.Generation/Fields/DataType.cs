@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
@@ -105,19 +102,19 @@ public class DataType : SetMarkerType
             {
                 if (subField.Field is TypicalTypeGeneration typical)
                 {
-                    typical.PreSetEvent += (fg) =>
+                    typical.PreSetEvent += (sb) =>
                     {
                         if (this.Nullable)
                         {
-                            fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Has;");
+                            sb.AppendLine($"this.{this.StateName} |= {this.EnumName}.Has;");
                         }
                         foreach (var b in subField.EncounteredBreaks)
                         {
-                            fg.AppendLine($"this.{this.StateName} &= ~{this.EnumName}.Break{b};");
+                            sb.AppendLine($"this.{this.StateName} &= ~{this.EnumName}.Break{b};");
                         }
                         if (subField.Range != null)
                         {
-                            fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Range{subField.RangeIndex};");
+                            sb.AppendLine($"this.{this.StateName} |= {this.EnumName}.Range{subField.RangeIndex};");
                         }
                     };
                 }

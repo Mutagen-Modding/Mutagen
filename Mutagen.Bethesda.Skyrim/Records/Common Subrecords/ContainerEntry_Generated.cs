@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -69,12 +70,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ContainerEntryMixIn.ToString(
+            ContainerEntryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -203,34 +205,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(ContainerEntry.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(ContainerEntry.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ContainerEntry.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, ContainerEntry.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(ContainerEntry.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(ContainerEntry.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Item?.Overall ?? true)
                     {
-                        Item?.ToString(fg);
+                        Item?.Print(sb);
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        Data?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -315,37 +312,28 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Item?.ToString(fg);
-                Data?.ToString(fg);
+                Item?.Print(sb);
+                Data?.Print(sb);
             }
             #endregion
 
@@ -418,8 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ContainerEntry_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ContainerEntryCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -430,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ContainerEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -440,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static ContainerEntry CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new ContainerEntry();
             ((ContainerEntrySetterCommon)((IContainerEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -455,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out ContainerEntry item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -465,7 +452,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -529,26 +516,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IContainerEntryGetter item,
             string? name = null,
             ContainerEntry.Mask<bool>? printMask = null)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).ToString(
+            return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IContainerEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ContainerEntry.Mask<bool>? printMask = null)
         {
-            ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).ToString(
+            ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -654,7 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IContainerEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ContainerEntrySetterCommon)((IContainerEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -669,10 +656,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum ContainerEntry_FieldIndex
+    internal enum ContainerEntry_FieldIndex
     {
         Item = 0,
         Data = 1,
@@ -680,7 +667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ContainerEntry_Registration : ILoquiRegistration
+    internal partial class ContainerEntry_Registration : ILoquiRegistration
     {
         public static readonly ContainerEntry_Registration Instance = new ContainerEntry_Registration();
 
@@ -722,6 +709,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CNTO;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CNTO);
+            var all = RecordCollection.Factory(
+                RecordTypes.CNTO,
+                RecordTypes.COED);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ContainerEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -755,7 +751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ContainerEntrySetterCommon
+    internal partial class ContainerEntrySetterCommon
     {
         public static readonly ContainerEntrySetterCommon Instance = new ContainerEntrySetterCommon();
 
@@ -781,7 +777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IContainerEntry item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -794,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerEntryCommon
+    internal partial class ContainerEntryCommon
     {
         public static readonly ContainerEntryCommon Instance = new ContainerEntryCommon();
 
@@ -818,7 +814,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ContainerEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Item = MaskItemExt.Factory(item.Item.GetEqualsMask(rhs.Item, include), include);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
@@ -827,58 +822,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IContainerEntryGetter item,
             string? name = null,
             ContainerEntry.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IContainerEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             ContainerEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ContainerEntry =>");
+                sb.AppendLine($"ContainerEntry =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ContainerEntry) =>");
+                sb.AppendLine($"{name} (ContainerEntry) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IContainerEntryGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             ContainerEntry.Mask<bool>? printMask = null)
         {
             if (printMask?.Item?.Overall ?? true)
             {
-                item.Item?.ToString(fg, "Item");
+                item.Item?.Print(sb, "Item");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data is {} DataItem)
             {
-                DataItem?.ToString(fg, "Data");
+                DataItem?.Print(sb, "Data");
             }
         }
         
@@ -928,15 +921,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IContainerEntryGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IContainerEntryGetter obj)
         {
-            foreach (var item in obj.Item.ContainedFormLinks)
+            foreach (var item in obj.Item.EnumerateFormLinks())
             {
                 yield return item;
             }
             if (obj.Data is IFormLinkContainerGetter DatalinkCont)
             {
-                foreach (var item in DatalinkCont.ContainedFormLinks)
+                foreach (var item in DatalinkCont.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -947,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerEntrySetterTranslationCommon
+    internal partial class ContainerEntrySetterTranslationCommon
     {
         public static readonly ContainerEntrySetterTranslationCommon Instance = new ContainerEntrySetterTranslationCommon();
 
@@ -1069,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerEntry_Registration.Instance;
-        public static ContainerEntry_Registration StaticRegistration => ContainerEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1093,16 +1086,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ContainerEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ContainerEntryBinaryWriteTranslation Instance = new ContainerEntryBinaryWriteTranslation();
+        public static readonly ContainerEntryBinaryWriteTranslation Instance = new ContainerEntryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IContainerEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             var ItemItem = item.Item;
             ((ContainerItemBinaryWriteTranslation)((IBinaryItem)ItemItem).BinaryWriteTranslator).Write(
@@ -1121,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IContainerEntryGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1132,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IContainerEntryGetter)item,
@@ -1142,9 +1135,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ContainerEntryBinaryCreateTranslation
+    internal partial class ContainerEntryBinaryCreateTranslation
     {
-        public readonly static ContainerEntryBinaryCreateTranslation Instance = new ContainerEntryBinaryCreateTranslation();
+        public static readonly ContainerEntryBinaryCreateTranslation Instance = new ContainerEntryBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IContainerEntry item,
@@ -1159,14 +1152,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.CNTO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ContainerEntry_FieldIndex.Item, translationParams)) return ParseResult.Stop;
                     item.Item = Mutagen.Bethesda.Skyrim.ContainerItem.CreateFromBinary(frame: frame);
                     return (int)ContainerEntry_FieldIndex.Item;
                 }
@@ -1191,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IContainerEntryGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ContainerEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1204,16 +1197,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ContainerEntryBinaryOverlay :
+    internal partial class ContainerEntryBinaryOverlay :
         PluginBinaryOverlay,
         IContainerEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerEntry_Registration.Instance;
-        public static ContainerEntry_Registration StaticRegistration => ContainerEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerEntry_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => ContainerEntryCommon.Instance;
         [DebuggerStepThrough]
@@ -1227,16 +1220,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ContainerEntryCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ContainerEntryCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ContainerEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ContainerEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1246,12 +1239,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Item
         private RangeInt32? _ItemLocation;
-        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(new OverlayStream(_data.Slice(_ItemLocation!.Value.Min), _package), _package) : default;
+        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(_recordData.Slice(_ItemLocation!.Value.Min), _package) : default;
         public IContainerItemGetter Item => _Item ?? new ContainerItem();
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
+        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1260,42 +1253,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ContainerEntryBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ContainerEntryBinaryOverlay ContainerEntryFactory(
+        public static IContainerEntryGetter ContainerEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ContainerEntryBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ContainerEntryBinaryOverlay ContainerEntryFactory(
+        public static IContainerEntryGetter ContainerEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ContainerEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1305,14 +1304,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CNTO:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ContainerEntry_FieldIndex.Item, translationParams)) return ParseResult.Stop;
                     _ItemLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)ContainerEntry_FieldIndex.Item;
                 }
@@ -1327,12 +1326,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ContainerEntryMixIn.ToString(
+            ContainerEntryMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

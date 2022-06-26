@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -106,12 +108,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LodMixIn.ToString(
+            LodMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -278,58 +281,53 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Lod.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Lod.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Lod.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Lod.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Lod.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Lod.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Level0 ?? true)
                     {
-                        fg.AppendItem(Level0, "Level0");
+                        sb.AppendItem(Level0, "Level0");
                     }
                     if (printMask?.Level0Extra ?? true)
                     {
-                        fg.AppendItem(Level0Extra, "Level0Extra");
+                        sb.AppendItem(Level0Extra, "Level0Extra");
                     }
                     if (printMask?.Level1 ?? true)
                     {
-                        fg.AppendItem(Level1, "Level1");
+                        sb.AppendItem(Level1, "Level1");
                     }
                     if (printMask?.Level1Extra ?? true)
                     {
-                        fg.AppendItem(Level1Extra, "Level1Extra");
+                        sb.AppendItem(Level1Extra, "Level1Extra");
                     }
                     if (printMask?.Level2 ?? true)
                     {
-                        fg.AppendItem(Level2, "Level2");
+                        sb.AppendItem(Level2, "Level2");
                     }
                     if (printMask?.Level2Extra ?? true)
                     {
-                        fg.AppendItem(Level2Extra, "Level2Extra");
+                        sb.AppendItem(Level2Extra, "Level2Extra");
                     }
                     if (printMask?.Level3 ?? true)
                     {
-                        fg.AppendItem(Level3, "Level3");
+                        sb.AppendItem(Level3, "Level3");
                     }
                     if (printMask?.Level3Extra ?? true)
                     {
-                        fg.AppendItem(Level3Extra, "Level3Extra");
+                        sb.AppendItem(Level3Extra, "Level3Extra");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -474,43 +472,50 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Level0, "Level0");
-                fg.AppendItem(Level0Extra, "Level0Extra");
-                fg.AppendItem(Level1, "Level1");
-                fg.AppendItem(Level1Extra, "Level1Extra");
-                fg.AppendItem(Level2, "Level2");
-                fg.AppendItem(Level2Extra, "Level2Extra");
-                fg.AppendItem(Level3, "Level3");
-                fg.AppendItem(Level3Extra, "Level3Extra");
+                {
+                    sb.AppendItem(Level0, "Level0");
+                }
+                {
+                    sb.AppendItem(Level0Extra, "Level0Extra");
+                }
+                {
+                    sb.AppendItem(Level1, "Level1");
+                }
+                {
+                    sb.AppendItem(Level1Extra, "Level1Extra");
+                }
+                {
+                    sb.AppendItem(Level2, "Level2");
+                }
+                {
+                    sb.AppendItem(Level2Extra, "Level2Extra");
+                }
+                {
+                    sb.AppendItem(Level3, "Level3");
+                }
+                {
+                    sb.AppendItem(Level3Extra, "Level3Extra");
+                }
             }
             #endregion
 
@@ -608,10 +613,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = Lod_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;
@@ -619,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LodBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -629,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Lod CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Lod();
             ((LodSetterCommon)((ILodGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -644,7 +645,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Lod item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -654,7 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -728,26 +729,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILodGetter item,
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
-            return ((LodCommon)((ILodGetter)item).CommonInstance()!).ToString(
+            return ((LodCommon)((ILodGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILodGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
-            ((LodCommon)((ILodGetter)item).CommonInstance()!).ToString(
+            ((LodCommon)((ILodGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -853,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ILod item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LodSetterCommon)((ILodGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -868,10 +869,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Lod_FieldIndex
+    internal enum Lod_FieldIndex
     {
         Level0 = 0,
         Level0Extra = 1,
@@ -885,7 +886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Lod_Registration : ILoquiRegistration
+    internal partial class Lod_Registration : ILoquiRegistration
     {
         public static readonly Lod_Registration Instance = new Lod_Registration();
 
@@ -927,6 +928,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.MNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LodBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -960,7 +967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LodSetterCommon
+    internal partial class LodSetterCommon
     {
         public static readonly LodSetterCommon Instance = new LodSetterCommon();
 
@@ -990,12 +997,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ILod item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.MNAM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1006,7 +1013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LodCommon
+    internal partial class LodCommon
     {
         public static readonly LodCommon Instance = new LodCommon();
 
@@ -1030,7 +1037,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Lod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Level0 = string.Equals(item.Level0, rhs.Level0);
             ret.Level0Extra = MemorySliceExt.Equal(item.Level0Extra, rhs.Level0Extra);
             ret.Level1 = string.Equals(item.Level1, rhs.Level1);
@@ -1041,85 +1047,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Level3Extra = MemorySliceExt.Equal(item.Level3Extra, rhs.Level3Extra);
         }
         
-        public string ToString(
+        public string Print(
             ILodGetter item,
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILodGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Lod.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Lod =>");
+                sb.AppendLine($"Lod =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Lod) =>");
+                sb.AppendLine($"{name} (Lod) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILodGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Lod.Mask<bool>? printMask = null)
         {
             if (printMask?.Level0 ?? true)
             {
-                fg.AppendItem(item.Level0, "Level0");
+                sb.AppendItem(item.Level0, "Level0");
             }
             if ((printMask?.Level0Extra ?? true)
                 && item.Level0Extra is {} Level0ExtraItem)
             {
-                fg.AppendLine($"Level0Extra => {SpanExt.ToHexString(Level0ExtraItem)}");
+                sb.AppendLine($"Level0Extra => {SpanExt.ToHexString(Level0ExtraItem)}");
             }
             if (printMask?.Level1 ?? true)
             {
-                fg.AppendItem(item.Level1, "Level1");
+                sb.AppendItem(item.Level1, "Level1");
             }
             if ((printMask?.Level1Extra ?? true)
                 && item.Level1Extra is {} Level1ExtraItem)
             {
-                fg.AppendLine($"Level1Extra => {SpanExt.ToHexString(Level1ExtraItem)}");
+                sb.AppendLine($"Level1Extra => {SpanExt.ToHexString(Level1ExtraItem)}");
             }
             if (printMask?.Level2 ?? true)
             {
-                fg.AppendItem(item.Level2, "Level2");
+                sb.AppendItem(item.Level2, "Level2");
             }
             if ((printMask?.Level2Extra ?? true)
                 && item.Level2Extra is {} Level2ExtraItem)
             {
-                fg.AppendLine($"Level2Extra => {SpanExt.ToHexString(Level2ExtraItem)}");
+                sb.AppendLine($"Level2Extra => {SpanExt.ToHexString(Level2ExtraItem)}");
             }
             if (printMask?.Level3 ?? true)
             {
-                fg.AppendItem(item.Level3, "Level3");
+                sb.AppendItem(item.Level3, "Level3");
             }
             if ((printMask?.Level3Extra ?? true)
                 && item.Level3Extra is {} Level3ExtraItem)
             {
-                fg.AppendLine($"Level3Extra => {SpanExt.ToHexString(Level3ExtraItem)}");
+                sb.AppendLine($"Level3Extra => {SpanExt.ToHexString(Level3ExtraItem)}");
             }
         }
         
@@ -1200,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILodGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILodGetter obj)
         {
             yield break;
         }
@@ -1208,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LodSetterTranslationCommon
+    internal partial class LodSetterTranslationCommon
     {
         public static readonly LodSetterTranslationCommon Instance = new LodSetterTranslationCommon();
 
@@ -1342,7 +1346,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Lod_Registration.Instance;
-        public static Lod_Registration StaticRegistration => Lod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LodCommon.Instance;
         [DebuggerStepThrough]
@@ -1366,11 +1370,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class LodBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LodBinaryWriteTranslation Instance = new LodBinaryWriteTranslation();
+        public static readonly LodBinaryWriteTranslation Instance = new LodBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILodGetter item,
@@ -1397,12 +1401,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ILodGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.MNAM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1414,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILodGetter)item,
@@ -1424,9 +1428,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LodBinaryCreateTranslation
+    internal partial class LodBinaryCreateTranslation
     {
-        public readonly static LodBinaryCreateTranslation Instance = new LodBinaryCreateTranslation();
+        public static readonly LodBinaryCreateTranslation Instance = new LodBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILod item,
@@ -1452,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ILodGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LodBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1465,16 +1469,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LodBinaryOverlay :
+    internal partial class LodBinaryOverlay :
         PluginBinaryOverlay,
         ILodGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Lod_Registration.Instance;
-        public static Lod_Registration StaticRegistration => Lod_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LodCommon.Instance;
         [DebuggerStepThrough]
@@ -1488,7 +1492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LodBinaryWriteTranslation.Instance;
@@ -1496,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LodBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1511,25 +1515,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected LodBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LodBinaryOverlay LodFactory(
+        public static ILodGetter LodFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new LodBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x0 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1538,25 +1547,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LodBinaryOverlay LodFactory(
+        public static ILodGetter LodFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LodFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LodMixIn.ToString(
+            LodMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

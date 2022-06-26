@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VoiceType" recordType="VTYP" objType="Record" baseClass="Fallout4MajorRecord" GUID="15ae32f9-f7a6-461b-b03e-44c171c95030" ID="133">
+    <Fields>
+      <Enum name="Flags" enumName="VoiceType.Flag" recordType="DNAM" nullable="False" byteLength="1" />
+    </Fields>
+    <LinkInterface>IAliasVoiceType</LinkInterface>
+  </Object>
+</Loqui>

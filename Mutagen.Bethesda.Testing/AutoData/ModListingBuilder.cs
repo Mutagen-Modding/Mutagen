@@ -1,41 +1,44 @@
-﻿using System;
-using System.Linq;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 
-namespace Mutagen.Bethesda.Testing.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData;
+
+public class ModListingBuilder : ISpecimenBuilder
 {
-    public class ModListingBuilder : ISpecimenBuilder
+    public object Create(object request, ISpecimenContext context)
     {
-        public object Create(object request, ISpecimenContext context)
+        if (request is MultipleRequest mult)
         {
-            if (request is MultipleRequest mult)
+            var req = mult.Request;
+            if (req is SeededRequest seed)
             {
-                var req = mult.Request;
-                if (req is SeededRequest seed)
-                {
-                    req = seed.Request;
-                }
-                if (req is Type t)
-                {
-                    if (t == typeof(ModListing))
-                    {
-                        var keys = context.CreateMany<ModKey>();
-                        return keys.Select(x => new ModListing(x, true));
-                    }
-                }
+                req = seed.Request;
             }
-            else if (request is Type t)
+            if (req is Type t)
             {
                 if (t == typeof(ModListing))
                 {
-                    return new ModListing(TestConstants.PluginModKey, true);
+                    var keys = context.CreateMany<ModKey>();
+                    return keys.Select(x => new ModListing(x, true, true));
+                }
+                if (t == typeof(IModListingGetter))
+                {
+                    var keys = context.CreateMany<ModKey>();
+                    return keys.Select(x => (IModListingGetter)new ModListing(x, true, true));
                 }
             }
-            
-            return new NoSpecimen();
         }
+        else if (request is Type t)
+        {
+            if (t == typeof(ModListing)
+                || t == typeof(IModListingGetter))
+            {
+                return new ModListing(TestConstants.PluginModKey, true, true);
+            }
+        }
+            
+        return new NoSpecimen();
     }
 }

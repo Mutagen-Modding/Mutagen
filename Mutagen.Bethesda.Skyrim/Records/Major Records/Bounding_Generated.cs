@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -71,12 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BoundingMixIn.ToString(
+            BoundingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -234,54 +237,49 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Bounding.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Bounding.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Bounding.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Bounding.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Bounding.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Bounding.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Width ?? true)
                     {
-                        fg.AppendItem(Width, "Width");
+                        sb.AppendItem(Width, "Width");
                     }
                     if (printMask?.Height ?? true)
                     {
-                        fg.AppendItem(Height, "Height");
+                        sb.AppendItem(Height, "Height");
                     }
                     if (printMask?.Position ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
+                        sb.AppendItem(Position, "Position");
                     }
                     if (printMask?.RotationQ1 ?? true)
                     {
-                        fg.AppendItem(RotationQ1, "RotationQ1");
+                        sb.AppendItem(RotationQ1, "RotationQ1");
                     }
                     if (printMask?.RotationQ2 ?? true)
                     {
-                        fg.AppendItem(RotationQ2, "RotationQ2");
+                        sb.AppendItem(RotationQ2, "RotationQ2");
                     }
                     if (printMask?.RotationQ3 ?? true)
                     {
-                        fg.AppendItem(RotationQ3, "RotationQ3");
+                        sb.AppendItem(RotationQ3, "RotationQ3");
                     }
                     if (printMask?.RotationQ4 ?? true)
                     {
-                        fg.AppendItem(RotationQ4, "RotationQ4");
+                        sb.AppendItem(RotationQ4, "RotationQ4");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -416,42 +414,47 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Width, "Width");
-                fg.AppendItem(Height, "Height");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(RotationQ1, "RotationQ1");
-                fg.AppendItem(RotationQ2, "RotationQ2");
-                fg.AppendItem(RotationQ3, "RotationQ3");
-                fg.AppendItem(RotationQ4, "RotationQ4");
+                {
+                    sb.AppendItem(Width, "Width");
+                }
+                {
+                    sb.AppendItem(Height, "Height");
+                }
+                {
+                    sb.AppendItem(Position, "Position");
+                }
+                {
+                    sb.AppendItem(RotationQ1, "RotationQ1");
+                }
+                {
+                    sb.AppendItem(RotationQ2, "RotationQ2");
+                }
+                {
+                    sb.AppendItem(RotationQ3, "RotationQ3");
+                }
+                {
+                    sb.AppendItem(RotationQ4, "RotationQ4");
+                }
             }
             #endregion
 
@@ -552,7 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BoundingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -562,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Bounding CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Bounding();
             ((BoundingSetterCommon)((IBoundingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -577,7 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Bounding item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -587,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -659,26 +662,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBoundingGetter item,
             string? name = null,
             Bounding.Mask<bool>? printMask = null)
         {
-            return ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).ToString(
+            return ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBoundingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Bounding.Mask<bool>? printMask = null)
         {
-            ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).ToString(
+            ((BoundingCommon)((IBoundingGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -784,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBounding item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BoundingSetterCommon)((IBoundingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -799,10 +802,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Bounding_FieldIndex
+    internal enum Bounding_FieldIndex
     {
         Width = 0,
         Height = 1,
@@ -815,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Bounding_Registration : ILoquiRegistration
+    internal partial class Bounding_Registration : ILoquiRegistration
     {
         public static readonly Bounding_Registration Instance = new Bounding_Registration();
 
@@ -889,7 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BoundingSetterCommon
+    internal partial class BoundingSetterCommon
     {
         public static readonly BoundingSetterCommon Instance = new BoundingSetterCommon();
 
@@ -918,7 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IBounding item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -930,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BoundingCommon
+    internal partial class BoundingCommon
     {
         public static readonly BoundingCommon Instance = new BoundingCommon();
 
@@ -954,7 +957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Bounding.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Width = item.Width.EqualsWithin(rhs.Width);
             ret.Height = item.Height.EqualsWithin(rhs.Height);
             ret.Position = item.Position.Equals(rhs.Position);
@@ -964,77 +966,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.RotationQ4 = item.RotationQ4.EqualsWithin(rhs.RotationQ4);
         }
         
-        public string ToString(
+        public string Print(
             IBoundingGetter item,
             string? name = null,
             Bounding.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBoundingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Bounding.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Bounding =>");
+                sb.AppendLine($"Bounding =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Bounding) =>");
+                sb.AppendLine($"{name} (Bounding) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBoundingGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Bounding.Mask<bool>? printMask = null)
         {
             if (printMask?.Width ?? true)
             {
-                fg.AppendItem(item.Width, "Width");
+                sb.AppendItem(item.Width, "Width");
             }
             if (printMask?.Height ?? true)
             {
-                fg.AppendItem(item.Height, "Height");
+                sb.AppendItem(item.Height, "Height");
             }
             if (printMask?.Position ?? true)
             {
-                fg.AppendItem(item.Position, "Position");
+                sb.AppendItem(item.Position, "Position");
             }
             if (printMask?.RotationQ1 ?? true)
             {
-                fg.AppendItem(item.RotationQ1, "RotationQ1");
+                sb.AppendItem(item.RotationQ1, "RotationQ1");
             }
             if (printMask?.RotationQ2 ?? true)
             {
-                fg.AppendItem(item.RotationQ2, "RotationQ2");
+                sb.AppendItem(item.RotationQ2, "RotationQ2");
             }
             if (printMask?.RotationQ3 ?? true)
             {
-                fg.AppendItem(item.RotationQ3, "RotationQ3");
+                sb.AppendItem(item.RotationQ3, "RotationQ3");
             }
             if (printMask?.RotationQ4 ?? true)
             {
-                fg.AppendItem(item.RotationQ4, "RotationQ4");
+                sb.AppendItem(item.RotationQ4, "RotationQ4");
             }
         }
         
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBoundingGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBoundingGetter obj)
         {
             yield break;
         }
@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BoundingSetterTranslationCommon
+    internal partial class BoundingSetterTranslationCommon
     {
         public static readonly BoundingSetterTranslationCommon Instance = new BoundingSetterTranslationCommon();
 
@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bounding_Registration.Instance;
-        public static Bounding_Registration StaticRegistration => Bounding_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Bounding_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoundingCommon.Instance;
         [DebuggerStepThrough]
@@ -1232,11 +1232,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BoundingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BoundingBinaryWriteTranslation Instance = new BoundingBinaryWriteTranslation();
+        public static readonly BoundingBinaryWriteTranslation Instance = new BoundingBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBoundingGetter item,
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IBoundingGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBoundingGetter)item,
@@ -1288,9 +1288,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BoundingBinaryCreateTranslation
+    internal partial class BoundingBinaryCreateTranslation
     {
-        public readonly static BoundingBinaryCreateTranslation Instance = new BoundingBinaryCreateTranslation();
+        public static readonly BoundingBinaryCreateTranslation Instance = new BoundingBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBounding item,
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBoundingGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BoundingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1329,16 +1329,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BoundingBinaryOverlay :
+    internal partial class BoundingBinaryOverlay :
         PluginBinaryOverlay,
         IBoundingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Bounding_Registration.Instance;
-        public static Bounding_Registration StaticRegistration => Bounding_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Bounding_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BoundingCommon.Instance;
         [DebuggerStepThrough]
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BoundingBinaryWriteTranslation.Instance;
@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BoundingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1368,13 +1368,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public Single Width => _data.Slice(0x0, 0x4).Float();
-        public Single Height => _data.Slice(0x4, 0x4).Float();
-        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
-        public Single RotationQ1 => _data.Slice(0x14, 0x4).Float();
-        public Single RotationQ2 => _data.Slice(0x18, 0x4).Float();
-        public Single RotationQ3 => _data.Slice(0x1C, 0x4).Float();
-        public Single RotationQ4 => _data.Slice(0x20, 0x4).Float();
+        public Single Width => _structData.Slice(0x0, 0x4).Float();
+        public Single Height => _structData.Slice(0x4, 0x4).Float();
+        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
+        public Single RotationQ1 => _structData.Slice(0x14, 0x4).Float();
+        public Single RotationQ2 => _structData.Slice(0x18, 0x4).Float();
+        public Single RotationQ3 => _structData.Slice(0x1C, 0x4).Float();
+        public Single RotationQ4 => _structData.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1382,24 +1382,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected BoundingBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BoundingBinaryOverlay BoundingFactory(
+        public static IBoundingGetter BoundingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x24,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BoundingBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x24),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x24;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1408,25 +1414,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static BoundingBinaryOverlay BoundingFactory(
+        public static IBoundingGetter BoundingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BoundingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BoundingMixIn.ToString(
+            BoundingMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

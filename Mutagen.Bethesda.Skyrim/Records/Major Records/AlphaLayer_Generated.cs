@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,20 +17,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AlphaLayerMixIn.ToString(
+            AlphaLayerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -182,30 +184,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AlphaLayer.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AlphaLayer.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AlphaLayer.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AlphaLayer.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AlphaLayer.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AlphaLayer.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.AlphaLayerData ?? true)
                     {
-                        fg.AppendItem(AlphaLayerData, "AlphaLayerData");
+                        sb.AppendItem(AlphaLayerData, "AlphaLayerData");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -269,37 +266,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(AlphaLayerData, "AlphaLayerData");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(AlphaLayerData, "AlphaLayerData");
+                }
             }
             #endregion
 
@@ -360,7 +350,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AlphaLayer_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AlphaLayerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlphaLayerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -368,7 +359,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -378,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static AlphaLayer CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlphaLayer();
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -393,7 +384,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AlphaLayer item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -403,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -458,26 +449,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAlphaLayerGetter item,
             string? name = null,
             AlphaLayer.Mask<bool>? printMask = null)
         {
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).ToString(
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAlphaLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AlphaLayer.Mask<bool>? printMask = null)
         {
-            ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).ToString(
+            ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -558,7 +549,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IAlphaLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -573,10 +564,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum AlphaLayer_FieldIndex
+    internal enum AlphaLayer_FieldIndex
     {
         Header = 0,
         AlphaLayerData = 1,
@@ -584,7 +575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class AlphaLayer_Registration : ILoquiRegistration
+    internal partial class AlphaLayer_Registration : ILoquiRegistration
     {
         public static readonly AlphaLayer_Registration Instance = new AlphaLayer_Registration();
 
@@ -626,10 +617,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ATXT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.ATXT);
+            var all = RecordCollection.Factory(
+                RecordTypes.ATXT,
+                RecordTypes.VTXT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static RecordTypeConverter BaseConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("BTXT"),
-                new RecordType("ATXT")));
+                RecordTypes.BTXT,
+                RecordTypes.ATXT));
         public static readonly Type BinaryWriteTranslation = typeof(AlphaLayerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AlphaLayerSetterCommon : BaseLayerSetterCommon
+    internal partial class AlphaLayerSetterCommon : BaseLayerSetterCommon
     {
         public new static readonly AlphaLayerSetterCommon Instance = new AlphaLayerSetterCommon();
 
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IAlphaLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IBaseLayer item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (AlphaLayer)item,
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AlphaLayerCommon : BaseLayerCommon
+    internal partial class AlphaLayerCommon : BaseLayerCommon
     {
         public new static readonly AlphaLayerCommon Instance = new AlphaLayerCommon();
 
@@ -741,63 +741,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlphaLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.AlphaLayerData = MemorySliceExt.Equal(item.AlphaLayerData, rhs.AlphaLayerData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IAlphaLayerGetter item,
             string? name = null,
             AlphaLayer.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAlphaLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AlphaLayer.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AlphaLayer =>");
+                sb.AppendLine($"AlphaLayer =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AlphaLayer) =>");
+                sb.AppendLine($"{name} (AlphaLayer) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAlphaLayerGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AlphaLayer.Mask<bool>? printMask = null)
         {
             BaseLayerCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.AlphaLayerData ?? true)
                 && item.AlphaLayerData is {} AlphaLayerDataItem)
             {
-                fg.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(AlphaLayerDataItem)}");
+                sb.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(AlphaLayerDataItem)}");
             }
         }
         
@@ -863,9 +860,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAlphaLayerGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAlphaLayerGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -875,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AlphaLayerSetterTranslationCommon : BaseLayerSetterTranslationCommon
+    internal partial class AlphaLayerSetterTranslationCommon : BaseLayerSetterTranslationCommon
     {
         public new static readonly AlphaLayerSetterTranslationCommon Instance = new AlphaLayerSetterTranslationCommon();
 
@@ -982,7 +979,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1000,18 +997,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class AlphaLayerBinaryWriteTranslation :
         BaseLayerBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AlphaLayerBinaryWriteTranslation Instance = new AlphaLayerBinaryWriteTranslation();
+        public new static readonly AlphaLayerBinaryWriteTranslation Instance = new AlphaLayerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IAlphaLayerGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             BaseLayerBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1026,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IAlphaLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1037,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAlphaLayerGetter)item,
@@ -1048,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IBaseLayerGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IAlphaLayerGetter)item,
@@ -1058,9 +1055,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AlphaLayerBinaryCreateTranslation : BaseLayerBinaryCreateTranslation
+    internal partial class AlphaLayerBinaryCreateTranslation : BaseLayerBinaryCreateTranslation
     {
-        public new readonly static AlphaLayerBinaryCreateTranslation Instance = new AlphaLayerBinaryCreateTranslation();
+        public new static readonly AlphaLayerBinaryCreateTranslation Instance = new AlphaLayerBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
             IAlphaLayer item,
@@ -1069,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1105,16 +1102,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class AlphaLayerBinaryOverlay :
+    internal partial class AlphaLayerBinaryOverlay :
         BaseLayerBinaryOverlay,
         IAlphaLayerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlphaLayer_Registration.Instance;
-        public new static AlphaLayer_Registration StaticRegistration => AlphaLayer_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AlphaLayer_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => AlphaLayerCommon.Instance;
         [DebuggerStepThrough]
@@ -1122,13 +1119,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AlphaLayerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlphaLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1138,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region AlphaLayerData
         private int? _AlphaLayerDataLocation;
-        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _AlphaLayerDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlphaLayerDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1147,42 +1144,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected AlphaLayerBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AlphaLayerBinaryOverlay AlphaLayerFactory(
+        public static IAlphaLayerGetter AlphaLayerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new AlphaLayerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static AlphaLayerBinaryOverlay AlphaLayerFactory(
+        public static IAlphaLayerGetter AlphaLayerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AlphaLayerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1192,9 +1195,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.VTXT:
@@ -1210,17 +1213,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         type: type,
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
-                        parseParams: AlphaLayer_Registration.BaseConverter);
+                        translationParams: AlphaLayer_Registration.BaseConverter);
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AlphaLayerMixIn.ToString(
+            AlphaLayerMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

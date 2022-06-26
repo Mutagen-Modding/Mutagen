@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,12 +61,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DistantLODDataMixIn.ToString(
+            DistantLODDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -186,38 +189,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DistantLODData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DistantLODData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DistantLODData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DistantLODData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DistantLODData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DistantLODData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Unknown0 ?? true)
                     {
-                        fg.AppendItem(Unknown0, "Unknown0");
+                        sb.AppendItem(Unknown0, "Unknown0");
                     }
                     if (printMask?.Unknown1 ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Unknown1, "Unknown1");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown2, "Unknown2");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -312,38 +310,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Unknown0, "Unknown0");
-                fg.AppendItem(Unknown1, "Unknown1");
-                fg.AppendItem(Unknown2, "Unknown2");
+                {
+                    sb.AppendItem(Unknown0, "Unknown0");
+                }
+                {
+                    sb.AppendItem(Unknown1, "Unknown1");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
             }
             #endregion
 
@@ -421,10 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = DistantLODData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;
@@ -432,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -442,7 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static DistantLODData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DistantLODData();
             ((DistantLODDataSetterCommon)((IDistantLODDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -457,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DistantLODData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -467,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -531,26 +522,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDistantLODDataGetter item,
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
-            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
+            return ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDistantLODDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
-            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).ToString(
+            ((DistantLODDataCommon)((IDistantLODDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -656,7 +647,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDistantLODData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DistantLODDataSetterCommon)((IDistantLODDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -671,10 +662,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DistantLODData_FieldIndex
+    internal enum DistantLODData_FieldIndex
     {
         Unknown0 = 0,
         Unknown1 = 1,
@@ -683,7 +674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DistantLODData_Registration : ILoquiRegistration
+    internal partial class DistantLODData_Registration : ILoquiRegistration
     {
         public static readonly DistantLODData_Registration Instance = new DistantLODData_Registration();
 
@@ -725,6 +716,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XLOD;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XLOD);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DistantLODDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -758,7 +755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DistantLODDataSetterCommon
+    internal partial class DistantLODDataSetterCommon
     {
         public static readonly DistantLODDataSetterCommon Instance = new DistantLODDataSetterCommon();
 
@@ -783,12 +780,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IDistantLODData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLOD),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -799,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DistantLODDataCommon
+    internal partial class DistantLODDataCommon
     {
         public static readonly DistantLODDataCommon Instance = new DistantLODDataCommon();
 
@@ -823,67 +820,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DistantLODData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Unknown0 = item.Unknown0.EqualsWithin(rhs.Unknown0);
             ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
             ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
         }
         
-        public string ToString(
+        public string Print(
             IDistantLODDataGetter item,
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDistantLODDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DistantLODData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DistantLODData =>");
+                sb.AppendLine($"DistantLODData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DistantLODData) =>");
+                sb.AppendLine($"{name} (DistantLODData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDistantLODDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DistantLODData.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown0 ?? true)
             {
-                fg.AppendItem(item.Unknown0, "Unknown0");
+                sb.AppendItem(item.Unknown0, "Unknown0");
             }
             if (printMask?.Unknown1 ?? true)
             {
-                fg.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Unknown1, "Unknown1");
             }
             if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -927,7 +921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDistantLODDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDistantLODDataGetter obj)
         {
             yield break;
         }
@@ -935,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DistantLODDataSetterTranslationCommon
+    internal partial class DistantLODDataSetterTranslationCommon
     {
         public static readonly DistantLODDataSetterTranslationCommon Instance = new DistantLODDataSetterTranslationCommon();
 
@@ -1021,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1045,11 +1039,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DistantLODDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
+        public static readonly DistantLODDataBinaryWriteTranslation Instance = new DistantLODDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDistantLODDataGetter item,
@@ -1069,12 +1063,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IDistantLODDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLOD),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1086,7 +1080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDistantLODDataGetter)item,
@@ -1096,9 +1090,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DistantLODDataBinaryCreateTranslation
+    internal partial class DistantLODDataBinaryCreateTranslation
     {
-        public readonly static DistantLODDataBinaryCreateTranslation Instance = new DistantLODDataBinaryCreateTranslation();
+        public static readonly DistantLODDataBinaryCreateTranslation Instance = new DistantLODDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDistantLODData item,
@@ -1120,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IDistantLODDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLODDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1133,16 +1127,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DistantLODDataBinaryOverlay :
+    internal partial class DistantLODDataBinaryOverlay :
         PluginBinaryOverlay,
         IDistantLODDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DistantLODData_Registration.Instance;
-        public static DistantLODData_Registration StaticRegistration => DistantLODData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DistantLODData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DistantLODDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1156,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DistantLODDataBinaryWriteTranslation.Instance;
@@ -1164,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DistantLODDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1172,9 +1166,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Single Unknown0 => _data.Slice(0x0, 0x4).Float();
-        public Single Unknown1 => _data.Slice(0x4, 0x4).Float();
-        public Single Unknown2 => _data.Slice(0x8, 0x4).Float();
+        public Single Unknown0 => _structData.Slice(0x0, 0x4).Float();
+        public Single Unknown1 => _structData.Slice(0x4, 0x4).Float();
+        public Single Unknown2 => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1182,25 +1176,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected DistantLODDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DistantLODDataBinaryOverlay DistantLODDataFactory(
+        public static IDistantLODDataGetter DistantLODDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DistantLODDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1209,25 +1208,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static DistantLODDataBinaryOverlay DistantLODDataFactory(
+        public static IDistantLODDataGetter DistantLODDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DistantLODDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DistantLODDataMixIn.ToString(
+            DistantLODDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

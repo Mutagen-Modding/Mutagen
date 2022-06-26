@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovableStatic" recordType="MSTT" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="1f8b969d-e065-45b8-8cce-d5b826d35a35" ID="200">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <Bool name="OnLocalMap" byteLength="1" recordType="DATA" nullable="False" />
+      <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -59,12 +61,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogItemDataMixIn.ToString(
+            DialogItemDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -186,38 +189,33 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(DialogItemData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(DialogItemData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, DialogItemData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, DialogItemData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(DialogItemData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(DialogItemData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
-                        fg.AppendItem(Versioning, "Versioning");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
                     if (printMask?.DialogType ?? true)
                     {
-                        fg.AppendItem(DialogType, "DialogType");
+                        sb.AppendItem(DialogType, "DialogType");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -312,38 +310,35 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Versioning, "Versioning");
-                fg.AppendItem(DialogType, "DialogType");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
+                    sb.AppendItem(DialogType, "DialogType");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -422,7 +417,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = DialogItemData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -437,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -447,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static DialogItemData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new DialogItemData();
             ((DialogItemDataSetterCommon)((IDialogItemDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -462,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out DialogItemData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -472,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -536,26 +530,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IDialogItemDataGetter item,
             string? name = null,
             DialogItemData.Mask<bool>? printMask = null)
         {
-            return ((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).ToString(
+            return ((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IDialogItemDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogItemData.Mask<bool>? printMask = null)
         {
-            ((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).ToString(
+            ((DialogItemDataCommon)((IDialogItemDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -661,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IDialogItemData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((DialogItemDataSetterCommon)((IDialogItemDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -676,10 +670,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum DialogItemData_FieldIndex
+    internal enum DialogItemData_FieldIndex
     {
         Versioning = 0,
         DialogType = 1,
@@ -688,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class DialogItemData_Registration : ILoquiRegistration
+    internal partial class DialogItemData_Registration : ILoquiRegistration
     {
         public static readonly DialogItemData_Registration Instance = new DialogItemData_Registration();
 
@@ -730,6 +724,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(DialogItemDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class DialogItemDataSetterCommon
+    internal partial class DialogItemDataSetterCommon
     {
         public static readonly DialogItemDataSetterCommon Instance = new DialogItemDataSetterCommon();
 
@@ -788,12 +788,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IDialogItemData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogItemDataCommon
+    internal partial class DialogItemDataCommon
     {
         public static readonly DialogItemDataCommon Instance = new DialogItemDataCommon();
 
@@ -828,67 +828,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DialogType = item.DialogType == rhs.DialogType;
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IDialogItemDataGetter item,
             string? name = null,
             DialogItemData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IDialogItemDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             DialogItemData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogItemData =>");
+                sb.AppendLine($"DialogItemData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogItemData) =>");
+                sb.AppendLine($"{name} (DialogItemData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IDialogItemDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             DialogItemData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
-                fg.AppendItem(item.Versioning, "Versioning");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
             if (printMask?.DialogType ?? true)
             {
-                fg.AppendItem(item.DialogType, "DialogType");
+                sb.AppendItem(item.DialogType, "DialogType");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -932,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogItemDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogItemDataGetter obj)
         {
             yield break;
         }
@@ -940,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class DialogItemDataSetterTranslationCommon
+    internal partial class DialogItemDataSetterTranslationCommon
     {
         public static readonly DialogItemDataSetterTranslationCommon Instance = new DialogItemDataSetterTranslationCommon();
 
@@ -1027,7 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItemData_Registration.Instance;
-        public static DialogItemData_Registration StaticRegistration => DialogItemData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogItemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogItemDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1051,11 +1048,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class DialogItemDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogItemDataBinaryWriteTranslation Instance = new DialogItemDataBinaryWriteTranslation();
+        public static readonly DialogItemDataBinaryWriteTranslation Instance = new DialogItemDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IDialogItemDataGetter item,
@@ -1077,12 +1074,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IDialogItemDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1094,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IDialogItemDataGetter)item,
@@ -1104,9 +1101,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class DialogItemDataBinaryCreateTranslation
+    internal partial class DialogItemDataBinaryCreateTranslation
     {
-        public readonly static DialogItemDataBinaryCreateTranslation Instance = new DialogItemDataBinaryCreateTranslation();
+        public static readonly DialogItemDataBinaryCreateTranslation Instance = new DialogItemDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IDialogItemData item,
@@ -1136,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IDialogItemDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1149,16 +1146,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class DialogItemDataBinaryOverlay :
+    internal partial class DialogItemDataBinaryOverlay :
         PluginBinaryOverlay,
         IDialogItemDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => DialogItemData_Registration.Instance;
-        public static DialogItemData_Registration StaticRegistration => DialogItemData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => DialogItemData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => DialogItemDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1172,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DialogItemDataBinaryWriteTranslation.Instance;
@@ -1180,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((DialogItemDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1189,8 +1186,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public DialogItemData.VersioningBreaks Versioning { get; private set; }
-        public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
-        public DialogItem.Flag Flags => _data.Span.Length <= 0x2 ? default : (DialogItem.Flag)_data.Span.Slice(0x2, 0x1)[0];
+        public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
+        public DialogItem.Flag Flags => _structData.Span.Length <= 0x2 ? default : (DialogItem.Flag)_structData.Span.Slice(0x2, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1198,26 +1195,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected DialogItemDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static DialogItemDataBinaryOverlay DialogItemDataFactory(
+        public static IDialogItemDataGetter DialogItemDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x3,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new DialogItemDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x2)
+            if (ret._structData.Length <= 0x2)
             {
                 ret.Versioning |= DialogItemData.VersioningBreaks.Break0;
             }
@@ -1228,25 +1230,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static DialogItemDataBinaryOverlay DialogItemDataFactory(
+        public static IDialogItemDataGetter DialogItemDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return DialogItemDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            DialogItemDataMixIn.ToString(
+            DialogItemDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -10,7 +10,9 @@
         <xs:extension base="ObjectType">
           <xs:choice>
             <xs:element name="BaseRecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" />
-            <xs:element name="CustomRecordTypeTrigger" type="xs:string" minOccurs="0" />
+            <xs:element name="CustomRecordTypeTrigger" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="AdditionalContainedRecordType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="SubgroupType" type="xs:int" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="LinkInterface" type="InterfaceType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="GameReleaseOptions" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="GameModeOverride" type="GameModeRecordTypeOverrides" minOccurs="0" maxOccurs="unbounded" />
@@ -34,6 +36,13 @@
             <xs:annotation>
               <xs:documentation>
                 Whether a major record has custom flags
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="partialForm" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether record can be a PartialForm
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -65,10 +74,24 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="binaryOverlayGenerateCtor" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to generate the binary overlay factory method
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="endMarkerType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
                 Optional ending marker
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="shortCircuitToLastRequired" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to short circuit only to the last required field
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -275,6 +298,13 @@
       <xs:complexContent>
         <xs:extension base="Bool">
           <xs:attribute name="boolAsMarker" type="xs:string" />
+          <xs:attribute name="importantByteLength" type="xs:int" >
+            <xs:annotation>
+              <xs:documentation>
+                How much of the byte length to consider when checking if bool is true or false
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -361,7 +391,21 @@
           <xs:attribute name="nullIfCounterZero" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>
-                If has a counter record type, should list be null if count is zero.
+                If has a counter record type, should single record typed list be null if count is zero.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="allowNoCounter" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to expect/allow a list to have no counter when one is defined
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endMarker" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                RecordType of an ending marker
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -392,6 +436,34 @@
             <xs:annotation>
               <xs:documentation>
                 Number of bytes for the counter
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="nullIfCounterZero" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                If has a counter record type, should single record typed list be null if count is zero.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="allowNoCounter" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to expect/allow a list to have no counter when one is defined
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endMarker" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                RecordType of an ending marker
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="additive" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to clear and call Add, rather than SetTo
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -580,6 +652,13 @@
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="negOneIsNull" type="xs:boolean" >
+          <xs:annotation>
+            <xs:documentation>
+              Whether negative one is interpreted as null
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -677,18 +756,20 @@
     </xs:choice>
     <xs:attribute name="Min" use="required" />
   </xs:complexType>
-  
+
   <xs:complexType name="DataTypeFields" >
     <xs:choice minOccurs="0" maxOccurs="unbounded" >
       <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Range" type="DataTypeFieldRangeType" />
     </xs:choice>
   </xs:complexType>
-  
+
   <xs:complexType name="DataType" >
-    <xs:choice minOccurs="0" maxOccurs="unbounded" >
+    <xs:sequence>
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
-    </xs:choice>
+      <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
     <xs:attribute name="recordType" />
     <xs:attribute name="binaryOverlay" type="MutagenBinaryType" >
       <xs:annotation>
@@ -734,5 +815,5 @@
     <xs:attribute name="refName" use="required" />
     <xs:attribute name="edidLinked" />
   </xs:complexType>
-  
+
 </xs:schema>

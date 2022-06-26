@@ -2,10 +2,10 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SimpleModel" objType="Subrecord" GUID="bdf69dac-8f54-4522-adfc-75c6a645ff66" ID="83">
     <Fields>
-      <String name="File" recordType="MODL" nullable="False" />
+      <String name="File" recordType="MODL" />
       <Float name="ColorRemappingIndex" recordType="MODC" />
-      <FormLink name="MaterialSwap" recordType="MODS" refName="MaterialSwap" />
       <ByteArray name="Data" recordType="MODT" />
+      <FormLink name="MaterialSwap" recordType="MODS" refName="MaterialSwap" />
     </Fields>
   </Object>
   <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="c791d9f6-adea-4c99-b582-43b365850cf8" ID="84">

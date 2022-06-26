@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="Fallout4MajorRecord" GUID="6a469e1c-3dbf-4c21-ba4b-7c0acd6819b2" ID="90">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ObjectEffect" recordType="EITM" >
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <Data>
+        <Fields>
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="Sound1" refName="SoundDescriptor" />
+          <FormLink name="Sound2" refName="SoundDescriptor" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="PlacedObject" >
+            <Interface>IExplodeSpawn</Interface>
+          </FormLink>
+          <FormLink name="SpawnProjectile" refName="Projectile" />
+          <Float name="Force" />
+          <Float name="Damage" />
+          <Float name="InnerRadius" >
+            <Versioning formVersion="97" action="Add"/>
+          </Float>
+          <Float name="OuterRadius" />
+          <Float name="ISRadius" />
+          <Float name="VerticalOffsetMult" />
+          <Enum name="Flags" enumName="Explosion.Flag" byteLength="4" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Float name="PlacedObjectAutoFadeDelay" >
+            <Versioning formVersion="70" action="Add"/>
+          </Float>
+          <Enum name="Stagger" enumName="Explosion.StaggerAmount" byteLength="4" >
+            <Versioning formVersion="91" action="Add"/>
+          </Enum>
+          <P3Float name="SpawnPosition" >
+            <Versioning formVersion="112" action="Add"/>
+          </P3Float>
+          <Float name="SpawnSpreadDegrees" >
+            <Versioning formVersion="112" action="Add"/>
+          </Float>
+          <UInt32 name="SpawnCount" >
+            <Versioning formVersion="112" action="Add"/>
+          </UInt32>
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

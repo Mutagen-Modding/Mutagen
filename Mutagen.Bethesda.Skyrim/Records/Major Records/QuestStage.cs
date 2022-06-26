@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class QuestStage
 {
-    public partial class QuestStage
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            StartUpStage = 0x02,
-            ShutDownStage = 0x04,
-            KeepInstanceDataFromHereOn = 0x08,
-        }
+        StartUpStage = 0x02,
+        ShutDownStage = 0x04,
+        KeepInstanceDataFromHereOn = 0x08,
     }
 }

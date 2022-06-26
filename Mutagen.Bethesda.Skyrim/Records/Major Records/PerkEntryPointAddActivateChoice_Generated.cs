@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,21 +18,21 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -75,12 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkEntryPointAddActivateChoiceMixIn.ToString(
+            PerkEntryPointAddActivateChoiceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -230,38 +232,33 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PerkEntryPointAddActivateChoice.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PerkEntryPointAddActivateChoice.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(Spell, "Spell");
+                        sb.AppendItem(Spell, "Spell");
                     }
                     if (printMask?.ButtonLabel ?? true)
                     {
-                        fg.AppendItem(ButtonLabel, "ButtonLabel");
+                        sb.AppendItem(ButtonLabel, "ButtonLabel");
                     }
                     if (printMask?.Flags?.Overall ?? true)
                     {
-                        Flags?.ToString(fg);
+                        Flags?.Print(sb);
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -345,39 +342,34 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(Spell, "Spell");
-                fg.AppendItem(ButtonLabel, "ButtonLabel");
-                Flags?.ToString(fg);
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Spell, "Spell");
+                }
+                {
+                    sb.AppendItem(ButtonLabel, "ButtonLabel");
+                }
+                Flags?.Print(sb);
             }
             #endregion
 
@@ -445,8 +437,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = PerkEntryPointAddActivateChoice_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkEntryPointAddActivateChoiceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointAddActivateChoiceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkEntryPointAddActivateChoiceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -455,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => PerkEntryPointAddActivateChoiceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointAddActivateChoiceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -465,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static PerkEntryPointAddActivateChoice CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PerkEntryPointAddActivateChoice();
             ((PerkEntryPointAddActivateChoiceSetterCommon)((IPerkEntryPointAddActivateChoiceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -480,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PerkEntryPointAddActivateChoice item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -490,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -551,26 +542,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPerkEntryPointAddActivateChoiceGetter item,
             string? name = null,
             PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).ToString(
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPerkEntryPointAddActivateChoiceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
         {
-            ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).ToString(
+            ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -651,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPerkEntryPointAddActivateChoice item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PerkEntryPointAddActivateChoiceSetterCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -666,10 +657,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PerkEntryPointAddActivateChoice_FieldIndex
+    internal enum PerkEntryPointAddActivateChoice_FieldIndex
     {
         Rank = 0,
         Priority = 1,
@@ -684,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PerkEntryPointAddActivateChoice_Registration : ILoquiRegistration
+    internal partial class PerkEntryPointAddActivateChoice_Registration : ILoquiRegistration
     {
         public static readonly PerkEntryPointAddActivateChoice_Registration Instance = new PerkEntryPointAddActivateChoice_Registration();
 
@@ -726,6 +717,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.PRKE;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.PRKE);
+            var all = RecordCollection.Factory(
+                RecordTypes.PRKE,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddActivateChoiceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -759,7 +760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PerkEntryPointAddActivateChoiceSetterCommon : APerkEntryPointEffectSetterCommon
+    internal partial class PerkEntryPointAddActivateChoiceSetterCommon : APerkEntryPointEffectSetterCommon
     {
         public new static readonly PerkEntryPointAddActivateChoiceSetterCommon Instance = new PerkEntryPointAddActivateChoiceSetterCommon();
 
@@ -797,7 +798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPerkEntryPointAddActivateChoice item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -810,7 +811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointAddActivateChoice)item,
@@ -821,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IAPerkEffect item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (PerkEntryPointAddActivateChoice)item,
@@ -832,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAddActivateChoiceCommon : APerkEntryPointEffectCommon
+    internal partial class PerkEntryPointAddActivateChoiceCommon : APerkEntryPointEffectCommon
     {
         public new static readonly PerkEntryPointAddActivateChoiceCommon Instance = new PerkEntryPointAddActivateChoiceCommon();
 
@@ -856,73 +857,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PerkEntryPointAddActivateChoice.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Spell = item.Spell.Equals(rhs.Spell);
             ret.ButtonLabel = object.Equals(item.ButtonLabel, rhs.ButtonLabel);
             ret.Flags = MaskItemExt.Factory(item.Flags.GetEqualsMask(rhs.Flags, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IPerkEntryPointAddActivateChoiceGetter item,
             string? name = null,
             PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPerkEntryPointAddActivateChoiceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PerkEntryPointAddActivateChoice =>");
+                sb.AppendLine($"PerkEntryPointAddActivateChoice =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PerkEntryPointAddActivateChoice) =>");
+                sb.AppendLine($"{name} (PerkEntryPointAddActivateChoice) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPerkEntryPointAddActivateChoiceGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PerkEntryPointAddActivateChoice.Mask<bool>? printMask = null)
         {
             APerkEntryPointEffectCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.Spell ?? true)
             {
-                fg.AppendItem(item.Spell.FormKeyNullable, "Spell");
+                sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
             if ((printMask?.ButtonLabel ?? true)
                 && item.ButtonLabel is {} ButtonLabelItem)
             {
-                fg.AppendItem(ButtonLabelItem, "ButtonLabel");
+                sb.AppendItem(ButtonLabelItem, "ButtonLabel");
             }
             if (printMask?.Flags?.Overall ?? true)
             {
-                item.Flags?.ToString(fg, "Flags");
+                item.Flags?.Print(sb, "Flags");
             }
         }
         
@@ -1045,15 +1043,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkEntryPointAddActivateChoiceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkEntryPointAddActivateChoiceGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.Spell.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Spell, out var SpellInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Spell);
+                yield return SpellInfo;
             }
             yield break;
         }
@@ -1061,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PerkEntryPointAddActivateChoiceSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
+    internal partial class PerkEntryPointAddActivateChoiceSetterTranslationCommon : APerkEntryPointEffectSetterTranslationCommon
     {
         public new static readonly PerkEntryPointAddActivateChoiceSetterTranslationCommon Instance = new PerkEntryPointAddActivateChoiceSetterTranslationCommon();
 
@@ -1203,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        public new static PerkEntryPointAddActivateChoice_Registration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddActivateChoiceCommon.Instance;
         [DebuggerStepThrough]
@@ -1221,13 +1219,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PerkEntryPointAddActivateChoiceBinaryWriteTranslation :
         APerkEntryPointEffectBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static PerkEntryPointAddActivateChoiceBinaryWriteTranslation Instance = new PerkEntryPointAddActivateChoiceBinaryWriteTranslation();
+        public new static readonly PerkEntryPointAddActivateChoiceBinaryWriteTranslation Instance = new PerkEntryPointAddActivateChoiceBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPerkEntryPointAddActivateChoiceGetter item,
@@ -1244,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IPerkEntryPointAddActivateChoiceGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -1266,7 +1264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointAddActivateChoiceGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1280,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPerkEntryPointAddActivateChoiceGetter)item,
@@ -1291,7 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointAddActivateChoiceGetter)item,
@@ -1302,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IAPerkEffectGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IPerkEntryPointAddActivateChoiceGetter)item,
@@ -1312,9 +1310,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PerkEntryPointAddActivateChoiceBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
+    internal partial class PerkEntryPointAddActivateChoiceBinaryCreateTranslation : APerkEntryPointEffectBinaryCreateTranslation
     {
-        public new readonly static PerkEntryPointAddActivateChoiceBinaryCreateTranslation Instance = new PerkEntryPointAddActivateChoiceBinaryCreateTranslation();
+        public new static readonly PerkEntryPointAddActivateChoiceBinaryCreateTranslation Instance = new PerkEntryPointAddActivateChoiceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPerkEntryPointAddActivateChoice item,
@@ -1334,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -1360,7 +1358,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -1377,16 +1376,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PerkEntryPointAddActivateChoiceBinaryOverlay :
+    internal partial class PerkEntryPointAddActivateChoiceBinaryOverlay :
         APerkEntryPointEffectBinaryOverlay,
         IPerkEntryPointAddActivateChoiceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        public new static PerkEntryPointAddActivateChoice_Registration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => PerkEntryPointAddActivateChoiceCommon.Instance;
         [DebuggerStepThrough]
@@ -1394,14 +1393,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkEntryPointAddActivateChoiceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkEntryPointAddActivateChoiceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkEntryPointAddActivateChoiceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PerkEntryPointAddActivateChoiceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1409,14 +1408,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkNullableGetter<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public IFormLinkNullableGetter<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x2, 0x4))));
         #region ButtonLabel
         private int? _ButtonLabelLocation;
-        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         #region Flags
         private RangeInt32? _FlagsLocation;
-        private IPerkScriptFlagGetter? _Flags => _FlagsLocation.HasValue ? PerkScriptFlagBinaryOverlay.PerkScriptFlagFactory(new OverlayStream(_data.Slice(_FlagsLocation!.Value.Min), _package), _package) : default;
+        private IPerkScriptFlagGetter? _Flags => _FlagsLocation.HasValue ? PerkScriptFlagBinaryOverlay.PerkScriptFlagFactory(_recordData.Slice(_FlagsLocation!.Value.Min), _package) : default;
         public IPerkScriptFlagGetter Flags => _Flags ?? new PerkScriptFlag();
         #endregion
         partial void CustomFactoryEnd(
@@ -1426,42 +1425,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PerkEntryPointAddActivateChoiceBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PerkEntryPointAddActivateChoiceBinaryOverlay PerkEntryPointAddActivateChoiceFactory(
+        public static IPerkEntryPointAddActivateChoiceGetter PerkEntryPointAddActivateChoiceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PerkEntryPointAddActivateChoiceBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static PerkEntryPointAddActivateChoiceBinaryOverlay PerkEntryPointAddActivateChoiceFactory(
+        public static IPerkEntryPointAddActivateChoiceGetter PerkEntryPointAddActivateChoiceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PerkEntryPointAddActivateChoiceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -1471,9 +1476,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.EPF2:
@@ -1493,17 +1498,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkEntryPointAddActivateChoiceMixIn.ToString(
+            PerkEntryPointAddActivateChoiceMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

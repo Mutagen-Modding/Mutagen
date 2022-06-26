@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -16,22 +17,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -224,12 +225,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CombatStyleMixIn.ToString(
+            CombatStyleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -505,94 +507,89 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(CombatStyle.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(CombatStyle.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CombatStyle.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, CombatStyle.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.OffensiveMult ?? true)
                     {
-                        fg.AppendItem(OffensiveMult, "OffensiveMult");
+                        sb.AppendItem(OffensiveMult, "OffensiveMult");
                     }
                     if (printMask?.DefensiveMult ?? true)
                     {
-                        fg.AppendItem(DefensiveMult, "DefensiveMult");
+                        sb.AppendItem(DefensiveMult, "DefensiveMult");
                     }
                     if (printMask?.GroupOffensiveMult ?? true)
                     {
-                        fg.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
+                        sb.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
                     }
                     if (printMask?.EquipmentScoreMultMelee ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
+                        sb.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
                     }
                     if (printMask?.EquipmentScoreMultMagic ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
+                        sb.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
                     }
                     if (printMask?.EquipmentScoreMultRanged ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
+                        sb.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
                     }
                     if (printMask?.EquipmentScoreMultShout ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
+                        sb.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
                     }
                     if (printMask?.EquipmentScoreMultUnarmed ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
+                        sb.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
                     }
                     if (printMask?.EquipmentScoreMultStaff ?? true)
                     {
-                        fg.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
+                        sb.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
                     }
                     if (printMask?.AvoidThreatChance ?? true)
                     {
-                        fg.AppendItem(AvoidThreatChance, "AvoidThreatChance");
+                        sb.AppendItem(AvoidThreatChance, "AvoidThreatChance");
                     }
                     if (printMask?.CSMD ?? true)
                     {
-                        fg.AppendItem(CSMD, "CSMD");
+                        sb.AppendItem(CSMD, "CSMD");
                     }
                     if (printMask?.Melee?.Overall ?? true)
                     {
-                        Melee?.ToString(fg);
+                        Melee?.Print(sb);
                     }
                     if (printMask?.CloseRange?.Overall ?? true)
                     {
-                        CloseRange?.ToString(fg);
+                        CloseRange?.Print(sb);
                     }
                     if (printMask?.LongRangeStrafeMult ?? true)
                     {
-                        fg.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
+                        sb.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
                     }
                     if (printMask?.Flight?.Overall ?? true)
                     {
-                        Flight?.ToString(fg);
+                        Flight?.Print(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.CSGDDataTypeState ?? true)
                     {
-                        fg.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
+                        sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -816,53 +813,72 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(OffensiveMult, "OffensiveMult");
-                fg.AppendItem(DefensiveMult, "DefensiveMult");
-                fg.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
-                fg.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
-                fg.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
-                fg.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
-                fg.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
-                fg.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
-                fg.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
-                fg.AppendItem(AvoidThreatChance, "AvoidThreatChance");
-                fg.AppendItem(CSMD, "CSMD");
-                Melee?.ToString(fg);
-                CloseRange?.ToString(fg);
-                fg.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
-                Flight?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(OffensiveMult, "OffensiveMult");
+                }
+                {
+                    sb.AppendItem(DefensiveMult, "DefensiveMult");
+                }
+                {
+                    sb.AppendItem(GroupOffensiveMult, "GroupOffensiveMult");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultShout, "EquipmentScoreMultShout");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
+                }
+                {
+                    sb.AppendItem(EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
+                }
+                {
+                    sb.AppendItem(AvoidThreatChance, "AvoidThreatChance");
+                }
+                {
+                    sb.AppendItem(CSMD, "CSMD");
+                }
+                Melee?.Print(sb);
+                CloseRange?.Print(sb);
+                {
+                    sb.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
+                }
+                Flight?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(CSGDDataTypeState, "CSGDDataTypeState");
+                }
             }
             #endregion
 
@@ -1072,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1082,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static CombatStyle CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new CombatStyle();
             ((CombatStyleSetterCommon)((ICombatStyleGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1097,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out CombatStyle item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1107,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1211,26 +1227,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ICombatStyleGetter item,
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
+            return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ICombatStyleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
-            ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).ToString(
+            ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1325,7 +1341,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ICombatStyleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((CombatStyleSetterCommon)((ICombatStyleGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1340,10 +1356,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum CombatStyle_FieldIndex
+    internal enum CombatStyle_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1372,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class CombatStyle_Registration : ILoquiRegistration
+    internal partial class CombatStyle_Registration : ILoquiRegistration
     {
         public static readonly CombatStyle_Registration Instance = new CombatStyle_Registration();
 
@@ -1414,6 +1430,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSTY;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.CSTY);
+            var all = RecordCollection.Factory(
+                RecordTypes.CSTY,
+                RecordTypes.CSGD,
+                RecordTypes.CSMD,
+                RecordTypes.CSME,
+                RecordTypes.CSCR,
+                RecordTypes.CSLR,
+                RecordTypes.CSFL,
+                RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(CombatStyleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1447,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class CombatStyleSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class CombatStyleSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly CombatStyleSetterCommon Instance = new CombatStyleSetterCommon();
 
@@ -1498,7 +1529,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ICombatStyleInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<ICombatStyleInternal>(
                 record: item,
@@ -1511,7 +1542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CombatStyle)item,
@@ -1522,7 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (CombatStyle)item,
@@ -1533,7 +1564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleCommon : SkyrimMajorRecordCommon
+    internal partial class CombatStyleCommon : SkyrimMajorRecordCommon
     {
         public new static readonly CombatStyleCommon Instance = new CombatStyleCommon();
 
@@ -1557,7 +1588,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CombatStyle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.OffensiveMult = item.OffensiveMult.EqualsWithin(rhs.OffensiveMult);
             ret.DefensiveMult = item.DefensiveMult.EqualsWithin(rhs.DefensiveMult);
             ret.GroupOffensiveMult = item.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult);
@@ -1590,127 +1620,125 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             ICombatStyleGetter item,
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ICombatStyleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             CombatStyle.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"CombatStyle =>");
+                sb.AppendLine($"CombatStyle =>");
             }
             else
             {
-                fg.AppendLine($"{name} (CombatStyle) =>");
+                sb.AppendLine($"{name} (CombatStyle) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ICombatStyleGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             CombatStyle.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.OffensiveMult ?? true)
             {
-                fg.AppendItem(item.OffensiveMult, "OffensiveMult");
+                sb.AppendItem(item.OffensiveMult, "OffensiveMult");
             }
             if (printMask?.DefensiveMult ?? true)
             {
-                fg.AppendItem(item.DefensiveMult, "DefensiveMult");
+                sb.AppendItem(item.DefensiveMult, "DefensiveMult");
             }
             if (printMask?.GroupOffensiveMult ?? true)
             {
-                fg.AppendItem(item.GroupOffensiveMult, "GroupOffensiveMult");
+                sb.AppendItem(item.GroupOffensiveMult, "GroupOffensiveMult");
             }
             if (printMask?.EquipmentScoreMultMelee ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
+                sb.AppendItem(item.EquipmentScoreMultMelee, "EquipmentScoreMultMelee");
             }
             if (printMask?.EquipmentScoreMultMagic ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
+                sb.AppendItem(item.EquipmentScoreMultMagic, "EquipmentScoreMultMagic");
             }
             if (printMask?.EquipmentScoreMultRanged ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
+                sb.AppendItem(item.EquipmentScoreMultRanged, "EquipmentScoreMultRanged");
             }
             if (printMask?.EquipmentScoreMultShout ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultShout, "EquipmentScoreMultShout");
+                sb.AppendItem(item.EquipmentScoreMultShout, "EquipmentScoreMultShout");
             }
             if (printMask?.EquipmentScoreMultUnarmed ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
+                sb.AppendItem(item.EquipmentScoreMultUnarmed, "EquipmentScoreMultUnarmed");
             }
             if (printMask?.EquipmentScoreMultStaff ?? true)
             {
-                fg.AppendItem(item.EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
+                sb.AppendItem(item.EquipmentScoreMultStaff, "EquipmentScoreMultStaff");
             }
             if (printMask?.AvoidThreatChance ?? true)
             {
-                fg.AppendItem(item.AvoidThreatChance, "AvoidThreatChance");
+                sb.AppendItem(item.AvoidThreatChance, "AvoidThreatChance");
             }
             if ((printMask?.CSMD ?? true)
                 && item.CSMD is {} CSMDItem)
             {
-                fg.AppendLine($"CSMD => {SpanExt.ToHexString(CSMDItem)}");
+                sb.AppendLine($"CSMD => {SpanExt.ToHexString(CSMDItem)}");
             }
             if ((printMask?.Melee?.Overall ?? true)
                 && item.Melee is {} MeleeItem)
             {
-                MeleeItem?.ToString(fg, "Melee");
+                MeleeItem?.Print(sb, "Melee");
             }
             if ((printMask?.CloseRange?.Overall ?? true)
                 && item.CloseRange is {} CloseRangeItem)
             {
-                CloseRangeItem?.ToString(fg, "CloseRange");
+                CloseRangeItem?.Print(sb, "CloseRange");
             }
             if ((printMask?.LongRangeStrafeMult ?? true)
                 && item.LongRangeStrafeMult is {} LongRangeStrafeMultItem)
             {
-                fg.AppendItem(LongRangeStrafeMultItem, "LongRangeStrafeMult");
+                sb.AppendItem(LongRangeStrafeMultItem, "LongRangeStrafeMult");
             }
             if ((printMask?.Flight?.Overall ?? true)
                 && item.Flight is {} FlightItem)
             {
-                FlightItem?.ToString(fg, "Flight");
+                FlightItem?.Print(sb, "Flight");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if (printMask?.CSGDDataTypeState ?? true)
             {
-                fg.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
+                sb.AppendItem(item.CSGDDataTypeState, "CSGDDataTypeState");
             }
         }
         
@@ -1926,9 +1954,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICombatStyleGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
@@ -1973,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class CombatStyleSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class CombatStyleSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly CombatStyleSetterTranslationCommon Instance = new CombatStyleSetterTranslationCommon();
 
@@ -2269,7 +2297,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -2287,13 +2315,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class CombatStyleBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
+        public new static readonly CombatStyleBinaryWriteTranslation Instance = new CombatStyleBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ICombatStyleGetter item,
@@ -2307,7 +2335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             ICombatStyleGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2391,7 +2419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             ICombatStyleGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2402,12 +2430,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2419,7 +2450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ICombatStyleGetter)item,
@@ -2430,7 +2461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICombatStyleGetter)item,
@@ -2441,7 +2472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (ICombatStyleGetter)item,
@@ -2451,9 +2482,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class CombatStyleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class CombatStyleBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
+        public new static readonly CombatStyleBinaryCreateTranslation Instance = new CombatStyleBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CSTY;
         public static void FillBinaryStructs(
@@ -2472,7 +2503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2545,7 +2576,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2562,16 +2594,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class CombatStyleBinaryOverlay :
+    internal partial class CombatStyleBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         ICombatStyleGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
-        public new static CombatStyle_Registration StaticRegistration => CombatStyle_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => CombatStyleCommon.Instance;
         [DebuggerStepThrough]
@@ -2579,13 +2611,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CombatStyleBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((CombatStyleBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2596,81 +2628,81 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public CombatStyle.MajorFlag MajorFlags => (CombatStyle.MajorFlag)this.MajorRecordFlagsRaw;
 
-        private int? _CSGDLocation;
+        private RangeInt32? _CSGDLocation;
         public CombatStyle.CSGDDataType CSGDDataTypeState { get; private set; }
         #region OffensiveMult
-        private int _OffensiveMultLocation => _CSGDLocation!.Value;
+        private int _OffensiveMultLocation => _CSGDLocation!.Value.Min;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single OffensiveMult => _OffensiveMult_IsSet ? _data.Slice(_OffensiveMultLocation, 4).Float() : default;
+        public Single OffensiveMult => _OffensiveMult_IsSet ? _recordData.Slice(_OffensiveMultLocation, 4).Float() : default;
         #endregion
         #region DefensiveMult
-        private int _DefensiveMultLocation => _CSGDLocation!.Value + 0x4;
+        private int _DefensiveMultLocation => _CSGDLocation!.Value.Min + 0x4;
         private bool _DefensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single DefensiveMult => _DefensiveMult_IsSet ? _data.Slice(_DefensiveMultLocation, 4).Float() : default;
+        public Single DefensiveMult => _DefensiveMult_IsSet ? _recordData.Slice(_DefensiveMultLocation, 4).Float() : default;
         #endregion
         #region GroupOffensiveMult
-        private int _GroupOffensiveMultLocation => _CSGDLocation!.Value + 0x8;
+        private int _GroupOffensiveMultLocation => _CSGDLocation!.Value.Min + 0x8;
         private bool _GroupOffensiveMult_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _data.Slice(_GroupOffensiveMultLocation, 4).Float() : default;
+        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _recordData.Slice(_GroupOffensiveMultLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMelee
-        private int _EquipmentScoreMultMeleeLocation => _CSGDLocation!.Value + 0xC;
+        private int _EquipmentScoreMultMeleeLocation => _CSGDLocation!.Value.Min + 0xC;
         private bool _EquipmentScoreMultMelee_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? _data.Slice(_EquipmentScoreMultMeleeLocation, 4).Float() : default;
+        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? _recordData.Slice(_EquipmentScoreMultMeleeLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMagic
-        private int _EquipmentScoreMultMagicLocation => _CSGDLocation!.Value + 0x10;
+        private int _EquipmentScoreMultMagicLocation => _CSGDLocation!.Value.Min + 0x10;
         private bool _EquipmentScoreMultMagic_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? _data.Slice(_EquipmentScoreMultMagicLocation, 4).Float() : default;
+        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? _recordData.Slice(_EquipmentScoreMultMagicLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultRanged
-        private int _EquipmentScoreMultRangedLocation => _CSGDLocation!.Value + 0x14;
+        private int _EquipmentScoreMultRangedLocation => _CSGDLocation!.Value.Min + 0x14;
         private bool _EquipmentScoreMultRanged_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? _data.Slice(_EquipmentScoreMultRangedLocation, 4).Float() : default;
+        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? _recordData.Slice(_EquipmentScoreMultRangedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultShout
-        private int _EquipmentScoreMultShoutLocation => _CSGDLocation!.Value + 0x18;
+        private int _EquipmentScoreMultShoutLocation => _CSGDLocation!.Value.Min + 0x18;
         private bool _EquipmentScoreMultShout_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? _data.Slice(_EquipmentScoreMultShoutLocation, 4).Float() : default;
+        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? _recordData.Slice(_EquipmentScoreMultShoutLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultUnarmed
-        private int _EquipmentScoreMultUnarmedLocation => _CSGDLocation!.Value + 0x1C;
+        private int _EquipmentScoreMultUnarmedLocation => _CSGDLocation!.Value.Min + 0x1C;
         private bool _EquipmentScoreMultUnarmed_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? _data.Slice(_EquipmentScoreMultUnarmedLocation, 4).Float() : default;
+        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? _recordData.Slice(_EquipmentScoreMultUnarmedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultStaff
-        private int _EquipmentScoreMultStaffLocation => _CSGDLocation!.Value + 0x20;
+        private int _EquipmentScoreMultStaffLocation => _CSGDLocation!.Value.Min + 0x20;
         private bool _EquipmentScoreMultStaff_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? _data.Slice(_EquipmentScoreMultStaffLocation, 4).Float() : default;
+        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? _recordData.Slice(_EquipmentScoreMultStaffLocation, 4).Float() : default;
         #endregion
         #region AvoidThreatChance
-        private int _AvoidThreatChanceLocation => _CSGDLocation!.Value + 0x24;
+        private int _AvoidThreatChanceLocation => _CSGDLocation!.Value.Min + 0x24;
         private bool _AvoidThreatChance_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _data.Slice(_AvoidThreatChanceLocation, 4).Float() : default;
+        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _recordData.Slice(_AvoidThreatChanceLocation, 4).Float() : default;
         #endregion
         #region CSMD
         private int? _CSMDLocation;
-        public ReadOnlyMemorySlice<Byte>? CSMD => _CSMDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CSMDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte>? CSMD => _CSMDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSMDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region Melee
         private RangeInt32? _MeleeLocation;
-        public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(new OverlayStream(_data.Slice(_MeleeLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(_recordData.Slice(_MeleeLocation!.Value.Min), _package) : default;
         #endregion
         #region CloseRange
         private RangeInt32? _CloseRangeLocation;
-        public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(new OverlayStream(_data.Slice(_CloseRangeLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(_recordData.Slice(_CloseRangeLocation!.Value.Min), _package) : default;
         #endregion
         #region LongRangeStrafeMult
         private int? _LongRangeStrafeMultLocation;
-        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flight
         private RangeInt32? _FlightLocation;
-        public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(new OverlayStream(_data.Slice(_FlightLocation!.Value.Min), _package), _package) : default;
+        public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(_recordData.Slice(_FlightLocation!.Value.Min), _package) : default;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
+        public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2679,28 +2711,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected CombatStyleBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static CombatStyleBinaryOverlay CombatStyleFactory(
+        public static ICombatStyleGetter CombatStyleFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new CombatStyleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2710,20 +2745,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static CombatStyleBinaryOverlay CombatStyleFactory(
+        public static ICombatStyleGetter CombatStyleFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return CombatStyleFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2733,15 +2768,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CSGD:
                 {
-                    _CSGDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    _CSGDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= 0x8)
                     {
                         this.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break0;
@@ -2789,17 +2824,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            CombatStyleMixIn.ToString(
+            CombatStyleMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

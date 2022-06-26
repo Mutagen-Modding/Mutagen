@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public partial class EncounterZone
 {
-    public partial class EncounterZone
+    [Flags]
+    public enum Flag
     {
-        [Flags]
-        public enum Flag
-        {
-            NeverResets = 0x01,
-            MatchPcBelowMinimumLevel = 0x02,
-            DisableCombatBoundary = 0x04,
-        }
+        NeverResets = 0x01,
+        MatchPcBelowMinimumLevel = 0x02,
+        DisableCombatBoundary = 0x04,
     }
 }

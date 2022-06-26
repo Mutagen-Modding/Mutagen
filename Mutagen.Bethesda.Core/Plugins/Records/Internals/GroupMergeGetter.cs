@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
+using Loqui;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
-public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyCache<TMajor, FormKey>
+internal class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyCache<TMajor, FormKey>
     where TGroup : class, IGroupGetter<TMajor>
     where TMajor : class, IMajorRecordGetter
 {
@@ -40,7 +38,7 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
     public IReadOnlyCache<TMajor, FormKey> RecordCache => this;
     IReadOnlyCache<IMajorRecordGetter, FormKey> IGroupGetter.RecordCache => this;
 
-    public IEnumerable<IFormLinkGetter> ContainedFormLinks => SubGroups.SelectMany(x => x.ContainedFormLinks);
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SubGroups.SelectMany(x => x.EnumerateFormLinks());
 
     private TMajor Get(FormKey key)
     {
@@ -62,6 +60,9 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
         return false;
     }
 
+    public ILoquiRegistration ContainedRecordRegistration => SubGroups[0].ContainedRecordRegistration;
+    public Type ContainedRecordType => typeof(TMajor);
+
     #endregion
 
     #region Cache
@@ -69,7 +70,7 @@ public class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, IReadOnlyC
     public IEnumerable<FormKey> Keys => SubGroups.SelectMany(x => x.FormKeys);
     public IEnumerable<TMajor> Items => Records;
 
-    IEnumerator<IKeyValue<TMajor, FormKey>> IEnumerable<IKeyValue<TMajor, FormKey>>.GetEnumerator() =>
+    IEnumerator<IKeyValue<FormKey, TMajor>> IEnumerable<IKeyValue<FormKey, TMajor>>.GetEnumerator() =>
         SubGroups.SelectMany(x => x.RecordCache).GetEnumerator();
 
     public TMajor? TryGetValue(FormKey key)

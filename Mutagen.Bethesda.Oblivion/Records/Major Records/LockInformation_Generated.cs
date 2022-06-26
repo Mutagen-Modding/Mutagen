@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -79,12 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LockInformationMixIn.ToString(
+            LockInformationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -215,42 +217,37 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(LockInformation.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(LockInformation.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LockInformation.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, LockInformation.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(LockInformation.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(LockInformation.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.LockLevel ?? true)
                     {
-                        fg.AppendItem(LockLevel, "LockLevel");
+                        sb.AppendItem(LockLevel, "LockLevel");
                     }
                     if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Key ?? true)
                     {
-                        fg.AppendItem(Key, "Key");
+                        sb.AppendItem(Key, "Key");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -355,39 +352,38 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(LockLevel, "LockLevel");
-                fg.AppendItem(Unused, "Unused");
-                fg.AppendItem(Key, "Key");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(LockLevel, "LockLevel");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(Key, "Key");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -470,8 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = LockInformation_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LockInformationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LockInformationCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LockInformationSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -482,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -492,7 +487,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static LockInformation CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new LockInformation();
             ((LockInformationSetterCommon)((ILockInformationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -507,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out LockInformation item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -517,7 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -585,26 +580,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this ILockInformationGetter item,
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
-            return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).ToString(
+            return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this ILockInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
-            ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).ToString(
+            ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -710,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this ILockInformation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((LockInformationSetterCommon)((ILockInformationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -725,10 +720,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum LockInformation_FieldIndex
+    internal enum LockInformation_FieldIndex
     {
         LockLevel = 0,
         Unused = 1,
@@ -738,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class LockInformation_Registration : ILoquiRegistration
+    internal partial class LockInformation_Registration : ILoquiRegistration
     {
         public static readonly LockInformation_Registration Instance = new LockInformation_Registration();
 
@@ -780,6 +775,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XLOC;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XLOC);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(LockInformationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -813,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LockInformationSetterCommon
+    internal partial class LockInformationSetterCommon
     {
         public static readonly LockInformationSetterCommon Instance = new LockInformationSetterCommon();
 
@@ -840,12 +841,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             ILockInformation item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XLOC),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -856,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LockInformationCommon
+    internal partial class LockInformationCommon
     {
         public static readonly LockInformationCommon Instance = new LockInformationCommon();
 
@@ -880,72 +881,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LockInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.LockLevel = item.LockLevel == rhs.LockLevel;
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Key = item.Key.Equals(rhs.Key);
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             ILockInformationGetter item,
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             ILockInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             LockInformation.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LockInformation =>");
+                sb.AppendLine($"LockInformation =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LockInformation) =>");
+                sb.AppendLine($"{name} (LockInformation) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             ILockInformationGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             LockInformation.Mask<bool>? printMask = null)
         {
             if (printMask?.LockLevel ?? true)
             {
-                fg.AppendItem(item.LockLevel, "LockLevel");
+                sb.AppendItem(item.LockLevel, "LockLevel");
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Key ?? true)
             {
-                fg.AppendItem(item.Key.FormKey, "Key");
+                sb.AppendItem(item.Key.FormKey, "Key");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -994,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILockInformationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILockInformationGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Key);
             yield break;
@@ -1003,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LockInformationSetterTranslationCommon
+    internal partial class LockInformationSetterTranslationCommon
     {
         public static readonly LockInformationSetterTranslationCommon Instance = new LockInformationSetterTranslationCommon();
 
@@ -1093,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration StaticRegistration => LockInformation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LockInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1117,11 +1115,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class LockInformationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
+        public static readonly LockInformationBinaryWriteTranslation Instance = new LockInformationBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             ILockInformationGetter item,
@@ -1143,12 +1141,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             ILockInformationGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XLOC),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1160,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (ILockInformationGetter)item,
@@ -1170,9 +1168,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LockInformationBinaryCreateTranslation
+    internal partial class LockInformationBinaryCreateTranslation
     {
-        public readonly static LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
+        public static readonly LockInformationBinaryCreateTranslation Instance = new LockInformationBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             ILockInformation item,
@@ -1197,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this ILockInformationGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockInformationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1210,16 +1208,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LockInformationBinaryOverlay :
+    internal partial class LockInformationBinaryOverlay :
         PluginBinaryOverlay,
         ILockInformationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LockInformation_Registration.Instance;
-        public static LockInformation_Registration StaticRegistration => LockInformation_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LockInformation_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => LockInformationCommon.Instance;
         [DebuggerStepThrough]
@@ -1233,16 +1231,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LockInformationCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LockInformationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LockInformationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((LockInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1250,10 +1248,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Byte LockLevel => _data.Span[0x0];
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        public Byte LockLevel => _structData.Span[0x0];
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x1, 0x3).ToArray();
+        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1261,25 +1259,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected LockInformationBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static LockInformationBinaryOverlay LockInformationFactory(
+        public static ILockInformationGetter LockInformationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new LockInformationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1288,25 +1291,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static LockInformationBinaryOverlay LockInformationFactory(
+        public static ILockInformationGetter LockInformationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return LockInformationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            LockInformationMixIn.ToString(
+            LockInformationMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,18 +18,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +66,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RankMixIn.ToString(
+            RankMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,39 +200,34 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Rank.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Rank.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Rank.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Rank.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Rank.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Rank.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.RankNumber ?? true)
                     {
-                        fg.AppendItem(RankNumber, "RankNumber");
+                        sb.AppendItem(RankNumber, "RankNumber");
                     }
                     if (Name != null
                         && (printMask?.Name?.Overall ?? true))
                     {
-                        fg.AppendLine($"Name => {Name}");
+                        sb.AppendLine($"Name => {Name}");
                     }
                     if (printMask?.Insignia ?? true)
                     {
-                        fg.AppendItem(Insignia, "Insignia");
+                        sb.AppendItem(Insignia, "Insignia");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -325,41 +322,36 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(RankNumber, "RankNumber");
+                {
+                    sb.AppendItem(RankNumber, "RankNumber");
+                }
                 if (Name != null)
                 {
-                    fg.AppendLine($"Name => {Name}");
+                    sb.AppendLine($"Name => {Name}");
                 }
-                fg.AppendItem(Insignia, "Insignia");
+                {
+                    sb.AppendItem(Insignia, "Insignia");
+                }
             }
             #endregion
 
@@ -443,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -453,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static Rank CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Rank();
             ((RankSetterCommon)((IRankGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -468,7 +460,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Rank item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -478,7 +470,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -542,26 +534,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRankGetter item,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
-            return ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
+            return ((RankCommon)((IRankGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRankGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
-            ((RankCommon)((IRankGetter)item).CommonInstance()!).ToString(
+            ((RankCommon)((IRankGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -667,7 +659,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRank item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RankSetterCommon)((IRankGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -682,10 +674,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum Rank_FieldIndex
+    internal enum Rank_FieldIndex
     {
         RankNumber = 0,
         Name = 1,
@@ -694,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Rank_Registration : ILoquiRegistration
+    internal partial class Rank_Registration : ILoquiRegistration
     {
         public static readonly Rank_Registration Instance = new Rank_Registration();
 
@@ -735,19 +727,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.RNAM,
-                        RecordTypes.MNAM,
-                        RecordTypes.FNAM,
-                        RecordTypes.INAM
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.RNAM,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.INAM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);
         #region Interface
@@ -782,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RankSetterCommon
+    internal partial class RankSetterCommon
     {
         public static readonly RankSetterCommon Instance = new RankSetterCommon();
 
@@ -807,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRank item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -820,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RankCommon
+    internal partial class RankCommon
     {
         public static readonly RankCommon Instance = new RankCommon();
 
@@ -844,7 +832,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.RankNumber = item.RankNumber == rhs.RankNumber;
             ret.Name = GenderedItem.EqualityMaskHelper(
                 lhs: item.Name,
@@ -854,64 +841,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
         }
         
-        public string ToString(
+        public string Print(
             IRankGetter item,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRankGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Rank.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Rank =>");
+                sb.AppendLine($"Rank =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Rank) =>");
+                sb.AppendLine($"{name} (Rank) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRankGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Rank.Mask<bool>? printMask = null)
         {
             if ((printMask?.RankNumber ?? true)
                 && item.RankNumber is {} RankNumberItem)
             {
-                fg.AppendItem(RankNumberItem, "RankNumber");
+                sb.AppendItem(RankNumberItem, "RankNumber");
             }
             if ((printMask?.Name?.Overall ?? true)
                 && item.Name is {} NameItem)
             {
-                NameItem?.ToString(fg, "Name");
+                NameItem?.Print(sb, "Name");
             }
             if ((printMask?.Insignia ?? true)
                 && item.Insignia is {} InsigniaItem)
             {
-                fg.AppendItem(InsigniaItem, "Insignia");
+                sb.AppendItem(InsigniaItem, "Insignia");
             }
         }
         
@@ -964,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRankGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRankGetter obj)
         {
             yield break;
         }
@@ -972,7 +957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RankSetterTranslationCommon
+    internal partial class RankSetterTranslationCommon
     {
         public static readonly RankSetterTranslationCommon Instance = new RankSetterTranslationCommon();
 
@@ -1064,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]
@@ -1088,16 +1073,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RankBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
+        public static readonly RankBinaryWriteTranslation Instance = new RankBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IRankGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1119,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRankGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1130,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRankGetter)item,
@@ -1140,9 +1125,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RankBinaryCreateTranslation
+    internal partial class RankBinaryCreateTranslation
     {
-        public readonly static RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
+        public static readonly RankBinaryCreateTranslation Instance = new RankBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRank item,
@@ -1157,14 +1142,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.RankNumber, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadInt32();
                     return (int)Rank_FieldIndex.RankNumber;
@@ -1172,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     item.Name = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
@@ -1183,7 +1168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Insignia = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1206,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRankGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1219,16 +1204,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RankBinaryOverlay :
+    internal partial class RankBinaryOverlay :
         PluginBinaryOverlay,
         IRankGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
-        public static Rank_Registration StaticRegistration => Rank_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RankCommon.Instance;
         [DebuggerStepThrough]
@@ -1242,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
@@ -1250,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RankBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1260,7 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region RankNumber
         private int? _RankNumberLocation;
-        public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public Int32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RankNumberLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         #region Name
         private IGenderedItemGetter<String?>? _NameOverlay;
@@ -1268,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
-        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1277,42 +1262,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RankBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RankBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static RankBinaryOverlay RankFactory(
+        public static IRankGetter RankFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RankFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1322,21 +1313,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.RankNumber, translationParams)) return ParseResult.Stop;
                     _RankNumberLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Name) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameOverlay = GenderedItemBinaryOverlay.Factory<String>(
                         package: _package,
                         male: RecordTypes.MNAM,
@@ -1347,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     _InsigniaLocation = (stream.Position - offset);
                     return (int)Rank_FieldIndex.Insignia;
                 }
@@ -1357,12 +1348,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RankMixIn.ToString(
+            RankMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

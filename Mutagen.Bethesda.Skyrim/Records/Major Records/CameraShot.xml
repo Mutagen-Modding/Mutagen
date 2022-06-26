@@ -7,7 +7,7 @@
         <Fields>
           <Enum name="Action" enumName="CameraShot.ActionType" byteLength="4" />
           <Enum name="Location" enumName="CameraShot.LocationType" byteLength="4" />
-          <Enum name="Target" enumName="CameraShot.TargetType" byteLength="4" />
+          <Enum name="Target" enumName="CameraShot.LocationType" byteLength="4" />
           <Enum name="Flags" enumName="CameraShot.Flag" byteLength="4" />
           <Float name="TimeMultiplierPlayer" />
           <Float name="TimeMultiplierTarget" />

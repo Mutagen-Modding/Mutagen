@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -63,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedPrimitiveMixIn.ToString(
+            PlacedPrimitiveMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -199,42 +202,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(PlacedPrimitive.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(PlacedPrimitive.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedPrimitive.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, PlacedPrimitive.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(PlacedPrimitive.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(PlacedPrimitive.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Bounds ?? true)
                     {
-                        fg.AppendItem(Bounds, "Bounds");
+                        sb.AppendItem(Bounds, "Bounds");
                     }
                     if (printMask?.Color ?? true)
                     {
-                        fg.AppendItem(Color, "Color");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -339,39 +337,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Bounds, "Bounds");
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Type, "Type");
+                {
+                    sb.AppendItem(Bounds, "Bounds");
+                }
+                {
+                    sb.AppendItem(Color, "Color");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Type, "Type");
+                }
             }
             #endregion
 
@@ -453,10 +450,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = PlacedPrimitive_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlacedPrimitiveBinaryWriteTranslation.Instance;
@@ -464,7 +457,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -474,7 +467,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static PlacedPrimitive CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new PlacedPrimitive();
             ((PlacedPrimitiveSetterCommon)((IPlacedPrimitiveGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -489,7 +482,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out PlacedPrimitive item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -499,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -565,26 +558,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPlacedPrimitiveGetter item,
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
-            return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).ToString(
+            return ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPlacedPrimitiveGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
-            ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).ToString(
+            ((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -690,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPlacedPrimitive item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PlacedPrimitiveSetterCommon)((IPlacedPrimitiveGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -705,10 +698,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum PlacedPrimitive_FieldIndex
+    internal enum PlacedPrimitive_FieldIndex
     {
         Bounds = 0,
         Color = 1,
@@ -718,7 +711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class PlacedPrimitive_Registration : ILoquiRegistration
+    internal partial class PlacedPrimitive_Registration : ILoquiRegistration
     {
         public static readonly PlacedPrimitive_Registration Instance = new PlacedPrimitive_Registration();
 
@@ -760,6 +753,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.XPRM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.XPRM);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(PlacedPrimitiveBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -793,7 +792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PlacedPrimitiveSetterCommon
+    internal partial class PlacedPrimitiveSetterCommon
     {
         public static readonly PlacedPrimitiveSetterCommon Instance = new PlacedPrimitiveSetterCommon();
 
@@ -819,12 +818,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPlacedPrimitive item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.XPRM),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -835,7 +834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedPrimitiveCommon
+    internal partial class PlacedPrimitiveCommon
     {
         public static readonly PlacedPrimitiveCommon Instance = new PlacedPrimitiveCommon();
 
@@ -859,72 +858,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PlacedPrimitive.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Bounds = item.Bounds.Equals(rhs.Bounds);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
             ret.Type = item.Type == rhs.Type;
         }
         
-        public string ToString(
+        public string Print(
             IPlacedPrimitiveGetter item,
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPlacedPrimitiveGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"PlacedPrimitive =>");
+                sb.AppendLine($"PlacedPrimitive =>");
             }
             else
             {
-                fg.AppendLine($"{name} (PlacedPrimitive) =>");
+                sb.AppendLine($"{name} (PlacedPrimitive) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPlacedPrimitiveGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
             if (printMask?.Bounds ?? true)
             {
-                fg.AppendItem(item.Bounds, "Bounds");
+                sb.AppendItem(item.Bounds, "Bounds");
             }
             if (printMask?.Color ?? true)
             {
-                fg.AppendItem(item.Color, "Color");
+                sb.AppendItem(item.Color, "Color");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -973,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedPrimitiveGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedPrimitiveGetter obj)
         {
             yield break;
         }
@@ -981,7 +977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PlacedPrimitiveSetterTranslationCommon
+    internal partial class PlacedPrimitiveSetterTranslationCommon
     {
         public static readonly PlacedPrimitiveSetterTranslationCommon Instance = new PlacedPrimitiveSetterTranslationCommon();
 
@@ -1071,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedPrimitive_Registration.Instance;
-        public static PlacedPrimitive_Registration StaticRegistration => PlacedPrimitive_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacedPrimitiveCommon.Instance;
         [DebuggerStepThrough]
@@ -1095,11 +1091,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PlacedPrimitiveBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PlacedPrimitiveBinaryWriteTranslation Instance = new PlacedPrimitiveBinaryWriteTranslation();
+        public static readonly PlacedPrimitiveBinaryWriteTranslation Instance = new PlacedPrimitiveBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPlacedPrimitiveGetter item,
@@ -1137,12 +1133,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPlacedPrimitiveGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.XPRM),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1154,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPlacedPrimitiveGetter)item,
@@ -1164,9 +1160,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PlacedPrimitiveBinaryCreateTranslation
+    internal partial class PlacedPrimitiveBinaryCreateTranslation
     {
-        public readonly static PlacedPrimitiveBinaryCreateTranslation Instance = new PlacedPrimitiveBinaryCreateTranslation();
+        public static readonly PlacedPrimitiveBinaryCreateTranslation Instance = new PlacedPrimitiveBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlacedPrimitive item,
@@ -1197,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPlacedPrimitiveGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1210,16 +1206,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PlacedPrimitiveBinaryOverlay :
+    internal partial class PlacedPrimitiveBinaryOverlay :
         PluginBinaryOverlay,
         IPlacedPrimitiveGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlacedPrimitive_Registration.Instance;
-        public static PlacedPrimitive_Registration StaticRegistration => PlacedPrimitive_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PlacedPrimitiveCommon.Instance;
         [DebuggerStepThrough]
@@ -1233,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PlacedPrimitiveBinaryWriteTranslation.Instance;
@@ -1241,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PlacedPrimitiveBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1249,10 +1245,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
+        #region Bounds
+        public partial P3Float GetBoundsCustom(int location);
         public P3Float Bounds => GetBoundsCustom(location: 0x0);
-        public Color Color => _data.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
-        public Single Unknown => _data.Slice(0x18, 0x4).Float();
-        public PlacedPrimitive.TypeEnum Type => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
+        #endregion
+        public Color Color => _structData.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
+        public Single Unknown => _structData.Slice(0x18, 0x4).Float();
+        public PlacedPrimitive.TypeEnum Type => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1260,25 +1259,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PlacedPrimitiveBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PlacedPrimitiveBinaryOverlay PlacedPrimitiveFactory(
+        public static IPlacedPrimitiveGetter PlacedPrimitiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x20,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new PlacedPrimitiveBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0x20 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1287,25 +1291,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PlacedPrimitiveBinaryOverlay PlacedPrimitiveFactory(
+        public static IPlacedPrimitiveGetter PlacedPrimitiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PlacedPrimitiveFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PlacedPrimitiveMixIn.ToString(
+            PlacedPrimitiveMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

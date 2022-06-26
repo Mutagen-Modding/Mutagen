@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Relationship" objType="Record" recordType="RELA" baseClass="Fallout4MajorRecord" GUID="3e59d695-6da8-45ea-a3df-6e914bfdc339" ID="632">
+    <Fields>
+      <Data>
+        <Fields>
+          <FormLink name="Parent" refName="Npc" />
+          <FormLink name="Child" refName="Npc" />
+          <Enum name="Rank" enumName="Relationship.RankType" byteLength="2" />
+          <UInt8 name="Unknown" />
+          <Enum name="Flags" enumName="Relationship.Flag" byteLength="1" />
+          <FormLink name="AssociationType" refName="AssociationType" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

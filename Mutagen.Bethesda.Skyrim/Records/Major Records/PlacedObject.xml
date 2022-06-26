@@ -3,7 +3,9 @@
   <Object name="PlacedObject" recordType="REFR" baseClass="SkyrimMajorRecord" objType="Record" GUID="15cab6c0-7390-410a-b2a8-7ee0e58569a6" ID="30">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
-      <FormLink name="Base" refName="SkyrimMajorRecord" recordType="NAME" />
+      <FormLink name="Base" recordType="NAME" >
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
       <P3Float name="BoundHalfExtents" recordType="XMBO" />
       <RefDirect name="Primitive" refName="PlacedPrimitive" />
       <ByteArray name="XORD" recordType="XORD" />
@@ -13,11 +15,11 @@
       <CustomLogic name="BoundData" recordType="XRMR" />
       <Int16 name="Unknown" binary="NoGeneration" />
       <FormLink name="LightingTemplate" recordType="LNAM" refName="Light" binary="NoGeneration" />
-      <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="INAM" binary="NoGeneration" />
+      <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" binary="NoGeneration" />
       <List name="LinkedRooms" binary="NoGeneration">
         <FormLink recordType="XLRM" refName="PlacedObject" />
       </List>
-      <Bool name="MultiBoundPrimitive" boolAsMarker="XMBP" />
+      <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <ByteArray name="RagdollBipedData" recordType="XRGB" />
       <Float name="Radius" recordType="XRDS" />
@@ -48,7 +50,6 @@
       <FormLink name="LeveledItemBaseObject" refName="LeveledItem" recordType="XLIB" />
       <Enum name="LevelModifier" enumName="Level" byteLength="4" recordType="XLCM" />
       <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
-      <!-- ToDo: Upgrade to a FormLink? -->
       <UInt32 name="CollisionLayer" recordType="XTRI" />
       <RefDirect name="Lock" refName="LockData" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
@@ -56,8 +57,11 @@
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />
       </List>
-      <Bool name="IgnoredBySandbox" boolAsMarker="XIS2" />
-      <RefDirect name="Ownership" refName="Ownership" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
       <Int32 name="ItemCount" recordType="XCNT" />
       <Float name="Charge" recordType="XCHG" />
       <FormLink name="LocationReference" recordType="XLRL">
@@ -69,7 +73,7 @@
       <Enum name="Action" enumName="PlacedObject.ActionFlag" recordType="XACT" byteLength="4" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
       <Float name="FavorCost" recordType="XFVC" />
-      <Bool name="OpenByDefault" boolAsMarker="ONAM" />
+      <Bool name="IsOpenByDefault" boolAsMarker="ONAM" />
       <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
       <FormLink name="AttachRef" recordType="XATR">
         <Interface>IPlacedThing</Interface>
@@ -126,7 +130,6 @@
     </Fields>
   </Object>
   <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL" GUID="b67ff340-7a4a-4aa1-b4cb-076b5ddc5c78" ID="305">
-    <Interface>IPositionRotation</Interface>
     <Fields>
       <FormLink name="Door" refName="PlacedObject" />
       <P3Float name="Position" />
@@ -153,9 +156,8 @@
   </Object>
   <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="3dfc5897-6afc-4b57-9d2a-1946257205ed" ID="310">
     <Fields>
-      <FormLink name="NavMesh" refName="ANavigationMesh" />
-      <!-- ToDo:  Add a linking accessor to get triangle directly through formlink? -->
-      <Int16 name="NavMeshTriangleIndex" />
+      <FormLink name="NavMesh" refName="NavigationMesh" />
+      <Int16 name="TeleportMarkerTriangle" />
       <Int16 name="Unused" />
     </Fields>
   </Object>

@@ -1,141 +1,133 @@
-using Loqui;
 using Loqui.Generation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Noggog.StructuredStrings.CSharp;
 using StringType = Mutagen.Bethesda.Generation.Fields.StringType;
 
-namespace Mutagen.Bethesda.Generation.Modules.Aspects
+namespace Mutagen.Bethesda.Generation.Modules.Aspects;
+
+public class NamedAspect : AspectFieldInterfaceDefinition
 {
-    public class NamedAspect : AspectFieldInterfaceDefinition
+    public NamedAspect()
+        : base(
+            "INamed",
+            AspectSubInterfaceDefinition.Factory(
+                nameof(INamed),
+                (_, f) => Test(f, translated: null, nullable: true)),
+            AspectSubInterfaceDefinition.Factory(
+                nameof(INamedRequired),
+                (_, f) => Test(f, translated: null, nullable: null)),
+            AspectSubInterfaceDefinition.Factory(
+                nameof(ITranslatedNamed),
+                (_, f) => Test(f, translated: true, nullable: true)),
+            AspectSubInterfaceDefinition.Factory(
+                nameof(ITranslatedNamedRequired),
+                (_, f) => Test(f, translated: true, nullable: null)))
     {
-        public NamedAspect()
-            : base("INamed")
+        FieldActions = new()
         {
-            FieldActions = new()
+            new(LoquiInterfaceType.Direct, _ => "Name", (o, tg, sb) =>
             {
-                new(LoquiInterfaceType.Direct, "Name", (o, tg, fg) =>
+                if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
+                var isTransl = nameField.Translated.HasValue;
+
+                if (isTransl)
                 {
-                    if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
-                    var isTransl = nameField.Translated.HasValue;
-
-                    if (isTransl)
+                    if (nameField.Nullable)
                     {
-                        if (nameField.Nullable)
-                        {
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine("string? INamedGetter.Name => this.Name?.String;");
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine($"{nameof(ITranslatedStringGetter)}? {nameof(ITranslatedNamedGetter)}.Name => this.Name;");
-                        }
-                        else
-                        {
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
-                        }
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string? INamedGetter.Name => this.Name?.String;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)}? {nameof(ITranslatedNamedGetter)}.Name => this.Name;");
                     }
-                    else if (nameField.Nullable)
+                    else
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
                     }
-
-                    if (isTransl)
-                    {
-                        if (nameField.IsNullable)
-                        {
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? string.Empty;");
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine($"string? INamed.Name");
-                            using (new BraceWrapper(fg))
-                            {
-                                fg.AppendLine("get => this.Name?.String;");
-                                fg.AppendLine("set => this.Name = value;");
-                            }
-                        }
-                        else
-                        {
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
-                        }
-
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequired.Name");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine("get => this.Name?.String ?? string.Empty;");
-                            fg.AppendLine("set => this.Name = value;");
-                        }
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine($"{nameof(TranslatedString)} {nameof(ITranslatedNamedRequired)}.Name");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine("get => this.Name ?? string.Empty;");
-                            fg.AppendLine("set => this.Name = value;");
-                        }
-                    }
-                    else if (nameField.Nullable)
-                    {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequired.Name");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine("get => this.Name ?? string.Empty;");
-                            fg.AppendLine("set => this.Name = value;");
-                        }
-                    }
-                }),
-                new(LoquiInterfaceType.IGetter, "Name", (o, tg, fg) =>
+                }
+                else if (nameField.Nullable)
                 {
-                    if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
-                    var isTransl = nameField.Translated.HasValue;
-                    if (isTransl)
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
+                }
+
+                if (isTransl)
+                {
+                    if (nameField.IsNullable)
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
-                        if (nameField.Nullable)
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"string? INamed.Name");
+                        using (sb.CurlyBrace())
                         {
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine("string? INamedGetter.Name => this.Name?.String;");
-                            fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                            fg.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
+                            sb.AppendLine("get => this.Name?.String;");
+                            sb.AppendLine("set => this.Name = value;");
                         }
                     }
-                    else if (nameField.Nullable)
+                    else
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
                     }
-                })
-            };
-        }
 
-        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
-            .TryGetValue("Name", out var field)
-            && field is StringType;
-
-        public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-        {
-            var nameField = obj.IterateFields(includeBaseClass: true).OfType<StringType>().Single(x => x.Name == "Name");
-
-            var list = new List<AspectInterfaceData>();
-            AddInterfaces(list, nameof(INamedRequired), nameof(INamedRequiredGetter));
-
-            if (nameField.Nullable)
-                AddInterfaces(list, nameof(INamed), nameof(INamedGetter));
-
-            if (nameField.Translated.HasValue)
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequired.Name");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("get => this.Name?.String ?? string.Empty;");
+                        sb.AppendLine("set => this.Name = value;");
+                    }
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine($"{nameof(TranslatedString)} {nameof(ITranslatedNamedRequired)}.Name");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("get => this.Name ?? string.Empty;");
+                        sb.AppendLine("set => this.Name = value;");
+                    }
+                }
+                else if (nameField.Nullable)
+                {
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequired.Name");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("get => this.Name ?? string.Empty;");
+                        sb.AppendLine("set => this.Name = value;");
+                    }
+                }
+            }),
+            new(LoquiInterfaceType.IGetter, _ => "Name", (o, tg, sb) =>
             {
-                AddInterfaces(list, nameof(ITranslatedNamedRequired), nameof(ITranslatedNamedRequiredGetter));
-                if (nameField.Nullable)
-                    AddInterfaces(list, nameof(ITranslatedNamed), nameof(ITranslatedNamedGetter));
-            }
-            return list;
-        }
+                if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
+                var isTransl = nameField.Translated.HasValue;
+                if (isTransl)
+                {
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;");
+                    if (nameField.Nullable)
+                    {
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine("string? INamedGetter.Name => this.Name?.String;");
+                        sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                        sb.AppendLine($"{nameof(ITranslatedStringGetter)} {nameof(ITranslatedNamedRequiredGetter)}.Name => this.Name ?? {nameof(TranslatedString)}.Empty;");
+                    }
+                }
+                else if (nameField.Nullable)
+                {
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("string INamedRequiredGetter.Name => this.Name ?? string.Empty;");
+                }
+            })
+        };
     }
+
+    public static bool Test(Dictionary<string, TypeGeneration> allFields, bool? translated, bool? nullable) => 
+        allFields.TryGetValue("Name", out var field) 
+        && field is StringType str
+        && (nullable == null || str.Nullable == nullable.Value)
+        && (translated == null || str.Translated.HasValue == translated.Value);
 }

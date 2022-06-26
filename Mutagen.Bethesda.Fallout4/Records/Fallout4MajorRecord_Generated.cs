@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,20 +19,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            Fallout4MajorRecordMixIn.ToString(
+            Fallout4MajorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -182,34 +184,29 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Fallout4MajorRecord.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Fallout4MajorRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Fallout4MajorRecord.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Fallout4MajorRecord.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Fallout4MajorRecord.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Fallout4MajorRecord.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FormVersion ?? true)
                     {
-                        fg.AppendItem(FormVersion, "FormVersion");
+                        sb.AppendItem(FormVersion, "FormVersion");
                     }
                     if (printMask?.Version2 ?? true)
                     {
-                        fg.AppendItem(Version2, "Version2");
+                        sb.AppendItem(Version2, "Version2");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -283,38 +280,33 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
+                }
             }
             #endregion
 
@@ -379,7 +371,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4MajorRecordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public Fallout4MajorRecord(FormKey formKey)
         {
@@ -421,6 +413,40 @@ namespace Mutagen.Bethesda.Fallout4
             return MajorRecordPrinter<Fallout4MajorRecord>.ToString(this);
         }
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -448,7 +474,7 @@ namespace Mutagen.Bethesda.Fallout4
         protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -457,7 +483,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -474,12 +500,13 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IFallout4MajorRecordInternal>,
+        IMajorRecordEnumerable,
         IMajorRecordInternal
     {
         new UInt16 FormVersion { get; set; }
@@ -494,13 +521,14 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, Grass, HeadPart, ImpactDataSet, Keyword, LandscapeTexture, LeveledSpell, LocationReferenceType, MaterialSwap, MaterialType, MiscItem, Outfit, PlacedObject, Race, Region, ReverbParameters, SoundDescriptor, SoundMarker, TextureSet, Transform]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IFallout4MajorRecordGetter>
+        ILoquiObject<IFallout4MajorRecordGetter>,
+        IMajorRecordGetterEnumerable
     {
         static new ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
@@ -529,26 +557,26 @@ namespace Mutagen.Bethesda.Fallout4
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IFallout4MajorRecordGetter item,
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
-            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).ToString(
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IFallout4MajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
-            ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).ToString(
+            ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -626,6 +654,218 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IFallout4MajorRecordGetter obj)
+        {
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IFallout4MajorRecordGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this IFallout4MajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((Fallout4MajorRecordCommon)((IFallout4MajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IFallout4MajorRecordInternal obj)
+        {
+            return ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IFallout4MajorRecordInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this IFallout4MajorRecordInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout4MajorRecordInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout4MajorRecordInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout4MajorRecordInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout4MajorRecordInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout4MajorRecordInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static Fallout4MajorRecord Duplicate(
             this IFallout4MajorRecordGetter item,
             FormKey formKey,
@@ -643,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static void CopyInFromBinary(
             this IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -658,10 +898,10 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     #region Field Index
-    public enum Fallout4MajorRecord_FieldIndex
+    internal enum Fallout4MajorRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -673,7 +913,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Registration
-    public partial class Fallout4MajorRecord_Registration : ILoquiRegistration
+    internal partial class Fallout4MajorRecord_Registration : ILoquiRegistration
     {
         public static readonly Fallout4MajorRecord_Registration Instance = new Fallout4MajorRecord_Registration();
 
@@ -747,7 +987,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #endregion
 
     #region Common
-    public partial class Fallout4MajorRecordSetterCommon : MajorRecordSetterCommon
+    internal partial class Fallout4MajorRecordSetterCommon : MajorRecordSetterCommon
     {
         public new static readonly Fallout4MajorRecordSetterCommon Instance = new Fallout4MajorRecordSetterCommon();
 
@@ -772,20 +1012,83 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             base.RemapLinks(obj, mapping);
         }
         
+        public virtual IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout4MajorRecordInternal obj)
+        {
+            foreach (var item in Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IFallout4MajorRecordInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout4MajorRecordInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in Fallout4MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public virtual void Remove(
+            IFallout4MajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
+        }
+        
+        public virtual void Remove(
+            IFallout4MajorRecordInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    if (!Fallout4MajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
             IFallout4MajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
         }
         
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Fallout4MajorRecord)item,
@@ -796,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4MajorRecordCommon : MajorRecordCommon
+    internal partial class Fallout4MajorRecordCommon : MajorRecordCommon
     {
         public new static readonly Fallout4MajorRecordCommon Instance = new Fallout4MajorRecordCommon();
 
@@ -820,67 +1123,64 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4MajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IFallout4MajorRecordGetter item,
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IFallout4MajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Fallout4MajorRecord =>");
+                sb.AppendLine($"Fallout4MajorRecord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Fallout4MajorRecord) =>");
+                sb.AppendLine($"{name} (Fallout4MajorRecord) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IFallout4MajorRecordGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Fallout4MajorRecord.Mask<bool>? printMask = null)
         {
             MajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.FormVersion ?? true)
             {
-                fg.AppendItem(item.FormVersion, "FormVersion");
+                sb.AppendItem(item.FormVersion, "FormVersion");
             }
             if (printMask?.Version2 ?? true)
             {
-                fg.AppendItem(item.Version2, "Version2");
+                sb.AppendItem(item.Version2, "Version2");
             }
         }
         
@@ -954,13 +1254,71 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4MajorRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout4MajorRecordGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             yield break;
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout4MajorRecordGetter obj)
+        {
+            yield break;
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IFallout4MajorRecordGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout4MajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout4MajorRecord":
+                case "Fallout4MajorRecord":
+                    if (!Fallout4MajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout4MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout4, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
         }
         
         #region Duplicate
@@ -988,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         
     }
-    public partial class Fallout4MajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
+    internal partial class Fallout4MajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
     {
         public new static readonly Fallout4MajorRecordSetterTranslationCommon Instance = new Fallout4MajorRecordSetterTranslationCommon();
 
@@ -1121,7 +1479,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1139,13 +1497,13 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
     public partial class Fallout4MajorRecordBinaryWriteTranslation :
         MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static Fallout4MajorRecordBinaryWriteTranslation Instance = new Fallout4MajorRecordBinaryWriteTranslation();
+        public new static readonly Fallout4MajorRecordBinaryWriteTranslation Instance = new Fallout4MajorRecordBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IFallout4MajorRecordGetter item,
@@ -1161,17 +1519,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public virtual void Write(
             MutagenWriter writer,
             IFallout4MajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             try
             {
                 WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    translationParams: translationParams);
+                if (!item.IsDeleted)
+                {
+                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        item: item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             catch (Exception ex)
             {
@@ -1182,7 +1543,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IFallout4MajorRecordGetter)item,
@@ -1193,7 +1554,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IFallout4MajorRecordGetter)item,
@@ -1203,9 +1564,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
     }
 
-    public partial class Fallout4MajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    internal partial class Fallout4MajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
     {
-        public new readonly static Fallout4MajorRecordBinaryCreateTranslation Instance = new Fallout4MajorRecordBinaryCreateTranslation();
+        public new static readonly Fallout4MajorRecordBinaryCreateTranslation Instance = new Fallout4MajorRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
         public static void FillBinaryStructs(
@@ -1232,16 +1593,16 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4.Internals
+namespace Mutagen.Bethesda.Fallout4
 {
-    public abstract partial class Fallout4MajorRecordBinaryOverlay :
+    internal abstract partial class Fallout4MajorRecordBinaryOverlay :
         MajorRecordBinaryOverlay,
         IFallout4MajorRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Fallout4MajorRecord_Registration.Instance;
-        public new static Fallout4MajorRecord_Registration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Fallout4MajorRecord_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => Fallout4MajorRecordCommon.Instance;
         [DebuggerStepThrough]
@@ -1249,14 +1610,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4MajorRecordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => Fallout4MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((Fallout4MajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1264,8 +1631,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 translationParams: translationParams);
         }
 
-        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
+        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1273,10 +1640,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void CustomCtor();
         protected Fallout4MajorRecordBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
@@ -1285,12 +1652,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            Fallout4MajorRecordMixIn.ToString(
+            Fallout4MajorRecordMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

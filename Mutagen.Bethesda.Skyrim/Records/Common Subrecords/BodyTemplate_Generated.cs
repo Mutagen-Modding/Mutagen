@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -62,12 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyTemplateMixIn.ToString(
+            BodyTemplateMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -198,42 +201,37 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(BodyTemplate.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(BodyTemplate.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BodyTemplate.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, BodyTemplate.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(BodyTemplate.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(BodyTemplate.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.FirstPersonFlags ?? true)
                     {
-                        fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                        sb.AppendItem(FirstPersonFlags, "FirstPersonFlags");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ArmorType ?? true)
                     {
-                        fg.AppendItem(ArmorType, "ArmorType");
+                        sb.AppendItem(ArmorType, "ArmorType");
                     }
                     if (printMask?.ActsLike44 ?? true)
                     {
-                        fg.AppendItem(ActsLike44, "ActsLike44");
+                        sb.AppendItem(ActsLike44, "ActsLike44");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -338,39 +336,38 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(ArmorType, "ArmorType");
-                fg.AppendItem(ActsLike44, "ActsLike44");
+                {
+                    sb.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(ArmorType, "ArmorType");
+                }
+                {
+                    sb.AppendItem(ActsLike44, "ActsLike44");
+                }
             }
             #endregion
 
@@ -459,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -469,7 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static BodyTemplate CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new BodyTemplate();
             ((BodyTemplateSetterCommon)((IBodyTemplateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -484,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out BodyTemplate item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -494,7 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -560,26 +557,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IBodyTemplateGetter item,
             string? name = null,
             BodyTemplate.Mask<bool>? printMask = null)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).ToString(
+            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IBodyTemplateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyTemplate.Mask<bool>? printMask = null)
         {
-            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).ToString(
+            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -685,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IBodyTemplate item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -700,10 +697,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum BodyTemplate_FieldIndex
+    internal enum BodyTemplate_FieldIndex
     {
         FirstPersonFlags = 0,
         Flags = 1,
@@ -713,7 +710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class BodyTemplate_Registration : ILoquiRegistration
+    internal partial class BodyTemplate_Registration : ILoquiRegistration
     {
         public static readonly BodyTemplate_Registration Instance = new BodyTemplate_Registration();
 
@@ -754,22 +751,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.BODT,
-                        RecordTypes.BOD2
-                    })
-            );
+            var all = RecordCollection.Factory(
+                RecordTypes.BODT,
+                RecordTypes.BOD2);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static RecordTypeConverter Version44Converter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
-                new RecordType("BODT"),
-                new RecordType("BOD2")));
+                RecordTypes.BODT,
+                RecordTypes.BOD2));
         public static RecordTypeConverter? Get(int? version)
         {
             if (version == null) return default(RecordTypeConverter);
@@ -812,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BodyTemplateSetterCommon
+    internal partial class BodyTemplateSetterCommon
     {
         public static readonly BodyTemplateSetterCommon Instance = new BodyTemplateSetterCommon();
 
@@ -838,12 +831,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IBodyTemplate item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.Combine(BodyTemplate_Registration.Get(frame.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -854,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BodyTemplateCommon
+    internal partial class BodyTemplateCommon
     {
         public static readonly BodyTemplateCommon Instance = new BodyTemplateCommon();
 
@@ -878,72 +871,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
             ret.Flags = item.Flags == rhs.Flags;
             ret.ArmorType = item.ArmorType == rhs.ArmorType;
             ret.ActsLike44 = item.ActsLike44 == rhs.ActsLike44;
         }
         
-        public string ToString(
+        public string Print(
             IBodyTemplateGetter item,
             string? name = null,
             BodyTemplate.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IBodyTemplateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             BodyTemplate.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BodyTemplate =>");
+                sb.AppendLine($"BodyTemplate =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BodyTemplate) =>");
+                sb.AppendLine($"{name} (BodyTemplate) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IBodyTemplateGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             BodyTemplate.Mask<bool>? printMask = null)
         {
             if (printMask?.FirstPersonFlags ?? true)
             {
-                fg.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
+                sb.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if (printMask?.ArmorType ?? true)
             {
-                fg.AppendItem(item.ArmorType, "ArmorType");
+                sb.AppendItem(item.ArmorType, "ArmorType");
             }
             if (printMask?.ActsLike44 ?? true)
             {
-                fg.AppendItem(item.ActsLike44, "ActsLike44");
+                sb.AppendItem(item.ActsLike44, "ActsLike44");
             }
         }
         
@@ -992,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyTemplateGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyTemplateGetter obj)
         {
             yield break;
         }
@@ -1000,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class BodyTemplateSetterTranslationCommon
+    internal partial class BodyTemplateSetterTranslationCommon
     {
         public static readonly BodyTemplateSetterTranslationCommon Instance = new BodyTemplateSetterTranslationCommon();
 
@@ -1090,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static BodyTemplate_Registration StaticRegistration => BodyTemplate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -1114,11 +1104,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class BodyTemplateBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyTemplateBinaryWriteTranslation Instance = new BodyTemplateBinaryWriteTranslation();
+        public static readonly BodyTemplateBinaryWriteTranslation Instance = new BodyTemplateBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IBodyTemplateGetter item,
@@ -1147,12 +1137,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IBodyTemplateGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.Combine(BodyTemplate_Registration.Get(writer.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1164,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IBodyTemplateGetter)item,
@@ -1174,9 +1164,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BodyTemplateBinaryCreateTranslation
+    internal partial class BodyTemplateBinaryCreateTranslation
     {
-        public readonly static BodyTemplateBinaryCreateTranslation Instance = new BodyTemplateBinaryCreateTranslation();
+        public static readonly BodyTemplateBinaryCreateTranslation Instance = new BodyTemplateBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IBodyTemplate item,
@@ -1210,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IBodyTemplateGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyTemplateBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1223,16 +1213,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BodyTemplateBinaryOverlay :
+    internal partial class BodyTemplateBinaryOverlay :
         PluginBinaryOverlay,
         IBodyTemplateGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static BodyTemplate_Registration StaticRegistration => BodyTemplate_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BodyTemplate_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => BodyTemplateCommon.Instance;
         [DebuggerStepThrough]
@@ -1246,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyTemplateBinaryWriteTranslation.Instance;
@@ -1254,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1262,15 +1252,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationParams: translationParams);
         }
 
-        public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         #region Flags
         private bool _Flags_IsSet => _package.FormVersion!.FormVersion!.Value < 44;
-        public BodyTemplate.Flag Flags => _Flags_IsSet ? (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4)) : default;
+        public BodyTemplate.Flag Flags => _Flags_IsSet ? (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)) : default;
         int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
         #endregion
         #region ArmorType
         private bool _ArmorType_IsSet => _package.FormVersion!.FormVersion!.Value >= 22;
-        public ArmorType ArmorType => _ArmorType_IsSet ? (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4)) : default;
+        public ArmorType ArmorType => _ArmorType_IsSet ? (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(FlagsVersioningOffset + 0x8, 0x4)) : default;
         int ArmorTypeVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 22 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(
@@ -1280,25 +1270,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected BodyTemplateBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static BodyTemplateBinaryOverlay BodyTemplateFactory(
+        public static IBodyTemplateGetter BodyTemplateFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xC,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new BodyTemplateBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1307,25 +1302,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static BodyTemplateBinaryOverlay BodyTemplateFactory(
+        public static IBodyTemplateGetter BodyTemplateFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return BodyTemplateFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyTemplateMixIn.ToString(
+            BodyTemplateMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

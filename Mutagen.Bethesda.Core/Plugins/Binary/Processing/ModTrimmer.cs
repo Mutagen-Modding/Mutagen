@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Utility;
@@ -23,7 +21,7 @@ public class ModTrimmer
         using var inputStream = streamCreator();
         if (inputStream.Complete) return;
         
-        using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
+        using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
         var fileLocs = RecordLocator.GetLocations(
             inputStream,
@@ -45,7 +43,7 @@ public class ModTrimmer
         
         while (!inputStream.Complete)
         {
-            var groupMeta = inputStream.GetGroup(readSafe: true);
+            var groupMeta = inputStream.GetGroupHeader(readSafe: true);
             if (interest.IsInterested(groupMeta.ContainedRecordType))
             {
                 inputStream.WriteTo(outputStream, checked((int)groupMeta.TotalLength));

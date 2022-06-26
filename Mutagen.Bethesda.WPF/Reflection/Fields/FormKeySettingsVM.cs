@@ -1,83 +1,81 @@
 using Mutagen.Bethesda.Plugins;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Text.Json;
 
-namespace Mutagen.Bethesda.WPF.Reflection.Fields
+namespace Mutagen.Bethesda.WPF.Reflection.Fields;
+
+public class FormKeySettingsVM : BasicSettingsVM<FormKey>
 {
-    public class FormKeySettingsVM : BasicSettingsVM<FormKey>
+    public FormKeySettingsVM(FieldMeta fieldMeta, object? defaultVal)
+        : base(fieldMeta, TryStripOrigin(defaultVal))
     {
-        public FormKeySettingsVM(FieldMeta fieldMeta, object? defaultVal)
-            : base(fieldMeta, TryStripOrigin(defaultVal))
+    }
+
+    public FormKeySettingsVM()
+        : base(FieldMeta.Empty, default)
+    {
+    }
+
+    public override SettingsNodeVM Duplicate() => new FormKeySettingsVM(Meta, DefaultValue);
+
+    public override FormKey Get(JsonElement property)
+    {
+        return FormKey.Factory(property.GetString());
+    }
+
+    public override FormKey GetDefault() => FormKey.Null;
+
+    public override void Import(JsonElement property, Action<string> logger)
+    {
+        Value = Import(property);
+    }
+
+    public static FormKey Import(JsonElement property)
+    {
+        if (FormKey.TryFactory(property.GetString(), out var formKey))
         {
+            return formKey;
         }
-
-        public FormKeySettingsVM()
-            : base(FieldMeta.Empty, default)
+        else
         {
+            return FormKey.Null;
         }
+    }
 
-        public override SettingsNodeVM Duplicate() => new FormKeySettingsVM(Meta, DefaultValue);
+    public override void Persist(JObject obj, Action<string> logger)
+    {
+        obj[Meta.DiskName] = JToken.FromObject(Persist(Value));
+    }
 
-        public override FormKey Get(JsonElement property)
+    public static string Persist(FormKey formKey)
+    {
+        if (formKey.IsNull)
         {
-            return FormKey.Factory(property.GetString());
+            return "Null";
         }
-
-        public override FormKey GetDefault() => FormKey.Null;
-
-        public override void Import(JsonElement property, Action<string> logger)
+        else
         {
-            Value = Import(property);
+            return formKey.ToString();
         }
+    }
 
-        public static FormKey Import(JsonElement property)
-        {
-            if (FormKey.TryFactory(property.GetString(), out var formKey))
-            {
-                return formKey;
-            }
-            else
-            {
-                return FormKey.Null;
-            }
-        }
+    public static FormKey StripOrigin(FormKey formKey)
+    {
+        return FormKey.Factory(formKey.ToString());
+    }
 
-        public override void Persist(JObject obj, Action<string> logger)
+    public static FormKey? TryStripOrigin(object? o)
+    {
+        if (o == null) return null;
+        if (FormKey.TryFactory(o.ToString(), out var form))
         {
-            obj[Meta.DiskName] = JToken.FromObject(Persist(Value));
+            return form;
         }
+        return null;
+    }
 
-        public static string Persist(FormKey formKey)
-        {
-            if (formKey.IsNull)
-            {
-                return "Null";
-            }
-            else
-            {
-                return formKey.ToString();
-            }
-        }
-
-        public static FormKey StripOrigin(FormKey formKey)
-        {
-            return FormKey.Factory(formKey.ToString());
-        }
-
-        public static FormKey? TryStripOrigin(object? o)
-        {
-            if (o == null) return null;
-            if (FormKey.TryFactory(o.ToString(), out var form))
-            {
-                return form;
-            }
-            return null;
-        }
-
-        public override void WrapUp()
-        {
-            Value = StripOrigin(Value);
-        }
+    public override void WrapUp()
+    {
+        Value = StripOrigin(Value);
     }
 }

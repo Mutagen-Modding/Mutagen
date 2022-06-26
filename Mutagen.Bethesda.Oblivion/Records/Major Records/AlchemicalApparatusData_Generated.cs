@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +66,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AlchemicalApparatusDataMixIn.ToString(
+            AlchemicalApparatusDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -200,42 +203,37 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(AlchemicalApparatusData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(AlchemicalApparatusData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AlchemicalApparatusData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, AlchemicalApparatusData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(AlchemicalApparatusData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(AlchemicalApparatusData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Type ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Value, "Value");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Weight, "Weight");
+                        sb.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.Quality ?? true)
                     {
-                        fg.AppendItem(Quality, "Quality");
+                        sb.AppendItem(Quality, "Quality");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -340,39 +338,38 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Quality, "Quality");
+                {
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Quality, "Quality");
+                }
             }
             #endregion
 
@@ -454,10 +451,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GrupRecordType = AlchemicalApparatusData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AlchemicalApparatusDataBinaryWriteTranslation.Instance;
@@ -465,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -475,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static AlchemicalApparatusData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new AlchemicalApparatusData();
             ((AlchemicalApparatusDataSetterCommon)((IAlchemicalApparatusDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -490,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out AlchemicalApparatusData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -500,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -568,26 +561,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IAlchemicalApparatusDataGetter item,
             string? name = null,
             AlchemicalApparatusData.Mask<bool>? printMask = null)
         {
-            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).ToString(
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IAlchemicalApparatusDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AlchemicalApparatusData.Mask<bool>? printMask = null)
         {
-            ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).ToString(
+            ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -693,7 +686,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IAlchemicalApparatusData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((AlchemicalApparatusDataSetterCommon)((IAlchemicalApparatusDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -708,10 +701,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum AlchemicalApparatusData_FieldIndex
+    internal enum AlchemicalApparatusData_FieldIndex
     {
         Type = 0,
         Value = 1,
@@ -721,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class AlchemicalApparatusData_Registration : ILoquiRegistration
+    internal partial class AlchemicalApparatusData_Registration : ILoquiRegistration
     {
         public static readonly AlchemicalApparatusData_Registration Instance = new AlchemicalApparatusData_Registration();
 
@@ -763,6 +756,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.DATA);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -796,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AlchemicalApparatusDataSetterCommon
+    internal partial class AlchemicalApparatusDataSetterCommon
     {
         public static readonly AlchemicalApparatusDataSetterCommon Instance = new AlchemicalApparatusDataSetterCommon();
 
@@ -822,12 +821,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 translationParams.ConvertToCustom(RecordTypes.DATA),
-                translationParams?.LengthOverride));
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -838,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusDataCommon
+    internal partial class AlchemicalApparatusDataCommon
     {
         public static readonly AlchemicalApparatusDataCommon Instance = new AlchemicalApparatusDataCommon();
 
@@ -862,72 +861,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatusData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Type = item.Type == rhs.Type;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Quality = item.Quality.EqualsWithin(rhs.Quality);
         }
         
-        public string ToString(
+        public string Print(
             IAlchemicalApparatusDataGetter item,
             string? name = null,
             AlchemicalApparatusData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IAlchemicalApparatusDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             AlchemicalApparatusData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"AlchemicalApparatusData =>");
+                sb.AppendLine($"AlchemicalApparatusData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (AlchemicalApparatusData) =>");
+                sb.AppendLine($"{name} (AlchemicalApparatusData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IAlchemicalApparatusDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             AlchemicalApparatusData.Mask<bool>? printMask = null)
         {
             if (printMask?.Type ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Value, "Value");
             }
             if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Weight, "Weight");
+                sb.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.Quality ?? true)
             {
-                fg.AppendItem(item.Quality, "Quality");
+                sb.AppendItem(item.Quality, "Quality");
             }
         }
         
@@ -976,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAlchemicalApparatusDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAlchemicalApparatusDataGetter obj)
         {
             yield break;
         }
@@ -984,7 +980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AlchemicalApparatusDataSetterTranslationCommon
+    internal partial class AlchemicalApparatusDataSetterTranslationCommon
     {
         public static readonly AlchemicalApparatusDataSetterTranslationCommon Instance = new AlchemicalApparatusDataSetterTranslationCommon();
 
@@ -1074,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatusData_Registration.Instance;
-        public static AlchemicalApparatusData_Registration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlchemicalApparatusDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1098,11 +1094,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class AlchemicalApparatusDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static AlchemicalApparatusDataBinaryWriteTranslation Instance = new AlchemicalApparatusDataBinaryWriteTranslation();
+        public static readonly AlchemicalApparatusDataBinaryWriteTranslation Instance = new AlchemicalApparatusDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IAlchemicalApparatusDataGetter item,
@@ -1124,12 +1120,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IAlchemicalApparatusDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
                 record: translationParams.ConvertToCustom(RecordTypes.DATA),
-                overflowRecord: translationParams?.OverflowRecordType,
+                overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
                 WriteEmbedded(
@@ -1141,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IAlchemicalApparatusDataGetter)item,
@@ -1151,9 +1147,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AlchemicalApparatusDataBinaryCreateTranslation
+    internal partial class AlchemicalApparatusDataBinaryCreateTranslation
     {
-        public readonly static AlchemicalApparatusDataBinaryCreateTranslation Instance = new AlchemicalApparatusDataBinaryCreateTranslation();
+        public static readonly AlchemicalApparatusDataBinaryCreateTranslation Instance = new AlchemicalApparatusDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IAlchemicalApparatusData item,
@@ -1178,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IAlchemicalApparatusDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1191,16 +1187,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class AlchemicalApparatusDataBinaryOverlay :
+    internal partial class AlchemicalApparatusDataBinaryOverlay :
         PluginBinaryOverlay,
         IAlchemicalApparatusDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatusData_Registration.Instance;
-        public static AlchemicalApparatusData_Registration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AlchemicalApparatusData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => AlchemicalApparatusDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1214,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => AlchemicalApparatusDataBinaryWriteTranslation.Instance;
@@ -1222,7 +1218,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((AlchemicalApparatusDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1230,10 +1226,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public AlchemicalApparatus.ApparatusType Type => (AlchemicalApparatus.ApparatusType)_data.Span.Slice(0x0, 0x1)[0];
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x1, 0x4));
-        public Single Weight => _data.Slice(0x5, 0x4).Float();
-        public Single Quality => _data.Slice(0x9, 0x4).Float();
+        public AlchemicalApparatus.ApparatusType Type => (AlchemicalApparatus.ApparatusType)_structData.Span.Slice(0x0, 0x1)[0];
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1, 0x4));
+        public Single Weight => _structData.Slice(0x5, 0x4).Float();
+        public Single Quality => _structData.Slice(0x9, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1241,25 +1237,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected AlchemicalApparatusDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static AlchemicalApparatusDataBinaryOverlay AlchemicalApparatusDataFactory(
+        public static IAlchemicalApparatusDataGetter AlchemicalApparatusDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0xD,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new AlchemicalApparatusDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants, parseParams),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
             stream.Position += 0xD + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1268,25 +1269,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static AlchemicalApparatusDataBinaryOverlay AlchemicalApparatusDataFactory(
+        public static IAlchemicalApparatusDataGetter AlchemicalApparatusDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return AlchemicalApparatusDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            AlchemicalApparatusDataMixIn.ToString(
+            AlchemicalApparatusDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

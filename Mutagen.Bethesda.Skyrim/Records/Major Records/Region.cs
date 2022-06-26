@@ -3,223 +3,219 @@ using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
-using System;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Skyrim.Internals;
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class Region
 {
-    public partial class Region
+    [Flags]
+    public enum MajorFlag
     {
-        [Flags]
-        public enum MajorFlag
+        BorderRegion = 0x40
+    }
+}
+
+partial class RegionBinaryCreateTranslation
+{
+    public static readonly RecordType RDOT = new RecordType("RDOT");
+    public static readonly RecordType RDWT = new RecordType("RDWT");
+    public static readonly RecordType RDMP = new RecordType("RDMP");
+    public static readonly RecordType RDGS = new RecordType("RDGS");
+    public static readonly RecordType RDSA = new RecordType("RDSA");
+    public static readonly RecordType RDMO = new RecordType("RDMO");
+
+    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+    {
+        var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
+        while (rdat.Equals(RecordTypes.RDAT))
         {
-            BorderRegion = 0x40
+            ParseRegionData(frame, item);
+            if (frame.Complete) break;
+            rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out rdatType);
         }
+
+        return null;
     }
 
-    namespace Internals
+    public static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
     {
-        public partial class RegionBinaryCreateTranslation
+        switch (dataType)
         {
-            public static readonly RecordType RDOT = new RecordType("RDOT");
-            public static readonly RecordType RDWT = new RecordType("RDWT");
-            public static readonly RecordType RDMP = new RecordType("RDMP");
-            public static readonly RecordType RDGS = new RecordType("RDGS");
-            public static readonly RecordType RDSA = new RecordType("RDSA");
-            public static readonly RecordType RDMO = new RecordType("RDMO");
+            case RegionData.RegionDataType.Object:
+                if (!recordType.Equals(RDOT)) return false;
+                break;
+            case RegionData.RegionDataType.Weather:
+                if (!recordType.Equals(RDWT)) return false;
+                break;
+            case RegionData.RegionDataType.Map:
+                if (!recordType.Equals(RDMP)) return false;
+                break;
+            case RegionData.RegionDataType.Grass:
+                if (!recordType.Equals(RDGS)) return false;
+                break;
+            case RegionData.RegionDataType.Sound:
+                if (!recordType.Equals(RDSA) && !recordType.Equals(RDMO)) return false;
+                break;
+            case RegionData.RegionDataType.Land:
+            default:
+                return false;
+        }
+        return true;
+    }
 
-            public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+    static void ParseRegionData(MutagenFrame frame, IRegionInternal item)
+    {
+        var rdatFrame = frame.Reader.GetSubrecord();
+        int len = rdatFrame.TotalLength;
+        RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
+
+        if (frame.Reader.TryGetSubrecordHeader(out var subMeta, offset: len))
+        {
+            var recType = subMeta.RecordType;
+            if (recType == RecordTypes.ICON)
             {
-                var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
-                while (rdat.Equals(RecordTypes.RDAT))
-                {
-                    ParseRegionData(frame, item);
-                    if (frame.Complete) break;
-                    rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out rdatType);
-                }
-
-                return null;
+                len += subMeta.TotalLength;
+                // Skip icon subrecord for now
+                subMeta = frame.Reader.GetSubrecordHeader(offset: rdatFrame.TotalLength + subMeta.TotalLength);
             }
-
-            public static bool IsExpected(RegionData.RegionDataType dataType, RecordType recordType)
+            if (IsExpected(dataType, recType))
             {
-                switch (dataType)
-                {
-                    case RegionData.RegionDataType.Object:
-                        if (!recordType.Equals(RDOT)) return false;
-                        break;
-                    case RegionData.RegionDataType.Weather:
-                        if (!recordType.Equals(RDWT)) return false;
-                        break;
-                    case RegionData.RegionDataType.Map:
-                        if (!recordType.Equals(RDMP)) return false;
-                        break;
-                    case RegionData.RegionDataType.Grass:
-                        if (!recordType.Equals(RDGS)) return false;
-                        break;
-                    case RegionData.RegionDataType.Sound:
-                        if (!recordType.Equals(RDSA) && !recordType.Equals(RDMO)) return false;
-                        break;
-                    case RegionData.RegionDataType.Land:
-                    default:
-                        return false;
-                }
-                return true;
+                len += subMeta.TotalLength;
             }
-
-            static void ParseRegionData(MutagenFrame frame, IRegionInternal item)
-            {
-                var rdatFrame = frame.Reader.GetSubrecordFrame();
-                int len = rdatFrame.TotalLength;
-                RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-
-                if (frame.Reader.TryGetSubrecord(out var subMeta, offset: len))
-                {
-                    var recType = subMeta.RecordType;
-                    if (recType == RecordTypes.ICON)
-                    {
-                        len += subMeta.TotalLength;
-                        // Skip icon subrecord for now
-                        subMeta = frame.Reader.GetSubrecord(offset: rdatFrame.TotalLength + subMeta.TotalLength);
-                    }
-                    if (IsExpected(dataType, recType))
-                    {
-                        len += subMeta.TotalLength;
-                    }
-                }
+        }
                 
-                switch (dataType)
+        switch (dataType)
+        {
+            case RegionData.RegionDataType.Object:
+                item.Objects = RegionObjects.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
+            case RegionData.RegionDataType.Map:
+                item.Map = RegionMap.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
+            case RegionData.RegionDataType.Grass:
+                item.Grasses = RegionGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
+            case RegionData.RegionDataType.Sound:
+                if (frame.Reader.TryGetSubrecordHeader(out var nextRec, offset: len)
+                    && (nextRec.RecordType.Equals(RDSA) || nextRec.RecordType.Equals(RDMO)))
                 {
-                    case RegionData.RegionDataType.Object:
-                        item.Objects = RegionObjects.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
-                        break;
-                    case RegionData.RegionDataType.Map:
-                        item.Map = RegionMap.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
-                        break;
-                    case RegionData.RegionDataType.Grass:
-                        item.Grasses = RegionGrasses.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
-                        break;
-                    case RegionData.RegionDataType.Sound:
-                        if (frame.Reader.TryGetSubrecord(out var nextRec, offset: len)
-                            && (nextRec.RecordType.Equals(RDSA) || nextRec.RecordType.Equals(RDMO)))
-                        {
-                            len += nextRec.TotalLength;
-                        }
-                        item.Sounds = RegionSounds.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
-                        break;
-                    case RegionData.RegionDataType.Weather:
-                        item.Weather = RegionWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
-                        break;
-                    case RegionData.RegionDataType.Land:
-                        item.Land = RegionLand.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
-                        break;
-                    default:
-                        throw new NotImplementedException();
+                    len += nextRec.TotalLength;
                 }
-            }
+                item.Sounds = RegionSounds.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
+            case RegionData.RegionDataType.Weather:
+                item.Weather = RegionWeather.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
+            case RegionData.RegionDataType.Land:
+                item.Land = RegionLand.CreateFromBinary(frame.SpawnWithLength(len, checkFraming: false));
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+}
+
+partial class RegionBinaryWriteTranslation
+{
+    public static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item)
+    {
+        item.Objects?.WriteToBinary(writer);
+        item.Weather?.WriteToBinary(writer);
+        item.Map?.WriteToBinary(writer);
+        item.Land?.WriteToBinary(writer);
+        item.Grasses?.WriteToBinary(writer);
+        item.Sounds?.WriteToBinary(writer);
+    }
+}
+
+partial class RegionBinaryOverlay : IRegionGetter
+{
+    private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
+    public IRegionObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new OverlayStream(_ObjectsSpan.Value, _package), _package) : default;
+
+    private ReadOnlyMemorySlice<byte>? _WeatherSpan;
+    public IRegionWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new OverlayStream(_WeatherSpan.Value, _package), _package) : default;
+
+    private ReadOnlyMemorySlice<byte>? _MapSpan;
+    public IRegionMapGetter? Map => _MapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new OverlayStream(_MapSpan.Value, _package), _package) : default;
+
+    private ReadOnlyMemorySlice<byte>? _GrassesSpan;
+    public IRegionGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new OverlayStream(_GrassesSpan.Value, _package), _package) : default;
+
+    private ReadOnlyMemorySlice<byte>? _SoundsSpan;
+    public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new OverlayStream(_SoundsSpan.Value, _package), _package) : default;
+
+    private ReadOnlyMemorySlice<byte>? _LandSpan;
+    public IRegionLandGetter? Land => _LandSpan.HasValue ? RegionLandBinaryOverlay.RegionLandFactory(new OverlayStream(_LandSpan.Value, _package), _package) : default;
+
+    public partial ParseResult RegionAreaLogicCustomParse(
+        OverlayStream stream,
+        int offset)
+    {
+        var rdat = stream.GetSubrecordHeader();
+        while (rdat.RecordType.Equals(RecordTypes.RDAT))
+        {
+            ParseRegionData(stream, offset);
+            if (stream.Complete) break;
+            rdat = stream.GetSubrecordHeader();
         }
 
-        public partial class RegionBinaryWriteTranslation
+        return null;
+    }
+
+    private void ParseRegionData(OverlayStream stream, int offset)
+    {
+        int loc = stream.Position - offset;
+        var rdatFrame = stream.ReadSubrecord();
+        RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
+        var len = rdatFrame.TotalLength;
+        if (!stream.Complete)
         {
-            public static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item)
+            var contentMeta = stream.GetSubrecordHeader();
+            var recType = contentMeta.RecordType;
+            if (recType == RecordTypes.ICON)
             {
-                item.Objects?.WriteToBinary(writer);
-                item.Weather?.WriteToBinary(writer);
-                item.Map?.WriteToBinary(writer);
-                item.Land?.WriteToBinary(writer);
-                item.Grasses?.WriteToBinary(writer);
-                item.Sounds?.WriteToBinary(writer);
+                var totalLen = contentMeta.TotalLength;
+                len += totalLen;
+                // Skip icon subrecord for now
+                contentMeta = stream.GetSubrecordHeader(offset: rdatFrame.TotalLength + totalLen);
+            }
+            if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
+            {
+                len += contentMeta.TotalLength;
+                stream.Position += contentMeta.TotalLength;
             }
         }
-
-        public partial class RegionBinaryOverlay : IRegionGetter
+        switch (dataType)
         {
-            private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
-            public IRegionObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new OverlayStream(_ObjectsSpan.Value, _package), _package) : default;
-
-            private ReadOnlyMemorySlice<byte>? _WeatherSpan;
-            public IRegionWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new OverlayStream(_WeatherSpan.Value, _package), _package) : default;
-
-            private ReadOnlyMemorySlice<byte>? _MapSpan;
-            public IRegionMapGetter? Map => _MapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new OverlayStream(_MapSpan.Value, _package), _package) : default;
-
-            private ReadOnlyMemorySlice<byte>? _GrassesSpan;
-            public IRegionGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new OverlayStream(_GrassesSpan.Value, _package), _package) : default;
-
-            private ReadOnlyMemorySlice<byte>? _SoundsSpan;
-            public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new OverlayStream(_SoundsSpan.Value, _package), _package) : default;
-
-            private ReadOnlyMemorySlice<byte>? _LandSpan;
-            public IRegionLandGetter? Land => _LandSpan.HasValue ? RegionLandBinaryOverlay.RegionLandFactory(new OverlayStream(_LandSpan.Value, _package), _package) : default;
-
-            public partial ParseResult RegionAreaLogicCustomParse(
-                OverlayStream stream,
-                int offset)
-            {
-                var rdat = stream.GetSubrecord();
-                while (rdat.RecordType.Equals(RecordTypes.RDAT))
+            case RegionData.RegionDataType.Object:
+                _ObjectsSpan = _recordData.Slice(loc, len);
+                break;
+            case RegionData.RegionDataType.Map:
+                _MapSpan = _recordData.Slice(loc, len);
+                break;
+            case RegionData.RegionDataType.Grass:
+                _GrassesSpan = _recordData.Slice(loc, len);
+                break;
+            case RegionData.RegionDataType.Land:
+                _LandSpan = _recordData.Slice(loc, len);
+                break;
+            case RegionData.RegionDataType.Sound:
+                if (stream.TryGetSubrecordHeader(out var nextRec)
+                    && (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSA)
+                        || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMO)))
                 {
-                    ParseRegionData(stream, offset);
-                    if (stream.Complete) break;
-                    rdat = stream.GetSubrecord();
+                    len += nextRec.TotalLength;
                 }
-
-                return null;
-            }
-
-            private void ParseRegionData(OverlayStream stream, int offset)
-            {
-                int loc = stream.Position - offset;
-                var rdatFrame = stream.ReadSubrecordFrame();
-                RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-                var len = rdatFrame.TotalLength;
-                if (!stream.Complete)
-                {
-                    var contentMeta = stream.GetSubrecord();
-                    var recType = contentMeta.RecordType;
-                    if (recType == RecordTypes.ICON)
-                    {
-                        var totalLen = contentMeta.TotalLength;
-                        len += totalLen;
-                        // Skip icon subrecord for now
-                        contentMeta = stream.GetSubrecord(offset: rdatFrame.TotalLength + totalLen);
-                    }
-                    if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
-                    {
-                        len += contentMeta.TotalLength;
-                        stream.Position += contentMeta.TotalLength;
-                    }
-                }
-                switch (dataType)
-                {
-                    case RegionData.RegionDataType.Object:
-                        _ObjectsSpan = this._data.Slice(loc, len);
-                        break;
-                    case RegionData.RegionDataType.Map:
-                        _MapSpan = this._data.Slice(loc, len);
-                        break;
-                    case RegionData.RegionDataType.Grass:
-                        _GrassesSpan = this._data.Slice(loc, len);
-                        break;
-                    case RegionData.RegionDataType.Land:
-                        _LandSpan = this._data.Slice(loc, len);
-                        break;
-                    case RegionData.RegionDataType.Sound:
-                        if (stream.TryGetSubrecord(out var nextRec)
-                            && (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSA)
-                                || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMO)))
-                        {
-                            len += nextRec.TotalLength;
-                        }
-                        _SoundsSpan = this._data.Slice(loc, len);
-                        break;
-                    case RegionData.RegionDataType.Weather:
-                        _WeatherSpan = this._data.Slice(loc, len);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
+                _SoundsSpan = _recordData.Slice(loc, len);
+                break;
+            case RegionData.RegionDataType.Weather:
+                _WeatherSpan = _recordData.Slice(loc, len);
+                break;
+            default:
+                throw new NotImplementedException();
         }
     }
 }

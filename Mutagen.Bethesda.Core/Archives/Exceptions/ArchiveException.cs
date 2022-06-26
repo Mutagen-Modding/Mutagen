@@ -1,199 +1,197 @@
 using Noggog;
-using System;
 
-namespace Mutagen.Bethesda.Archives.Exceptions
+namespace Mutagen.Bethesda.Archives.Exceptions;
+
+public class ArchiveException : Exception
 {
-    public class ArchiveException : Exception
+    public FilePath? ArchiveFilePath { get; set; }
+    public string? InternalFolderAccessed { get; set; }
+    public string? InternalFileAccessed { get; set; }
+
+
+    public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
     {
-        public FilePath? ArchiveFilePath { get; set; }
-        public string? InternalFolderAccessed { get; set; }
-        public string? InternalFileAccessed { get; set; }
+        ArchiveFilePath = archiveFilePath;
+        InternalFolderAccessed = folderAccessed;
+        InternalFileAccessed = fileAccessed;
+    }
 
+    public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed, string message)
+        : base(message)
+    {
+        ArchiveFilePath = archiveFilePath;
+        InternalFolderAccessed = folderAccessed;
+        InternalFileAccessed = fileAccessed;
+    }
 
-        public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+    public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed, string message, Exception? innerException)
+        : base(message, innerException)
+    {
+        ArchiveFilePath = archiveFilePath;
+        InternalFolderAccessed = folderAccessed;
+        InternalFileAccessed = fileAccessed;
+    }
+
+    public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed, Exception innerException)
+        : base(innerException.Message, innerException)
+    {
+        ArchiveFilePath = archiveFilePath;
+        InternalFolderAccessed = folderAccessed;
+        InternalFileAccessed = fileAccessed;
+    }
+
+    #region Enrich
+
+    public static ArchiveException EnrichWithFileAccessed(Exception ex, string fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
         {
-            ArchiveFilePath = archiveFilePath;
-            InternalFolderAccessed = folderAccessed;
-            InternalFileAccessed = fileAccessed;
+            archiveException.InternalFileAccessed = fileAccessed;
+            return archiveException;
         }
 
-        public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed, string message)
-            : base(message)
+        return new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: null,
+            fileAccessed: fileAccessed,
+            innerException: ex);
+    }
+
+    public static ArchiveException EnrichWithFileAccessed(string message, Exception ex, string fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
         {
-            ArchiveFilePath = archiveFilePath;
-            InternalFolderAccessed = folderAccessed;
-            InternalFileAccessed = fileAccessed;
+            archiveException.InternalFileAccessed = fileAccessed;
+            return archiveException;
         }
 
-        public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed, string message, Exception? innerException)
-            : base(message, innerException)
+        return new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: null,
+            fileAccessed: fileAccessed,
+            message: message,
+            innerException: ex);
+    }
+
+    public static ArchiveException EnrichWithFolderAccessed(Exception ex, string folderAccessed)
+    {
+        if (ex is ArchiveException archiveException)
         {
-            ArchiveFilePath = archiveFilePath;
-            InternalFolderAccessed = folderAccessed;
-            InternalFileAccessed = fileAccessed;
+            archiveException.InternalFolderAccessed = folderAccessed;
+            return archiveException;
         }
 
-        public ArchiveException(FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed, Exception innerException)
-            : base(innerException.Message, innerException)
+        return new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: folderAccessed,
+            fileAccessed: null,
+            innerException: ex);
+    }
+
+    public static ArchiveException EnrichWithFolderAccessed(string message, Exception ex, string folderAccessed)
+    {
+        if (ex is ArchiveException archiveException)
         {
-            ArchiveFilePath = archiveFilePath;
-            InternalFolderAccessed = folderAccessed;
-            InternalFileAccessed = fileAccessed;
+            archiveException.InternalFolderAccessed = folderAccessed;
+            return archiveException;
         }
 
-        #region Enrich
+        return new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: folderAccessed,
+            fileAccessed: null,
+            message: message,
+            innerException: ex);
+    }
 
-        public static ArchiveException EnrichWithFileAccessed(Exception ex, string fileAccessed)
+    public static ArchiveException EnrichWithArchivePath(Exception ex, FilePath path)
+    {
+        if (ex is ArchiveException archiveException)
         {
-            if (ex is ArchiveException archiveException)
+            archiveException.ArchiveFilePath = path;
+            return archiveException;
+        }
+
+        return new ArchiveException(
+            archiveFilePath: path,
+            folderAccessed: null,
+            fileAccessed: null,
+            innerException: ex);
+    }
+
+    public static ArchiveException EnrichWithArchivePath(string message, Exception ex, FilePath path)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.ArchiveFilePath = path;
+            return archiveException;
+        }
+
+        return new ArchiveException(
+            archiveFilePath: path,
+            folderAccessed: null,
+            fileAccessed: null,
+            message: message,
+            innerException: ex);
+    }
+
+    public static ArchiveException Enrich(Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            if (archiveFilePath != null)
             {
-                archiveException.InternalFileAccessed = fileAccessed;
-                return archiveException;
+                archiveException.ArchiveFilePath = archiveFilePath;
             }
-
-            return new ArchiveException(
-                archiveFilePath: null,
-                folderAccessed: null,
-                fileAccessed: fileAccessed,
-                innerException: ex);
-        }
-
-        public static ArchiveException EnrichWithFileAccessed(string message, Exception ex, string fileAccessed)
-        {
-            if (ex is ArchiveException archiveException)
-            {
-                archiveException.InternalFileAccessed = fileAccessed;
-                return archiveException;
-            }
-
-            return new ArchiveException(
-                archiveFilePath: null,
-                folderAccessed: null,
-                fileAccessed: fileAccessed,
-                message: message,
-                innerException: ex);
-        }
-
-        public static ArchiveException EnrichWithFolderAccessed(Exception ex, string folderAccessed)
-        {
-            if (ex is ArchiveException archiveException)
+            if (folderAccessed != null)
             {
                 archiveException.InternalFolderAccessed = folderAccessed;
-                return archiveException;
             }
-
-            return new ArchiveException(
-                archiveFilePath: null,
-                folderAccessed: folderAccessed,
-                fileAccessed: null,
-                innerException: ex);
+            if (fileAccessed != null)
+            {
+                archiveException.InternalFileAccessed = fileAccessed;
+            }
+            return archiveException;
         }
 
-        public static ArchiveException EnrichWithFolderAccessed(string message, Exception ex, string folderAccessed)
+        return new ArchiveException(
+            archiveFilePath: archiveFilePath,
+            folderAccessed: folderAccessed,
+            fileAccessed: fileAccessed,
+            innerException: ex);
+    }
+
+    public static ArchiveException Enrich(string message, Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
         {
-            if (ex is ArchiveException archiveException)
+            if (archiveFilePath != null)
+            {
+                archiveException.ArchiveFilePath = archiveFilePath;
+            }
+            if (folderAccessed != null)
             {
                 archiveException.InternalFolderAccessed = folderAccessed;
-                return archiveException;
             }
-
-            return new ArchiveException(
-                archiveFilePath: null,
-                folderAccessed: folderAccessed,
-                fileAccessed: null,
-                message: message,
-                innerException: ex);
-        }
-
-        public static ArchiveException EnrichWithArchivePath(Exception ex, FilePath path)
-        {
-            if (ex is ArchiveException archiveException)
+            if (fileAccessed != null)
             {
-                archiveException.ArchiveFilePath = path;
-                return archiveException;
+                archiveException.InternalFileAccessed = fileAccessed;
             }
-
-            return new ArchiveException(
-                archiveFilePath: path,
-                folderAccessed: null,
-                fileAccessed: null,
-                innerException: ex);
+            return archiveException;
         }
 
-        public static ArchiveException EnrichWithArchivePath(string message, Exception ex, FilePath path)
-        {
-            if (ex is ArchiveException archiveException)
-            {
-                archiveException.ArchiveFilePath = path;
-                return archiveException;
-            }
+        return new ArchiveException(
+            archiveFilePath: archiveFilePath,
+            folderAccessed: folderAccessed,
+            fileAccessed: fileAccessed,
+            message: message,
+            innerException: ex);
+    }
 
-            return new ArchiveException(
-                archiveFilePath: path,
-                folderAccessed: null,
-                fileAccessed: null,
-                message: message,
-                innerException: ex);
-        }
+    #endregion
 
-        public static ArchiveException Enrich(Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
-        {
-            if (ex is ArchiveException archiveException)
-            {
-                if (archiveFilePath != null)
-                {
-                    archiveException.ArchiveFilePath = archiveFilePath;
-                }
-                if (folderAccessed != null)
-                {
-                    archiveException.InternalFolderAccessed = folderAccessed;
-                }
-                if (fileAccessed != null)
-                {
-                    archiveException.InternalFileAccessed = fileAccessed;
-                }
-                return archiveException;
-            }
-
-            return new ArchiveException(
-                archiveFilePath: archiveFilePath,
-                folderAccessed: folderAccessed,
-                fileAccessed: fileAccessed,
-                innerException: ex);
-        }
-
-        public static ArchiveException Enrich(string message, Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
-        {
-            if (ex is ArchiveException archiveException)
-            {
-                if (archiveFilePath != null)
-                {
-                    archiveException.ArchiveFilePath = archiveFilePath;
-                }
-                if (folderAccessed != null)
-                {
-                    archiveException.InternalFolderAccessed = folderAccessed;
-                }
-                if (fileAccessed != null)
-                {
-                    archiveException.InternalFileAccessed = fileAccessed;
-                }
-                return archiveException;
-            }
-
-            return new ArchiveException(
-                archiveFilePath: archiveFilePath,
-                folderAccessed: folderAccessed,
-                fileAccessed: fileAccessed,
-                message: message,
-                innerException: ex);
-        }
-
-        #endregion
-
-        public override string ToString()
-        {
-            return $"{nameof(ArchiveException)} {ArchiveFilePath}{InternalFolderAccessed?.Decorate(x => $"=>{x}")}{InternalFileAccessed?.Decorate(x => $"=>{x}")}: {this.Message} {this.InnerException}{this.StackTrace}";
-        }
+    public override string ToString()
+    {
+        return $"{nameof(ArchiveException)} {ArchiveFilePath}{InternalFolderAccessed?.Decorate(x => $"=>{x}")}{InternalFileAccessed?.Decorate(x => $"=>{x}")}: {Message} {InnerException}{StackTrace}";
     }
 }

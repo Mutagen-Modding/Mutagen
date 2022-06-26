@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -78,12 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RoadPointMixIn.ToString(
+            RoadPointMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -227,9 +230,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         var l = new List<(int Index, R Item)>();
                         obj.Connections.Specific = l;
-                        foreach (var item in Connections.Specific.WithIndex())
+                        foreach (var item in Connections.Specific)
                         {
-                            R mask = eval(item.Item.Value);
+                            R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
@@ -238,57 +241,50 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(RoadPoint.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(RoadPoint.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, RoadPoint.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, RoadPoint.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(RoadPoint.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(RoadPoint.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                     if (printMask?.NumConnectionsFluffBytes ?? true)
                     {
-                        fg.AppendItem(NumConnectionsFluffBytes, "NumConnectionsFluffBytes");
+                        sb.AppendItem(NumConnectionsFluffBytes, "NumConnectionsFluffBytes");
                     }
                     if ((printMask?.Connections?.Overall ?? true)
                         && Connections is {} ConnectionsItem)
                     {
-                        fg.AppendLine("Connections =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Connections =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(ConnectionsItem.Overall);
+                            sb.AppendItem(ConnectionsItem.Overall);
                             if (ConnectionsItem.Specific != null)
                             {
                                 foreach (var subItem in ConnectionsItem.Specific)
                                 {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
+                                    using (sb.Brace())
                                     {
-                                        fg.AppendItem(subItem);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
-                                    fg.AppendLine("]");
                                 }
                             }
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -383,58 +379,51 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Point, "Point");
-                fg.AppendItem(NumConnectionsFluffBytes, "NumConnectionsFluffBytes");
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(NumConnectionsFluffBytes, "NumConnectionsFluffBytes");
+                }
                 if (Connections is {} ConnectionsItem)
                 {
-                    fg.AppendLine("Connections =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
+                    sb.AppendLine("Connections =>");
+                    using (sb.Brace())
                     {
-                        fg.AppendItem(ConnectionsItem.Overall);
+                        sb.AppendItem(ConnectionsItem.Overall);
                         if (ConnectionsItem.Specific != null)
                         {
                             foreach (var subItem in ConnectionsItem.Specific)
                             {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
+                                using (sb.Brace())
                                 {
-                                    fg.AppendItem(subItem);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
-                                fg.AppendLine("]");
                             }
                         }
                     }
-                    fg.AppendLine("]");
                 }
             }
             #endregion
@@ -520,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -530,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static RoadPoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new RoadPoint();
             ((RoadPointSetterCommon)((IRoadPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -545,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out RoadPoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -555,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -619,26 +608,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IRoadPointGetter item,
             string? name = null,
             RoadPoint.Mask<bool>? printMask = null)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).ToString(
+            return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IRoadPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RoadPoint.Mask<bool>? printMask = null)
         {
-            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).ToString(
+            ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -744,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IRoadPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((RoadPointSetterCommon)((IRoadPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -759,10 +748,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum RoadPoint_FieldIndex
+    internal enum RoadPoint_FieldIndex
     {
         Point = 0,
         NumConnectionsFluffBytes = 1,
@@ -771,7 +760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class RoadPoint_Registration : ILoquiRegistration
+    internal partial class RoadPoint_Registration : ILoquiRegistration
     {
         public static readonly RoadPoint_Registration Instance = new RoadPoint_Registration();
 
@@ -845,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class RoadPointSetterCommon
+    internal partial class RoadPointSetterCommon
     {
         public static readonly RoadPointSetterCommon Instance = new RoadPointSetterCommon();
 
@@ -870,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IRoadPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -882,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RoadPointCommon
+    internal partial class RoadPointCommon
     {
         public static readonly RoadPointCommon Instance = new RoadPointCommon();
 
@@ -906,7 +895,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RoadPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Point = item.Point.Equals(rhs.Point);
             ret.NumConnectionsFluffBytes = MemoryExtensions.SequenceEqual(item.NumConnectionsFluffBytes.Span, rhs.NumConnectionsFluffBytes.Span);
             ret.Connections = item.Connections.CollectionEqualsHelper(
@@ -915,75 +903,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
         }
         
-        public string ToString(
+        public string Print(
             IRoadPointGetter item,
             string? name = null,
             RoadPoint.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IRoadPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             RoadPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"RoadPoint =>");
+                sb.AppendLine($"RoadPoint =>");
             }
             else
             {
-                fg.AppendLine($"{name} (RoadPoint) =>");
+                sb.AppendLine($"{name} (RoadPoint) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IRoadPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             RoadPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
             if (printMask?.NumConnectionsFluffBytes ?? true)
             {
-                fg.AppendLine($"NumConnectionsFluffBytes => {SpanExt.ToHexString(item.NumConnectionsFluffBytes)}");
+                sb.AppendLine($"NumConnectionsFluffBytes => {SpanExt.ToHexString(item.NumConnectionsFluffBytes)}");
             }
             if (printMask?.Connections?.Overall ?? true)
             {
-                fg.AppendLine("Connections =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine("Connections =>");
+                using (sb.Brace())
                 {
                     foreach (var subItem in item.Connections)
                     {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        using (sb.Brace())
                         {
-                            fg.AppendItem(subItem);
+                            sb.AppendItem(subItem);
                         }
-                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
         }
         
@@ -1027,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRoadPointGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRoadPointGetter obj)
         {
             yield break;
         }
@@ -1035,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class RoadPointSetterTranslationCommon
+    internal partial class RoadPointSetterTranslationCommon
     {
         public static readonly RoadPointSetterTranslationCommon Instance = new RoadPointSetterTranslationCommon();
 
@@ -1134,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
-        public static RoadPoint_Registration StaticRegistration => RoadPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RoadPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1158,11 +1140,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class RoadPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static RoadPointBinaryWriteTranslation Instance = new RoadPointBinaryWriteTranslation();
+        public static readonly RoadPointBinaryWriteTranslation Instance = new RoadPointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IRoadPointGetter item,
@@ -1183,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IRoadPointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1193,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IRoadPointGetter)item,
@@ -1203,9 +1185,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class RoadPointBinaryCreateTranslation
+    internal partial class RoadPointBinaryCreateTranslation
     {
-        public readonly static RoadPointBinaryCreateTranslation Instance = new RoadPointBinaryCreateTranslation();
+        public static readonly RoadPointBinaryCreateTranslation Instance = new RoadPointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IRoadPoint item,
@@ -1230,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IRoadPointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RoadPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1243,16 +1225,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RoadPointBinaryOverlay :
+    internal partial class RoadPointBinaryOverlay :
         PluginBinaryOverlay,
         IRoadPointGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RoadPoint_Registration.Instance;
-        public static RoadPoint_Registration StaticRegistration => RoadPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => RoadPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => RoadPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1266,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RoadPointBinaryWriteTranslation.Instance;
@@ -1274,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((RoadPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1282,10 +1264,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
-        public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _data.Span.Slice(0xC, 0x3).ToArray();
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _structData.Span.Slice(0xC, 0x3).ToArray();
         #region Connections
-        public IReadOnlyList<P3Float> Connections => BinaryOverlayList.FactoryByStartIndex<P3Float>(_data.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
+        public IReadOnlyList<P3Float> Connections => BinaryOverlayList.FactoryByStartIndex<P3Float>(_structData.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int ConnectionsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1295,25 +1277,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected RoadPointBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static RoadPointBinaryOverlay RoadPointFactory(
+        public static IRoadPointGetter RoadPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new RoadPointBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
-            ret.ConnectionsEndingPos = ret._data.Length;
+            ret.ConnectionsEndingPos = ret._structData.Length;
             stream.Position += ret.ConnectionsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1322,25 +1310,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static RoadPointBinaryOverlay RoadPointFactory(
+        public static IRoadPointGetter RoadPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return RoadPointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            RoadPointMixIn.ToString(
+            RoadPointMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -5,29 +5,31 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -56,12 +58,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            InterCellPointMixIn.ToString(
+            InterCellPointMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,34 +177,29 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(InterCellPoint.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(InterCellPoint.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, InterCellPoint.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, InterCellPoint.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(InterCellPoint.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(InterCellPoint.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.PointID ?? true)
                     {
-                        fg.AppendItem(PointID, "PointID");
+                        sb.AppendItem(PointID, "PointID");
                     }
                     if (printMask?.Point ?? true)
                     {
-                        fg.AppendItem(Point, "Point");
+                        sb.AppendItem(Point, "Point");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -286,37 +284,32 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(PointID, "PointID");
-                fg.AppendItem(Point, "Point");
+                {
+                    sb.AppendItem(PointID, "PointID");
+                }
+                {
+                    sb.AppendItem(Point, "Point");
+                }
             }
             #endregion
 
@@ -397,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -407,7 +400,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static InterCellPoint CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new InterCellPoint();
             ((InterCellPointSetterCommon)((IInterCellPointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -422,7 +415,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out InterCellPoint item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -432,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -494,26 +487,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IInterCellPointGetter item,
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
-            return ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).ToString(
+            return ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IInterCellPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
-            ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).ToString(
+            ((InterCellPointCommon)((IInterCellPointGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -619,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IInterCellPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((InterCellPointSetterCommon)((IInterCellPointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -634,10 +627,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum InterCellPoint_FieldIndex
+    internal enum InterCellPoint_FieldIndex
     {
         PointID = 0,
         Point = 1,
@@ -645,7 +638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class InterCellPoint_Registration : ILoquiRegistration
+    internal partial class InterCellPoint_Registration : ILoquiRegistration
     {
         public static readonly InterCellPoint_Registration Instance = new InterCellPoint_Registration();
 
@@ -719,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class InterCellPointSetterCommon
+    internal partial class InterCellPointSetterCommon
     {
         public static readonly InterCellPointSetterCommon Instance = new InterCellPointSetterCommon();
 
@@ -743,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IInterCellPoint item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -755,7 +748,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class InterCellPointCommon
+    internal partial class InterCellPointCommon
     {
         public static readonly InterCellPointCommon Instance = new InterCellPointCommon();
 
@@ -779,62 +772,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             InterCellPoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.PointID = item.PointID == rhs.PointID;
             ret.Point = item.Point.Equals(rhs.Point);
         }
         
-        public string ToString(
+        public string Print(
             IInterCellPointGetter item,
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IInterCellPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             InterCellPoint.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"InterCellPoint =>");
+                sb.AppendLine($"InterCellPoint =>");
             }
             else
             {
-                fg.AppendLine($"{name} (InterCellPoint) =>");
+                sb.AppendLine($"{name} (InterCellPoint) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IInterCellPointGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             InterCellPoint.Mask<bool>? printMask = null)
         {
             if (printMask?.PointID ?? true)
             {
-                fg.AppendItem(item.PointID, "PointID");
+                sb.AppendItem(item.PointID, "PointID");
             }
             if (printMask?.Point ?? true)
             {
-                fg.AppendItem(item.Point, "Point");
+                sb.AppendItem(item.Point, "Point");
             }
         }
         
@@ -873,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IInterCellPointGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IInterCellPointGetter obj)
         {
             yield break;
         }
@@ -881,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class InterCellPointSetterTranslationCommon
+    internal partial class InterCellPointSetterTranslationCommon
     {
         public static readonly InterCellPointSetterTranslationCommon Instance = new InterCellPointSetterTranslationCommon();
 
@@ -963,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
-        public static InterCellPoint_Registration StaticRegistration => InterCellPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InterCellPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => InterCellPointCommon.Instance;
         [DebuggerStepThrough]
@@ -987,11 +977,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class InterCellPointBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
+        public static readonly InterCellPointBinaryWriteTranslation Instance = new InterCellPointBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IInterCellPointGetter item,
@@ -1006,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IInterCellPointGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1016,7 +1006,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IInterCellPointGetter)item,
@@ -1026,9 +1016,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class InterCellPointBinaryCreateTranslation
+    internal partial class InterCellPointBinaryCreateTranslation
     {
-        public readonly static InterCellPointBinaryCreateTranslation Instance = new InterCellPointBinaryCreateTranslation();
+        public static readonly InterCellPointBinaryCreateTranslation Instance = new InterCellPointBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IInterCellPoint item,
@@ -1049,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IInterCellPointGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InterCellPointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1062,16 +1052,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class InterCellPointBinaryOverlay :
+    internal partial class InterCellPointBinaryOverlay :
         PluginBinaryOverlay,
         IInterCellPointGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => InterCellPoint_Registration.Instance;
-        public static InterCellPoint_Registration StaticRegistration => InterCellPoint_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => InterCellPoint_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => InterCellPointCommon.Instance;
         [DebuggerStepThrough]
@@ -1085,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => InterCellPointBinaryWriteTranslation.Instance;
@@ -1093,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((InterCellPointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1101,8 +1091,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0xC));
+        public Int32 PointID => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1110,24 +1100,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected InterCellPointBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static InterCellPointBinaryOverlay InterCellPointFactory(
+        public static IInterCellPointGetter InterCellPointFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new InterCellPointBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x10),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1136,25 +1132,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static InterCellPointBinaryOverlay InterCellPointFactory(
+        public static IInterCellPointGetter InterCellPointFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return InterCellPointFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            InterCellPointMixIn.ToString(
+            InterCellPointMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

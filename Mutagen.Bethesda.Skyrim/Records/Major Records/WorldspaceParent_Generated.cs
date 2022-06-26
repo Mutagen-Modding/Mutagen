@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,19 +18,19 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -65,12 +66,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceParentMixIn.ToString(
+            WorldspaceParentMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -183,34 +185,29 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(WorldspaceParent.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(WorldspaceParent.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WorldspaceParent.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, WorldspaceParent.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(WorldspaceParent.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(WorldspaceParent.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Worldspace ?? true)
                     {
-                        fg.AppendItem(Worldspace, "Worldspace");
+                        sb.AppendItem(Worldspace, "Worldspace");
                     }
                     if (printMask?.Flags ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -295,37 +292,32 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Worldspace, "Worldspace");
-                fg.AppendItem(Flags, "Flags");
+                {
+                    sb.AppendItem(Worldspace, "Worldspace");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -400,8 +392,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WorldspaceParent_Registration.TriggeringRecordType;
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceParentCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceParentCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceParentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -412,7 +403,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -422,7 +413,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static WorldspaceParent CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new WorldspaceParent();
             ((WorldspaceParentSetterCommon)((IWorldspaceParentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -437,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out WorldspaceParent item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -447,7 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -511,26 +502,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IWorldspaceParentGetter item,
             string? name = null,
             WorldspaceParent.Mask<bool>? printMask = null)
         {
-            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)item).CommonInstance()!).ToString(
+            return ((WorldspaceParentCommon)((IWorldspaceParentGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IWorldspaceParentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceParent.Mask<bool>? printMask = null)
         {
-            ((WorldspaceParentCommon)((IWorldspaceParentGetter)item).CommonInstance()!).ToString(
+            ((WorldspaceParentCommon)((IWorldspaceParentGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -636,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IWorldspaceParent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((WorldspaceParentSetterCommon)((IWorldspaceParentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -651,10 +642,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum WorldspaceParent_FieldIndex
+    internal enum WorldspaceParent_FieldIndex
     {
         Worldspace = 0,
         Flags = 1,
@@ -662,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WorldspaceParent_Registration : ILoquiRegistration
+    internal partial class WorldspaceParent_Registration : ILoquiRegistration
     {
         public static readonly WorldspaceParent_Registration Instance = new WorldspaceParent_Registration();
 
@@ -704,6 +695,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.WNAM;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.WNAM);
+            var all = RecordCollection.Factory(
+                RecordTypes.WNAM,
+                RecordTypes.PNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceParentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WorldspaceParentSetterCommon
+    internal partial class WorldspaceParentSetterCommon
     {
         public static readonly WorldspaceParentSetterCommon Instance = new WorldspaceParentSetterCommon();
 
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IWorldspaceParent item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceParentCommon
+    internal partial class WorldspaceParentCommon
     {
         public static readonly WorldspaceParentCommon Instance = new WorldspaceParentCommon();
 
@@ -799,62 +799,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorldspaceParent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
             ret.Flags = item.Flags == rhs.Flags;
         }
         
-        public string ToString(
+        public string Print(
             IWorldspaceParentGetter item,
             string? name = null,
             WorldspaceParent.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IWorldspaceParentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             WorldspaceParent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WorldspaceParent =>");
+                sb.AppendLine($"WorldspaceParent =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WorldspaceParent) =>");
+                sb.AppendLine($"{name} (WorldspaceParent) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IWorldspaceParentGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             WorldspaceParent.Mask<bool>? printMask = null)
         {
             if (printMask?.Worldspace ?? true)
             {
-                fg.AppendItem(item.Worldspace.FormKey, "Worldspace");
+                sb.AppendItem(item.Worldspace.FormKey, "Worldspace");
             }
             if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -893,7 +890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceParentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWorldspaceParentGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Worldspace);
             yield break;
@@ -902,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class WorldspaceParentSetterTranslationCommon
+    internal partial class WorldspaceParentSetterTranslationCommon
     {
         public static readonly WorldspaceParentSetterTranslationCommon Instance = new WorldspaceParentSetterTranslationCommon();
 
@@ -984,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceParent_Registration.Instance;
-        public static WorldspaceParent_Registration StaticRegistration => WorldspaceParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1008,16 +1005,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class WorldspaceParentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WorldspaceParentBinaryWriteTranslation Instance = new WorldspaceParentBinaryWriteTranslation();
+        public static readonly WorldspaceParentBinaryWriteTranslation Instance = new WorldspaceParentBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             IWorldspaceParentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1033,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IWorldspaceParentGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1044,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IWorldspaceParentGetter)item,
@@ -1054,9 +1051,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WorldspaceParentBinaryCreateTranslation
+    internal partial class WorldspaceParentBinaryCreateTranslation
     {
-        public readonly static WorldspaceParentBinaryCreateTranslation Instance = new WorldspaceParentBinaryCreateTranslation();
+        public static readonly WorldspaceParentBinaryCreateTranslation Instance = new WorldspaceParentBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IWorldspaceParent item,
@@ -1071,14 +1068,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)WorldspaceParent_FieldIndex.Worldspace, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
@@ -1107,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IWorldspaceParentGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceParentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1120,16 +1117,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WorldspaceParentBinaryOverlay :
+    internal partial class WorldspaceParentBinaryOverlay :
         PluginBinaryOverlay,
         IWorldspaceParentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => WorldspaceParent_Registration.Instance;
-        public static WorldspaceParent_Registration StaticRegistration => WorldspaceParent_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WorldspaceParent_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => WorldspaceParentCommon.Instance;
         [DebuggerStepThrough]
@@ -1143,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceParentCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceParentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceParentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((WorldspaceParentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1162,11 +1159,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public WorldspaceParent.Flag Flags => _FlagsLocation.HasValue ? (WorldspaceParent.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(WorldspaceParent.Flag);
+        public WorldspaceParent.Flag Flags => _FlagsLocation.HasValue ? (WorldspaceParent.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(WorldspaceParent.Flag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1175,42 +1172,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected WorldspaceParentBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static WorldspaceParentBinaryOverlay WorldspaceParentFactory(
+        public static IWorldspaceParentGetter WorldspaceParentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new WorldspaceParentBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static WorldspaceParentBinaryOverlay WorldspaceParentFactory(
+        public static IWorldspaceParentGetter WorldspaceParentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return WorldspaceParentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1220,14 +1223,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)WorldspaceParent_FieldIndex.Worldspace, translationParams)) return ParseResult.Stop;
                     _WorldspaceLocation = (stream.Position - offset);
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
                 }
@@ -1242,12 +1245,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            WorldspaceParentMixIn.ToString(
+            WorldspaceParentMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

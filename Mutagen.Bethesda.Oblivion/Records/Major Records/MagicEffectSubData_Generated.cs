@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,18 +19,18 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Oblivion.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -108,12 +109,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MagicEffectSubDataMixIn.ToString(
+            MagicEffectSubDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -271,54 +273,49 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(MagicEffectSubData.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(MagicEffectSubData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MagicEffectSubData.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, MagicEffectSubData.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(MagicEffectSubData.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(MagicEffectSubData.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.EnchantEffect ?? true)
                     {
-                        fg.AppendItem(EnchantEffect, "EnchantEffect");
+                        sb.AppendItem(EnchantEffect, "EnchantEffect");
                     }
                     if (printMask?.CastingSound ?? true)
                     {
-                        fg.AppendItem(CastingSound, "CastingSound");
+                        sb.AppendItem(CastingSound, "CastingSound");
                     }
                     if (printMask?.BoltSound ?? true)
                     {
-                        fg.AppendItem(BoltSound, "BoltSound");
+                        sb.AppendItem(BoltSound, "BoltSound");
                     }
                     if (printMask?.HitSound ?? true)
                     {
-                        fg.AppendItem(HitSound, "HitSound");
+                        sb.AppendItem(HitSound, "HitSound");
                     }
                     if (printMask?.AreaSound ?? true)
                     {
-                        fg.AppendItem(AreaSound, "AreaSound");
+                        sb.AppendItem(AreaSound, "AreaSound");
                     }
                     if (printMask?.ConstantEffectEnchantmentFactor ?? true)
                     {
-                        fg.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                        sb.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
                     }
                     if (printMask?.ConstantEffectBarterFactor ?? true)
                     {
-                        fg.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                        sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -453,42 +450,47 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(EnchantEffect, "EnchantEffect");
-                fg.AppendItem(CastingSound, "CastingSound");
-                fg.AppendItem(BoltSound, "BoltSound");
-                fg.AppendItem(HitSound, "HitSound");
-                fg.AppendItem(AreaSound, "AreaSound");
-                fg.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
-                fg.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                {
+                    sb.AppendItem(EnchantEffect, "EnchantEffect");
+                }
+                {
+                    sb.AppendItem(CastingSound, "CastingSound");
+                }
+                {
+                    sb.AppendItem(BoltSound, "BoltSound");
+                }
+                {
+                    sb.AppendItem(HitSound, "HitSound");
+                }
+                {
+                    sb.AppendItem(AreaSound, "AreaSound");
+                }
+                {
+                    sb.AppendItem(ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                }
+                {
+                    sb.AppendItem(ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                }
             }
             #endregion
 
@@ -583,7 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectSubDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectSubDataCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectSubDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -594,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectSubDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -604,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static MagicEffectSubData CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new MagicEffectSubData();
             ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -619,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out MagicEffectSubData item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -629,7 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -703,26 +705,26 @@ namespace Mutagen.Bethesda.Oblivion
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IMagicEffectSubDataGetter item,
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
-            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).ToString(
+            return ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IMagicEffectSubDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
-            ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).ToString(
+            ((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -828,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IMagicEffectSubData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((MagicEffectSubDataSetterCommon)((IMagicEffectSubDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -843,10 +845,10 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Field Index
-    public enum MagicEffectSubData_FieldIndex
+    internal enum MagicEffectSubData_FieldIndex
     {
         EnchantEffect = 0,
         CastingSound = 1,
@@ -859,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class MagicEffectSubData_Registration : ILoquiRegistration
+    internal partial class MagicEffectSubData_Registration : ILoquiRegistration
     {
         public static readonly MagicEffectSubData_Registration Instance = new MagicEffectSubData_Registration();
 
@@ -933,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectSubDataSetterCommon
+    internal partial class MagicEffectSubDataSetterCommon
     {
         public static readonly MagicEffectSubDataSetterCommon Instance = new MagicEffectSubDataSetterCommon();
 
@@ -967,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual void CopyInFromBinary(
             IMagicEffectSubData item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -979,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MagicEffectSubDataCommon
+    internal partial class MagicEffectSubDataCommon
     {
         public static readonly MagicEffectSubDataCommon Instance = new MagicEffectSubDataCommon();
 
@@ -1003,7 +1005,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectSubData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.EnchantEffect = item.EnchantEffect.Equals(rhs.EnchantEffect);
             ret.CastingSound = item.CastingSound.Equals(rhs.CastingSound);
             ret.BoltSound = item.BoltSound.Equals(rhs.BoltSound);
@@ -1013,77 +1014,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor.EqualsWithin(rhs.ConstantEffectBarterFactor);
         }
         
-        public string ToString(
+        public string Print(
             IMagicEffectSubDataGetter item,
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IMagicEffectSubDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectSubData =>");
+                sb.AppendLine($"MagicEffectSubData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectSubData) =>");
+                sb.AppendLine($"{name} (MagicEffectSubData) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IMagicEffectSubDataGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             MagicEffectSubData.Mask<bool>? printMask = null)
         {
             if (printMask?.EnchantEffect ?? true)
             {
-                fg.AppendItem(item.EnchantEffect.FormKey, "EnchantEffect");
+                sb.AppendItem(item.EnchantEffect.FormKey, "EnchantEffect");
             }
             if (printMask?.CastingSound ?? true)
             {
-                fg.AppendItem(item.CastingSound.FormKey, "CastingSound");
+                sb.AppendItem(item.CastingSound.FormKey, "CastingSound");
             }
             if (printMask?.BoltSound ?? true)
             {
-                fg.AppendItem(item.BoltSound.FormKey, "BoltSound");
+                sb.AppendItem(item.BoltSound.FormKey, "BoltSound");
             }
             if (printMask?.HitSound ?? true)
             {
-                fg.AppendItem(item.HitSound.FormKey, "HitSound");
+                sb.AppendItem(item.HitSound.FormKey, "HitSound");
             }
             if (printMask?.AreaSound ?? true)
             {
-                fg.AppendItem(item.AreaSound.FormKey, "AreaSound");
+                sb.AppendItem(item.AreaSound.FormKey, "AreaSound");
             }
             if (printMask?.ConstantEffectEnchantmentFactor ?? true)
             {
-                fg.AppendItem(item.ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
+                sb.AppendItem(item.ConstantEffectEnchantmentFactor, "ConstantEffectEnchantmentFactor");
             }
             if (printMask?.ConstantEffectBarterFactor ?? true)
             {
-                fg.AppendItem(item.ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
+                sb.AppendItem(item.ConstantEffectBarterFactor, "ConstantEffectBarterFactor");
             }
         }
         
@@ -1147,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMagicEffectSubDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectSubDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.EnchantEffect);
             yield return FormLinkInformation.Factory(obj.CastingSound);
@@ -1160,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class MagicEffectSubDataSetterTranslationCommon
+    internal partial class MagicEffectSubDataSetterTranslationCommon
     {
         public static readonly MagicEffectSubDataSetterTranslationCommon Instance = new MagicEffectSubDataSetterTranslationCommon();
 
@@ -1262,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
-        public static MagicEffectSubData_Registration StaticRegistration => MagicEffectSubData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectSubData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSubDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1286,11 +1285,11 @@ namespace Mutagen.Bethesda.Oblivion
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MagicEffectSubDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MagicEffectSubDataBinaryWriteTranslation Instance = new MagicEffectSubDataBinaryWriteTranslation();
+        public static readonly MagicEffectSubDataBinaryWriteTranslation Instance = new MagicEffectSubDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IMagicEffectSubDataGetter item,
@@ -1322,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             IMagicEffectSubDataGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -1332,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IMagicEffectSubDataGetter)item,
@@ -1342,9 +1341,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class MagicEffectSubDataBinaryCreateTranslation
+    internal partial class MagicEffectSubDataBinaryCreateTranslation
     {
-        public readonly static MagicEffectSubDataBinaryCreateTranslation Instance = new MagicEffectSubDataBinaryCreateTranslation();
+        public static readonly MagicEffectSubDataBinaryCreateTranslation Instance = new MagicEffectSubDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IMagicEffectSubData item,
@@ -1370,7 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IMagicEffectSubDataGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectSubDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -1383,16 +1382,16 @@ namespace Mutagen.Bethesda.Oblivion
 
 
 }
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class MagicEffectSubDataBinaryOverlay :
+    internal partial class MagicEffectSubDataBinaryOverlay :
         PluginBinaryOverlay,
         IMagicEffectSubDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
-        public static MagicEffectSubData_Registration StaticRegistration => MagicEffectSubData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MagicEffectSubData_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => MagicEffectSubDataCommon.Instance;
         [DebuggerStepThrough]
@@ -1406,16 +1405,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> ContainedFormLinks => MagicEffectSubDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectSubDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MagicEffectSubDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((MagicEffectSubDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1423,13 +1422,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IEffectShaderGetter> EnchantEffect => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<ISoundGetter> CastingSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<ISoundGetter> BoltSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<ISoundGetter> HitSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
-        public IFormLinkGetter<ISoundGetter> AreaSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
-        public Single ConstantEffectEnchantmentFactor => _data.Slice(0x14, 0x4).Float();
-        public Single ConstantEffectBarterFactor => _data.Slice(0x18, 0x4).Float();
+        public IFormLinkGetter<IEffectShaderGetter> EnchantEffect => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundGetter> CastingSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ISoundGetter> BoltSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ISoundGetter> HitSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<ISoundGetter> AreaSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+        public Single ConstantEffectEnchantmentFactor => _structData.Slice(0x14, 0x4).Float();
+        public Single ConstantEffectBarterFactor => _structData.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1437,24 +1436,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void CustomCtor();
         protected MagicEffectSubDataBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static MagicEffectSubDataBinaryOverlay MagicEffectSubDataFactory(
+        public static IMagicEffectSubDataGetter MagicEffectSubDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x1C,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
             var ret = new MagicEffectSubDataBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x1C),
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             stream.Position += 0x1C;
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1463,25 +1468,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static MagicEffectSubDataBinaryOverlay MagicEffectSubDataFactory(
+        public static IMagicEffectSubDataGetter MagicEffectSubDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return MagicEffectSubDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            MagicEffectSubDataMixIn.ToString(
+            MagicEffectSubDataMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

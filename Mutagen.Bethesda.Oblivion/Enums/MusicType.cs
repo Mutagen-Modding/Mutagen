@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Mutagen.Bethesda.Oblivion;
 
-namespace Mutagen.Bethesda.Oblivion
+public enum MusicType
 {
-    public enum MusicType
-    {
-        Default,
-        Public,
-        Dungeon
-    }
+    Default,
+    Public,
+    Dungeon
 }

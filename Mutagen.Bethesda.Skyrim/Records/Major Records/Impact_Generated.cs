@@ -5,11 +5,12 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -18,22 +19,22 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -87,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region SoundLevel
         public SoundLevel SoundLevel { get; set; } = default;
         #endregion
-        #region Flags
-        public Impact.Flag Flags { get; set; } = default;
+        #region NoDecalData
+        public Boolean NoDecalData { get; set; } = default;
         #endregion
         #region Result
         public Impact.ResultType Result { get; set; } = default;
@@ -163,12 +164,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImpactMixIn.ToString(
+            ImpactMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -190,7 +192,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngleThreshold = initialValue;
                 this.PlacementRadius = initialValue;
                 this.SoundLevel = initialValue;
-                this.Flags = initialValue;
+                this.NoDecalData = initialValue;
                 this.Result = initialValue;
                 this.Unknown = initialValue;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
@@ -215,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem AngleThreshold,
                 TItem PlacementRadius,
                 TItem SoundLevel,
-                TItem Flags,
+                TItem NoDecalData,
                 TItem Result,
                 TItem Unknown,
                 TItem Decal,
@@ -239,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngleThreshold = AngleThreshold;
                 this.PlacementRadius = PlacementRadius;
                 this.SoundLevel = SoundLevel;
-                this.Flags = Flags;
+                this.NoDecalData = NoDecalData;
                 this.Result = Result;
                 this.Unknown = Unknown;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
@@ -266,7 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem AngleThreshold;
             public TItem PlacementRadius;
             public TItem SoundLevel;
-            public TItem Flags;
+            public TItem NoDecalData;
             public TItem Result;
             public TItem Unknown;
             public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
@@ -295,7 +297,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.AngleThreshold, rhs.AngleThreshold)) return false;
                 if (!object.Equals(this.PlacementRadius, rhs.PlacementRadius)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.NoDecalData, rhs.NoDecalData)) return false;
                 if (!object.Equals(this.Result, rhs.Result)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Decal, rhs.Decal)) return false;
@@ -316,7 +318,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.AngleThreshold);
                 hash.Add(this.PlacementRadius);
                 hash.Add(this.SoundLevel);
-                hash.Add(this.Flags);
+                hash.Add(this.NoDecalData);
                 hash.Add(this.Result);
                 hash.Add(this.Unknown);
                 hash.Add(this.Decal);
@@ -346,7 +348,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.AngleThreshold)) return false;
                 if (!eval(this.PlacementRadius)) return false;
                 if (!eval(this.SoundLevel)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.NoDecalData)) return false;
                 if (!eval(this.Result)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (Decal != null)
@@ -378,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.AngleThreshold)) return true;
                 if (eval(this.PlacementRadius)) return true;
                 if (eval(this.SoundLevel)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.NoDecalData)) return true;
                 if (eval(this.Result)) return true;
                 if (eval(this.Unknown)) return true;
                 if (Decal != null)
@@ -413,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AngleThreshold = eval(this.AngleThreshold);
                 obj.PlacementRadius = eval(this.PlacementRadius);
                 obj.SoundLevel = eval(this.SoundLevel);
-                obj.Flags = eval(this.Flags);
+                obj.NoDecalData = eval(this.NoDecalData);
                 obj.Result = eval(this.Result);
                 obj.Unknown = eval(this.Unknown);
                 obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal.Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
@@ -427,90 +429,85 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Impact.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Impact.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Impact.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Impact.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Impact.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Impact.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Model?.Overall ?? true)
                     {
-                        Model?.ToString(fg);
+                        Model?.Print(sb);
                     }
                     if (printMask?.Duration ?? true)
                     {
-                        fg.AppendItem(Duration, "Duration");
+                        sb.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.Orientation ?? true)
                     {
-                        fg.AppendItem(Orientation, "Orientation");
+                        sb.AppendItem(Orientation, "Orientation");
                     }
                     if (printMask?.AngleThreshold ?? true)
                     {
-                        fg.AppendItem(AngleThreshold, "AngleThreshold");
+                        sb.AppendItem(AngleThreshold, "AngleThreshold");
                     }
                     if (printMask?.PlacementRadius ?? true)
                     {
-                        fg.AppendItem(PlacementRadius, "PlacementRadius");
+                        sb.AppendItem(PlacementRadius, "PlacementRadius");
                     }
                     if (printMask?.SoundLevel ?? true)
                     {
-                        fg.AppendItem(SoundLevel, "SoundLevel");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.NoDecalData ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        sb.AppendItem(NoDecalData, "NoDecalData");
                     }
                     if (printMask?.Result ?? true)
                     {
-                        fg.AppendItem(Result, "Result");
+                        sb.AppendItem(Result, "Result");
                     }
                     if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Decal?.Overall ?? true)
                     {
-                        Decal?.ToString(fg);
+                        Decal?.Print(sb);
                     }
                     if (printMask?.TextureSet ?? true)
                     {
-                        fg.AppendItem(TextureSet, "TextureSet");
+                        sb.AppendItem(TextureSet, "TextureSet");
                     }
                     if (printMask?.SecondaryTextureSet ?? true)
                     {
-                        fg.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
+                        sb.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
                     }
                     if (printMask?.Sound1 ?? true)
                     {
-                        fg.AppendItem(Sound1, "Sound1");
+                        sb.AppendItem(Sound1, "Sound1");
                     }
                     if (printMask?.Sound2 ?? true)
                     {
-                        fg.AppendItem(Sound2, "Sound2");
+                        sb.AppendItem(Sound2, "Sound2");
                     }
                     if (printMask?.Hazard ?? true)
                     {
-                        fg.AppendItem(Hazard, "Hazard");
+                        sb.AppendItem(Hazard, "Hazard");
                     }
                     if (printMask?.DATADataTypeState ?? true)
                     {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -527,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? AngleThreshold;
             public Exception? PlacementRadius;
             public Exception? SoundLevel;
-            public Exception? Flags;
+            public Exception? NoDecalData;
             public Exception? Result;
             public Exception? Unknown;
             public MaskItem<Exception?, Decal.ErrorMask?>? Decal;
@@ -557,8 +554,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return PlacementRadius;
                     case Impact_FieldIndex.SoundLevel:
                         return SoundLevel;
-                    case Impact_FieldIndex.Flags:
-                        return Flags;
+                    case Impact_FieldIndex.NoDecalData:
+                        return NoDecalData;
                     case Impact_FieldIndex.Result:
                         return Result;
                     case Impact_FieldIndex.Unknown:
@@ -605,8 +602,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Impact_FieldIndex.SoundLevel:
                         this.SoundLevel = ex;
                         break;
-                    case Impact_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Impact_FieldIndex.NoDecalData:
+                        this.NoDecalData = ex;
                         break;
                     case Impact_FieldIndex.Result:
                         this.Result = ex;
@@ -664,8 +661,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Impact_FieldIndex.SoundLevel:
                         this.SoundLevel = (Exception?)obj;
                         break;
-                    case Impact_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Impact_FieldIndex.NoDecalData:
+                        this.NoDecalData = (Exception?)obj;
                         break;
                     case Impact_FieldIndex.Result:
                         this.Result = (Exception?)obj;
@@ -709,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (AngleThreshold != null) return true;
                 if (PlacementRadius != null) return true;
                 if (SoundLevel != null) return true;
-                if (Flags != null) return true;
+                if (NoDecalData != null) return true;
                 if (Result != null) return true;
                 if (Unknown != null) return true;
                 if (Decal != null) return true;
@@ -724,52 +721,71 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                Model?.ToString(fg);
-                fg.AppendItem(Duration, "Duration");
-                fg.AppendItem(Orientation, "Orientation");
-                fg.AppendItem(AngleThreshold, "AngleThreshold");
-                fg.AppendItem(PlacementRadius, "PlacementRadius");
-                fg.AppendItem(SoundLevel, "SoundLevel");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Result, "Result");
-                fg.AppendItem(Unknown, "Unknown");
-                Decal?.ToString(fg);
-                fg.AppendItem(TextureSet, "TextureSet");
-                fg.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
-                fg.AppendItem(Sound1, "Sound1");
-                fg.AppendItem(Sound2, "Sound2");
-                fg.AppendItem(Hazard, "Hazard");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                base.PrintFillInternal(sb);
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Duration, "Duration");
+                }
+                {
+                    sb.AppendItem(Orientation, "Orientation");
+                }
+                {
+                    sb.AppendItem(AngleThreshold, "AngleThreshold");
+                }
+                {
+                    sb.AppendItem(PlacementRadius, "PlacementRadius");
+                }
+                {
+                    sb.AppendItem(SoundLevel, "SoundLevel");
+                }
+                {
+                    sb.AppendItem(NoDecalData, "NoDecalData");
+                }
+                {
+                    sb.AppendItem(Result, "Result");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                Decal?.Print(sb);
+                {
+                    sb.AppendItem(TextureSet, "TextureSet");
+                }
+                {
+                    sb.AppendItem(SecondaryTextureSet, "SecondaryTextureSet");
+                }
+                {
+                    sb.AppendItem(Sound1, "Sound1");
+                }
+                {
+                    sb.AppendItem(Sound2, "Sound2");
+                }
+                {
+                    sb.AppendItem(Hazard, "Hazard");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -784,7 +800,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AngleThreshold = this.AngleThreshold.Combine(rhs.AngleThreshold);
                 ret.PlacementRadius = this.PlacementRadius.Combine(rhs.PlacementRadius);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.NoDecalData = this.NoDecalData.Combine(rhs.NoDecalData);
                 ret.Result = this.Result.Combine(rhs.Result);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
@@ -822,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool AngleThreshold;
             public bool PlacementRadius;
             public bool SoundLevel;
-            public bool Flags;
+            public bool NoDecalData;
             public bool Result;
             public bool Unknown;
             public Decal.TranslationMask? Decal;
@@ -845,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AngleThreshold = defaultOn;
                 this.PlacementRadius = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.Flags = defaultOn;
+                this.NoDecalData = defaultOn;
                 this.Result = defaultOn;
                 this.Unknown = defaultOn;
                 this.TextureSet = defaultOn;
@@ -867,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AngleThreshold, null));
                 ret.Add((PlacementRadius, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((Flags, null));
+                ret.Add((NoDecalData, null));
                 ret.Add((Result, null));
                 ret.Add((Unknown, null));
                 ret.Add((Decal != null ? Decal.OnOverall : DefaultOn, Decal?.GetCrystal()));
@@ -889,7 +905,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ImpactCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ImpactCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ImpactSetterCommon.Instance.RemapLinks(this, mapping);
         public Impact(
             FormKey formKey,
@@ -971,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => ImpactBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImpactBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -981,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static Impact CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Impact();
             ((ImpactSetterCommon)((IImpactGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -996,7 +1012,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Impact item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1006,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1038,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngleThreshold { get; set; }
         new Single PlacementRadius { get; set; }
         new SoundLevel SoundLevel { get; set; }
-        new Impact.Flag Flags { get; set; }
+        new Boolean NoDecalData { get; set; }
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
@@ -1078,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single AngleThreshold { get; }
         Single PlacementRadius { get; }
         SoundLevel SoundLevel { get; }
-        Impact.Flag Flags { get; }
+        Boolean NoDecalData { get; }
         Impact.ResultType Result { get; }
         Int16 Unknown { get; }
         IDecalGetter? Decal { get; }
@@ -1112,26 +1128,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IImpactGetter item,
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
-            return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).ToString(
+            return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IImpactGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
-            ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).ToString(
+            ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -1226,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IImpactInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((ImpactSetterCommon)((IImpactGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -1241,10 +1257,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Impact_FieldIndex
+    internal enum Impact_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1258,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         AngleThreshold = 9,
         PlacementRadius = 10,
         SoundLevel = 11,
-        Flags = 12,
+        NoDecalData = 12,
         Result = 13,
         Unknown = 14,
         Decal = 15,
@@ -1272,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Impact_Registration : ILoquiRegistration
+    internal partial class Impact_Registration : ILoquiRegistration
     {
         public static readonly Impact_Registration Instance = new Impact_Registration();
 
@@ -1314,6 +1330,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.IPCT;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var triggers = RecordCollection.Factory(RecordTypes.IPCT);
+            var all = RecordCollection.Factory(
+                RecordTypes.IPCT,
+                RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.DODT,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.SNAM,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(ImpactBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1347,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ImpactSetterCommon : SkyrimMajorRecordSetterCommon
+    internal partial class ImpactSetterCommon : SkyrimMajorRecordSetterCommon
     {
         public new static readonly ImpactSetterCommon Instance = new ImpactSetterCommon();
 
@@ -1362,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AngleThreshold = default;
             item.PlacementRadius = default;
             item.SoundLevel = default;
-            item.Flags = default;
+            item.NoDecalData = default;
             item.Result = default;
             item.Unknown = default;
             item.Decal = null;
@@ -1403,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IImpactInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.MajorRecordParse<IImpactInternal>(
                 record: item,
@@ -1416,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Impact)item,
@@ -1427,7 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (Impact)item,
@@ -1438,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactCommon : SkyrimMajorRecordCommon
+    internal partial class ImpactCommon : SkyrimMajorRecordCommon
     {
         public new static readonly ImpactCommon Instance = new ImpactCommon();
 
@@ -1462,7 +1494,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Impact.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1473,7 +1504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.AngleThreshold = item.AngleThreshold.EqualsWithin(rhs.AngleThreshold);
             ret.PlacementRadius = item.PlacementRadius.EqualsWithin(rhs.PlacementRadius);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.NoDecalData = item.NoDecalData == rhs.NoDecalData;
             ret.Result = item.Result == rhs.Result;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Decal = EqualsMaskHelper.EqualsHelper(
@@ -1490,119 +1521,117 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             IImpactGetter item,
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IImpactGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Impact.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Impact =>");
+                sb.AppendLine($"Impact =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Impact) =>");
+                sb.AppendLine($"{name} (Impact) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IImpactGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Impact.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
-                ModelItem?.ToString(fg, "Model");
+                ModelItem?.Print(sb, "Model");
             }
             if (printMask?.Duration ?? true)
             {
-                fg.AppendItem(item.Duration, "Duration");
+                sb.AppendItem(item.Duration, "Duration");
             }
             if (printMask?.Orientation ?? true)
             {
-                fg.AppendItem(item.Orientation, "Orientation");
+                sb.AppendItem(item.Orientation, "Orientation");
             }
             if (printMask?.AngleThreshold ?? true)
             {
-                fg.AppendItem(item.AngleThreshold, "AngleThreshold");
+                sb.AppendItem(item.AngleThreshold, "AngleThreshold");
             }
             if (printMask?.PlacementRadius ?? true)
             {
-                fg.AppendItem(item.PlacementRadius, "PlacementRadius");
+                sb.AppendItem(item.PlacementRadius, "PlacementRadius");
             }
             if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(item.SoundLevel, "SoundLevel");
+                sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.NoDecalData ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.NoDecalData, "NoDecalData");
             }
             if (printMask?.Result ?? true)
             {
-                fg.AppendItem(item.Result, "Result");
+                sb.AppendItem(item.Result, "Result");
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.Decal?.Overall ?? true)
                 && item.Decal is {} DecalItem)
             {
-                DecalItem?.ToString(fg, "Decal");
+                DecalItem?.Print(sb, "Decal");
             }
             if (printMask?.TextureSet ?? true)
             {
-                fg.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
+                sb.AppendItem(item.TextureSet.FormKeyNullable, "TextureSet");
             }
             if (printMask?.SecondaryTextureSet ?? true)
             {
-                fg.AppendItem(item.SecondaryTextureSet.FormKeyNullable, "SecondaryTextureSet");
+                sb.AppendItem(item.SecondaryTextureSet.FormKeyNullable, "SecondaryTextureSet");
             }
             if (printMask?.Sound1 ?? true)
             {
-                fg.AppendItem(item.Sound1.FormKeyNullable, "Sound1");
+                sb.AppendItem(item.Sound1.FormKeyNullable, "Sound1");
             }
             if (printMask?.Sound2 ?? true)
             {
-                fg.AppendItem(item.Sound2.FormKeyNullable, "Sound2");
+                sb.AppendItem(item.Sound2.FormKeyNullable, "Sound2");
             }
             if (printMask?.Hazard ?? true)
             {
-                fg.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
+                sb.AppendItem(item.Hazard.FormKeyNullable, "Hazard");
             }
             if (printMask?.DATADataTypeState ?? true)
             {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1680,9 +1709,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.NoDecalData != rhs.NoDecalData) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
@@ -1761,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AngleThreshold);
             hash.Add(item.PlacementRadius);
             hash.Add(item.SoundLevel);
-            hash.Add(item.Flags);
+            hash.Add(item.NoDecalData);
             hash.Add(item.Result);
             hash.Add(item.Unknown);
             if (item.Decal is {} Decalitem)
@@ -1797,38 +1826,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImpactGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImpactGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.ContainedFormLinks)
+                foreach (var item in ModelItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.TextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.TextureSet, out var TextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.TextureSet);
+                yield return TextureSetInfo;
             }
-            if (obj.SecondaryTextureSet.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.SecondaryTextureSet, out var SecondaryTextureSetInfo))
             {
-                yield return FormLinkInformation.Factory(obj.SecondaryTextureSet);
+                yield return SecondaryTextureSetInfo;
             }
-            if (obj.Sound1.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound1, out var Sound1Info))
             {
-                yield return FormLinkInformation.Factory(obj.Sound1);
+                yield return Sound1Info;
             }
-            if (obj.Sound2.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Sound2, out var Sound2Info))
             {
-                yield return FormLinkInformation.Factory(obj.Sound2);
+                yield return Sound2Info;
             }
-            if (obj.Hazard.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.Hazard, out var HazardInfo))
             {
-                yield return FormLinkInformation.Factory(obj.Hazard);
+                yield return HazardInfo;
             }
             yield break;
         }
@@ -1871,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ImpactSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    internal partial class ImpactSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
         public new static readonly ImpactSetterTranslationCommon Instance = new ImpactSetterTranslationCommon();
 
@@ -1950,9 +1979,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.SoundLevel = rhs.SoundLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.NoDecalData = rhs.NoDecalData;
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
             {
@@ -2134,7 +2163,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]
@@ -2152,13 +2181,13 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class ImpactBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ImpactBinaryWriteTranslation Instance = new ImpactBinaryWriteTranslation();
+        public new static readonly ImpactBinaryWriteTranslation Instance = new ImpactBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IImpactGetter item,
@@ -2172,7 +2201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static void WriteRecordTypes(
             IImpactGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
@@ -2204,10 +2233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.SoundLevel,
                     length: 4);
-                EnumBinaryTranslation<Impact.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1);
+                writer.Write(item.NoDecalData);
                 EnumBinaryTranslation<Impact.ResultType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Result,
@@ -2246,7 +2272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IImpactGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
@@ -2257,12 +2283,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     WriteEmbedded(
                         item: item,
                         writer: writer);
-                    writer.MetaData.FormVersion = item.FormVersion;
-                    WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                    writer.MetaData.FormVersion = null;
+                    if (!item.IsDeleted)
+                    {
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
+                            item: item,
+                            writer: writer,
+                            translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2274,7 +2303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IImpactGetter)item,
@@ -2285,7 +2314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImpactGetter)item,
@@ -2296,7 +2325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (IImpactGetter)item,
@@ -2306,9 +2335,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ImpactBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    internal partial class ImpactBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ImpactBinaryCreateTranslation Instance = new ImpactBinaryCreateTranslation();
+        public new static readonly ImpactBinaryCreateTranslation Instance = new ImpactBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPCT;
         public static void FillBinaryStructs(
@@ -2327,7 +2356,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
@@ -2336,7 +2365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
-                        translationParams: translationParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Impact_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
@@ -2352,9 +2381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
-                    item.Flags = EnumBinaryTranslation<Impact.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
+                    item.NoDecalData = dataFrame.ReadBoolean();
                     item.Result = EnumBinaryTranslation<Impact.ResultType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
@@ -2403,7 +2430,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         lastParsed: lastParsed,
                         recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
-                        contentLength: contentLength);
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
 
@@ -2420,16 +2448,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ImpactBinaryOverlay :
+    internal partial class ImpactBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
         IImpactGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Impact_Registration.Instance;
-        public new static Impact_Registration StaticRegistration => Impact_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Impact_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => ImpactCommon.Instance;
         [DebuggerStepThrough]
@@ -2437,14 +2465,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ImpactCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ImpactCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImpactBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((ImpactBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -2455,71 +2483,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public IModelGetter? Model { get; private set; }
-        private int? _DATALocation;
+        private RangeInt32? _DATALocation;
         public Impact.DATADataType DATADataTypeState { get; private set; }
         #region Duration
-        private int _DurationLocation => _DATALocation!.Value;
+        private int _DurationLocation => _DATALocation!.Value.Min;
         private bool _Duration_IsSet => _DATALocation.HasValue;
-        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
+        public Single Duration => _Duration_IsSet ? _recordData.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Orientation
-        private int _OrientationLocation => _DATALocation!.Value + 0x4;
+        private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Orientation_IsSet => _DATALocation.HasValue;
-        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_OrientationLocation, 0x4)) : default;
+        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OrientationLocation, 0x4)) : default;
         #endregion
         #region AngleThreshold
-        private int _AngleThresholdLocation => _DATALocation!.Value + 0x8;
+        private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
-        public Single AngleThreshold => _AngleThreshold_IsSet ? _data.Slice(_AngleThresholdLocation, 4).Float() : default;
+        public Single AngleThreshold => _AngleThreshold_IsSet ? _recordData.Slice(_AngleThresholdLocation, 4).Float() : default;
         #endregion
         #region PlacementRadius
-        private int _PlacementRadiusLocation => _DATALocation!.Value + 0xC;
+        private int _PlacementRadiusLocation => _DATALocation!.Value.Min + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
-        public Single PlacementRadius => _PlacementRadius_IsSet ? _data.Slice(_PlacementRadiusLocation, 4).Float() : default;
+        public Single PlacementRadius => _PlacementRadius_IsSet ? _recordData.Slice(_PlacementRadiusLocation, 4).Float() : default;
         #endregion
         #region SoundLevel
-        private int _SoundLevelLocation => _DATALocation!.Value + 0x10;
+        private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x10;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x14;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Impact.Flag Flags => _Flags_IsSet ? (Impact.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #region NoDecalData
+        private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _NoDecalData_IsSet => _DATALocation.HasValue;
+        public Boolean NoDecalData => _NoDecalData_IsSet ? _recordData.Slice(_NoDecalDataLocation, 1)[0] >= 1 : default;
         #endregion
         #region Result
-        private int _ResultLocation => _DATALocation!.Value + 0x15;
+        private int _ResultLocation => _DATALocation!.Value.Min + 0x15;
         private bool _Result_IsSet => _DATALocation.HasValue;
-        public Impact.ResultType Result => _Result_IsSet ? (Impact.ResultType)_data.Span.Slice(_ResultLocation, 0x1)[0] : default;
+        public Impact.ResultType Result => _Result_IsSet ? (Impact.ResultType)_recordData.Span.Slice(_ResultLocation, 0x1)[0] : default;
         #endregion
         #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value + 0x16;
+        private int _UnknownLocation => _DATALocation!.Value.Min + 0x16;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default;
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
-        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new OverlayStream(_data.Slice(_DecalLocation!.Value.Min), _package), _package) : default;
+        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(_recordData.Slice(_DecalLocation!.Value.Min), _package) : default;
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
-        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Sound1
         private int? _Sound1Location;
-        public IFormLinkNullableGetter<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Sound2
         private int? _Sound2Location;
-        public IFormLinkNullableGetter<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Hazard
         private int? _HazardLocation;
-        public IFormLinkNullableGetter<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
+        public IFormLinkNullableGetter<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2528,28 +2556,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected ImpactBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static ImpactBinaryOverlay ImpactFactory(
+        public static IImpactGetter ImpactFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            stream = PluginUtilityTranslation.DecompressStream(stream);
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ImpactBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
+                memoryPair: memoryPair,
                 package: package);
-            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
-            int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
-            stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: finalPos,
@@ -2559,20 +2590,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 stream: stream,
                 finalPos: finalPos,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ImpactBinaryOverlay ImpactFactory(
+        public static IImpactGetter ImpactFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return ImpactFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public override ParseResult FillRecordType(
@@ -2582,9 +2613,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
@@ -2592,12 +2623,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
-                        parseParams: parseParams);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Impact_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Impact_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DODT:
@@ -2637,17 +2668,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed,
-                        recordParseCount: recordParseCount);
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
             }
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            ImpactMixIn.ToString(
+            ImpactMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

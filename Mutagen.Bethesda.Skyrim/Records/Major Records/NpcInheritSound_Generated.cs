@@ -5,10 +5,11 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -17,20 +18,20 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -64,12 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcInheritSoundMixIn.ToString(
+            NpcInheritSoundMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -174,30 +176,25 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(NpcInheritSound.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(NpcInheritSound.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NpcInheritSound.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, NpcInheritSound.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(NpcInheritSound.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(NpcInheritSound.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.InheritsSoundsFrom ?? true)
                     {
-                        fg.AppendItem(InheritsSoundsFrom, "InheritsSoundsFrom");
+                        sb.AppendItem(InheritsSoundsFrom, "InheritsSoundsFrom");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -261,37 +258,30 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public override void ToString(FileGeneration fg, string? name = null)
+            public override void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected override void ToString_FillInternal(FileGeneration fg)
+            protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.ToString_FillInternal(fg);
-                fg.AppendItem(InheritsSoundsFrom, "InheritsSoundsFrom");
+                base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(InheritsSoundsFrom, "InheritsSoundsFrom");
+                }
             }
             #endregion
 
@@ -352,8 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = NpcInheritSound_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcInheritSoundCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcInheritSoundCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcInheritSoundSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -362,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected override object BinaryWriteTranslator => NpcInheritSoundBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcInheritSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -372,7 +361,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public new static NpcInheritSound CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new NpcInheritSound();
             ((NpcInheritSoundSetterCommon)((INpcInheritSoundGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -387,7 +376,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out NpcInheritSound item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -397,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -454,26 +443,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this INpcInheritSoundGetter item,
             string? name = null,
             NpcInheritSound.Mask<bool>? printMask = null)
         {
-            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).ToString(
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this INpcInheritSoundGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcInheritSound.Mask<bool>? printMask = null)
         {
-            ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).ToString(
+            ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -554,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this INpcInheritSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((NpcInheritSoundSetterCommon)((INpcInheritSoundGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -569,17 +558,17 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum NpcInheritSound_FieldIndex
+    internal enum NpcInheritSound_FieldIndex
     {
         InheritsSoundsFrom = 0,
     }
     #endregion
 
     #region Registration
-    public partial class NpcInheritSound_Registration : ILoquiRegistration
+    internal partial class NpcInheritSound_Registration : ILoquiRegistration
     {
         public static readonly NpcInheritSound_Registration Instance = new NpcInheritSound_Registration();
 
@@ -621,6 +610,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.CSCR;
+        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
+        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
+        {
+            var all = RecordCollection.Factory(RecordTypes.CSCR);
+            return new RecordTriggerSpecs(allRecordTypes: all);
+        });
         public static readonly Type BinaryWriteTranslation = typeof(NpcInheritSoundBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -654,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcInheritSoundSetterCommon : ANpcSoundDefinitionSetterCommon
+    internal partial class NpcInheritSoundSetterCommon : ANpcSoundDefinitionSetterCommon
     {
         public new static readonly NpcInheritSoundSetterCommon Instance = new NpcInheritSoundSetterCommon();
 
@@ -685,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             INpcInheritSound item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -698,7 +693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void CopyInFromBinary(
             IANpcSoundDefinition item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             CopyInFromBinary(
                 item: (NpcInheritSound)item,
@@ -709,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcInheritSoundCommon : ANpcSoundDefinitionCommon
+    internal partial class NpcInheritSoundCommon : ANpcSoundDefinitionCommon
     {
         public new static readonly NpcInheritSoundCommon Instance = new NpcInheritSoundCommon();
 
@@ -733,62 +728,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             NpcInheritSound.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.InheritsSoundsFrom = item.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
-        public string ToString(
+        public string Print(
             INpcInheritSoundGetter item,
             string? name = null,
             NpcInheritSound.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             INpcInheritSoundGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             NpcInheritSound.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"NpcInheritSound =>");
+                sb.AppendLine($"NpcInheritSound =>");
             }
             else
             {
-                fg.AppendLine($"{name} (NpcInheritSound) =>");
+                sb.AppendLine($"{name} (NpcInheritSound) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             INpcInheritSoundGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             NpcInheritSound.Mask<bool>? printMask = null)
         {
             ANpcSoundDefinitionCommon.ToStringFields(
                 item: item,
-                fg: fg,
+                sb: sb,
                 printMask: printMask);
             if (printMask?.InheritsSoundsFrom ?? true)
             {
-                fg.AppendItem(item.InheritsSoundsFrom.FormKeyNullable, "InheritsSoundsFrom");
+                sb.AppendItem(item.InheritsSoundsFrom.FormKeyNullable, "InheritsSoundsFrom");
             }
         }
         
@@ -849,15 +841,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcInheritSoundGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcInheritSoundGetter obj)
         {
-            foreach (var item in base.GetContainedFormLinks(obj))
+            foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (obj.InheritsSoundsFrom.FormKeyNullable.HasValue)
+            if (FormLinkInformation.TryFactory(obj.InheritsSoundsFrom, out var InheritsSoundsFromInfo))
             {
-                yield return FormLinkInformation.Factory(obj.InheritsSoundsFrom);
+                yield return InheritsSoundsFromInfo;
             }
             yield break;
         }
@@ -865,7 +857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcInheritSoundSetterTranslationCommon : ANpcSoundDefinitionSetterTranslationCommon
+    internal partial class NpcInheritSoundSetterTranslationCommon : ANpcSoundDefinitionSetterTranslationCommon
     {
         public new static readonly NpcInheritSoundSetterTranslationCommon Instance = new NpcInheritSoundSetterTranslationCommon();
 
@@ -965,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcInheritSound_Registration.Instance;
-        public new static NpcInheritSound_Registration StaticRegistration => NpcInheritSound_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcInheritSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcInheritSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -983,18 +975,18 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class NpcInheritSoundBinaryWriteTranslation :
         ANpcSoundDefinitionBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static NpcInheritSoundBinaryWriteTranslation Instance = new NpcInheritSoundBinaryWriteTranslation();
+        public new static readonly NpcInheritSoundBinaryWriteTranslation Instance = new NpcInheritSoundBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
             INpcInheritSoundGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams)
+            TypedWriteParams translationParams)
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1005,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             INpcInheritSoundGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteRecordTypes(
                 item: item,
@@ -1016,7 +1008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (INpcInheritSoundGetter)item,
@@ -1027,7 +1019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             IANpcSoundDefinitionGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             Write(
                 item: (INpcInheritSoundGetter)item,
@@ -1037,9 +1029,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcInheritSoundBinaryCreateTranslation : ANpcSoundDefinitionBinaryCreateTranslation
+    internal partial class NpcInheritSoundBinaryCreateTranslation : ANpcSoundDefinitionBinaryCreateTranslation
     {
-        public new readonly static NpcInheritSoundBinaryCreateTranslation Instance = new NpcInheritSoundBinaryCreateTranslation();
+        public new static readonly NpcInheritSoundBinaryCreateTranslation Instance = new NpcInheritSoundBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             INpcInheritSound item,
@@ -1054,14 +1046,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.CSCR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InheritsSoundsFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom;
@@ -1084,16 +1076,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class NpcInheritSoundBinaryOverlay :
+    internal partial class NpcInheritSoundBinaryOverlay :
         ANpcSoundDefinitionBinaryOverlay,
         INpcInheritSoundGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NpcInheritSound_Registration.Instance;
-        public new static NpcInheritSound_Registration StaticRegistration => NpcInheritSound_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => NpcInheritSound_Registration.Instance;
         [DebuggerStepThrough]
         protected override object CommonInstance() => NpcInheritSoundCommon.Instance;
         [DebuggerStepThrough]
@@ -1101,14 +1093,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NpcInheritSoundCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcInheritSoundCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcInheritSoundBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((NpcInheritSoundBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1118,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
-        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1127,42 +1119,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected NpcInheritSoundBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static NpcInheritSoundBinaryOverlay NpcInheritSoundFactory(
+        public static INpcInheritSoundGetter NpcInheritSoundFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new NpcInheritSoundBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
                 offset: offset,
-                parseParams: parseParams,
+                translationParams: translationParams,
                 fill: ret.FillRecordType);
             return ret;
         }
 
-        public static NpcInheritSoundBinaryOverlay NpcInheritSoundFactory(
+        public static INpcInheritSoundGetter NpcInheritSoundFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return NpcInheritSoundFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         public ParseResult FillRecordType(
@@ -1172,14 +1170,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordType type,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
-            type = parseParams.ConvertToStandard(type);
+            type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
                 case RecordTypeInts.CSCR:
                 {
-                    if (lastParsed.ParsedIndex.HasValue && lastParsed.ParsedIndex.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom, translationParams)) return ParseResult.Stop;
                     _InheritsSoundsFromLocation = (stream.Position - offset);
                     return (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom;
                 }
@@ -1189,12 +1187,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #region To String
 
-        public override void ToString(
-            FileGeneration fg,
+        public override void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcInheritSoundMixIn.ToString(
+            NpcInheritSoundMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

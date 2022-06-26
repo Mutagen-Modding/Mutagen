@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LightingTemplate" recordType="LGTM" baseClass="Fallout4MajorRecord" objType="Record" GUID="e3ab581e-42ce-4c15-9c2d-28956462d5ef" ID="466">
+    <Fields>
+      <Data>
+        <Fields>
+          <Color name="AmbientColor" binaryType="Alpha" />
+          <Color name="DirectionalColor" binaryType="Alpha" />
+          <Color name="FogNearColor" binaryType="Alpha" />
+          <Float name="FogNear" />
+          <Float name="FogFar" />
+          <Int32 name="DirectionalRotationXY" />
+          <Int32 name="DirectionalRotationZ" />
+          <Float name="DirectionalFade" />
+          <Float name="FogClipDistance" />
+          <Float name="FogPower" />
+          <ByteArray name="Unused" byteLength="32" nullable="false" />
+          <Color name="FogFarColor" binaryType="Alpha" />
+          <Float name="FogMax" />
+          <Float name="LightFadeStartDistance" />
+          <Float name="LightFadeEndDistance" />
+          <Int32 name="Unknown" />
+          <Break />
+          <Float name="NearHeightMid" />
+          <Float name="NearHeightRange" />
+          <Color name="FogColorHighNear" binaryType="Alpha" />
+          <Color name="FogColorHighFar" binaryType="Alpha" />
+          <Float name="HighDensityScale" />
+          <Float name="FogNearScale" />
+          <Float name="FogFarScale" />
+          <Float name="FogHighNearScale" />
+          <Float name="FogHighFarScale" />
+          <Break />
+          <Float name="FogHeightMid" />
+          <Float name="FogHeightRange" />
+        </Fields>
+      </Data>
+      <RefDirect name="DirectionalAmbientColors" refName="AmbientColors" recordType="DALC" />
+      <FormLink name="GodRays" recordType="WGDR" refName="GodRays" />
+    </Fields>
+  </Object>
+</Loqui>

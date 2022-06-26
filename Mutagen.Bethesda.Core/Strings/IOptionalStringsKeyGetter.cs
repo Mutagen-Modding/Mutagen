@@ -1,10 +1,9 @@
-namespace Mutagen.Bethesda.Strings
+namespace Mutagen.Bethesda.Strings;
+
+public interface IOptionalStringsKeyGetter
 {
-    public interface IOptionalStringsKeyGetter
-    {
-        /// <summary>
-        /// Key related to a strings file index
-        /// </summary>
-        uint? StringsKey { get; }
-    }
+    /// <summary>
+    /// Key related to a strings file index
+    /// </summary>
+    uint? StringsKey { get; }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Noggog;
+﻿using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Exceptions;
 
@@ -37,12 +34,12 @@ public abstract class ModPathException : Exception
     {
         if (ModPaths.Count == 1)
         {
-            return $"{GetType().Name} {ModPath}: {this.Message} {this.InnerException}{this.StackTrace}";
+            return $"{GetType().Name} {ModPath}: {Message} {InnerException}{StackTrace}";
         }
         else
         {
             return
-                $"{GetType().Name} {ModPath} (+{ModPaths.Count - 1}): {this.Message} {this.InnerException}{this.StackTrace}";
+                $"{GetType().Name} {ModPath} (+{ModPaths.Count - 1}): {Message} {InnerException}{StackTrace}";
         }
     }
 }

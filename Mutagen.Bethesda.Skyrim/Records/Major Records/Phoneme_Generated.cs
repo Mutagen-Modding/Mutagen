@@ -5,30 +5,32 @@
 */
 #region Usings
 using Loqui;
+using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
+using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 #endregion
 
 #nullable enable
@@ -186,12 +188,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PhonemeMixIn.ToString(
+            PhonemeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 
@@ -682,202 +685,197 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
+            public override string ToString() => this.Print();
+
+            public string Print(Phoneme.Mask<bool>? printMask = null)
             {
-                return ToString(printMask: null);
+                var sb = new StructuredStringBuilder();
+                Print(sb, printMask);
+                return sb.ToString();
             }
 
-            public string ToString(Phoneme.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Phoneme.Mask<bool>? printMask = null)
             {
-                var fg = new FileGeneration();
-                ToString(fg, printMask);
-                return fg.ToString();
-            }
-
-            public void ToString(FileGeneration fg, Phoneme.Mask<bool>? printMask = null)
-            {
-                fg.AppendLine($"{nameof(Phoneme.Mask<TItem>)} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{nameof(Phoneme.Mask<TItem>)} =>");
+                using (sb.Brace())
                 {
                     if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.IY ?? true)
                     {
-                        fg.AppendItem(IY, "IY");
+                        sb.AppendItem(IY, "IY");
                     }
                     if (printMask?.IH ?? true)
                     {
-                        fg.AppendItem(IH, "IH");
+                        sb.AppendItem(IH, "IH");
                     }
                     if (printMask?.EH ?? true)
                     {
-                        fg.AppendItem(EH, "EH");
+                        sb.AppendItem(EH, "EH");
                     }
                     if (printMask?.EY ?? true)
                     {
-                        fg.AppendItem(EY, "EY");
+                        sb.AppendItem(EY, "EY");
                     }
                     if (printMask?.AE ?? true)
                     {
-                        fg.AppendItem(AE, "AE");
+                        sb.AppendItem(AE, "AE");
                     }
                     if (printMask?.AA ?? true)
                     {
-                        fg.AppendItem(AA, "AA");
+                        sb.AppendItem(AA, "AA");
                     }
                     if (printMask?.AW ?? true)
                     {
-                        fg.AppendItem(AW, "AW");
+                        sb.AppendItem(AW, "AW");
                     }
                     if (printMask?.AY ?? true)
                     {
-                        fg.AppendItem(AY, "AY");
+                        sb.AppendItem(AY, "AY");
                     }
                     if (printMask?.AH ?? true)
                     {
-                        fg.AppendItem(AH, "AH");
+                        sb.AppendItem(AH, "AH");
                     }
                     if (printMask?.AO ?? true)
                     {
-                        fg.AppendItem(AO, "AO");
+                        sb.AppendItem(AO, "AO");
                     }
                     if (printMask?.OY ?? true)
                     {
-                        fg.AppendItem(OY, "OY");
+                        sb.AppendItem(OY, "OY");
                     }
                     if (printMask?.OW ?? true)
                     {
-                        fg.AppendItem(OW, "OW");
+                        sb.AppendItem(OW, "OW");
                     }
                     if (printMask?.UH ?? true)
                     {
-                        fg.AppendItem(UH, "UH");
+                        sb.AppendItem(UH, "UH");
                     }
                     if (printMask?.UW ?? true)
                     {
-                        fg.AppendItem(UW, "UW");
+                        sb.AppendItem(UW, "UW");
                     }
                     if (printMask?.ER ?? true)
                     {
-                        fg.AppendItem(ER, "ER");
+                        sb.AppendItem(ER, "ER");
                     }
                     if (printMask?.AX ?? true)
                     {
-                        fg.AppendItem(AX, "AX");
+                        sb.AppendItem(AX, "AX");
                     }
                     if (printMask?.S ?? true)
                     {
-                        fg.AppendItem(S, "S");
+                        sb.AppendItem(S, "S");
                     }
                     if (printMask?.SH ?? true)
                     {
-                        fg.AppendItem(SH, "SH");
+                        sb.AppendItem(SH, "SH");
                     }
                     if (printMask?.Z ?? true)
                     {
-                        fg.AppendItem(Z, "Z");
+                        sb.AppendItem(Z, "Z");
                     }
                     if (printMask?.ZH ?? true)
                     {
-                        fg.AppendItem(ZH, "ZH");
+                        sb.AppendItem(ZH, "ZH");
                     }
                     if (printMask?.F ?? true)
                     {
-                        fg.AppendItem(F, "F");
+                        sb.AppendItem(F, "F");
                     }
                     if (printMask?.TH ?? true)
                     {
-                        fg.AppendItem(TH, "TH");
+                        sb.AppendItem(TH, "TH");
                     }
                     if (printMask?.V ?? true)
                     {
-                        fg.AppendItem(V, "V");
+                        sb.AppendItem(V, "V");
                     }
                     if (printMask?.DH ?? true)
                     {
-                        fg.AppendItem(DH, "DH");
+                        sb.AppendItem(DH, "DH");
                     }
                     if (printMask?.M ?? true)
                     {
-                        fg.AppendItem(M, "M");
+                        sb.AppendItem(M, "M");
                     }
                     if (printMask?.N ?? true)
                     {
-                        fg.AppendItem(N, "N");
+                        sb.AppendItem(N, "N");
                     }
                     if (printMask?.NG ?? true)
                     {
-                        fg.AppendItem(NG, "NG");
+                        sb.AppendItem(NG, "NG");
                     }
                     if (printMask?.L ?? true)
                     {
-                        fg.AppendItem(L, "L");
+                        sb.AppendItem(L, "L");
                     }
                     if (printMask?.R ?? true)
                     {
-                        fg.AppendItem(R, "R");
+                        sb.AppendItem(R, "R");
                     }
                     if (printMask?.W ?? true)
                     {
-                        fg.AppendItem(W, "W");
+                        sb.AppendItem(W, "W");
                     }
                     if (printMask?.Y ?? true)
                     {
-                        fg.AppendItem(Y, "Y");
+                        sb.AppendItem(Y, "Y");
                     }
                     if (printMask?.HH ?? true)
                     {
-                        fg.AppendItem(HH, "HH");
+                        sb.AppendItem(HH, "HH");
                     }
                     if (printMask?.B ?? true)
                     {
-                        fg.AppendItem(B, "B");
+                        sb.AppendItem(B, "B");
                     }
                     if (printMask?.D ?? true)
                     {
-                        fg.AppendItem(D, "D");
+                        sb.AppendItem(D, "D");
                     }
                     if (printMask?.JH ?? true)
                     {
-                        fg.AppendItem(JH, "JH");
+                        sb.AppendItem(JH, "JH");
                     }
                     if (printMask?.G ?? true)
                     {
-                        fg.AppendItem(G, "G");
+                        sb.AppendItem(G, "G");
                     }
                     if (printMask?.P ?? true)
                     {
-                        fg.AppendItem(P, "P");
+                        sb.AppendItem(P, "P");
                     }
                     if (printMask?.T ?? true)
                     {
-                        fg.AppendItem(T, "T");
+                        sb.AppendItem(T, "T");
                     }
                     if (printMask?.K ?? true)
                     {
-                        fg.AppendItem(K, "K");
+                        sb.AppendItem(K, "K");
                     }
                     if (printMask?.CH ?? true)
                     {
-                        fg.AppendItem(CH, "CH");
+                        sb.AppendItem(CH, "CH");
                     }
                     if (printMask?.SIL ?? true)
                     {
-                        fg.AppendItem(SIL, "SIL");
+                        sb.AppendItem(SIL, "SIL");
                     }
                     if (printMask?.SHOTSIL ?? true)
                     {
-                        fg.AppendItem(SHOTSIL, "SHOTSIL");
+                        sb.AppendItem(SHOTSIL, "SHOTSIL");
                     }
                     if (printMask?.FLAP ?? true)
                     {
-                        fg.AppendItem(FLAP, "FLAP");
+                        sb.AppendItem(FLAP, "FLAP");
                     }
                 }
-                fg.AppendLine("]");
             }
             #endregion
 
@@ -1382,79 +1380,158 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region To String
-            public override string ToString()
-            {
-                var fg = new FileGeneration();
-                ToString(fg, null);
-                return fg.ToString();
-            }
+            public override string ToString() => this.Print();
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
-                fg.AppendLine($"{(name ?? "ErrorMask")} =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                sb.AppendLine($"{(name ?? "ErrorMask")} =>");
+                using (sb.Brace())
                 {
                     if (this.Overall != null)
                     {
-                        fg.AppendLine("Overall =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
+                        sb.AppendLine("Overall =>");
+                        using (sb.Brace())
                         {
-                            fg.AppendLine($"{this.Overall}");
+                            sb.AppendLine($"{this.Overall}");
                         }
-                        fg.AppendLine("]");
                     }
-                    ToString_FillInternal(fg);
+                    PrintFillInternal(sb);
                 }
-                fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                fg.AppendItem(Name, "Name");
-                fg.AppendItem(IY, "IY");
-                fg.AppendItem(IH, "IH");
-                fg.AppendItem(EH, "EH");
-                fg.AppendItem(EY, "EY");
-                fg.AppendItem(AE, "AE");
-                fg.AppendItem(AA, "AA");
-                fg.AppendItem(AW, "AW");
-                fg.AppendItem(AY, "AY");
-                fg.AppendItem(AH, "AH");
-                fg.AppendItem(AO, "AO");
-                fg.AppendItem(OY, "OY");
-                fg.AppendItem(OW, "OW");
-                fg.AppendItem(UH, "UH");
-                fg.AppendItem(UW, "UW");
-                fg.AppendItem(ER, "ER");
-                fg.AppendItem(AX, "AX");
-                fg.AppendItem(S, "S");
-                fg.AppendItem(SH, "SH");
-                fg.AppendItem(Z, "Z");
-                fg.AppendItem(ZH, "ZH");
-                fg.AppendItem(F, "F");
-                fg.AppendItem(TH, "TH");
-                fg.AppendItem(V, "V");
-                fg.AppendItem(DH, "DH");
-                fg.AppendItem(M, "M");
-                fg.AppendItem(N, "N");
-                fg.AppendItem(NG, "NG");
-                fg.AppendItem(L, "L");
-                fg.AppendItem(R, "R");
-                fg.AppendItem(W, "W");
-                fg.AppendItem(Y, "Y");
-                fg.AppendItem(HH, "HH");
-                fg.AppendItem(B, "B");
-                fg.AppendItem(D, "D");
-                fg.AppendItem(JH, "JH");
-                fg.AppendItem(G, "G");
-                fg.AppendItem(P, "P");
-                fg.AppendItem(T, "T");
-                fg.AppendItem(K, "K");
-                fg.AppendItem(CH, "CH");
-                fg.AppendItem(SIL, "SIL");
-                fg.AppendItem(SHOTSIL, "SHOTSIL");
-                fg.AppendItem(FLAP, "FLAP");
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(IY, "IY");
+                }
+                {
+                    sb.AppendItem(IH, "IH");
+                }
+                {
+                    sb.AppendItem(EH, "EH");
+                }
+                {
+                    sb.AppendItem(EY, "EY");
+                }
+                {
+                    sb.AppendItem(AE, "AE");
+                }
+                {
+                    sb.AppendItem(AA, "AA");
+                }
+                {
+                    sb.AppendItem(AW, "AW");
+                }
+                {
+                    sb.AppendItem(AY, "AY");
+                }
+                {
+                    sb.AppendItem(AH, "AH");
+                }
+                {
+                    sb.AppendItem(AO, "AO");
+                }
+                {
+                    sb.AppendItem(OY, "OY");
+                }
+                {
+                    sb.AppendItem(OW, "OW");
+                }
+                {
+                    sb.AppendItem(UH, "UH");
+                }
+                {
+                    sb.AppendItem(UW, "UW");
+                }
+                {
+                    sb.AppendItem(ER, "ER");
+                }
+                {
+                    sb.AppendItem(AX, "AX");
+                }
+                {
+                    sb.AppendItem(S, "S");
+                }
+                {
+                    sb.AppendItem(SH, "SH");
+                }
+                {
+                    sb.AppendItem(Z, "Z");
+                }
+                {
+                    sb.AppendItem(ZH, "ZH");
+                }
+                {
+                    sb.AppendItem(F, "F");
+                }
+                {
+                    sb.AppendItem(TH, "TH");
+                }
+                {
+                    sb.AppendItem(V, "V");
+                }
+                {
+                    sb.AppendItem(DH, "DH");
+                }
+                {
+                    sb.AppendItem(M, "M");
+                }
+                {
+                    sb.AppendItem(N, "N");
+                }
+                {
+                    sb.AppendItem(NG, "NG");
+                }
+                {
+                    sb.AppendItem(L, "L");
+                }
+                {
+                    sb.AppendItem(R, "R");
+                }
+                {
+                    sb.AppendItem(W, "W");
+                }
+                {
+                    sb.AppendItem(Y, "Y");
+                }
+                {
+                    sb.AppendItem(HH, "HH");
+                }
+                {
+                    sb.AppendItem(B, "B");
+                }
+                {
+                    sb.AppendItem(D, "D");
+                }
+                {
+                    sb.AppendItem(JH, "JH");
+                }
+                {
+                    sb.AppendItem(G, "G");
+                }
+                {
+                    sb.AppendItem(P, "P");
+                }
+                {
+                    sb.AppendItem(T, "T");
+                }
+                {
+                    sb.AppendItem(K, "K");
+                }
+                {
+                    sb.AppendItem(CH, "CH");
+                }
+                {
+                    sb.AppendItem(SIL, "SIL");
+                }
+                {
+                    sb.AppendItem(SHOTSIL, "SHOTSIL");
+                }
+                {
+                    sb.AppendItem(FLAP, "FLAP");
+                }
             }
             #endregion
 
@@ -1703,7 +1780,7 @@ namespace Mutagen.Bethesda.Skyrim
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PhonemeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -1713,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Create
         public static Phoneme CreateFromBinary(
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var ret = new Phoneme();
             ((PhonemeSetterCommon)((IPhonemeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
@@ -1728,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
             out Phoneme item,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
             item = CreateFromBinary(
@@ -1738,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         void IClearable.Clear()
         {
@@ -1894,26 +1971,26 @@ namespace Mutagen.Bethesda.Skyrim
                 include: include);
         }
 
-        public static string ToString(
+        public static string Print(
             this IPhonemeGetter item,
             string? name = null,
             Phoneme.Mask<bool>? printMask = null)
         {
-            return ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).ToString(
+            return ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
-        public static void ToString(
+        public static void Print(
             this IPhonemeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Phoneme.Mask<bool>? printMask = null)
         {
-            ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).ToString(
+            ((PhonemeCommon)((IPhonemeGetter)item).CommonInstance()!).Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
         }
@@ -2019,7 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this IPhoneme item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams = default)
         {
             ((PhonemeSetterCommon)((IPhonemeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
@@ -2034,10 +2111,10 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    public enum Phoneme_FieldIndex
+    internal enum Phoneme_FieldIndex
     {
         Name = 0,
         IY = 1,
@@ -2087,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Phoneme_Registration : ILoquiRegistration
+    internal partial class Phoneme_Registration : ILoquiRegistration
     {
         public static readonly Phoneme_Registration Instance = new Phoneme_Registration();
 
@@ -2161,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class PhonemeSetterCommon
+    internal partial class PhonemeSetterCommon
     {
         public static readonly PhonemeSetterCommon Instance = new PhonemeSetterCommon();
 
@@ -2227,7 +2304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             IPhoneme item,
             MutagenFrame frame,
-            TypedParseParams? translationParams = null)
+            TypedParseParams translationParams)
         {
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
@@ -2239,7 +2316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PhonemeCommon
+    internal partial class PhonemeCommon
     {
         public static readonly PhonemeCommon Instance = new PhonemeCommon();
 
@@ -2263,7 +2340,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            if (rhs == null) return;
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.IY = item.IY.EqualsWithin(rhs.IY);
             ret.IH = item.IH.EqualsWithin(rhs.IH);
@@ -2310,225 +2386,223 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.FLAP = item.FLAP.EqualsWithin(rhs.FLAP);
         }
         
-        public string ToString(
+        public string Print(
             IPhonemeGetter item,
             string? name = null,
             Phoneme.Mask<bool>? printMask = null)
         {
-            var fg = new FileGeneration();
-            ToString(
+            var sb = new StructuredStringBuilder();
+            Print(
                 item: item,
-                fg: fg,
+                sb: sb,
                 name: name,
                 printMask: printMask);
-            return fg.ToString();
+            return sb.ToString();
         }
         
-        public void ToString(
+        public void Print(
             IPhonemeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             string? name = null,
             Phoneme.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Phoneme =>");
+                sb.AppendLine($"Phoneme =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Phoneme) =>");
+                sb.AppendLine($"{name} (Phoneme) =>");
             }
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
+            using (sb.Brace())
             {
                 ToStringFields(
                     item: item,
-                    fg: fg,
+                    sb: sb,
                     printMask: printMask);
             }
-            fg.AppendLine("]");
         }
         
         protected static void ToStringFields(
             IPhonemeGetter item,
-            FileGeneration fg,
+            StructuredStringBuilder sb,
             Phoneme.Mask<bool>? printMask = null)
         {
             if (printMask?.Name ?? true)
             {
-                fg.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
             if (printMask?.IY ?? true)
             {
-                fg.AppendItem(item.IY, "IY");
+                sb.AppendItem(item.IY, "IY");
             }
             if (printMask?.IH ?? true)
             {
-                fg.AppendItem(item.IH, "IH");
+                sb.AppendItem(item.IH, "IH");
             }
             if (printMask?.EH ?? true)
             {
-                fg.AppendItem(item.EH, "EH");
+                sb.AppendItem(item.EH, "EH");
             }
             if (printMask?.EY ?? true)
             {
-                fg.AppendItem(item.EY, "EY");
+                sb.AppendItem(item.EY, "EY");
             }
             if (printMask?.AE ?? true)
             {
-                fg.AppendItem(item.AE, "AE");
+                sb.AppendItem(item.AE, "AE");
             }
             if (printMask?.AA ?? true)
             {
-                fg.AppendItem(item.AA, "AA");
+                sb.AppendItem(item.AA, "AA");
             }
             if (printMask?.AW ?? true)
             {
-                fg.AppendItem(item.AW, "AW");
+                sb.AppendItem(item.AW, "AW");
             }
             if (printMask?.AY ?? true)
             {
-                fg.AppendItem(item.AY, "AY");
+                sb.AppendItem(item.AY, "AY");
             }
             if (printMask?.AH ?? true)
             {
-                fg.AppendItem(item.AH, "AH");
+                sb.AppendItem(item.AH, "AH");
             }
             if (printMask?.AO ?? true)
             {
-                fg.AppendItem(item.AO, "AO");
+                sb.AppendItem(item.AO, "AO");
             }
             if (printMask?.OY ?? true)
             {
-                fg.AppendItem(item.OY, "OY");
+                sb.AppendItem(item.OY, "OY");
             }
             if (printMask?.OW ?? true)
             {
-                fg.AppendItem(item.OW, "OW");
+                sb.AppendItem(item.OW, "OW");
             }
             if (printMask?.UH ?? true)
             {
-                fg.AppendItem(item.UH, "UH");
+                sb.AppendItem(item.UH, "UH");
             }
             if (printMask?.UW ?? true)
             {
-                fg.AppendItem(item.UW, "UW");
+                sb.AppendItem(item.UW, "UW");
             }
             if (printMask?.ER ?? true)
             {
-                fg.AppendItem(item.ER, "ER");
+                sb.AppendItem(item.ER, "ER");
             }
             if (printMask?.AX ?? true)
             {
-                fg.AppendItem(item.AX, "AX");
+                sb.AppendItem(item.AX, "AX");
             }
             if (printMask?.S ?? true)
             {
-                fg.AppendItem(item.S, "S");
+                sb.AppendItem(item.S, "S");
             }
             if (printMask?.SH ?? true)
             {
-                fg.AppendItem(item.SH, "SH");
+                sb.AppendItem(item.SH, "SH");
             }
             if (printMask?.Z ?? true)
             {
-                fg.AppendItem(item.Z, "Z");
+                sb.AppendItem(item.Z, "Z");
             }
             if (printMask?.ZH ?? true)
             {
-                fg.AppendItem(item.ZH, "ZH");
+                sb.AppendItem(item.ZH, "ZH");
             }
             if (printMask?.F ?? true)
             {
-                fg.AppendItem(item.F, "F");
+                sb.AppendItem(item.F, "F");
             }
             if (printMask?.TH ?? true)
             {
-                fg.AppendItem(item.TH, "TH");
+                sb.AppendItem(item.TH, "TH");
             }
             if (printMask?.V ?? true)
             {
-                fg.AppendItem(item.V, "V");
+                sb.AppendItem(item.V, "V");
             }
             if (printMask?.DH ?? true)
             {
-                fg.AppendItem(item.DH, "DH");
+                sb.AppendItem(item.DH, "DH");
             }
             if (printMask?.M ?? true)
             {
-                fg.AppendItem(item.M, "M");
+                sb.AppendItem(item.M, "M");
             }
             if (printMask?.N ?? true)
             {
-                fg.AppendItem(item.N, "N");
+                sb.AppendItem(item.N, "N");
             }
             if (printMask?.NG ?? true)
             {
-                fg.AppendItem(item.NG, "NG");
+                sb.AppendItem(item.NG, "NG");
             }
             if (printMask?.L ?? true)
             {
-                fg.AppendItem(item.L, "L");
+                sb.AppendItem(item.L, "L");
             }
             if (printMask?.R ?? true)
             {
-                fg.AppendItem(item.R, "R");
+                sb.AppendItem(item.R, "R");
             }
             if (printMask?.W ?? true)
             {
-                fg.AppendItem(item.W, "W");
+                sb.AppendItem(item.W, "W");
             }
             if (printMask?.Y ?? true)
             {
-                fg.AppendItem(item.Y, "Y");
+                sb.AppendItem(item.Y, "Y");
             }
             if (printMask?.HH ?? true)
             {
-                fg.AppendItem(item.HH, "HH");
+                sb.AppendItem(item.HH, "HH");
             }
             if (printMask?.B ?? true)
             {
-                fg.AppendItem(item.B, "B");
+                sb.AppendItem(item.B, "B");
             }
             if (printMask?.D ?? true)
             {
-                fg.AppendItem(item.D, "D");
+                sb.AppendItem(item.D, "D");
             }
             if (printMask?.JH ?? true)
             {
-                fg.AppendItem(item.JH, "JH");
+                sb.AppendItem(item.JH, "JH");
             }
             if (printMask?.G ?? true)
             {
-                fg.AppendItem(item.G, "G");
+                sb.AppendItem(item.G, "G");
             }
             if (printMask?.P ?? true)
             {
-                fg.AppendItem(item.P, "P");
+                sb.AppendItem(item.P, "P");
             }
             if (printMask?.T ?? true)
             {
-                fg.AppendItem(item.T, "T");
+                sb.AppendItem(item.T, "T");
             }
             if (printMask?.K ?? true)
             {
-                fg.AppendItem(item.K, "K");
+                sb.AppendItem(item.K, "K");
             }
             if (printMask?.CH ?? true)
             {
-                fg.AppendItem(item.CH, "CH");
+                sb.AppendItem(item.CH, "CH");
             }
             if (printMask?.SIL ?? true)
             {
-                fg.AppendItem(item.SIL, "SIL");
+                sb.AppendItem(item.SIL, "SIL");
             }
             if (printMask?.SHOTSIL ?? true)
             {
-                fg.AppendItem(item.SHOTSIL, "SHOTSIL");
+                sb.AppendItem(item.SHOTSIL, "SHOTSIL");
             }
             if (printMask?.FLAP ?? true)
             {
-                fg.AppendItem(item.FLAP, "FLAP");
+                sb.AppendItem(item.FLAP, "FLAP");
             }
         }
         
@@ -2777,7 +2851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPhonemeGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPhonemeGetter obj)
         {
             yield break;
         }
@@ -2785,7 +2859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class PhonemeSetterTranslationCommon
+    internal partial class PhonemeSetterTranslationCommon
     {
         public static readonly PhonemeSetterTranslationCommon Instance = new PhonemeSetterTranslationCommon();
 
@@ -3035,7 +3109,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Phoneme_Registration.Instance;
-        public static Phoneme_Registration StaticRegistration => Phoneme_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Phoneme_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PhonemeCommon.Instance;
         [DebuggerStepThrough]
@@ -3059,11 +3133,11 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
     public partial class PhonemeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static PhonemeBinaryWriteTranslation Instance = new PhonemeBinaryWriteTranslation();
+        public static readonly PhonemeBinaryWriteTranslation Instance = new PhonemeBinaryWriteTranslation();
 
         public static void WriteEmbedded(
             IPhonemeGetter item,
@@ -3074,7 +3148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             IPhonemeGetter item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams)
         {
             WriteEmbedded(
                 item: item,
@@ -3084,7 +3158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Write(
             MutagenWriter writer,
             object item,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             Write(
                 item: (IPhonemeGetter)item,
@@ -3094,9 +3168,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class PhonemeBinaryCreateTranslation
+    internal partial class PhonemeBinaryCreateTranslation
     {
-        public readonly static PhonemeBinaryCreateTranslation Instance = new PhonemeBinaryCreateTranslation();
+        public static readonly PhonemeBinaryCreateTranslation Instance = new PhonemeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPhoneme item,
@@ -3115,7 +3189,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this IPhonemeGetter item,
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PhonemeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
@@ -3128,16 +3202,16 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class PhonemeBinaryOverlay :
+    internal partial class PhonemeBinaryOverlay :
         PluginBinaryOverlay,
         IPhonemeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Phoneme_Registration.Instance;
-        public static Phoneme_Registration StaticRegistration => Phoneme_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Phoneme_Registration.Instance;
         [DebuggerStepThrough]
         protected object CommonInstance() => PhonemeCommon.Instance;
         [DebuggerStepThrough]
@@ -3151,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #endregion
 
-        void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
+        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PhonemeBinaryWriteTranslation.Instance;
@@ -3159,7 +3233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
-            TypedWriteParams? translationParams = null)
+            TypedWriteParams translationParams = default)
         {
             ((PhonemeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
@@ -3174,24 +3248,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void CustomCtor();
         protected PhonemeBinaryOverlay(
-            ReadOnlyMemorySlice<byte> bytes,
+            MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
-                bytes: bytes,
+                memoryPair: memoryPair,
                 package: package)
         {
             this.CustomCtor();
         }
 
-        public static PhonemeBinaryOverlay PhonemeFactory(
+        public static IPhonemeGetter PhonemeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new PhonemeBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                memoryPair: memoryPair,
                 package: package);
-            int offset = stream.Position;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -3199,25 +3279,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static PhonemeBinaryOverlay PhonemeFactory(
+        public static IPhonemeGetter PhonemeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
-            TypedParseParams? parseParams = null)
+            TypedParseParams translationParams = default)
         {
             return PhonemeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
-                parseParams: parseParams);
+                translationParams: translationParams);
         }
 
         #region To String
 
-        public void ToString(
-            FileGeneration fg,
+        public void Print(
+            StructuredStringBuilder sb,
             string? name = null)
         {
-            PhonemeMixIn.ToString(
+            PhonemeMixIn.Print(
                 item: this,
+                sb: sb,
                 name: name);
         }
 

@@ -1,58 +1,47 @@
-using Loqui;
 using Loqui.Generation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Noggog.StructuredStrings.CSharp;
 
-namespace Mutagen.Bethesda.Generation.Modules.Aspects
+namespace Mutagen.Bethesda.Generation.Modules.Aspects;
+
+public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
 {
-    public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
+    public ObjectBoundedAspect()
+        : base(
+            "IObjectBounded",
+            AspectSubInterfaceDefinition.Factory(
+                "IObjectBounded",
+                (o, f) => Test(f, nullable: false)),
+            AspectSubInterfaceDefinition.Factory(
+                "IObjectBoundedOptional",
+                (o, f) => Test(f, nullable: true)))
     {
-        public ObjectBoundedAspect()
-            : base("IObjectBounded")
+        FieldActions = new()
         {
-            FieldActions = new()
+            new (LoquiInterfaceType.Direct, _ => "ObjectBounds", (o, tg, sb) =>
             {
-                new (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, fg) =>
+                if (tg is not LoquiType field) throw new ArgumentException("ObjectBounds is not LoquiType", nameof(tg));
+
+                if (!field.Nullable)
                 {
-                    if (tg is not LoquiType field) throw new ArgumentException("ObjectBounds is not LoquiType", nameof(tg));
-
-                    if (!field.Nullable)
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("ObjectBounds? IObjectBoundedOptional.ObjectBounds");
+                    using (sb.CurlyBrace())
                     {
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("ObjectBounds? IObjectBoundedOptional.ObjectBounds");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"get => this.ObjectBounds;");
-                            fg.AppendLine($"set => this.ObjectBounds = value ?? new ObjectBounds();");
-                        }
-                        fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                        fg.AppendLine("IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;");
+                        sb.AppendLine($"get => this.ObjectBounds;");
+                        sb.AppendLine($"set => this.ObjectBounds = value ?? new ObjectBounds();");
                     }
-                    fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-                    fg.AppendLine("IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;");
-                })
-            };
-        }
-
-        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
-            .TryGetValue("ObjectBounds", out var field)
-            && field is LoquiType loqui
-            && loqui.TargetObjectGeneration.Name == "ObjectBounds";
-
-        public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
-        {
-            var field = obj.IterateFields(includeBaseClass: true).OfType<LoquiType>().Single(x => x.Name == "ObjectBounds");
-
-            var list = new List<AspectInterfaceData>();
-            AddInterfaces(list, "IObjectBoundedOptional");
-
-            if (!field.Nullable)
-                AddInterfaces(list, "IObjectBounded");
-
-            return list;
-        }
+                    sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                    sb.AppendLine("IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;");
+                }
+                sb.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+                sb.AppendLine("IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;");
+            })
+        };
     }
+
+    public static bool Test(Dictionary<string, TypeGeneration> allFields, bool nullable)
+        => allFields.TryGetValue("ObjectBounds", out var field)
+           && field is LoquiType loqui
+           && loqui.TargetObjectGeneration.Name == "ObjectBounds"
+           && loqui.Nullable == nullable;
 }

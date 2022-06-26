@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Skyrim
+public enum FavorLevel
 {
-    public enum FavorLevel
-    {
-        None,
-        Small,
-        Medium,
-        Large
-    }
+    None,
+    Small,
+    Medium,
+    Large
 }
