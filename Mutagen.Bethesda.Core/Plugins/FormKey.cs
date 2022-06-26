@@ -265,25 +265,53 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
         return hash.ToHashCode();
     }
 
+    [Obsolete("Use ToLink instead")]
     public FormLink<TMajorGetter> AsLink<TMajorGetter>()
         where TMajorGetter : class, IMajorRecordGetter
     {
         return new FormLink<TMajorGetter>(this);
     }
 
+    public FormLink<TMajorGetter> ToLink<TMajorGetter>()
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLink<TMajorGetter>(this);
+    }
+
+    [Obsolete("Use ToLinkGetter instead")]
     public IFormLinkGetter<TMajorGetter> AsLinkGetter<TMajorGetter>()
         where TMajorGetter : class, IMajorRecordGetter
     {
         return new FormLink<TMajorGetter>(this);
     }
 
+    public IFormLinkGetter<TMajorGetter> ToLinkGetter<TMajorGetter>()
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLink<TMajorGetter>(this);
+    }
+
+    [Obsolete("Use ToNullableLink instead")]
     public FormLinkNullable<TMajorGetter> AsNullableLink<TMajorGetter>()
         where TMajorGetter : class, IMajorRecordGetter
     {
         return new FormLinkNullable<TMajorGetter>(this);
     }
 
+    public FormLinkNullable<TMajorGetter> ToNullableLink<TMajorGetter>()
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(this);
+    }
+
+    [Obsolete("Use ToNullableLinkGetter instead")]
     public IFormLinkNullableGetter<TMajorGetter> AsNullableLinkGetter<TMajorGetter>()
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return new FormLinkNullable<TMajorGetter>(this);
+    }
+
+    public IFormLinkNullableGetter<TMajorGetter> ToNullableLinkGetter<TMajorGetter>()
         where TMajorGetter : class, IMajorRecordGetter
     {
         return new FormLinkNullable<TMajorGetter>(this);
